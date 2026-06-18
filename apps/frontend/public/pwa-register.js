@@ -1,6 +1,8 @@
 (function () {
   if (!("serviceWorker" in navigator)) return;
 
+  var applyingUpdate = false;
+
   function installUpdateHandlers(registration) {
     if (!registration) return;
 
@@ -16,27 +18,30 @@
     });
 
     window.addEventListener("bep-si-fb-apply-update", function () {
+      applyingUpdate = true;
       if (registration.waiting) {
         registration.waiting.postMessage({ type: "SKIP_WAITING" });
         return;
       }
       registration.update().then(function () {
         if (registration.waiting) registration.waiting.postMessage({ type: "SKIP_WAITING" });
-      }).catch(function () {});
+      }).catch(function () {
+        applyingUpdate = false;
+      });
     });
   }
 
-  var refreshing = false;
   navigator.serviceWorker.addEventListener("controllerchange", function () {
-    if (refreshing) return;
-    refreshing = true;
+    if (!applyingUpdate) return;
     window.location.reload();
   });
 
   window.addEventListener("load", function () {
-    navigator.serviceWorker.register("/service-worker.js?v=" + Date.now()).then(function (registration) {
+    navigator.serviceWorker.register("/service-worker.js").then(function (registration) {
       installUpdateHandlers(registration);
-      registration.update().catch(function () {});
+      setTimeout(function () {
+        registration.update().catch(function () {});
+      }, 2500);
     }).catch(function (error) {
       console.warn("Service worker registration failed:", error);
     });
