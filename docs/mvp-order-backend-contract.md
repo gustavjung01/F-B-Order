@@ -181,3 +181,7 @@ Backend riêng cần thêm sau MVP:
 - Inventory/price sync.
 - Long running AI recipe jobs.
 - Payment/shipping webhook nếu có.
+
+## Deploy marker
+
+Final MVP hardening deploy trigger created from this contract update.
