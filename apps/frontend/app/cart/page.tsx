@@ -22,6 +22,20 @@ const categoryEmoji: Record<string, string> = {
   combo: "📦",
 };
 
+type CreateOrderResponse = {
+  order?: {
+    id: string;
+    orderCode: string;
+    status: string;
+    subtotal: number;
+    submittedAt: string;
+    itemCount: number;
+  };
+  error?: string;
+  sku?: string;
+  minQty?: number;
+};
+
 function formatVnd(value: number) {
   return new Intl.NumberFormat("vi-VN", {
     style: "currency",
@@ -38,9 +52,23 @@ function getItemEmoji(item: CartItem) {
   return categoryEmoji[item.categorySlug] || "📦";
 }
 
+function getOrderErrorMessage(data: CreateOrderResponse, status: number) {
+  if (status === 401 || data.error === "UNAUTHENTICATED") return "Bạn cần đăng nhập trước khi gửi đơn.";
+  if (data.error === "CUSTOMER_PROFILE_REQUIRED") return "Bạn cần tạo hồ sơ quán trước khi gửi đơn.";
+  if (data.error === "CUSTOMER_NOT_APPROVED") return "Hồ sơ quán chưa được duyệt nên chưa thể gửi đơn.";
+  if (data.error === "EMPTY_ORDER") return "Giỏ hàng đang trống.";
+  if (data.error === "PRODUCT_NOT_FOUND_OR_INACTIVE") return "Có sản phẩm đã ngừng bán hoặc không còn hoạt động. Vui lòng tải lại catalog.";
+  if (data.error === "QUANTITY_BELOW_MIN") return `Sản phẩm ${data.sku || "này"} cần tối thiểu ${data.minQty || 1}.`;
+  return "Chưa gửi được đơn. Vui lòng thử lại.";
+}
+
 export default function CartPage() {
   const [items, setItems] = useState<CartItem[]>([]);
   const [loaded, setLoaded] = useState(false);
+  const [note, setNote] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
+  const [createdOrderCode, setCreatedOrderCode] = useState("");
 
   function refreshCart() {
     setItems(readCartItems());
@@ -67,10 +95,14 @@ export default function CartPage() {
   const total = useMemo(() => getCartTotal(items), [items]);
 
   function changeQuantity(item: CartItem, nextQuantity: number) {
+    setCreatedOrderCode("");
+    setSubmitError("");
     setItems(updateCartItemQuantity(getItemKey(item), nextQuantity));
   }
 
   function removeItem(item: CartItem) {
+    setCreatedOrderCode("");
+    setSubmitError("");
     setItems(removeCartItem(getItemKey(item)));
   }
 
@@ -79,10 +111,46 @@ export default function CartPage() {
     if (!window.confirm("Xóa toàn bộ giỏ hàng hiện tại?")) return;
     clearCartItems();
     setItems([]);
+    setSubmitError("");
+    setCreatedOrderCode("");
   }
 
-  function submitDraftOrder() {
-    window.alert("API gửi đơn thật sẽ làm ở gói tiếp theo. Giỏ hàng local vẫn được giữ lại để test luồng chọn hàng.");
+  async function submitOrder() {
+    if (!items.length || submitting) return;
+
+    setSubmitting(true);
+    setSubmitError("");
+    setCreatedOrderCode("");
+
+    try {
+      const response = await fetch("/api/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          note,
+          items: items.map((item) => ({
+            productId: item.productId,
+            quantity: item.quantity,
+          })),
+        }),
+      });
+
+      const data = (await response.json().catch(() => ({}))) as CreateOrderResponse;
+
+      if (!response.ok || !data.order) {
+        setSubmitError(getOrderErrorMessage(data, response.status));
+        return;
+      }
+
+      clearCartItems();
+      setItems([]);
+      setNote("");
+      setCreatedOrderCode(data.order.orderCode);
+    } catch (error) {
+      setSubmitError("Không kết nối được máy chủ. Vui lòng thử lại.");
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -90,8 +158,20 @@ export default function CartPage() {
       <section className="rounded-[26px] bg-[#fff1d7] p-5 shadow-[0_14px_30px_rgba(15,23,42,0.085)] ring-1 ring-white/80 md:p-8">
         <p className="text-[12px] font-black uppercase tracking-[0.16em] text-[#ff5a00]">Đơn hàng tạm tính</p>
         <h1 className="mt-3 text-[26px] font-black leading-tight tracking-tight md:text-5xl">Kiểm tra số lượng trước khi gửi đơn</h1>
-        <p className="mt-3 text-[14px] font-semibold leading-6 text-slate-700 md:text-base">Giỏ hàng đang lưu trên máy khách. Bước sau mới nối API gửi đơn cho sales xác nhận.</p>
+        <p className="mt-3 text-[14px] font-semibold leading-6 text-slate-700 md:text-base">Đơn sẽ lưu vào hệ thống và chuyển sang trạng thái chờ sales xác nhận tồn kho, giá và lịch giao.</p>
       </section>
+
+      {createdOrderCode ? (
+        <section className="mt-4 rounded-[26px] bg-white p-5 shadow-[0_16px_34px_rgba(15,23,42,0.095)] ring-1 ring-[#b9eadb] md:p-8">
+          <div className="grid h-16 w-16 place-items-center rounded-[22px] bg-[#e9fbf2] text-[34px] shadow-inner">✓</div>
+          <p className="mt-5 text-[12px] font-black uppercase tracking-[0.16em] text-[#08775f]">Đã gửi đơn</p>
+          <h2 className="mt-3 text-[26px] font-black leading-tight tracking-tight md:text-4xl">Mã đơn {createdOrderCode}</h2>
+          <p className="mt-3 text-[14px] font-semibold leading-6 text-slate-600">Sales Bếp Sỉ F&B sẽ xác nhận lại đơn trước khi giao. Giỏ hàng đã được làm sạch để bạn tạo đơn mới.</p>
+          <Link href="/" className="mt-5 flex h-12 items-center justify-center rounded-[18px] bg-[#0b1220] px-5 text-[16px] font-black text-white shadow-[0_12px_22px_rgba(15,23,42,0.18)] md:inline-flex">
+            Tiếp tục xem hàng
+          </Link>
+        </section>
+      ) : null}
 
       {!loaded ? (
         <section className="mt-4 rounded-[26px] bg-white p-6 text-center text-[15px] font-black text-slate-500 shadow-[0_16px_34px_rgba(15,23,42,0.095)] ring-1 ring-[#efe7dc]">
@@ -99,7 +179,7 @@ export default function CartPage() {
         </section>
       ) : null}
 
-      {loaded && items.length === 0 ? (
+      {loaded && items.length === 0 && !createdOrderCode ? (
         <section className="mt-4 overflow-hidden rounded-[28px] bg-white p-5 shadow-[0_16px_34px_rgba(15,23,42,0.095)] ring-1 ring-[#efe7dc] md:p-8">
           <div className="grid h-20 w-20 place-items-center rounded-[24px] bg-[#fff3ea] text-[42px] shadow-inner">🛒</div>
           <p className="mt-5 text-[12px] font-black uppercase tracking-[0.16em] text-[#ff5a00]">Giỏ hàng đang trống</p>
@@ -151,11 +231,22 @@ export default function CartPage() {
           </div>
 
           <section className="mt-4 rounded-[26px] bg-white p-4 shadow-[0_16px_34px_rgba(15,23,42,0.095)] ring-1 ring-[#efe7dc] md:max-w-xl">
-            <div className="flex items-center justify-between text-[14px] font-bold text-slate-500"><span>Số lượng</span><span>{itemCount} món</span></div>
+            <label className="block text-[13px] font-black text-slate-600" htmlFor="order-note">Ghi chú cho sales</label>
+            <textarea
+              id="order-note"
+              value={note}
+              onChange={(event) => setNote(event.target.value)}
+              placeholder="Ví dụ: giao buổi sáng, gọi trước khi đến..."
+              className="mt-2 min-h-20 w-full resize-none rounded-[18px] bg-[#fbfaf7] px-4 py-3 text-[14px] font-semibold text-[#0b1220] outline-none ring-1 ring-[#eee7dc] placeholder:text-slate-400 focus:ring-[#ff5a00]"
+            />
+            <div className="mt-4 flex items-center justify-between text-[14px] font-bold text-slate-500"><span>Số lượng</span><span>{itemCount} món</span></div>
             <div className="mt-2 flex items-center justify-between text-[14px] font-bold text-slate-500"><span>Tạm tính</span><span>{formatVnd(total)}</span></div>
             <div className="mt-3 flex items-center justify-between text-[20px] font-black text-[#0b1220]"><span>Tổng dự kiến</span><span className="text-[#ff5a00]">{formatVnd(total)}</span></div>
-            <button type="button" onClick={submitDraftOrder} className="mt-4 h-12 w-full rounded-[18px] bg-[#ff5a00] px-5 text-[16px] font-black text-white shadow-[0_12px_22px_rgba(255,90,0,0.24)]">Gửi đơn cho sales xác nhận</button>
-            <button type="button" onClick={clearCart} className="mt-3 h-11 w-full rounded-[16px] bg-[#fbfaf7] px-5 text-[14px] font-black text-slate-600 ring-1 ring-[#eee7dc]">Xóa toàn bộ giỏ</button>
+            {submitError ? <p className="mt-3 rounded-[16px] bg-[#fff0ef] px-4 py-3 text-[13px] font-black text-[#dc2626] ring-1 ring-[#ffc9c3]">{submitError}</p> : null}
+            <button type="button" onClick={submitOrder} disabled={submitting} className="mt-4 h-12 w-full rounded-[18px] bg-[#ff5a00] px-5 text-[16px] font-black text-white shadow-[0_12px_22px_rgba(255,90,0,0.24)] disabled:cursor-not-allowed disabled:opacity-60">
+              {submitting ? "Đang gửi đơn..." : "Gửi đơn cho sales xác nhận"}
+            </button>
+            <button type="button" onClick={clearCart} disabled={submitting} className="mt-3 h-11 w-full rounded-[16px] bg-[#fbfaf7] px-5 text-[14px] font-black text-slate-600 ring-1 ring-[#eee7dc] disabled:cursor-not-allowed disabled:opacity-60">Xóa toàn bộ giỏ</button>
           </section>
         </>
       ) : null}
