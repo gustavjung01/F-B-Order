@@ -1,17 +1,20 @@
 {
   "name": "f-b-order",
   "private": true,
-  "packageManager": "pnpm@9.15.0",
+  "packageManager": "npm@10.8.2",
+  "engines": {
+    "node": "22.x"
+  },
   "workspaces": [
     "apps/*",
     "packages/*"
   ],
   "scripts": {
     "dev": "pnpm -r --parallel dev",
-    "build": "pnpm --filter @fb-order/frontend build",
+    "build": "npm run build:frontend",
     "build:all": "pnpm -r build",
-    "build:frontend": "pnpm --filter @fb-order/frontend build",
-    "build:backend": "pnpm --filter @fb-order/backend build",
+    "build:frontend": "npm --workspace @fb-order/frontend run build",
+    "build:backend": "npm --workspace @fb-order/backend run build",
     "lint": "pnpm -r lint",
     "typecheck": "pnpm -r typecheck"
   },
