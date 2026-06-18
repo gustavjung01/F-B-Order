@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AuthControls } from "@/components/auth/AuthControls";
 import { getApprovalLabel, getApprovalTone, isApprovedCustomer, mockCustomer } from "@/lib/mockCustomer";
 
 const categories = ["Tat ca", "Tra sua", "Mi cay", "Topping", "Bao bi", "Combo"];
@@ -32,9 +33,7 @@ export function DesktopHome() {
             <Link href="/account" className="rounded-full px-4 py-2 hover:bg-white">Tai khoan</Link>
           </nav>
 
-          <Link href="/register" className="rounded-2xl bg-[#0b1220] px-5 py-3 text-sm font-black text-white shadow-[0_12px_24px_rgba(15,23,42,0.16)]">
-            Mo khoa gia si
-          </Link>
+          <AuthControls />
         </div>
       </header>
 
@@ -47,10 +46,11 @@ export function DesktopHome() {
             Catalog nguyen lieu F&B cho quan tra sua, mi cay va topping.
           </h1>
           <p className="mt-6 max-w-2xl text-lg font-semibold leading-8 text-slate-700">
-            Khach vao web xem san pham binh thuong. Gia si, cong thuc chi tiet va dat hang chi mo sau khi admin duyet ho so shop.
+            Khach vao web xem san pham binh thuong. Tai khoan dung de dang nhap; ho so quan dung de admin duyet mo gia si.
           </p>
           <div className="mt-8 flex gap-3">
-            <Link href="/register" className="rounded-2xl bg-[#ff5a00] px-6 py-4 text-base font-black text-white shadow-[0_16px_28px_rgba(255,90,0,0.25)]">Dang ky mo gia si</Link>
+            <Link href="/sign-up" className="rounded-2xl bg-[#ff5a00] px-6 py-4 text-base font-black text-white shadow-[0_16px_28px_rgba(255,90,0,0.25)]">Dang ky tai khoan</Link>
+            <Link href="/register" className="rounded-2xl bg-white px-6 py-4 text-base font-black text-[#0b1220] shadow-sm ring-1 ring-[#eee7dc]">Ho so quan</Link>
             <Link href="/recipes" className="rounded-2xl bg-white px-6 py-4 text-base font-black text-[#0b1220] shadow-sm ring-1 ring-[#eee7dc]">Xem cong thuc</Link>
           </div>
         </div>
@@ -59,7 +59,7 @@ export function DesktopHome() {
           <div className="rounded-[34px] bg-white p-6 shadow-[0_20px_48px_rgba(15,23,42,0.09)] ring-1 ring-[#efe7dc]">
             <p className="text-sm font-black uppercase tracking-[0.18em] text-[#08775f]">Quy trinh khach si</p>
             <div className="mt-5 space-y-3">
-              {["Xem catalog san pham", "Gui ho so shop", "Admin duyet", "Mo gia si va dat hang"].map((item, index) => (
+              {["Xem catalog san pham", "Tao tai khoan", "Gui ho so quan", "Admin duyet mo gia"].map((item, index) => (
                 <div key={item} className="flex items-center gap-3 rounded-2xl bg-[#fbfaf7] p-3 ring-1 ring-[#eee7dc]">
                   <span className="grid h-9 w-9 place-items-center rounded-xl bg-[#08775f] text-sm font-black text-white">{index + 1}</span>
                   <span className="font-black">{item}</span>
@@ -101,7 +101,7 @@ export function DesktopHome() {
               )}
               <div className="mt-5 flex gap-2">
                 <button className="flex-1 rounded-2xl bg-[#fbfaf7] px-4 py-3 text-sm font-black ring-1 ring-[#eee7dc]">Chi tiet</button>
-                <Link href="/register" className="rounded-2xl bg-[#0b1220] px-4 py-3 text-sm font-black text-white">Mo gia</Link>
+                <Link href="/sign-up" className="rounded-2xl bg-[#0b1220] px-4 py-3 text-sm font-black text-white">Mo gia</Link>
               </div>
             </article>
           ))}
