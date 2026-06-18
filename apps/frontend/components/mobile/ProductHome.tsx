@@ -1,7 +1,14 @@
 import { AppHeader } from "@/components/mobile/AppHeader";
 import { BottomNav } from "@/components/mobile/BottomNav";
 
-const tabs = ["Tat ca", "Tra sua", "Mi cay", "Topping", "Bao bi", "Combo"];
+const tabs = [
+  { label: "Tất cả", icon: "▦", tone: "bg-[#fff3ea] text-[#ff5a00] ring-[#ffd0b3]" },
+  { label: "Trà sữa", icon: "🧋", tone: "bg-[#eefbf6] text-[#08775f] ring-[#b9eadb]" },
+  { label: "Mì cay", icon: "🍜", tone: "bg-[#fff0ef] text-[#dc2626] ring-[#ffc9c3]" },
+  { label: "Topping", icon: "🧊", tone: "bg-[#eef6ff] text-[#2563eb] ring-[#c7ddff]" },
+  { label: "Bao bì", icon: "🥡", tone: "bg-[#fff8e8] text-[#b77900] ring-[#ffe1a8]" },
+  { label: "Combo", icon: "📦", tone: "bg-[#f4efff] text-[#7c3aed] ring-[#dccbff]" },
+];
 
 const products = [
   { name: "Tran chau den 3Q", sku: "TC-3Q-1KG", price: "42.000d", unit: "Goi 1kg", image: "🧋" },
@@ -72,8 +79,9 @@ export function ProductHome({ active = "home" }: { active?: BottomNavKey }) {
         <div className="-mx-4 mt-4 overflow-hidden border-y border-[#eee7dc] bg-[#f7f3eb]/95">
           <div className="flex touch-pan-x gap-2 overflow-x-auto overscroll-x-contain px-4 py-3 [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {tabs.map((tab, index) => (
-              <button key={tab} type="button" aria-pressed={index === 0} className={`shrink-0 rounded-[15px] px-5 py-3 text-[15px] font-black shadow-sm ring-1 ring-[#e9e2d8] ${index === 0 ? "bg-[#ff5a00] text-white ring-[#ff5a00] shadow-[0_8px_16px_rgba(255,90,0,0.18)]" : "bg-white text-[#0b1220]"}`}>
-                {tab}
+              <button key={tab.label} type="button" aria-pressed={index === 0} className={`inline-flex shrink-0 items-center gap-1.5 rounded-[14px] px-3.5 py-2.5 text-[13px] font-black shadow-sm ring-1 ${index === 0 ? "bg-[#ff5a00] text-white ring-[#ff5a00] shadow-[0_8px_16px_rgba(255,90,0,0.18)]" : tab.tone}`}>
+                <span className="text-[16px] leading-none">{tab.icon}</span>
+                <span className="leading-none">{tab.label}</span>
               </button>
             ))}
           </div>
