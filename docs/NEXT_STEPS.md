@@ -2,6 +2,14 @@
 
 Việc cần làm tiếp trên repo, theo đúng thứ tự. Không nhảy cóc.
 
+## Trạng thái hiện tại
+
+- Đã có monorepo skeleton.
+- Đã có frontend PWA nền.
+- Đã có backend API nền.
+- Đã bắt đầu Phase 1 Clerk login.
+- Việc tiếp theo: test Clerk local, sửa lỗi nếu có, rồi sang Product API.
+
 ## 1. Đồng bộ local
 
 Mục tiêu: máy local có đúng code mới nhất từ GitHub.
@@ -51,13 +59,24 @@ Chưa làm tính năng khi skeleton chưa chạy ổn.
 
 Mục tiêu: có đăng nhập trước khi làm dữ liệu khách.
 
-Việc cần làm:
+Đã làm trên repo:
 
-- Cài Clerk provider trong frontend.
-- Tạo trang sign-in/sign-up.
-- Bảo vệ route account/orders/admin.
-- Backend xác thực Clerk token.
-- Tạo bảng mapping `customer_users`.
+- Cài Clerk package trong frontend.
+- Bọc `ClerkProvider` trong layout.
+- Tạo trang `/sign-in`.
+- Tạo trang `/sign-up`.
+- Thêm middleware bảo vệ `/account`, `/orders`, `/cart`, `/checkout`, `/admin`.
+- Backend mount Clerk middleware.
+- Backend có route `GET /api/auth/me`.
+- Frontend có API helper gửi Bearer token.
+- Trang account gọi thử backend bằng Clerk token.
+
+Cần test local sau khi có Clerk key:
+
+- Đăng nhập được.
+- Route protected tự chuyển về sign-in.
+- `/account` gọi được `/api/auth/me`.
+- Backend nhận được Clerk user id.
 
 Role ban đầu:
 
