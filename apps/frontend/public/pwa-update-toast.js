@@ -1,5 +1,7 @@
 (function () {
   var KEY = "bep_si_fb_app_version";
+  var LAST_CHECK_KEY = "bep_si_fb_last_update_check";
+  var CHECK_INTERVAL = 10 * 60 * 1000;
   var showing = false;
   var readyRegistration = null;
 
@@ -26,6 +28,7 @@
 
   function applyUpdate(version) {
     localStorage.setItem(KEY, version);
+    window.dispatchEvent(new Event("bep-si-fb-apply-update"));
 
     if (readyRegistration && readyRegistration.waiting) {
       readyRegistration.waiting.postMessage({ type: "SKIP_WAITING" });
@@ -44,7 +47,6 @@
           setTimeout(function () { window.location.reload(); }, 1200);
           return;
         }
-        window.dispatchEvent(new Event("bep-si-fb-apply-update"));
         registration.update().finally(function () {
           setTimeout(function () { window.location.reload(); }, 1200);
         });
@@ -95,7 +97,16 @@
     document.body.appendChild(backdrop);
   }
 
-  function check() {
+  function shouldCheck(force) {
+    if (force) return true;
+    var last = Number(localStorage.getItem(LAST_CHECK_KEY) || 0);
+    return Date.now() - last > CHECK_INTERVAL;
+  }
+
+  function check(force) {
+    if (!shouldCheck(force)) return;
+    localStorage.setItem(LAST_CHECK_KEY, String(Date.now()));
+
     fetch("/app-version.json?t=" + Date.now(), { cache: "no-store" })
       .then(function (res) { return res.ok ? res.json() : null; })
       .then(function (data) {
@@ -105,18 +116,15 @@
           localStorage.setItem(KEY, data.version);
           return;
         }
-        if (current !== data.version) {
-          showUpdateToast(data.version);
-        }
+        if (current !== data.version) showUpdateToast(data.version);
       })
       .catch(function () {});
   }
 
   window.addEventListener("bep-si-fb-sw-update-ready", function (event) {
     readyRegistration = event.detail && event.detail.registration;
-    check();
+    check(true);
   });
-  window.addEventListener("focus", check);
-  window.addEventListener("pageshow", check);
-  window.addEventListener("load", function () { setTimeout(check, 1200); });
+  window.addEventListener("pageshow", function () { check(false); });
+  window.addEventListener("load", function () { setTimeout(function () { check(true); }, 1800); });
 })();
