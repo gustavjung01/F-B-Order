@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { AppHeader } from "@/components/mobile/AppHeader";
 import { BottomNav } from "@/components/mobile/BottomNav";
 
@@ -7,7 +8,7 @@ type MobilePageShellProps = {
   active: BottomNavKey;
   title?: string;
   subtitle?: string;
-  children: React.ReactNode;
+  children: ReactNode;
 };
 
 export function MobilePageShell({ active, title = "Bep Si F&B", subtitle = "Dat hang nguyen lieu", children }: MobilePageShellProps) {
