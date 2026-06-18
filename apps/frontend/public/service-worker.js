@@ -1,4 +1,4 @@
-const CACHE_VERSION = "bep-si-fb-pwa-v3";
+const CACHE_VERSION = "bep-si-fb-pwa-v4";
 
 const APP_SHELL = [
   "/",
@@ -7,7 +7,10 @@ const APP_SHELL = [
   "/cart",
   "/account",
   "/register",
+  "/sign-in",
+  "/sign-up",
   "/manifest.webmanifest",
+  "/icons/icon.svg",
   "/pwa-register.js",
   "/pwa-install-button.js",
   "/pwa-update-toast.js",
@@ -50,42 +53,30 @@ self.addEventListener("fetch", function (event) {
   const url = new URL(request.url);
 
   if (request.method !== "GET") return;
-  if (url.origin !== self.location.origin) return;
-  if (url.pathname.startsWith("/api/")) return;
-  if (url.pathname.startsWith("/admin")) return;
-  if (url.pathname === "/service-worker.js") return;
-  if (url.pathname === "/manifest.webmanifest") return;
-  if (url.pathname === "/app-version.json") return;
 
-  if (request.mode === "navigate") {
-    event.respondWith(networkFirst(request));
+  if (url.pathname === "/manifest.webmanifest" || url.pathname === "/app-version.json") {
+    event.respondWith(fetch(request, { cache: "no-store" }).catch(function () {
+      return caches.match(request);
+    }));
     return;
   }
 
-  if (STATIC_ASSET_RE.test(url.pathname) || APP_SHELL.includes(url.pathname)) {
-    event.respondWith(cacheFirst(request));
+  if (APP_SHELL.includes(url.pathname)) {
+    event.respondWith(caches.match(request).then(function (cached) {
+      return cached || fetch(request);
+    }));
+    return;
+  }
+
+  if (STATIC_ASSET_RE.test(url.pathname)) {
+    event.respondWith(caches.match(request).then(function (cached) {
+      return cached || fetch(request).then(function (response) {
+        const copy = response.clone();
+        caches.open(CACHE_VERSION).then(function (cache) {
+          cache.put(request, copy);
+        });
+        return response;
+      });
+    }));
   }
 });
-
-async function networkFirst(request) {
-  const cache = await caches.open(CACHE_VERSION);
-  try {
-    const response = await fetch(request, { cache: "no-store" });
-    if (response.ok) await cache.put(request, response.clone());
-    return response;
-  } catch (err) {
-    return (await cache.match(request)) || cache.match("/");
-  }
-}
-
-async function cacheFirst(request) {
-  const cache = await caches.open(CACHE_VERSION);
-  const cached = await cache.match(request);
-  const network = fetch(request).then(function (response) {
-    if (response.ok) cache.put(request, response.clone());
-    return response;
-  }).catch(function () {
-    return cached;
-  });
-  return cached || network;
-}
