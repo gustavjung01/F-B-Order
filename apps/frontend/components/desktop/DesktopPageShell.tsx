@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { AuthControls } from "@/components/auth/AuthControls";
+import { BrandMark } from "@/components/brand/BrandMark";
 
 type DesktopPageShellProps = {
   title: string;
@@ -14,7 +15,7 @@ export function DesktopPageShell({ title, subtitle, children }: DesktopPageShell
       <header className="sticky top-0 z-40 border-b border-[#eee7dc] bg-[#f7f3eb]/90 backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-8 py-5">
           <Link href="/" className="flex items-center gap-3">
-            <span className="grid h-12 w-12 place-items-center rounded-2xl bg-[#ff5a00] text-2xl font-black text-white shadow-[0_12px_24px_rgba(255,90,0,0.25)]">B</span>
+            <BrandMark className="h-12 w-12 shrink-0" />
             <span>
               <span className="block text-xl font-black tracking-tight">Bep Si F&B</span>
               <span className="block text-sm font-bold text-slate-500">Catalog nguyen lieu cho khach si</span>
