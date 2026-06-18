@@ -1,10 +1,10 @@
-const CACHE_VERSION = "bep-si-fb-pwa-v5";
-const RUNTIME_CACHE = "bep-si-fb-runtime-v5";
+const CACHE_VERSION = "bep-si-fb-pwa-v6";
+const RUNTIME_CACHE = "bep-si-fb-runtime-v6";
 
 const OFFLINE_FALLBACK = [
   "/",
   "/manifest.webmanifest",
-  "/icons/icon.svg"
+  "/icons/icon-192.png"
 ];
 
 const STATIC_ASSET_RE = /\.(?:js|css|png|jpg|jpeg|svg|webp|gif|ico|woff2?)$/i;
