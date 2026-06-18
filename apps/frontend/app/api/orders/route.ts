@@ -4,6 +4,8 @@ import { db } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
 
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
 type OrderItemPayload = {
   productId?: string;
   quantity?: number;
@@ -57,7 +59,7 @@ function normalizeItems(items: unknown) {
     const productId = clean(payload.productId);
     const quantity = Math.floor(Number(payload.quantity));
 
-    if (!productId || !Number.isFinite(quantity) || quantity <= 0) continue;
+    if (!UUID_RE.test(productId) || !Number.isFinite(quantity) || quantity <= 0) continue;
     byProductId.set(productId, (byProductId.get(productId) || 0) + quantity);
   }
 
@@ -75,7 +77,7 @@ export async function POST(request: Request) {
 
   const body = (await request.json().catch(() => ({}))) as CreateOrderPayload;
   const items = normalizeItems(body.items);
-  const note = clean(body.note) || null;
+  const note = clean(body.note).slice(0, 1000) || null;
 
   if (items.length === 0) {
     return NextResponse.json({ error: "EMPTY_ORDER" }, { status: 400 });
