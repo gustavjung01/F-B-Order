@@ -18,6 +18,26 @@
     return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
   }
 
+  function isAdminPath() {
+    return window.location.pathname.indexOf("/admin") === 0;
+  }
+
+  function getInstallCopy() {
+    if (isAdminPath()) {
+      return {
+        aria: "Tải app Bếp Sỉ Admin",
+        title: "Tải app Bếp Sỉ Admin",
+        subtitle: "Mở nhanh khu quản trị đơn hàng, khách sỉ và cập nhật trạng thái.",
+      };
+    }
+
+    return {
+      aria: "Tải app Bếp Sỉ F&B",
+      title: "Tải app Bếp Sỉ F&B",
+      subtitle: "Mở nhanh từ màn hình chính, nhận bản mới ổn định hơn.",
+    };
+  }
+
   function isProbablyInstalled() {
     return isStandalone() || safeGet(INSTALLED_KEY) === "1";
   }
@@ -92,15 +112,16 @@
     injectStyles();
 
     var ios = isIosSafari();
+    var copy = getInstallCopy();
     banner = document.createElement("div");
     banner.className = "bep-si-install-wrap";
     banner.innerHTML = [
-      '<div class="bep-si-install-card" role="dialog" aria-label="Tải app Bếp Sỉ F&amp;B">',
+      '<div class="bep-si-install-card" role="dialog" aria-label="' + copy.aria + '">',
       '  <div class="bep-si-install-head">',
       '    <img class="bep-si-install-icon" src="/icons/icon-192.png" alt="" width="48" height="48">',
       '    <div>',
-      '      <p class="bep-si-install-title">Tải app Bếp Sỉ F&amp;B</p>',
-      '      <p class="bep-si-install-sub">Mở nhanh từ màn hình chính, nhận bản mới ổn định hơn.</p>',
+      '      <p class="bep-si-install-title">' + copy.title + '</p>',
+      '      <p class="bep-si-install-sub">' + copy.subtitle + '</p>',
       '    </div>',
       '    <button class="bep-si-install-close" type="button" aria-label="Đóng">×</button>',
       '  </div>',
