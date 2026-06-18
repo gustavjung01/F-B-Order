@@ -1,8 +1,12 @@
-const CACHE_VERSION = "bep-si-fb-pwa-v2";
+const CACHE_VERSION = "bep-si-fb-pwa-v3";
 
 const APP_SHELL = [
   "/",
   "/products",
+  "/recipes",
+  "/cart",
+  "/account",
+  "/register",
   "/manifest.webmanifest",
   "/pwa-register.js",
   "/pwa-install-button.js",
