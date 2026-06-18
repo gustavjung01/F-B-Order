@@ -29,7 +29,7 @@ async function isApprovedCustomer(userId?: string | null) {
 }
 
 export async function GET() {
-  const { userId } = auth();
+  const { userId } = await auth();
   const approved = await isApprovedCustomer(userId);
 
   const result = await db.query<ProductRow>(
