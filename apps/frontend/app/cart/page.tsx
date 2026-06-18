@@ -5,7 +5,6 @@ import Link from "next/link";
 import { ResponsivePageShell } from "@/components/responsive/ResponsivePageShell";
 import {
   CART_UPDATED_EVENT,
-  CartItem,
   clearCartItems,
   getCartCount,
   getCartTotal,
@@ -13,6 +12,7 @@ import {
   removeCartItem,
   updateCartItemQuantity,
 } from "@/lib/cartStorage";
+import type { CartItem } from "@/lib/cartStorage";
 
 const categoryEmoji: Record<string, string> = {
   "tra-sua": "🧋",
