@@ -8,7 +8,11 @@ export const metadata: Metadata = {
   description: "PWA đặt hàng nguyên liệu F&B cho khách hàng.",
   manifest: "/manifest.webmanifest",
   icons: {
-    icon: [{ url: "/icons/icon.svg?v=2", type: "image/svg+xml" }],
+    icon: [
+      { url: "/favicon.ico" },
+      { url: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icons/apple-touch-icon.png", sizes: "180x180", type: "image/png" }
+    ],
   },
 };
 
