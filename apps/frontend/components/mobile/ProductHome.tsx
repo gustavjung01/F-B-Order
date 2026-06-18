@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { AccountAction } from "@/components/auth/AccountAction";
 import { MobilePageShell } from "@/components/mobile/MobilePageShell";
 import { getApprovalLabel, getApprovalTone, isApprovedCustomer, mockCustomer } from "@/lib/mockCustomer";
 
@@ -59,9 +59,7 @@ function ProductCard({ product, approved }: { product: (typeof products)[number]
           <button type="button" className="h-11 flex-1 rounded-[16px] bg-[#fbfaf7] px-4 text-[15px] font-black text-[#0b1220] ring-1 ring-[#eee7dc]">
             Xem chi tiet
           </button>
-          <Link href="/register" className="flex h-11 min-w-[112px] items-center justify-center rounded-[16px] bg-[#0b1220] px-4 text-[14px] font-black text-white shadow-[0_12px_22px_rgba(15,23,42,0.18)]">
-            Mo gia
-          </Link>
+          <AccountAction href="/register" signedOutLabel="Mo gia" className="flex h-11 min-w-[112px] items-center justify-center rounded-[16px] bg-[#0b1220] px-4 text-[14px] font-black text-white shadow-[0_12px_22px_rgba(15,23,42,0.18)]">Mo gia</AccountAction>
         </div>
       )}
     </article>
@@ -82,12 +80,12 @@ export function ProductHome({ active = "home" }: { active?: BottomNavKey }) {
               {getApprovalLabel(mockCustomer.approvalStatus)}
             </span>
             <h2 className="mt-3 text-[24px] font-black leading-[1.16] tracking-tight">
-              {approved ? "Bang gia si da mo cho shop cua ban" : "Xem san pham truoc, duyet shop de mo gia"}
+              {approved ? "Bang gia si da mo cho shop cua ban" : "Xem san pham truoc, dang nhap de mo gia"}
             </h2>
             <div className="mt-4 space-y-2 text-[14px] font-semibold text-slate-700">
               <p>✓ Ai cung xem duoc catalog san pham</p>
-              <p>✓ Gia si va cong thuc chi mo sau duyet</p>
-              <p>✓ Dang ky shop, SĐT, dia chi; MST tuy chon</p>
+              <p>✓ Dang nhap tai khoan bang popup Clerk</p>
+              <p>✓ Ho so quan duyet xong moi mo gia</p>
             </div>
           </div>
           <span className="absolute right-0 top-0 rounded-full bg-[#08775f] px-4 py-3 text-center text-xs font-black leading-tight text-white shadow-[0_10px_18px_rgba(8,119,95,0.18)]">Khach<br />si</span>
@@ -111,9 +109,9 @@ export function ProductHome({ active = "home" }: { active?: BottomNavKey }) {
       </div>
 
       {!approved ? (
-        <Link href="/register" className="mt-4 block rounded-[20px] bg-[#0b1220] px-5 py-4 text-center text-[15px] font-black text-white shadow-[0_14px_26px_rgba(15,23,42,0.18)]">
-          Tao ho so shop de mo gia si va cong thuc
-        </Link>
+        <div className="mt-4">
+          <AccountAction href="/register" signedOutLabel="Dang nhap de mo gia si" className="block w-full rounded-[20px] bg-[#0b1220] px-5 py-4 text-center text-[15px] font-black text-white shadow-[0_14px_26px_rgba(15,23,42,0.18)]">Tao ho so quan de mo gia si</AccountAction>
+        </div>
       ) : null}
     </MobilePageShell>
   );
