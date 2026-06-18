@@ -6,6 +6,8 @@ export const dynamic = "force-dynamic";
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
+type OrderStatus = "draft" | "submitted" | "confirmed" | "fulfilled" | "cancelled";
+
 type OrderItemPayload = {
   productId?: string;
   quantity?: number;
@@ -38,6 +40,44 @@ type CreatedOrderRow = {
   submitted_at: string;
 };
 
+type CustomerOrderRow = {
+  order_id: string;
+  order_code: string;
+  status: OrderStatus;
+  subtotal: string;
+  note: string | null;
+  submitted_at: string;
+  confirmed_at: string | null;
+  item_id: string | null;
+  sku: string | null;
+  item_name: string | null;
+  unit: string | null;
+  quantity: number | null;
+  unit_price: string | null;
+  line_total: string | null;
+};
+
+type CustomerOrderItem = {
+  id: string;
+  sku: string;
+  name: string;
+  unit: string;
+  quantity: number;
+  unitPrice: number;
+  lineTotal: number;
+};
+
+type CustomerOrder = {
+  id: string;
+  orderCode: string;
+  status: OrderStatus;
+  subtotal: number;
+  note: string;
+  submittedAt: string;
+  confirmedAt: string | null;
+  items: CustomerOrderItem[];
+};
+
 function clean(value: unknown) {
   return typeof value === "string" ? value.trim() : "";
 }
@@ -66,9 +106,83 @@ function normalizeItems(items: unknown) {
   return Array.from(byProductId.entries()).map(([productId, quantity]) => ({ productId, quantity }));
 }
 
-function moneyToNumber(value: string) {
+function moneyToNumber(value: string | null) {
   const numberValue = Number(value);
   return Number.isFinite(numberValue) ? numberValue : 0;
+}
+
+function groupCustomerOrders(rows: CustomerOrderRow[]) {
+  const orders = new Map<string, CustomerOrder>();
+
+  for (const row of rows) {
+    if (!orders.has(row.order_id)) {
+      orders.set(row.order_id, {
+        id: row.order_id,
+        orderCode: row.order_code,
+        status: row.status,
+        subtotal: moneyToNumber(row.subtotal),
+        note: row.note || "",
+        submittedAt: row.submitted_at,
+        confirmedAt: row.confirmed_at,
+        items: [],
+      });
+    }
+
+    if (row.item_id) {
+      orders.get(row.order_id)?.items.push({
+        id: row.item_id,
+        sku: row.sku || "",
+        name: row.item_name || "",
+        unit: row.unit || "",
+        quantity: row.quantity || 0,
+        unitPrice: moneyToNumber(row.unit_price),
+        lineTotal: moneyToNumber(row.line_total),
+      });
+    }
+  }
+
+  return Array.from(orders.values());
+}
+
+export async function GET() {
+  const { userId } = await auth();
+  if (!userId) return NextResponse.json({ error: "UNAUTHENTICATED" }, { status: 401 });
+
+  const customerResult = await db.query<CustomerRow>(
+    `SELECT id, approval_status FROM customers WHERE clerk_user_id = $1 LIMIT 1`,
+    [userId]
+  );
+  const customer = customerResult.rows[0];
+
+  if (!customer) {
+    return NextResponse.json({ orders: [], profileRequired: true });
+  }
+
+  const result = await db.query<CustomerOrderRow>(
+    `SELECT
+      o.id AS order_id,
+      o.order_code,
+      o.status,
+      o.subtotal::text,
+      o.note,
+      o.submitted_at::text,
+      o.confirmed_at::text,
+      oi.id AS item_id,
+      oi.sku,
+      oi.name AS item_name,
+      oi.unit,
+      oi.quantity,
+      oi.unit_price::text,
+      oi.line_total::text
+    FROM orders o
+    LEFT JOIN order_items oi ON oi.order_id = o.id
+    WHERE o.customer_id = $1
+    ORDER BY o.submitted_at DESC, oi.name ASC
+    LIMIT 300`,
+    [customer.id]
+  );
+
+  return NextResponse.json({ orders: groupCustomerOrders(result.rows), profileRequired: false });
 }
 
 export async function POST(request: Request) {
