@@ -1,6 +1,8 @@
 (function () {
-  var DISMISSED_UNTIL_KEY = "bep_si_fb_pwa_install_dismissed_until";
-  var INSTALLED_KEY = "bep_si_fb_pwa_installed";
+  var CUSTOMER_DISMISSED_UNTIL_KEY = "bep_si_fb_pwa_install_dismissed_until";
+  var CUSTOMER_INSTALLED_KEY = "bep_si_fb_pwa_installed";
+  var ADMIN_DISMISSED_UNTIL_KEY = "bep_si_fb_admin_pwa_install_dismissed_until";
+  var ADMIN_INSTALLED_KEY = "bep_si_fb_admin_pwa_installed";
   var DISMISS_DAYS = 7;
   var DAY_MS = 24 * 60 * 60 * 1000;
   var deferredPrompt = null;
@@ -22,6 +24,14 @@
     return window.location.pathname.indexOf("/admin") === 0;
   }
 
+  function getDismissedKey() {
+    return isAdminPath() ? ADMIN_DISMISSED_UNTIL_KEY : CUSTOMER_DISMISSED_UNTIL_KEY;
+  }
+
+  function getInstalledKey() {
+    return isAdminPath() ? ADMIN_INSTALLED_KEY : CUSTOMER_INSTALLED_KEY;
+  }
+
   function getInstallCopy() {
     if (isAdminPath()) {
       return {
@@ -39,16 +49,16 @@
   }
 
   function isProbablyInstalled() {
-    return isStandalone() || safeGet(INSTALLED_KEY) === "1";
+    return isStandalone() || safeGet(getInstalledKey()) === "1";
   }
 
   function isDismissed() {
-    var until = Number(safeGet(DISMISSED_UNTIL_KEY) || 0);
+    var until = Number(safeGet(getDismissedKey()) || 0);
     return until > Date.now();
   }
 
   function dismissBanner() {
-    safeSet(DISMISSED_UNTIL_KEY, String(Date.now() + DISMISS_DAYS * DAY_MS));
+    safeSet(getDismissedKey(), String(Date.now() + DISMISS_DAYS * DAY_MS));
     removeBanner();
   }
 
@@ -156,7 +166,7 @@
 
   window.addEventListener("appinstalled", function () {
     deferredPrompt = null;
-    safeSet(INSTALLED_KEY, "1");
+    safeSet(getInstalledKey(), "1");
     removeBanner();
   });
 
