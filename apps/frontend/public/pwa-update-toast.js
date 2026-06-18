@@ -1,6 +1,7 @@
 (function () {
   var KEY = "bep_si_fb_app_version";
   var showing = false;
+  var readyRegistration = null;
 
   function injectStyles() {
     if (document.getElementById("pwa-update-toast-style")) return;
@@ -23,6 +24,39 @@
     document.head.appendChild(style);
   }
 
+  function applyUpdate(version) {
+    localStorage.setItem(KEY, version);
+
+    if (readyRegistration && readyRegistration.waiting) {
+      readyRegistration.waiting.postMessage({ type: "SKIP_WAITING" });
+      setTimeout(function () { window.location.reload(); }, 1200);
+      return;
+    }
+
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.getRegistration().then(function (registration) {
+        if (!registration) {
+          window.location.reload();
+          return;
+        }
+        if (registration.waiting) {
+          registration.waiting.postMessage({ type: "SKIP_WAITING" });
+          setTimeout(function () { window.location.reload(); }, 1200);
+          return;
+        }
+        window.dispatchEvent(new Event("bep-si-fb-apply-update"));
+        registration.update().finally(function () {
+          setTimeout(function () { window.location.reload(); }, 1200);
+        });
+      }).catch(function () {
+        window.location.reload();
+      });
+      return;
+    }
+
+    window.location.reload();
+  }
+
   function showUpdateToast(version) {
     if (showing) return;
     showing = true;
@@ -40,7 +74,7 @@
       '    </div>',
       '  </div>',
       '  <div class="pwa-update-body">',
-      '    <p class="pwa-update-text">Ban moi da san sang. Bam cap nhat de tai lai app, giu du lieu gio hang va trai nghiem ban moi nhat.</p>',
+      '    <p class="pwa-update-text">Ban moi da san sang. Bam cap nhat de kich hoat ban moi va tai lai app.</p>',
       '    <div class="pwa-update-actions">',
       '      <button class="pwa-update-later" type="button">De sau</button>',
       '      <button class="pwa-update-now" type="button">Cap nhat ngay</button>',
@@ -55,8 +89,7 @@
     });
 
     backdrop.querySelector(".pwa-update-now").addEventListener("click", function () {
-      localStorage.setItem(KEY, version);
-      window.location.reload();
+      applyUpdate(version);
     });
 
     document.body.appendChild(backdrop);
@@ -79,7 +112,11 @@
       .catch(function () {});
   }
 
+  window.addEventListener("bep-si-fb-sw-update-ready", function (event) {
+    readyRegistration = event.detail && event.detail.registration;
+    check();
+  });
   window.addEventListener("focus", check);
   window.addEventListener("pageshow", check);
-  window.addEventListener("load", function () { setTimeout(check, 1500); });
+  window.addEventListener("load", function () { setTimeout(check, 1200); });
 })();
