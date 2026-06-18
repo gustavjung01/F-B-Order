@@ -183,7 +183,7 @@ Runtime env file:
 Reserved backend port:
 
 ```text
-5000
+5100
 ```
 
 Health endpoints for systemd/nginx verification:
@@ -191,6 +191,12 @@ Health endpoints for systemd/nginx verification:
 ```text
 GET /health
 GET /api/health
+```
+
+Live API base:
+
+```text
+https://api.bepsi.click
 ```
 
 Do not touch existing VPS apps:
@@ -225,4 +231,4 @@ Backend riêng cần thêm sau MVP:
 
 ## Deploy marker
 
-Final MVP hardening deploy trigger created from this contract update.
+Production domain/API deploy trigger created for `bepsi.click` and `api.bepsi.click`.
