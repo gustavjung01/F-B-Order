@@ -2,15 +2,15 @@
   "id": "/",
   "name": "Bếp Sỉ F&B",
   "short_name": "BepSiF&B",
-  "description": "Ứng dụng đặt hàng nguyên liệu F&B.",
+  "description": "Ứng dụng đặt hàng nguyên liệu F&B cho quán.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "display_override": ["standalone", "minimal-ui", "browser"],
-  "background_color": "#f7f3eb",
+  "background_color": "#fffdf7",
   "theme_color": "#ff5a00",
   "orientation": "portrait",
   "icons": [
-    { "src": "/icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+    { "src": "/icons/icon.svg?v=2", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
   ]
 }
