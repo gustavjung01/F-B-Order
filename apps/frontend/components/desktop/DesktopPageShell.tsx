@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
+import { AuthControls } from "@/components/auth/AuthControls";
 
 type DesktopPageShellProps = {
   title: string;
@@ -27,9 +28,7 @@ export function DesktopPageShell({ title, subtitle, children }: DesktopPageShell
             <Link href="/account" className="rounded-full px-4 py-2 hover:bg-white">Tai khoan</Link>
           </nav>
 
-          <Link href="/sign-up" className="rounded-2xl bg-[#0b1220] px-5 py-3 text-sm font-black text-white shadow-[0_12px_24px_rgba(15,23,42,0.16)]">
-            Dang ky tai khoan
-          </Link>
+          <AuthControls />
         </div>
       </header>
 
