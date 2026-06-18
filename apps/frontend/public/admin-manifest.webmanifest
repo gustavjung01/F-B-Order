@@ -1,0 +1,18 @@
+{
+  "id": "/admin/",
+  "name": "Bếp Sỉ Admin",
+  "short_name": "BepSi Admin",
+  "description": "PWA quản trị đơn hàng và khách sỉ Bếp Sỉ F&B.",
+  "start_url": "/admin/orders",
+  "scope": "/admin/",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui", "browser"],
+  "background_color": "#020617",
+  "theme_color": "#020617",
+  "orientation": "portrait",
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
