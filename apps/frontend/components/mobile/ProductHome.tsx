@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { AccountAction } from "@/components/auth/AccountAction";
 import { MobilePageShell } from "@/components/mobile/MobilePageShell";
+import { addCartItem } from "@/lib/cartStorage";
 
 const tabs = [
   { label: "Tất cả", icon: "▦", tone: "bg-[#fff3ea] text-[#ff5a00] ring-[#ffd0b3]" },
@@ -57,6 +58,36 @@ function getProductEmoji(product: ApiProduct) {
 function ProductCard({ product }: { product: ApiProduct }) {
   const price = product.price;
   const hasPrice = typeof price === "number";
+  const minQty = Math.max(1, product.minOrderQty || 1);
+  const [quantity, setQuantity] = useState(minQty);
+  const [added, setAdded] = useState(false);
+
+  function decreaseQuantity() {
+    setQuantity((current) => Math.max(minQty, current - 1));
+  }
+
+  function increaseQuantity() {
+    setQuantity((current) => current + 1);
+  }
+
+  function handleAddToCart() {
+    if (!hasPrice) return;
+
+    addCartItem({
+      productId: product.id,
+      sku: product.sku,
+      name: product.name,
+      unit: product.unit,
+      price,
+      quantity,
+      minOrderQty: minQty,
+      imageUrl: product.imageUrl,
+      categorySlug: product.categorySlug,
+    });
+
+    setAdded(true);
+    window.setTimeout(() => setAdded(false), 1200);
+  }
 
   return (
     <article className="relative overflow-hidden rounded-[28px] border border-white/80 bg-white p-4 shadow-[0_16px_34px_rgba(15,23,42,0.095)] ring-1 ring-[#efe7dc]">
@@ -89,17 +120,17 @@ function ProductCard({ product }: { product: ApiProduct }) {
       {hasPrice ? (
         <div className="relative mt-4 flex items-center gap-3">
           <div className="grid h-11 flex-1 grid-cols-3 overflow-hidden rounded-[16px] border border-[#eee7dc] bg-[#fbfaf7] text-[16px] font-black text-[#0b1220] shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]">
-            <button type="button" aria-label={`Giảm ${product.name}`} className="bg-white active:bg-[#fff3ea]">−</button>
-            <span className="grid place-items-center border-x border-[#eee7dc] bg-[#fbfaf7]">{product.minOrderQty || 1}</span>
-            <button type="button" aria-label={`Tăng ${product.name}`} className="bg-white active:bg-[#fff3ea]">+</button>
+            <button type="button" aria-label={`Giảm ${product.name}`} onClick={decreaseQuantity} className="bg-white active:bg-[#fff3ea]">−</button>
+            <span className="grid place-items-center border-x border-[#eee7dc] bg-[#fbfaf7]">{quantity}</span>
+            <button type="button" aria-label={`Tăng ${product.name}`} onClick={increaseQuantity} className="bg-white active:bg-[#fff3ea]">+</button>
           </div>
 
           <button
             type="button"
-            onClick={() => alert("Giỏ hàng thật sẽ được làm ở bước tiếp theo.")}
-            className="h-11 min-w-[112px] rounded-[16px] bg-[#ff5a00] px-5 text-[15px] font-black text-white shadow-[0_12px_22px_rgba(255,90,0,0.26)] ring-1 ring-[#ff7a2e]/40 active:translate-y-px active:shadow-[0_7px_14px_rgba(255,90,0,0.22)]"
+            onClick={handleAddToCart}
+            className={`h-11 min-w-[112px] rounded-[16px] px-5 text-[15px] font-black text-white shadow-[0_12px_22px_rgba(255,90,0,0.26)] ring-1 active:translate-y-px active:shadow-[0_7px_14px_rgba(255,90,0,0.22)] ${added ? "bg-[#08775f] ring-[#0b8f72]/40" : "bg-[#ff5a00] ring-[#ff7a2e]/40"}`}
           >
-            Thêm
+            {added ? "Đã thêm" : "Thêm"}
           </button>
         </div>
       ) : (
