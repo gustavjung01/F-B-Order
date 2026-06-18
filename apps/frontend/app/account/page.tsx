@@ -27,16 +27,16 @@ export default async function AccountPage() {
   const hasProfile = Boolean(profile);
 
   const shopFields = [
-    { label: "Shop / quan", value: profile?.shop_name || "Chua tao ho so" },
-    { label: "Lien he", value: profile?.contact_name || "Chua co" },
-    { label: "Dien thoai", value: profile?.phone || "Chua co" },
-    { label: "Dia chi", value: profile?.address || "Chua co" },
-    { label: "MST", value: profile?.tax_code || "Khong bat buoc" },
-    { label: "Nganh", value: profile?.business_type || "Chua co" },
+    { label: "Shop / quán", value: profile?.shop_name || "Chưa tạo hồ sơ" },
+    { label: "Liên hệ", value: profile?.contact_name || "Chưa có" },
+    { label: "Điện thoại", value: profile?.phone || "Chưa có" },
+    { label: "Địa chỉ", value: profile?.address || "Chưa có" },
+    { label: "MST", value: profile?.tax_code || "Không bắt buộc" },
+    { label: "Ngành", value: profile?.business_type || "Chưa có" },
   ];
 
   return (
-    <ResponsivePageShell active="account" title="Tai khoan" subtitle="Quan ly dang nhap va ho so">
+    <ResponsivePageShell active="account" title="Tài khoản" subtitle="Quản lý đăng nhập và hồ sơ">
       <div className="space-y-3 md:space-y-4">
         <ClerkAccountPanel />
 
@@ -48,22 +48,22 @@ export default async function AccountPage() {
                   {getApprovalLabel(status)}
                 </span>
                 <h1 className="mt-3 text-[22px] font-black leading-tight text-[#0b1220] md:text-3xl">
-                  {approved ? "Da mo khoa gia si" : hasProfile ? "Ho so quan dang cho duyet" : "Chua tao ho so quan"}
+                  {approved ? "Đã mở khóa giá sỉ" : hasProfile ? "Hồ sơ quán đang chờ duyệt" : "Chưa tạo hồ sơ quán"}
                 </h1>
                 <p className="mt-2 text-[13px] font-bold leading-5 text-slate-600 md:text-sm">
-                  {hasProfile ? "Gia si, cong thuc chi tiet va dat hang chi mo sau khi admin duyet ho so quan." : "Tao ho so quan de admin duyet va mo khoa gia si."}
+                  {hasProfile ? "Giá sỉ, công thức chi tiết và đặt hàng chỉ mở sau khi admin duyệt hồ sơ quán." : "Tạo hồ sơ quán để admin duyệt và mở khóa giá sỉ."}
                 </p>
               </div>
               <Link href="/register" className="shrink-0 rounded-[16px] bg-[#fff3ea] px-3 py-2 text-[12px] font-black text-[#ff5a00] ring-1 ring-[#ffd0b3]">
-                {hasProfile ? "Cap nhat" : "Tao ho so"}
+                {hasProfile ? "Cập nhật" : "Tạo hồ sơ"}
               </Link>
             </div>
           </section>
 
           <section className="rounded-[22px] bg-white p-4 shadow-[0_10px_24px_rgba(15,23,42,0.07)] ring-1 ring-[#efe7dc]">
             <div className="flex items-center justify-between">
-              <h2 className="text-[18px] font-black text-[#0b1220]">Ho so shop</h2>
-              <Link href="/register" className="text-[13px] font-black text-[#ff5a00]">Sua</Link>
+              <h2 className="text-[18px] font-black text-[#0b1220]">Hồ sơ shop</h2>
+              <Link href="/register" className="text-[13px] font-black text-[#ff5a00]">Sửa</Link>
             </div>
             <div className="mt-3 divide-y divide-[#eee7dc] rounded-[18px] border border-[#eee7dc] bg-[#fbfaf7]">
               {shopFields.map((field) => (
@@ -75,17 +75,30 @@ export default async function AccountPage() {
             </div>
           </section>
 
+          <section className="rounded-[22px] bg-white p-4 shadow-[0_10px_24px_rgba(15,23,42,0.07)] ring-1 ring-[#efe7dc]">
+            <div className="flex items-center justify-between gap-3">
+              <div>
+                <p className="text-[11px] font-black uppercase tracking-[0.16em] text-[#ff5a00]">Đơn hàng</p>
+                <h2 className="mt-1 text-[20px] font-black text-[#0b1220]">Lịch sử đơn đã gửi</h2>
+                <p className="mt-1 text-[13px] font-bold leading-5 text-slate-600">Xem mã đơn, trạng thái và chi tiết sản phẩm đã đặt.</p>
+              </div>
+              <Link href="/orders" className="shrink-0 rounded-[16px] bg-[#0b1220] px-4 py-3 text-[13px] font-black text-white">
+                Xem đơn
+              </Link>
+            </div>
+          </section>
+
           <section className="rounded-[22px] bg-[#0b1220] p-4 text-white shadow-[0_10px_24px_rgba(15,23,42,0.12)]">
-            <p className="text-[11px] font-black uppercase tracking-[0.16em] text-orange-200">Nhan vien phu trach</p>
+            <p className="text-[11px] font-black uppercase tracking-[0.16em] text-orange-200">Nhân viên phụ trách</p>
             <div className="mt-2 flex items-center justify-between gap-3">
               <div>
-                <h2 className="text-[20px] font-black">{profile?.sales_owner || "Bep Si F&B"}</h2>
+                <h2 className="text-[20px] font-black">{profile?.sales_owner || "Bếp Sỉ F&B"}</h2>
                 <p className="mt-1 text-[13px] font-bold leading-5 text-slate-300">
-                  {approved ? "Co the gui don de sales xac nhan." : hasProfile ? "Sales se xac minh truoc khi mo gia." : "Tao ho so de sales nam thong tin quan."}
+                  {approved ? "Có thể gửi đơn để sales xác nhận." : hasProfile ? "Sales sẽ xác minh trước khi mở giá." : "Tạo hồ sơ để sales nắm thông tin quán."}
                 </p>
               </div>
               <Link href="/" className="shrink-0 rounded-[16px] bg-white px-4 py-3 text-[13px] font-black text-[#0b1220]">
-                Xem hang
+                Xem hàng
               </Link>
             </div>
           </section>
