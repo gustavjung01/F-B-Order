@@ -33,8 +33,52 @@ type OrderRow = {
   line_total: string | null;
 };
 
+type AdminOrderItem = {
+  id: string;
+  sku: string;
+  name: string;
+  unit: string;
+  quantity: number;
+  unitPrice: number;
+  lineTotal: number;
+};
+
+type AdminOrder = {
+  id: string;
+  orderCode: string;
+  status: OrderStatus;
+  subtotal: number;
+  note: string;
+  submittedAt: string;
+  confirmedAt: string | null;
+  customer: {
+    shopName: string;
+    contactName: string;
+    phone: string;
+    address: string;
+  };
+  items: AdminOrderItem[];
+};
+
+type StatusRow = {
+  status: OrderStatus;
+};
+
+const ALLOWED_TRANSITIONS: Record<OrderStatus, OrderStatus[]> = {
+  draft: ["submitted", "cancelled"],
+  submitted: ["confirmed", "cancelled"],
+  confirmed: ["fulfilled", "cancelled"],
+  fulfilled: [],
+  cancelled: [],
+};
+
 function isOrderStatus(value: unknown): value is OrderStatus {
   return typeof value === "string" && ORDER_STATUSES.includes(value as OrderStatus);
+}
+
+function canTransition(from: OrderStatus, to: OrderStatus) {
+  if (from === to) return true;
+  return ALLOWED_TRANSITIONS[from].includes(to);
 }
 
 function money(value: string | null) {
@@ -43,7 +87,7 @@ function money(value: string | null) {
 }
 
 function groupOrders(rows: OrderRow[]) {
-  const orders = new Map<string, any>();
+  const orders = new Map<string, AdminOrder>();
 
   for (const row of rows) {
     if (!orders.has(row.order_id)) {
@@ -66,7 +110,7 @@ function groupOrders(rows: OrderRow[]) {
     }
 
     if (row.item_id) {
-      orders.get(row.order_id).items.push({
+      orders.get(row.order_id)?.items.push({
         id: row.item_id,
         sku: row.sku || "",
         name: row.item_name || "",
@@ -122,6 +166,14 @@ export async function PATCH(request: Request) {
   const body = (await request.json().catch(() => ({}))) as UpdateBody;
   if (!body.orderId || !isOrderStatus(body.status)) {
     return NextResponse.json({ error: "INVALID_FIELDS" }, { status: 400 });
+  }
+
+  const currentResult = await db.query<StatusRow>(`SELECT status FROM orders WHERE id = $1 LIMIT 1`, [body.orderId]);
+  const currentStatus = currentResult.rows[0]?.status;
+  if (!currentStatus) return NextResponse.json({ error: "NOT_FOUND" }, { status: 404 });
+
+  if (!canTransition(currentStatus, body.status)) {
+    return NextResponse.json({ error: "INVALID_STATUS_TRANSITION", from: currentStatus, to: body.status }, { status: 409 });
   }
 
   const result = await db.query(
