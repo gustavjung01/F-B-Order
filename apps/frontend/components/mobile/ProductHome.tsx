@@ -55,7 +55,8 @@ function getProductEmoji(product: ApiProduct) {
 }
 
 function ProductCard({ product }: { product: ApiProduct }) {
-  const hasPrice = product.price !== null;
+  const price = product.price;
+  const hasPrice = typeof price === "number";
 
   return (
     <article className="relative overflow-hidden rounded-[28px] border border-white/80 bg-white p-4 shadow-[0_16px_34px_rgba(15,23,42,0.095)] ring-1 ring-[#efe7dc]">
@@ -68,7 +69,7 @@ function ProductCard({ product }: { product: ApiProduct }) {
           <p className="mt-2 text-[14px] font-semibold text-slate-500">{product.unit}</p>
           {product.description ? <p className="mt-1 line-clamp-2 text-[12px] font-semibold leading-snug text-slate-400">{product.description}</p> : null}
           {hasPrice ? (
-            <p className="mt-3 text-[24px] font-black tracking-tight text-[#ff5a00]">{formatVnd(product.price)}</p>
+            <p className="mt-3 text-[24px] font-black tracking-tight text-[#ff5a00]">{formatVnd(price)}</p>
           ) : (
             <p className="mt-3 inline-flex rounded-full bg-[#fff3ea] px-3 py-2 text-[13px] font-black text-[#ff5a00] ring-1 ring-[#ffd0b3]">
               {product.publicPriceHint || "Giá sỉ sau duyệt"}
