@@ -20,7 +20,7 @@ async function getProfile(userId?: string | null) {
 }
 
 export default async function AccountPage() {
-  const { userId } = auth();
+  const { userId } = await auth();
   const profile = await getProfile(userId);
   const status = toStatus(profile?.approval_status);
   const approved = status === "approved";
