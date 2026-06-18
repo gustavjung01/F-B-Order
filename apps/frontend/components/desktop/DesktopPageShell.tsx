@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { AuthControls } from "@/components/auth/AuthControls";
-import { BrandMark } from "@/components/brand/BrandMark";
+import { BrandLogo } from "@/components/brand/BrandLogo";
 
 type DesktopPageShellProps = {
   title: string;
@@ -13,13 +13,9 @@ export function DesktopPageShell({ title, subtitle, children }: DesktopPageShell
   return (
     <main className="min-h-screen bg-[#f7f3eb] text-[#0b1220]">
       <header className="sticky top-0 z-40 border-b border-[#eee7dc] bg-[#f7f3eb]/90 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-8 py-5">
-          <Link href="/" className="flex items-center gap-3">
-            <BrandMark className="h-12 w-12 shrink-0" />
-            <span>
-              <span className="block text-xl font-black tracking-tight">Bep Si F&B</span>
-              <span className="block text-sm font-bold text-slate-500">Catalog nguyen lieu cho khach si</span>
-            </span>
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-8 py-4">
+          <Link href="/" className="flex items-center">
+            <BrandLogo className="h-16 w-auto" />
           </Link>
 
           <nav className="flex items-center gap-2 text-sm font-black text-slate-600">
