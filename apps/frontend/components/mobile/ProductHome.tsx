@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { BottomNav } from "@/components/mobile/BottomNav";
 import { MobilePageShell } from "@/components/mobile/MobilePageShell";
 import { getApprovalLabel, getApprovalTone, isApprovedCustomer, mockCustomer } from "@/lib/mockCustomer";
 
@@ -111,7 +110,6 @@ export function ProductHome({ active = "home" }: { active?: BottomNavKey }) {
           Tao ho so khach si de xem gia
         </Link>
       ) : null}
-      <BottomNav active={active} />
     </MobilePageShell>
   );
 }
