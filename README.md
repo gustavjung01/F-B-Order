@@ -5,11 +5,21 @@ Repo triển khai **Bếp Sỉ F&B**: PWA đặt hàng nguyên liệu F&B cho kh
 ## Stack chốt
 
 - **Frontend:** Next.js + Tailwind + PWA, deploy Vercel
-- **Backend:** Node.js/NestJS, deploy VPS bằng Docker + Nginx
+- **Backend:** Node.js/Express trước, có thể nâng NestJS sau, deploy VPS bằng Docker + Nginx
 - **Database:** Heroku Postgres
 - **Auth/Login:** Clerk
 - **Push notification:** OneSignal
 - **Giai đoạn đầu:** PWA chuẩn, có nút tải app, tự update, hỗ trợ mở từ Zalo/Facebook browser
+
+## Cấu trúc chính
+
+```txt
+apps/frontend      # Next.js PWA, deploy Vercel
+apps/backend       # API, deploy VPS
+db                 # schema, migrations, seeds
+packages/shared    # constants/types dùng chung
+docs               # MVP, features, plan, repo structure
+```
 
 ## Mục tiêu MVP
 
@@ -19,6 +29,25 @@ Repo triển khai **Bếp Sỉ F&B**: PWA đặt hàng nguyên liệu F&B cho kh
 4. Khách nhận thông báo chương trình, chính sách, đơn hàng.
 5. Có mục Công thức F&B để giữ chân khách.
 6. Admin quản lý được sản phẩm, khách, giá, đơn, thông báo, công thức.
+
+## Chạy local
+
+```bash
+pnpm install
+pnpm dev
+```
+
+Chạy riêng frontend:
+
+```bash
+pnpm --filter @fb-order/frontend dev
+```
+
+Chạy riêng backend:
+
+```bash
+pnpm --filter @fb-order/backend dev
+```
 
 ## Tài liệu triển khai
 
