@@ -1,3 +1,4 @@
+import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
 import Script from "next/script";
 import "./globals.css";
@@ -23,14 +24,16 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="vi">
-      <body>
-        {children}
-        <Script src="/open-external-browser.js?v=1" strategy="afterInteractive" />
-        <Script src="/pwa-install-button.js?v=1" strategy="afterInteractive" />
-        <Script src="/pwa-update-toast.js?v=1" strategy="afterInteractive" />
-        <Script src="/pwa-register.js?v=1" strategy="afterInteractive" />
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="vi">
+        <body>
+          {children}
+          <Script src="/open-external-browser.js?v=1" strategy="afterInteractive" />
+          <Script src="/pwa-install-button.js?v=1" strategy="afterInteractive" />
+          <Script src="/pwa-update-toast.js?v=1" strategy="afterInteractive" />
+          <Script src="/pwa-register.js?v=1" strategy="afterInteractive" />
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
