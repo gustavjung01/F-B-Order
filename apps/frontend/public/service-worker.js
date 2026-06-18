@@ -1,21 +1,10 @@
-const CACHE_VERSION = "bep-si-fb-pwa-v4";
+const CACHE_VERSION = "bep-si-fb-pwa-v5";
+const RUNTIME_CACHE = "bep-si-fb-runtime-v5";
 
-const APP_SHELL = [
+const OFFLINE_FALLBACK = [
   "/",
-  "/products",
-  "/recipes",
-  "/cart",
-  "/account",
-  "/register",
-  "/sign-in",
-  "/sign-up",
   "/manifest.webmanifest",
-  "/icons/icon.svg",
-  "/pwa-register.js",
-  "/pwa-install-button.js",
-  "/pwa-update-toast.js",
-  "/open-external-browser.js",
-  "/app-version.json"
+  "/icons/icon.svg"
 ];
 
 const STATIC_ASSET_RE = /\.(?:js|css|png|jpg|jpeg|svg|webp|gif|ico|woff2?)$/i;
@@ -23,7 +12,7 @@ const STATIC_ASSET_RE = /\.(?:js|css|png|jpg|jpeg|svg|webp|gif|ico|woff2?)$/i;
 self.addEventListener("install", function (event) {
   event.waitUntil(
     caches.open(CACHE_VERSION).then(function (cache) {
-      return cache.addAll(APP_SHELL);
+      return cache.addAll(OFFLINE_FALLBACK);
     }).then(function () {
       return self.skipWaiting();
     })
@@ -34,7 +23,7 @@ self.addEventListener("activate", function (event) {
   event.waitUntil(
     caches.keys().then(function (keys) {
       return Promise.all(keys.filter(function (key) {
-        return key !== CACHE_VERSION;
+        return key !== CACHE_VERSION && key !== RUNTIME_CACHE;
       }).map(function (key) {
         return caches.delete(key);
       }));
@@ -48,35 +37,54 @@ self.addEventListener("message", function (event) {
   if (event.data && event.data.type === "SKIP_WAITING") self.skipWaiting();
 });
 
+function networkFirst(request) {
+  return fetch(request, { cache: "no-store" }).then(function (response) {
+    var copy = response.clone();
+    caches.open(RUNTIME_CACHE).then(function (cache) {
+      cache.put(request, copy);
+    });
+    return response;
+  }).catch(function () {
+    return caches.match(request).then(function (cached) {
+      return cached || caches.match("/");
+    });
+  });
+}
+
+function staleWhileRevalidate(request) {
+  return caches.open(RUNTIME_CACHE).then(function (cache) {
+    return cache.match(request).then(function (cached) {
+      var fetchPromise = fetch(request).then(function (response) {
+        if (response && response.ok) cache.put(request, response.clone());
+        return response;
+      }).catch(function () {
+        return cached;
+      });
+      return cached || fetchPromise;
+    });
+  });
+}
+
 self.addEventListener("fetch", function (event) {
-  const request = event.request;
-  const url = new URL(request.url);
+  var request = event.request;
+  var url = new URL(request.url);
 
   if (request.method !== "GET") return;
+  if (url.origin !== self.location.origin) return;
 
-  if (url.pathname === "/manifest.webmanifest" || url.pathname === "/app-version.json") {
+  if (url.pathname === "/service-worker.js" || url.pathname === "/app-version.json" || url.pathname === "/manifest.webmanifest") {
     event.respondWith(fetch(request, { cache: "no-store" }).catch(function () {
       return caches.match(request);
     }));
     return;
   }
 
-  if (APP_SHELL.includes(url.pathname)) {
-    event.respondWith(caches.match(request).then(function (cached) {
-      return cached || fetch(request);
-    }));
+  if (request.mode === "navigate" || request.headers.get("accept")?.includes("text/html")) {
+    event.respondWith(networkFirst(request));
     return;
   }
 
   if (STATIC_ASSET_RE.test(url.pathname)) {
-    event.respondWith(caches.match(request).then(function (cached) {
-      return cached || fetch(request).then(function (response) {
-        const copy = response.clone();
-        caches.open(CACHE_VERSION).then(function (cache) {
-          cache.put(request, copy);
-        });
-        return response;
-      });
-    }));
+    event.respondWith(staleWhileRevalidate(request));
   }
 });
