@@ -22,6 +22,7 @@ Repo triển khai **Bếp Sỉ F&B**: PWA đặt hàng nguyên liệu F&B cho kh
 
 ## Tài liệu triển khai
 
+- `docs/MVP.md`: phạm vi MVP để sửa/bổ sung khi cần.
 - `docs/FEATURES.md`: tính năng ngắn gọn theo module.
 - `docs/EXECUTION_PLAN.md`: plan thực thi theo phase.
 - `docs/REPO_STRUCTURE.md`: cấu trúc repo sẽ làm theo.
