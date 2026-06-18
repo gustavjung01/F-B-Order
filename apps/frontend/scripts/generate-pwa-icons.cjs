@@ -1,8 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 const sharp = require('sharp');
-const _pngToIco = require('png-to-ico');
-const pngToIco = (_pngToIco && _pngToIco.default) ? _pngToIco.default : _pngToIco;
+// no png-to-ico dependency; we'll copy a PNG as favicon.ico for broad support
 
 async function ensureDir(dir) {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
@@ -31,8 +30,10 @@ async function main() {
     await resize(src, 32, path.join(outDir, 'favicon-32.png'));
     await resize(src, 16, path.join(outDir, 'favicon-16.png'));
 
-    const icoBuffer = await pngToIco([path.join(outDir, 'favicon-16.png'), path.join(outDir, 'favicon-32.png')]);
-    fs.writeFileSync(path.join(workspaceRoot, 'public', 'favicon.ico'), icoBuffer);
+    // As `png-to-ico` was removed, copy the 32px PNG to favicon.ico (modern browsers accept PNG-format ICO)
+    const srcFavicon = path.join(outDir, 'favicon-32.png');
+    const destFavicon = path.join(workspaceRoot, 'public', 'favicon.ico');
+    fs.copyFileSync(srcFavicon, destFavicon);
 
     console.log('ICONS_GENERATED');
   } catch (err) {

@@ -4,6 +4,7 @@
   "scripts": {
     "dev": "next dev",
     "prebuild": "node scripts/write-app-version.mjs",
+    "icons:gen": "node scripts/generate-pwa-icons.cjs",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
