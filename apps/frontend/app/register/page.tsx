@@ -1,53 +1,26 @@
+import { RegisterShopForm } from "@/components/account/RegisterShopForm";
 import { AccountGate } from "@/components/auth/AccountGate";
 import { ResponsivePageShell } from "@/components/responsive/ResponsivePageShell";
-
-const fields = [
-  { label: "Ten shop / quan", placeholder: "VD: Tra sua Miu Miu", required: true },
-  { label: "Nguoi lien he", placeholder: "Ten chu quan / quan ly", required: true },
-  { label: "So dien thoai", placeholder: "090...", required: true },
-  { label: "Dia chi giao hang", placeholder: "So nha, phuong, quan, tinh/thanh", required: true },
-  { label: "Ma so thue", placeholder: "Khong bat buoc", required: false },
-  { label: "Nganh hang", placeholder: "Tra sua / mi cay / cafe / dai ly...", required: true },
-];
 
 export default function RegisterPage() {
   return (
     <ResponsivePageShell active="account" title="Ho so quan" subtitle="Mo khoa gia si">
       <section className="overflow-hidden rounded-[28px] bg-[#fff1d7] p-5 shadow-[0_14px_30px_rgba(15,23,42,0.085)] ring-1 ring-white/80 md:p-8">
-        <div className="relative min-h-[142px] md:min-h-[170px]">
+        <div className="relative min-h-[132px] md:min-h-[170px]">
           <div className="relative z-10 max-w-[640px]">
             <p className="text-[12px] font-black uppercase tracking-[0.16em] text-[#ff5a00]">Ho so quan / shop</p>
-            <h1 className="mt-3 text-[27px] font-black leading-tight tracking-tight md:text-5xl">Gui ho so quan de admin duyet</h1>
+            <h1 className="mt-3 text-[26px] font-black leading-tight tracking-tight md:text-5xl">Gui ho so quan de admin duyet</h1>
             <p className="mt-3 text-[14px] font-semibold leading-6 text-slate-700 md:max-w-2xl md:text-base md:leading-7">
-              Tai khoan chi dung de dang nhap. Ho so quan moi la dieu kien de mo gia si, cong thuc chi tiet va dat hang.
+              Tai khoan Clerk chi dung de dang nhap. Ho so quan moi la dieu kien de mo gia si, cong thuc chi tiet va dat hang.
             </p>
           </div>
-          <span className="absolute bottom-2 right-3 text-[76px] drop-shadow-sm md:text-[104px]">🛍️</span>
+          <span className="absolute bottom-2 right-3 text-[68px] drop-shadow-sm md:text-[104px]">🛍️</span>
         </div>
       </section>
 
       <div className="mt-4">
         <AccountGate title="Dang nhap de gui ho so quan" message="Dung popup Clerk de dang nhap hoac tao tai khoan. Dang nhap xong form ho so quan se hien ngay tai day.">
-          <form className="grid gap-3 md:grid-cols-2">
-            {fields.map((field) => (
-              <label key={field.label} className="block rounded-[22px] bg-white p-4 shadow-[0_12px_26px_rgba(15,23,42,0.075)] ring-1 ring-[#efe7dc]">
-                <span className="flex items-center justify-between text-[12px] font-black uppercase tracking-[0.12em] text-slate-500">
-                  {field.label}
-                  {field.required ? <span className="text-[#ff5a00]">Bat buoc</span> : <span className="text-slate-400">Tuy chon</span>}
-                </span>
-                <input className="mt-3 h-11 w-full rounded-[16px] bg-[#fbfaf7] px-4 text-[15px] font-bold text-[#0b1220] outline-none ring-1 ring-[#eee7dc] placeholder:text-slate-400 focus:ring-[#ff5a00]" placeholder={field.placeholder} />
-              </label>
-            ))}
-
-            <label className="block rounded-[22px] bg-white p-4 shadow-[0_12px_26px_rgba(15,23,42,0.075)] ring-1 ring-[#efe7dc] md:col-span-2">
-              <span className="text-[12px] font-black uppercase tracking-[0.12em] text-slate-500">Ghi chu nhu cau nhap hang</span>
-              <textarea className="mt-3 min-h-24 w-full rounded-[16px] bg-[#fbfaf7] px-4 py-3 text-[15px] font-bold text-[#0b1220] outline-none ring-1 ring-[#eee7dc] placeholder:text-slate-400 focus:ring-[#ff5a00]" placeholder="VD: Moi thang nhap topping, bot sua, ly nap..." />
-            </label>
-
-            <button type="button" className="h-12 rounded-[18px] bg-[#ff5a00] px-5 text-[16px] font-black text-white shadow-[0_12px_22px_rgba(255,90,0,0.26)] md:col-span-2">
-              Gui ho so quan cho admin duyet
-            </button>
-          </form>
+          <RegisterShopForm />
         </AccountGate>
       </div>
     </ResponsivePageShell>
