@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Script from "next/script";
+import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -19,7 +20,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="vi">
       <body>
-        {children}
+        <ClerkProvider>
+          {children}
+        </ClerkProvider>
         <Script src="/open-external-browser.js?v=1" strategy="afterInteractive" />
         <Script src="/pwa-install-button.js?v=1" strategy="afterInteractive" />
         <Script src="/pwa-update-toast.js?v=1" strategy="afterInteractive" />
