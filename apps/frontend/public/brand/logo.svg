@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 320" role="img" aria-label="Bếp Sỉ F&B - Nguồn hàng cho quán">
+  <defs>
+    <linearGradient id="orange" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#FF7A1A"/><stop offset="1" stop-color="#F14A00"/></linearGradient>
+    <linearGradient id="teal" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#08775F"/><stop offset="1" stop-color="#003F36"/></linearGradient>
+  </defs>
+  <rect width="1120" height="320" rx="34" fill="#FFFDF7"/>
+
+  <g transform="translate(44 42) scale(.58)">
+    <path d="M0 344C74 430 206 472 376 424C417 412 451 390 512 368V512H0Z" fill="#FF5A00" opacity="0.92"/>
+    <path d="M2 359C91 440 226 458 360 409C397 395 423 378 512 353V395C406 442 318 462 224 453C118 443 45 403 2 359Z" fill="#F6C178" opacity="0.88"/>
+    <path d="M147 151h218l24 232c3 31-20 58-51 58H174c-31 0-54-27-51-58Z" fill="url(#orange)"/>
+    <path d="M147 151h45v290h-62c-7-15-10-31-8-48Z" fill="#C63E00" opacity="0.2"/>
+    <path d="M196 154c0-70 120-70 120 0" fill="none" stroke="url(#teal)" stroke-width="34" stroke-linecap="round"/>
+    <circle cx="196" cy="154" r="16" fill="#006252"/><circle cx="316" cy="154" r="16" fill="#006252"/>
+    <path d="M181 198h92c57 0 93 31 93 80c0 25-12 46-32 60c28 14 45 39 45 72c0 59-43 91-111 91h-87Z" fill="#fff" transform="translate(0 -52) scale(0.92 0.92)"/>
+    <path d="M245 246h34c23 0 37 12 37 31c0 20-14 32-38 32h-33Zm0 96h43c27 0 43 14 43 36c0 24-16 38-44 38h-42Z" fill="#FF5A00" transform="translate(0 -52) scale(0.92 0.92)" opacity="0.92"/>
+    <g transform="translate(51 278) rotate(-8) scale(.72)">
+      <path d="M20 33h106l-12 122c-3 25-23 43-48 43H56c-25 0-45-18-48-43Z" fill="#fff" stroke="#fff" stroke-width="14"/>
+      <path d="M25 43h96l-10 106c-3 22-21 38-43 38H58c-22 0-40-16-43-38Z" fill="#FFF5E2" stroke="#0B6B5A" stroke-width="7"/>
+      <path d="M20 60h108" stroke="#00463D" stroke-width="18" stroke-linecap="round"/><path d="M74 3l22 70" stroke="#00463D" stroke-width="16" stroke-linecap="round"/>
+      <path d="M24 112c23-22 53 12 94-10v48c0 21-17 37-38 37H61c-21 0-37-16-39-37Z" fill="#F6C178"/>
+      <circle cx="55" cy="151" r="10" fill="#3B1C0C"/><circle cx="82" cy="160" r="10" fill="#3B1C0C"/><circle cx="109" cy="149" r="10" fill="#3B1C0C"/><circle cx="67" cy="178" r="10" fill="#3B1C0C"/><circle cx="99" cy="178" r="10" fill="#3B1C0C"/>
+    </g>
+    <g transform="translate(325 285) scale(.72)">
+      <path d="M20 84c7 48 45 75 94 75h42c49 0 87-27 94-75Z" fill="url(#teal)"/>
+      <path d="M45 62c37-29 126-29 165 0" fill="none" stroke="#F6C178" stroke-width="12" stroke-linecap="round"/><path d="M67 74c31-18 92-18 122 0" fill="none" stroke="#F6C178" stroke-width="10" stroke-linecap="round"/>
+      <path d="M99 37c-22-36 34-45 9-82" fill="none" stroke="#F6C178" stroke-width="16" stroke-linecap="round"/><path d="M146 38c-17-28 27-35 8-63" fill="none" stroke="#F6C178" stroke-width="14" stroke-linecap="round"/>
+      <path d="M126 157c28-44 75-56 122-42c-30 11-50 34-68 67c-17-14-35-21-54-25Z" fill="#08775F"/><path d="M151 164c24-24 51-40 84-47" fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round" opacity="0.9"/>
+    </g>
+  </g>
+
+  <g transform="translate(350 112)">
+    <text x="0" y="0" font-family="Arial, Helvetica, sans-serif" font-size="92" font-weight="900" letter-spacing="-3" fill="#00463D">Bếp Sỉ</text>
+    <text x="360" y="0" font-family="Arial, Helvetica, sans-serif" font-size="92" font-weight="900" letter-spacing="-2" fill="#FF5A00">F&amp;B</text>
+    <line x1="0" x2="54" y1="72" y2="72" stroke="#FF5A00" stroke-width="8" stroke-linecap="round"/>
+    <text x="76" y="89" font-family="Arial, Helvetica, sans-serif" font-size="42" font-weight="800" letter-spacing="4" fill="#2B2B2B">Nguồn hàng cho quán</text>
+    <line x1="655" x2="710" y1="72" y2="72" stroke="#FF5A00" stroke-width="8" stroke-linecap="round"/>
+  </g>
+</svg>
