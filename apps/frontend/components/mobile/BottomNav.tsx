@@ -4,7 +4,7 @@ const items = [
   { href: "/", label: "Trang chu", icon: "⌂", key: "home" },
   { href: "/", label: "Hang", icon: "▦", key: "products" },
   { href: "/recipes", label: "Cong thuc", icon: "♨", key: "recipes" },
-  { href: "/cart", label: "Gio hang", icon: "♧", key: "cart", badge: "2" },
+  { href: "/cart", label: "Gio hang", icon: "♧", key: "cart" },
   { href: "/account", label: "Tai khoan", icon: "♙", key: "account" },
 ];
 
@@ -20,10 +20,7 @@ export function BottomNav({ active }: BottomNavProps) {
           const isActive = item.key === active;
           return (
             <Link key={item.key} href={item.href} prefetch className={`relative flex h-[58px] flex-col items-center justify-center gap-1 rounded-[18px] text-[10px] font-extrabold transition ${isActive ? "bg-[#fff3ea] text-[#ff5a00]" : "text-slate-500"}`}>
-              <span className="relative text-[24px] leading-none">
-                {item.icon}
-                {item.badge ? <span className="absolute -right-3 -top-2 grid h-5 w-5 place-items-center rounded-full bg-[#ff5a00] text-[11px] font-black text-white">{item.badge}</span> : null}
-              </span>
+              <span className="relative text-[24px] leading-none">{item.icon}</span>
               <span className="leading-none">{item.label}</span>
             </Link>
           );
