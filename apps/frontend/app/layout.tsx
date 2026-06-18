@@ -22,18 +22,30 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+function AppShell({ children }: { children: React.ReactNode }) {
   return (
-    <ClerkProvider>
-      <html lang="vi">
-        <body>
-          {children}
-          <Script src="/open-external-browser.js?v=1" strategy="afterInteractive" />
-          <Script src="/pwa-install-button.js?v=1" strategy="afterInteractive" />
-          <Script src="/pwa-update-toast.js?v=1" strategy="afterInteractive" />
-          <Script src="/pwa-register.js?v=1" strategy="afterInteractive" />
-        </body>
-      </html>
+    <html lang="vi">
+      <body>
+        {children}
+        <Script src="/open-external-browser.js?v=1" strategy="afterInteractive" />
+        <Script src="/pwa-install-button.js?v=1" strategy="afterInteractive" />
+        <Script src="/pwa-update-toast.js?v=1" strategy="afterInteractive" />
+        <Script src="/pwa-register.js?v=1" strategy="afterInteractive" />
+      </body>
+    </html>
+  );
+}
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const publishableKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
+
+  if (!publishableKey) {
+    return <AppShell>{children}</AppShell>;
+  }
+
+  return (
+    <ClerkProvider publishableKey={publishableKey}>
+      <AppShell>{children}</AppShell>
     </ClerkProvider>
   );
 }
