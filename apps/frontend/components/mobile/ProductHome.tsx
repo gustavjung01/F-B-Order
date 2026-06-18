@@ -1,6 +1,8 @@
+"use client";
+
+import { useEffect, useMemo, useState } from "react";
 import { AccountAction } from "@/components/auth/AccountAction";
 import { MobilePageShell } from "@/components/mobile/MobilePageShell";
-import { getApprovalLabel, getApprovalTone, isApprovedCustomer, mockCustomer } from "@/lib/mockCustomer";
 
 const tabs = [
   { label: "Tất cả", icon: "▦", tone: "bg-[#fff3ea] text-[#ff5a00] ring-[#ffd0b3]" },
@@ -11,16 +13,50 @@ const tabs = [
   { label: "Combo", icon: "📦", tone: "bg-[#f4efff] text-[#7c3aed] ring-[#dccbff]" },
 ];
 
-const products = [
-  { name: "Tran chau den 3Q", sku: "TC-3Q-1KG", price: "42.000d", unit: "Goi 1kg", image: "🧋" },
-  { name: "Bot sua Royal Auzan", sku: "TS-ROYAL-1KG", price: "125.000d", unit: "Goi 1kg", image: "🥛" },
-  { name: "Syrup Vani", sku: "SY-VANI-750ML", price: "72.000d", unit: "Chai 750ml", image: "🍯" },
-  { name: "Sua dac Ong Tho", sku: "SD-ONGTHO-380G", price: "28.000d", unit: "Lon 380g", image: "🥫" },
-];
+type ApiProduct = {
+  id: string;
+  sku: string;
+  name: string;
+  description: string;
+  unit: string;
+  imageUrl: string;
+  minOrderQty: number;
+  categoryName: string;
+  categorySlug: string;
+  price: number | null;
+  publicPriceHint?: string | null;
+};
+
+type ProductsResponse = {
+  approved: boolean;
+  products: ApiProduct[];
+};
 
 type BottomNavKey = "home" | "products" | "recipes" | "cart" | "account";
 
-function ProductCard({ product, approved }: { product: (typeof products)[number]; approved: boolean }) {
+const categoryEmoji: Record<string, string> = {
+  "tra-sua": "🧋",
+  "mi-cay": "🍜",
+  topping: "🧊",
+  "bao-bi": "🥡",
+  combo: "📦",
+};
+
+function formatVnd(value: number) {
+  return new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND",
+    maximumFractionDigits: 0,
+  }).format(value);
+}
+
+function getProductEmoji(product: ApiProduct) {
+  return categoryEmoji[product.categorySlug] || "📦";
+}
+
+function ProductCard({ product }: { product: ApiProduct }) {
+  const hasPrice = product.price !== null;
+
   return (
     <article className="relative overflow-hidden rounded-[28px] border border-white/80 bg-white p-4 shadow-[0_16px_34px_rgba(15,23,42,0.095)] ring-1 ring-[#efe7dc]">
       <span className="pointer-events-none absolute inset-x-5 top-0 h-px bg-white/90" />
@@ -30,65 +66,122 @@ function ProductCard({ product, approved }: { product: (typeof products)[number]
         <div className="min-w-0 flex-1 pt-1">
           <h2 className="max-w-[205px] text-[20px] font-black leading-tight tracking-tight text-[#0b1220]">{product.name}</h2>
           <p className="mt-2 text-[14px] font-semibold text-slate-500">{product.unit}</p>
-          {approved ? (
-            <p className="mt-3 text-[24px] font-black tracking-tight text-[#ff5a00]">{product.price}</p>
+          {product.description ? <p className="mt-1 line-clamp-2 text-[12px] font-semibold leading-snug text-slate-400">{product.description}</p> : null}
+          {hasPrice ? (
+            <p className="mt-3 text-[24px] font-black tracking-tight text-[#ff5a00]">{formatVnd(product.price)}</p>
           ) : (
-            <p className="mt-3 inline-flex rounded-full bg-[#fff3ea] px-3 py-2 text-[13px] font-black text-[#ff5a00] ring-1 ring-[#ffd0b3]">Gia si sau duyet</p>
+            <p className="mt-3 inline-flex rounded-full bg-[#fff3ea] px-3 py-2 text-[13px] font-black text-[#ff5a00] ring-1 ring-[#ffd0b3]">
+              {product.publicPriceHint || "Giá sỉ sau duyệt"}
+            </p>
           )}
         </div>
 
-        <div className="grid h-[112px] w-[116px] shrink-0 place-items-center rounded-[25px] bg-gradient-to-br from-[#fffaf3] via-[#fff3e6] to-[#ede7dd] text-[62px] shadow-[inset_0_2px_8px_rgba(255,255,255,0.95),inset_0_-10px_22px_rgba(15,23,42,0.06)] ring-1 ring-white/80">
-          {product.image}
+        <div className="grid h-[112px] w-[116px] shrink-0 place-items-center overflow-hidden rounded-[25px] bg-gradient-to-br from-[#fffaf3] via-[#fff3e6] to-[#ede7dd] text-[62px] shadow-[inset_0_2px_8px_rgba(255,255,255,0.95),inset_0_-10px_22px_rgba(15,23,42,0.06)] ring-1 ring-white/80">
+          {product.imageUrl ? (
+            <img src={product.imageUrl} alt={product.name} className="h-full w-full object-cover" />
+          ) : (
+            getProductEmoji(product)
+          )}
         </div>
       </div>
 
-      {approved ? (
+      {hasPrice ? (
         <div className="relative mt-4 flex items-center gap-3">
           <div className="grid h-11 flex-1 grid-cols-3 overflow-hidden rounded-[16px] border border-[#eee7dc] bg-[#fbfaf7] text-[16px] font-black text-[#0b1220] shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]">
-            <button type="button" aria-label={`Giam ${product.name}`} className="bg-white active:bg-[#fff3ea]">−</button>
-            <span className="grid place-items-center border-x border-[#eee7dc] bg-[#fbfaf7]">1</span>
-            <button type="button" aria-label={`Tang ${product.name}`} className="bg-white active:bg-[#fff3ea]">+</button>
+            <button type="button" aria-label={`Giảm ${product.name}`} className="bg-white active:bg-[#fff3ea]">−</button>
+            <span className="grid place-items-center border-x border-[#eee7dc] bg-[#fbfaf7]">{product.minOrderQty || 1}</span>
+            <button type="button" aria-label={`Tăng ${product.name}`} className="bg-white active:bg-[#fff3ea]">+</button>
           </div>
 
-          <button type="button" className="h-11 min-w-[112px] rounded-[16px] bg-[#ff5a00] px-5 text-[15px] font-black text-white shadow-[0_12px_22px_rgba(255,90,0,0.26)] ring-1 ring-[#ff7a2e]/40 active:translate-y-px active:shadow-[0_7px_14px_rgba(255,90,0,0.22)]">
-            Them
+          <button
+            type="button"
+            onClick={() => alert("Giỏ hàng thật sẽ được làm ở bước tiếp theo.")}
+            className="h-11 min-w-[112px] rounded-[16px] bg-[#ff5a00] px-5 text-[15px] font-black text-white shadow-[0_12px_22px_rgba(255,90,0,0.26)] ring-1 ring-[#ff7a2e]/40 active:translate-y-px active:shadow-[0_7px_14px_rgba(255,90,0,0.22)]"
+          >
+            Thêm
           </button>
         </div>
       ) : (
         <div className="relative mt-4 flex items-center gap-3">
           <button type="button" className="h-11 flex-1 rounded-[16px] bg-[#fbfaf7] px-4 text-[15px] font-black text-[#0b1220] ring-1 ring-[#eee7dc]">
-            Xem chi tiet
+            Xem chi tiết
           </button>
-          <AccountAction href="/register" signedOutLabel="Mo gia" className="flex h-11 min-w-[112px] items-center justify-center rounded-[16px] bg-[#0b1220] px-4 text-[14px] font-black text-white shadow-[0_12px_22px_rgba(15,23,42,0.18)]">Mo gia</AccountAction>
+          <AccountAction href="/register" signedOutLabel="Mở giá" className="flex h-11 min-w-[112px] items-center justify-center rounded-[16px] bg-[#0b1220] px-4 text-[14px] font-black text-white shadow-[0_12px_22px_rgba(15,23,42,0.18)]">Mở giá</AccountAction>
         </div>
       )}
     </article>
   );
 }
 
+function ProductListState({ children }: { children: string }) {
+  return (
+    <div className="rounded-[24px] border border-dashed border-[#e7dccd] bg-white/70 px-5 py-8 text-center text-[15px] font-black text-slate-500 shadow-sm">
+      {children}
+    </div>
+  );
+}
+
 export function ProductHome({ active = "home" }: { active?: BottomNavKey }) {
-  const approved = isApprovedCustomer;
+  const [approved, setApproved] = useState(false);
+  const [products, setProducts] = useState<ApiProduct[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    var activeRequest = true;
+
+    async function loadProducts() {
+      try {
+        setLoading(true);
+        setError("");
+        const response = await fetch("/api/products", { cache: "no-store" });
+        if (!response.ok) throw new Error("Không tải được sản phẩm");
+        const data = (await response.json()) as ProductsResponse;
+        if (!activeRequest) return;
+        setApproved(Boolean(data.approved));
+        setProducts(Array.isArray(data.products) ? data.products : []);
+      } catch (loadError) {
+        if (!activeRequest) return;
+        setError(loadError instanceof Error ? loadError.message : "Không tải được sản phẩm");
+        setProducts([]);
+      } finally {
+        if (activeRequest) setLoading(false);
+      }
+    }
+
+    loadProducts();
+
+    return () => {
+      activeRequest = false;
+    };
+  }, []);
+
+  const subtitle = useMemo(() => {
+    if (loading) return "Đang tải catalog";
+    if (approved) return "Bảng giá khách sỉ";
+    return "Xem catalog trước";
+  }, [approved, loading]);
 
   return (
-    <MobilePageShell active={active} title="Bep Si F&B" subtitle={approved ? "Bang gia khach si" : "Xem catalog truoc"}>
-      <h1 className="sr-only">San pham</h1>
+    <MobilePageShell active={active} title="Bếp Sỉ F&B" subtitle={subtitle}>
+      <h1 className="sr-only">Sản phẩm</h1>
 
       <section className="overflow-hidden rounded-[26px] bg-[#fff1d7] p-5 shadow-[0_14px_30px_rgba(15,23,42,0.085)] ring-1 ring-white/80">
         <div className="relative min-h-[188px]">
           <div className="relative z-10 max-w-[226px]">
-            <span className={`inline-flex rounded-full px-3 py-1.5 text-[12px] font-black ring-1 ${getApprovalTone(mockCustomer.approvalStatus)}`}>
-              {getApprovalLabel(mockCustomer.approvalStatus)}
+            <span className={`inline-flex rounded-full px-3 py-1.5 text-[12px] font-black ring-1 ${approved ? "bg-[#e9fbf2] text-[#08775f] ring-[#b9eadb]" : "bg-[#fff3ea] text-[#ff5a00] ring-[#ffd0b3]"}`}>
+              {approved ? "Đã mở giá sỉ" : "Chưa mở giá sỉ"}
             </span>
             <h2 className="mt-3 text-[24px] font-black leading-[1.16] tracking-tight">
-              {approved ? "Bang gia si da mo cho shop cua ban" : "Xem san pham truoc, dang nhap de mo gia"}
+              {approved ? "Bảng giá sỉ đã mở cho shop của bạn" : "Xem sản phẩm trước, đăng nhập để mở giá"}
             </h2>
             <div className="mt-4 space-y-2 text-[14px] font-semibold text-slate-700">
-              <p>✓ Ai cung xem duoc catalog san pham</p>
-              <p>✓ Dang nhap tai khoan bang popup Clerk</p>
-              <p>✓ Ho so quan duyet xong moi mo gia</p>
+              <p>✓ Ai cũng xem được catalog sản phẩm</p>
+              <p>✓ Đăng nhập tài khoản bằng popup Clerk</p>
+              <p>✓ Hồ sơ quán duyệt xong mới mở giá</p>
             </div>
           </div>
-          <span className="absolute right-0 top-0 rounded-full bg-[#08775f] px-4 py-3 text-center text-xs font-black leading-tight text-white shadow-[0_10px_18px_rgba(8,119,95,0.18)]">Khach<br />si</span>
+          <span className="absolute right-0 top-0 rounded-full bg-[#08775f] px-4 py-3 text-center text-xs font-black leading-tight text-white shadow-[0_10px_18px_rgba(8,119,95,0.18)]">Khách<br />sỉ</span>
           <span className="absolute bottom-4 right-3 text-[86px] drop-shadow-sm">📦</span>
         </div>
       </section>
@@ -105,12 +198,15 @@ export function ProductHome({ active = "home" }: { active?: BottomNavKey }) {
       </div>
 
       <div className="mt-4 space-y-3">
-        {products.map((product) => <ProductCard key={product.sku} product={product} approved={approved} />)}
+        {loading ? <ProductListState>Đang tải sản phẩm...</ProductListState> : null}
+        {!loading && error ? <ProductListState>{error}</ProductListState> : null}
+        {!loading && !error && products.length === 0 ? <ProductListState>Chưa có sản phẩm</ProductListState> : null}
+        {!loading && !error ? products.map((product) => <ProductCard key={product.id || product.sku} product={product} />) : null}
       </div>
 
       {!approved ? (
         <div className="mt-4">
-          <AccountAction href="/register" signedOutLabel="Dang nhap de mo gia si" className="block w-full rounded-[20px] bg-[#0b1220] px-5 py-4 text-center text-[15px] font-black text-white shadow-[0_14px_26px_rgba(15,23,42,0.18)]">Tao ho so quan de mo gia si</AccountAction>
+          <AccountAction href="/register" signedOutLabel="Đăng nhập để mở giá sỉ" className="block w-full rounded-[20px] bg-[#0b1220] px-5 py-4 text-center text-[15px] font-black text-white shadow-[0_14px_26px_rgba(15,23,42,0.18)]">Tạo hồ sơ quán để mở giá sỉ</AccountAction>
         </div>
       ) : null}
     </MobilePageShell>
