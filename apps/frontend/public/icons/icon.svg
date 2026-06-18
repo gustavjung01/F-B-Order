@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Bep Si F&B">
+  <rect width="512" height="512" rx="116" fill="#f7f3eb"/>
+  <circle cx="376" cy="128" r="68" fill="#08775f" opacity="0.16"/>
+  <circle cx="118" cy="396" r="82" fill="#ff5a00" opacity="0.14"/>
+  <rect x="86" y="98" width="340" height="340" rx="92" fill="#ff5a00"/>
+  <path d="M165 169c0-15 12-27 27-27h95c54 0 88 29 88 74 0 26-13 48-36 60 30 11 48 36 48 69 0 52-39 85-99 85h-96c-15 0-27-12-27-27V169Zm75 83h39c20 0 33-11 33-29s-13-29-33-29h-39v58Zm0 126h47c23 0 37-13 37-34s-14-34-37-34h-47v68Z" fill="#ffffff"/>
+  <path d="M120 102c32-34 80-54 136-54 58 0 109 22 141 58" fill="none" stroke="#0b1220" stroke-width="22" stroke-linecap="round" opacity="0.12"/>
+  <path d="M332 96l32 14-15 32" fill="none" stroke="#08775f" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
