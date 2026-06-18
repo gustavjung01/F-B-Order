@@ -2,24 +2,50 @@
 
 import { useState } from "react";
 
-const fields = [
-  { key: "shopName", label: "Ten shop / quan", placeholder: "VD: Tra sua Miu Miu", required: true },
-  { key: "contactName", label: "Nguoi lien he", placeholder: "Ten chu quan / quan ly", required: true },
-  { key: "phone", label: "So dien thoai", placeholder: "090...", required: true },
-  { key: "address", label: "Dia chi giao hang", placeholder: "So nha, phuong, quan, tinh/thanh", required: true },
-  { key: "taxCode", label: "Ma so thue", placeholder: "Khong bat buoc", required: false },
-  { key: "businessType", label: "Nganh hang", placeholder: "Tra sua / mi cay / cafe / dai ly...", required: false },
-] as const;
+const provinceOptions = [
+  "TP.HCM",
+  "Ha Noi",
+  "Da Nang",
+  "Can Tho",
+  "Binh Duong",
+  "Dong Nai",
+  "Long An",
+  "Ba Ria - Vung Tau",
+  "Khanh Hoa",
+  "Lam Dong",
+  "Khac",
+];
 
-type FormState = Record<(typeof fields)[number]["key"], string>;
+const businessTypes = [
+  "Tra sua / topping",
+  "Mi cay / an vat",
+  "Cafe / nuoc giai khat",
+  "Nha hang / quan an",
+  "Dai ly / tap hoa",
+  "Bep online / take away",
+  "Khac",
+];
+
+type FormState = {
+  shopName: string;
+  contactName: string;
+  phone: string;
+  streetAddress: string;
+  provinceCity: string;
+  taxCode: string;
+  businessType: string;
+  note: string;
+};
 
 const initialState: FormState = {
   shopName: "",
   contactName: "",
   phone: "",
-  address: "",
+  streetAddress: "",
+  provinceCity: "TP.HCM",
   taxCode: "",
-  businessType: "",
+  businessType: "Tra sua / topping",
+  note: "",
 };
 
 export function RegisterShopForm() {
@@ -28,17 +54,31 @@ export function RegisterShopForm() {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
+  function setField(key: keyof FormState, value: string) {
+    setForm((current) => ({ ...current, [key]: value }));
+  }
+
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setLoading(true);
     setMessage("");
     setError("");
 
+    const address = `${form.streetAddress.trim()}, ${form.provinceCity}`;
+
     try {
       const response = await fetch("/api/customer-profile", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+          shopName: form.shopName,
+          contactName: form.contactName,
+          phone: form.phone,
+          address,
+          taxCode: form.taxCode,
+          businessType: form.businessType,
+          note: form.note,
+        }),
       });
       const data = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(data.error || "SUBMIT_FAILED");
@@ -52,20 +92,49 @@ export function RegisterShopForm() {
 
   return (
     <form onSubmit={submit} className="grid gap-3 md:grid-cols-2">
-      {fields.map((field) => (
-        <label key={field.key} className="block rounded-[22px] bg-white p-4 ring-1 ring-[#eee7dc]">
-          <span className="text-[11px] font-black uppercase tracking-[0.12em] text-slate-400">
-            {field.label} {field.required ? <b className="text-[#ff5a00]">*</b> : null}
-          </span>
-          <input
-            required={field.required}
-            value={form[field.key]}
-            onChange={(event) => setForm((current) => ({ ...current, [field.key]: event.target.value }))}
-            className="mt-2 w-full border-0 bg-transparent text-[16px] font-black outline-none placeholder:text-slate-300"
-            placeholder={field.placeholder}
-          />
-        </label>
-      ))}
+      <label className="block rounded-[22px] bg-white p-4 ring-1 ring-[#eee7dc]">
+        <span className="text-[11px] font-black uppercase tracking-[0.12em] text-slate-400">Ten shop / quan <b className="text-[#ff5a00]">*</b></span>
+        <input required value={form.shopName} onChange={(event) => setField("shopName", event.target.value)} className="mt-2 w-full border-0 bg-transparent text-[16px] font-black outline-none placeholder:text-slate-300" placeholder="VD: Tra sua Miu Miu" />
+      </label>
+
+      <label className="block rounded-[22px] bg-white p-4 ring-1 ring-[#eee7dc]">
+        <span className="text-[11px] font-black uppercase tracking-[0.12em] text-slate-400">Nguoi lien he <b className="text-[#ff5a00]">*</b></span>
+        <input required value={form.contactName} onChange={(event) => setField("contactName", event.target.value)} className="mt-2 w-full border-0 bg-transparent text-[16px] font-black outline-none placeholder:text-slate-300" placeholder="Ten chu quan / quan ly" />
+      </label>
+
+      <label className="block rounded-[22px] bg-white p-4 ring-1 ring-[#eee7dc]">
+        <span className="text-[11px] font-black uppercase tracking-[0.12em] text-slate-400">So dien thoai <b className="text-[#ff5a00]">*</b></span>
+        <input required inputMode="tel" value={form.phone} onChange={(event) => setField("phone", event.target.value)} className="mt-2 w-full border-0 bg-transparent text-[16px] font-black outline-none placeholder:text-slate-300" placeholder="090..." />
+      </label>
+
+      <label className="block rounded-[22px] bg-white p-4 ring-1 ring-[#eee7dc]">
+        <span className="text-[11px] font-black uppercase tracking-[0.12em] text-slate-400">Tinh / thanh pho <b className="text-[#ff5a00]">*</b></span>
+        <select required value={form.provinceCity} onChange={(event) => setField("provinceCity", event.target.value)} className="mt-2 w-full border-0 bg-transparent text-[16px] font-black outline-none">
+          {provinceOptions.map((item) => <option key={item} value={item}>{item}</option>)}
+        </select>
+      </label>
+
+      <label className="block rounded-[22px] bg-white p-4 ring-1 ring-[#eee7dc] md:col-span-2">
+        <span className="text-[11px] font-black uppercase tracking-[0.12em] text-slate-400">So nha va ten duong <b className="text-[#ff5a00]">*</b></span>
+        <input required value={form.streetAddress} onChange={(event) => setField("streetAddress", event.target.value)} className="mt-2 w-full border-0 bg-transparent text-[16px] font-black outline-none placeholder:text-slate-300" placeholder="VD: 25 Nguyen Trai, Phuong Ben Thanh, Quan 1" />
+      </label>
+
+      <label className="block rounded-[22px] bg-white p-4 ring-1 ring-[#eee7dc]">
+        <span className="text-[11px] font-black uppercase tracking-[0.12em] text-slate-400">Loai hinh kinh doanh <b className="text-[#ff5a00]">*</b></span>
+        <select required value={form.businessType} onChange={(event) => setField("businessType", event.target.value)} className="mt-2 w-full border-0 bg-transparent text-[16px] font-black outline-none">
+          {businessTypes.map((item) => <option key={item} value={item}>{item}</option>)}
+        </select>
+      </label>
+
+      <label className="block rounded-[22px] bg-white p-4 ring-1 ring-[#eee7dc]">
+        <span className="text-[11px] font-black uppercase tracking-[0.12em] text-slate-400">Ma so thue</span>
+        <input value={form.taxCode} onChange={(event) => setField("taxCode", event.target.value)} className="mt-2 w-full border-0 bg-transparent text-[16px] font-black outline-none placeholder:text-slate-300" placeholder="Khong bat buoc" />
+      </label>
+
+      <label className="block rounded-[22px] bg-white p-4 ring-1 ring-[#eee7dc] md:col-span-2">
+        <span className="text-[11px] font-black uppercase tracking-[0.12em] text-slate-400">Ghi chu nhu cau nhap hang</span>
+        <textarea value={form.note} onChange={(event) => setField("note", event.target.value)} className="mt-2 min-h-24 w-full resize-none border-0 bg-transparent text-[16px] font-black outline-none placeholder:text-slate-300" placeholder="VD: Moi thang nhap topping, bot sua, ly nap..." />
+      </label>
 
       <div className="md:col-span-2">
         {error ? <p className="mb-3 rounded-[16px] bg-red-50 px-4 py-3 text-[13px] font-black text-red-600 ring-1 ring-red-100">{error}</p> : null}
