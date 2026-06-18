@@ -1,38 +1,61 @@
+import Link from "next/link";
+import { MobilePageShell } from "@/components/mobile/MobilePageShell";
+import { isApprovedCustomer } from "@/lib/mockCustomer";
+
 const recipes = [
-  { name: "Tra sua dau nuong", time: "12 phut", items: ["Hong tra", "Bot sua", "Syrup dau nuong", "Tran chau"] },
-  { name: "Mi cay kim chi hai san", time: "18 phut", items: ["Sot mi cay", "Mi Han", "Kim chi", "Topping hai san"] },
-  { name: "Sua tuoi tran chau duong den", time: "10 phut", items: ["Sua tuoi", "Duong den", "Tran chau", "Kem beo"] },
+  { name: "Tra sua dau nuong", time: "12 phut", icon: "🧋", items: ["Hong tra", "Bot sua", "Syrup dau nuong", "Tran chau"] },
+  { name: "Mi cay kim chi hai san", time: "18 phut", icon: "🍜", items: ["Sot mi cay", "Mi Han", "Kim chi", "Topping hai san"] },
+  { name: "Sua tuoi tran chau duong den", time: "10 phut", icon: "🥛", items: ["Sua tuoi", "Duong den", "Tran chau", "Kem beo"] },
 ];
 
 export default function RecipesPage() {
-  return (
-    <main className="min-h-screen bg-[#f6f3ea] pb-20 text-slate-950">
-      <section className="mx-auto max-w-6xl px-5 py-6">
-        <div className="rounded-[2rem] bg-pink-950 p-6 text-white md:p-8">
-          <p className="text-sm font-black uppercase text-pink-200">Noi dung giu chan khach</p>
-          <h1 className="mt-2 text-4xl font-black">Cong thuc F&B</h1>
-          <p className="mt-3 max-w-2xl text-pink-100">Khach xem cong thuc, bam them nguyen lieu vao gio. Day la diem khac biet cua app.</p>
-        </div>
+  const approved = isApprovedCustomer;
 
-        <div className="mt-5 grid gap-4 md:grid-cols-3">
-          {recipes.map((recipe, index) => (
-            <article key={recipe.name} className="rounded-[1.75rem] bg-white p-5 shadow-sm ring-1 ring-black/5">
-              <div className="grid h-36 place-items-center rounded-[1.5rem] bg-pink-50 text-6xl">🍓</div>
-              <div className="mt-5 flex items-center justify-between">
-                <span className="rounded-full bg-pink-50 px-3 py-1 text-xs font-black text-pink-700">Cong thuc #{index + 1}</span>
-                <span className="text-sm font-bold text-slate-500">{recipe.time}</span>
-              </div>
-              <h2 className="mt-4 text-xl font-black">{recipe.name}</h2>
-              <ul className="mt-4 space-y-2">
-                {recipe.items.map((item) => (
-                  <li key={item} className="rounded-2xl bg-slate-50 px-3 py-2 text-sm font-bold text-slate-600">{item}</li>
-                ))}
-              </ul>
-              <button className="mt-5 w-full rounded-2xl bg-slate-950 px-5 py-3 font-black text-white">Them nguyen lieu</button>
-            </article>
-          ))}
+  return (
+    <MobilePageShell active="recipes" title="Cong thuc" subtitle={approved ? "Them nguyen lieu nhanh" : "Duyet tk de dat hang"}>
+      <section className="overflow-hidden rounded-[26px] bg-[#f4efff] p-5 shadow-[0_14px_30px_rgba(15,23,42,0.085)] ring-1 ring-white/80">
+        <div className="relative min-h-[160px]">
+          <div className="relative z-10 max-w-[235px]">
+            <p className="text-[12px] font-black uppercase tracking-[0.16em] text-[#7c3aed]">Cong thuc ban hang</p>
+            <h1 className="mt-3 text-[25px] font-black leading-[1.16] tracking-tight">Chon cong thuc, gom nguyen lieu de nhap si</h1>
+            <p className="mt-3 text-[14px] font-semibold leading-6 text-slate-700">Khach chua duyet chi xem noi dung, chua thay gia va chua them vao gio.</p>
+          </div>
+          <span className="absolute bottom-2 right-3 text-[82px] drop-shadow-sm">🧑‍🍳</span>
         </div>
       </section>
-    </main>
+
+      <div className="mt-4 space-y-3">
+        {recipes.map((recipe, index) => (
+          <article key={recipe.name} className="relative overflow-hidden rounded-[28px] border border-white/80 bg-white p-4 shadow-[0_16px_34px_rgba(15,23,42,0.095)] ring-1 ring-[#efe7dc]">
+            <div className="flex gap-3">
+              <div className="grid h-[92px] w-[96px] shrink-0 place-items-center rounded-[24px] bg-gradient-to-br from-[#fffaf3] to-[#f4efff] text-[52px] shadow-inner ring-1 ring-white/80">{recipe.icon}</div>
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-2">
+                  <span className="rounded-full bg-[#f4efff] px-3 py-1 text-[11px] font-black text-[#7c3aed] ring-1 ring-[#dccbff]">CT #{index + 1}</span>
+                  <span className="text-[12px] font-black text-slate-400">{recipe.time}</span>
+                </div>
+                <h2 className="mt-3 text-[19px] font-black leading-tight tracking-tight text-[#0b1220]">{recipe.name}</h2>
+              </div>
+            </div>
+
+            <div className="mt-4 grid grid-cols-2 gap-2">
+              {recipe.items.map((item) => (
+                <span key={item} className="rounded-[14px] bg-[#fbfaf7] px-3 py-2 text-[12px] font-bold text-slate-600 ring-1 ring-[#eee7dc]">{item}</span>
+              ))}
+            </div>
+
+            {approved ? (
+              <button type="button" className="mt-4 h-11 w-full rounded-[16px] bg-[#ff5a00] px-5 text-[15px] font-black text-white shadow-[0_12px_22px_rgba(255,90,0,0.24)]">
+                Them nguyen lieu
+              </button>
+            ) : (
+              <Link href="/register" className="mt-4 flex h-11 items-center justify-center rounded-[16px] bg-[#0b1220] px-5 text-[15px] font-black text-white shadow-[0_12px_22px_rgba(15,23,42,0.18)]">
+                Dang ky khach si de dat hang
+              </Link>
+            )}
+          </article>
+        ))}
+      </div>
+    </MobilePageShell>
   );
 }
