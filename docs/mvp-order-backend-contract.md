@@ -159,6 +159,47 @@ cancelled -> terminal
 
 The API returns `INVALID_STATUS_TRANSITION` with HTTP 409 for invalid transitions.
 
+## VPS backend skeleton
+
+Current reserved VPS backend tree:
+
+```text
+/srv/apps/bepsi
+├── source
+├── current -> /srv/apps/bepsi/source
+├── releases
+└── shared
+    ├── logs
+    ├── tmp
+    └── uploads
+```
+
+Runtime env file:
+
+```text
+/etc/app-env/bepsi.env
+```
+
+Reserved backend port:
+
+```text
+5000
+```
+
+Health endpoints for systemd/nginx verification:
+
+```text
+GET /health
+GET /api/health
+```
+
+Do not touch existing VPS apps:
+
+```text
+/srv/apps/vlgn
+/srv/apps/tocviet
+```
+
 ## Backend riêng sau này
 
 Khi tách backend riêng, giữ nguyên API contract phía frontend:
