@@ -25,10 +25,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ClerkProvider>
           {children}
         </ClerkProvider>
-        <Script src="/open-external-browser.js?v=2" strategy="afterInteractive" />
-        <Script src="/pwa-install-button.js?v=2" strategy="afterInteractive" />
-        <Script src="/pwa-update-toast.js?v=2" strategy="afterInteractive" />
-        <Script src="/pwa-register.js?v=2" strategy="afterInteractive" />
+        <Script src="/open-external-browser.js?v=3" strategy="afterInteractive" />
+        <Script src="/pwa-install-button.js?v=3" strategy="afterInteractive" />
+        <Script src="/pwa-update-toast.js?v=3" strategy="afterInteractive" />
+        <Script src="/pwa-register.js?v=3" strategy="afterInteractive" />
         <Script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" strategy="afterInteractive" />
         <Script id="onesignal-init" strategy="afterInteractive">
           {`
