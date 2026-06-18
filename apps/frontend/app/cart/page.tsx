@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { AccountGate } from "@/components/auth/AccountGate";
+import { AccountAction } from "@/components/auth/AccountAction";
 import { ResponsivePageShell } from "@/components/responsive/ResponsivePageShell";
 import { isApprovedCustomer } from "@/lib/mockCustomer";
 
@@ -54,9 +54,7 @@ export default function CartPage() {
           <h1 className="mt-3 text-[27px] font-black leading-tight tracking-tight md:text-5xl">Can ho so quan duoc duyet</h1>
           <p className="mt-3 text-[14px] font-semibold leading-6 text-slate-600 md:max-w-2xl md:text-base">Khach van xem catalog tu do. Muon dat hang thi dang nhap tai khoan, gui ho so quan va cho admin duyet mo gia si.</p>
           <div className="mt-5 grid gap-3 md:flex">
-            <AccountGate title="Dang nhap de mo gio hang" message="Dung popup Clerk de dang nhap. Dang nhap xong anh co the gui ho so quan de admin duyet mo gia si.">
-              <Link href="/register" className="flex h-12 items-center justify-center rounded-[18px] bg-[#0b1220] px-5 text-[16px] font-black text-white shadow-[0_12px_22px_rgba(15,23,42,0.18)]">Tao ho so quan</Link>
-            </AccountGate>
+            <AccountAction href="/register" signedOutLabel="Dang nhap" className="flex h-12 items-center justify-center rounded-[18px] bg-[#0b1220] px-5 text-[16px] font-black text-white shadow-[0_12px_22px_rgba(15,23,42,0.18)]">Tao ho so quan</AccountAction>
             <Link href="/" className="flex h-12 items-center justify-center rounded-[18px] bg-[#fbfaf7] px-5 text-[16px] font-black text-[#0b1220] ring-1 ring-[#eee7dc]">Tiep tuc xem hang</Link>
           </div>
         </section>
