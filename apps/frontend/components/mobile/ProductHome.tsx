@@ -55,9 +55,14 @@ function ProductCard({ product, approved }: { product: (typeof products)[number]
           </button>
         </div>
       ) : (
-        <Link href="/register" className="relative mt-4 flex h-11 items-center justify-center rounded-[16px] bg-[#0b1220] px-5 text-[15px] font-black text-white shadow-[0_12px_22px_rgba(15,23,42,0.18)]">
-          Dang ky xem gia si
-        </Link>
+        <div className="relative mt-4 flex items-center gap-3">
+          <button type="button" className="h-11 flex-1 rounded-[16px] bg-[#fbfaf7] px-4 text-[15px] font-black text-[#0b1220] ring-1 ring-[#eee7dc]">
+            Xem chi tiet
+          </button>
+          <Link href="/register" className="flex h-11 min-w-[112px] items-center justify-center rounded-[16px] bg-[#0b1220] px-4 text-[14px] font-black text-white shadow-[0_12px_22px_rgba(15,23,42,0.18)]">
+            Mo gia
+          </Link>
+        </div>
       )}
     </article>
   );
@@ -67,7 +72,7 @@ export function ProductHome({ active = "home" }: { active?: BottomNavKey }) {
   const approved = isApprovedCustomer;
 
   return (
-    <MobilePageShell active={active} title="Bep Si F&B" subtitle={approved ? "Bang gia khach si" : "Cho duyet de xem gia"}>
+    <MobilePageShell active={active} title="Bep Si F&B" subtitle={approved ? "Bang gia khach si" : "Xem catalog truoc"}>
       <h1 className="sr-only">San pham</h1>
 
       <section className="overflow-hidden rounded-[26px] bg-[#fff1d7] p-5 shadow-[0_14px_30px_rgba(15,23,42,0.085)] ring-1 ring-white/80">
@@ -77,12 +82,12 @@ export function ProductHome({ active = "home" }: { active?: BottomNavKey }) {
               {getApprovalLabel(mockCustomer.approvalStatus)}
             </span>
             <h2 className="mt-3 text-[24px] font-black leading-[1.16] tracking-tight">
-              {approved ? "Bang gia si da mo cho shop cua ban" : "Dang ky khach si de mo bang gia"}
+              {approved ? "Bang gia si da mo cho shop cua ban" : "Xem san pham truoc, duyet shop de mo gia"}
             </h2>
             <div className="mt-4 space-y-2 text-[14px] font-semibold text-slate-700">
-              <p>✓ Bat buoc co shop va so dien thoai</p>
-              <p>✓ MST khong bat buoc</p>
-              <p>✓ Admin duyet moi thay gia</p>
+              <p>✓ Ai cung xem duoc catalog san pham</p>
+              <p>✓ Gia si va cong thuc chi mo sau duyet</p>
+              <p>✓ Dang ky shop, SĐT, dia chi; MST tuy chon</p>
             </div>
           </div>
           <span className="absolute right-0 top-0 rounded-full bg-[#08775f] px-4 py-3 text-center text-xs font-black leading-tight text-white shadow-[0_10px_18px_rgba(8,119,95,0.18)]">Khach<br />si</span>
@@ -107,7 +112,7 @@ export function ProductHome({ active = "home" }: { active?: BottomNavKey }) {
 
       {!approved ? (
         <Link href="/register" className="mt-4 block rounded-[20px] bg-[#0b1220] px-5 py-4 text-center text-[15px] font-black text-white shadow-[0_14px_26px_rgba(15,23,42,0.18)]">
-          Tao ho so khach si de xem gia
+          Tao ho so shop de mo gia si va cong thuc
         </Link>
       ) : null}
     </MobilePageShell>
