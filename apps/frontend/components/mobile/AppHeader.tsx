@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { useEffect, useRef, useState } from "react";
 import { BrandMark } from "@/components/brand/BrandMark";
 
@@ -47,7 +48,14 @@ export function AppHeader({ title = "Bep Si F&B", subtitle = "Nguon hang cho qua
             ♧
             <span className="absolute -right-1 -top-1 grid h-5 w-5 place-items-center rounded-full bg-[#ff5a00] text-[11px] font-black text-white">3</span>
           </Link>
-          <Link href="/account" prefetch aria-label="More" className="grid h-10 w-10 place-items-center rounded-full bg-white text-[18px] font-black text-[#0b1220] shadow-sm ring-1 ring-[#eee7dc]">•••</Link>
+          <SignedIn>
+            <div className="grid h-10 w-10 place-items-center rounded-full bg-white shadow-sm ring-1 ring-[#eee7dc]">
+              <UserButton afterSignOutUrl="/" userProfileMode="modal" />
+            </div>
+          </SignedIn>
+          <SignedOut>
+            <Link href="/account" prefetch aria-label="Account" className="grid h-10 w-10 place-items-center rounded-full bg-white text-[20px] text-[#0b1220] shadow-sm ring-1 ring-[#eee7dc]">♙</Link>
+          </SignedOut>
         </div>
       </div>
     </header>
