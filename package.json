@@ -2,9 +2,16 @@
   "name": "f-b-order",
   "private": true,
   "packageManager": "pnpm@9.15.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
     "dev": "pnpm -r --parallel dev",
-    "build": "pnpm -r build",
+    "build": "pnpm --filter @fb-order/frontend build",
+    "build:all": "pnpm -r build",
+    "build:frontend": "pnpm --filter @fb-order/frontend build",
+    "build:backend": "pnpm --filter @fb-order/backend build",
     "lint": "pnpm -r lint",
     "typecheck": "pnpm -r typecheck"
   },
