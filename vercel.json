@@ -1,4 +1,4 @@
 {
-  "installCommand": "pnpm install --no-frozen-lockfile",
-  "buildCommand": "pnpm --filter @fb-order/frontend build"
+  "installCommand": "npm install",
+  "buildCommand": "npm run build:frontend"
 }
