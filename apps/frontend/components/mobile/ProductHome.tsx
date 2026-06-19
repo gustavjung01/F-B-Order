@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { AccountAction } from "@/components/auth/AccountAction";
 import { MobilePageShell } from "@/components/mobile/MobilePageShell";
@@ -105,6 +106,7 @@ function ProductCard({ product }: { product: ApiProduct }) {
   const [added, setAdded] = useState(false);
   const packageLabel = product.packageSize || product.packageSpec || product.unit;
   const description = product.shortDescription || product.description;
+  const detailHref = `/products/${product.slug || product.sku}`;
 
   function decreaseQuantity() {
     setQuantity((current) => Math.max(minQty, current - 1));
@@ -141,7 +143,7 @@ function ProductCard({ product }: { product: ApiProduct }) {
       <div className="relative flex gap-3">
         <div className="min-w-0 flex-1 pt-1">
           {product.brand ? <p className="mb-1 text-[11px] font-black uppercase tracking-[0.12em] text-[#ff5a00]">{product.brand}</p> : null}
-          <h2 className="max-w-[205px] text-[20px] font-black leading-tight tracking-tight text-[#0b1220]">{product.name}</h2>
+          <Link href={detailHref} className="block max-w-[205px] text-[20px] font-black leading-tight tracking-tight text-[#0b1220] active:text-[#ff5a00]">{product.name}</Link>
           <p className="mt-2 text-[14px] font-semibold text-slate-500">{packageLabel}</p>
           {description ? <p className="mt-1 line-clamp-2 text-[12px] font-semibold leading-snug text-slate-400">{description}</p> : null}
           {hasPrice ? (
@@ -153,13 +155,13 @@ function ProductCard({ product }: { product: ApiProduct }) {
           )}
         </div>
 
-        <div className="grid h-[112px] w-[116px] shrink-0 place-items-center overflow-hidden rounded-[25px] bg-gradient-to-br from-[#fffaf3] via-[#fff3e6] to-[#ede7dd] text-[62px] shadow-[inset_0_2px_8px_rgba(255,255,255,0.95),inset_0_-10px_22px_rgba(15,23,42,0.06)] ring-1 ring-white/80">
+        <Link href={detailHref} className="grid h-[112px] w-[116px] shrink-0 place-items-center overflow-hidden rounded-[25px] bg-gradient-to-br from-[#fffaf3] via-[#fff3e6] to-[#ede7dd] text-[62px] shadow-[inset_0_2px_8px_rgba(255,255,255,0.95),inset_0_-10px_22px_rgba(15,23,42,0.06)] ring-1 ring-white/80">
           {product.imageUrl ? (
             <img src={product.imageUrl} alt={product.name} className="h-full w-full object-cover" />
           ) : (
             getProductEmoji(product)
           )}
-        </div>
+        </Link>
       </div>
 
       {hasPrice ? (
@@ -180,9 +182,9 @@ function ProductCard({ product }: { product: ApiProduct }) {
         </div>
       ) : (
         <div className="relative mt-4 flex items-center gap-3">
-          <button type="button" className="h-11 flex-1 rounded-[16px] bg-[#fbfaf7] px-4 text-[15px] font-black text-[#0b1220] ring-1 ring-[#eee7dc]">
+          <Link href={detailHref} className="flex h-11 flex-1 items-center justify-center rounded-[16px] bg-[#fbfaf7] px-4 text-[15px] font-black text-[#0b1220] ring-1 ring-[#eee7dc]">
             Xem chi tiết
-          </button>
+          </Link>
           <AccountAction href="/register" signedOutLabel="Mở giá" className="flex h-11 min-w-[112px] items-center justify-center rounded-[16px] bg-[#0b1220] px-4 text-[14px] font-black text-white shadow-[0_12px_22px_rgba(15,23,42,0.18)]">Mở giá</AccountAction>
         </div>
       )}
