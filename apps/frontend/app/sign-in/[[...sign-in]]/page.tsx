@@ -11,7 +11,7 @@ export default function SignInPage() {
           Dang nhap de tao ho so quan, xem trang thai duyet va mo khoa gia si sau khi admin xac nhan.
         </p>
         <div className="mt-6 flex justify-center md:justify-start">
-          <SignIn routing="path" path="/sign-in" signUpUrl="/sign-up" forceRedirectUrl="/account" />
+          <SignIn routing="path" path="/sign-in" signUpUrl="/sign-up" forceRedirectUrl="/account" fallbackRedirectUrl="/account" />
         </div>
       </section>
     </ResponsivePageShell>
