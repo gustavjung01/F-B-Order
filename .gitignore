@@ -11,3 +11,7 @@ coverage
 *.log
 .vercel
 .turbo
+
+.vercel-env-audit
+
+.vercel-env-audit
