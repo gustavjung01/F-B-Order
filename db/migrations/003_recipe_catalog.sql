@@ -20,6 +20,38 @@ CREATE TABLE IF NOT EXISTS recipes (
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+-- Legacy DBs already have the MVP recipes table. Add the catalog columns in place.
+ALTER TABLE IF EXISTS recipes
+  ADD COLUMN IF NOT EXISTS category_id UUID REFERENCES categories(id),
+  ADD COLUMN IF NOT EXISTS title TEXT,
+  ADD COLUMN IF NOT EXISTS short_description TEXT,
+  ADD COLUMN IF NOT EXISTS description TEXT,
+  ADD COLUMN IF NOT EXISTS related_brand TEXT,
+  ADD COLUMN IF NOT EXISTS cover_image_url TEXT,
+  ADD COLUMN IF NOT EXISTS source_confidence TEXT NOT NULL DEFAULT 'needs_review',
+  ADD COLUMN IF NOT EXISTS status TEXT NOT NULL DEFAULT 'needs_review',
+  ADD COLUMN IF NOT EXISTS sort_order INT NOT NULL DEFAULT 0;
+
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1
+    FROM information_schema.columns
+    WHERE table_schema = 'public'
+      AND table_name = 'recipes'
+      AND column_name = 'is_active'
+  ) THEN
+    EXECUTE $sql$
+      UPDATE recipes
+      SET title = COALESCE(title, name),
+          short_description = COALESCE(short_description, summary),
+          description = COALESCE(description, detail),
+          status = CASE WHEN is_active THEN 'active' ELSE 'inactive' END,
+          source_confidence = COALESCE(source_confidence, 'needs_review')
+    $sql$;
+  END IF;
+END $$;
+
 DO $$
 BEGIN
   IF NOT EXISTS (
