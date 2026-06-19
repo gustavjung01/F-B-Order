@@ -11,6 +11,7 @@ type IngredientProduct = {
   slug: string;
   name: string;
   brand: string;
+  unit: string;
   imageUrl: string;
   minOrderQty: number;
   categoryName: string;
@@ -187,7 +188,7 @@ export function RecipeDetailClient({ slug }: RecipeDetailClientProps) {
         productId: product.id,
         sku: product.sku,
         name: product.name,
-        unit: product.categoryName || "sản phẩm",
+        unit: product.unit || "sản phẩm",
         price: product.price,
         quantity: minQty,
         minOrderQty: minQty,
