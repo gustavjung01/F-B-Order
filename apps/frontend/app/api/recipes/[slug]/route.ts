@@ -31,6 +31,7 @@ type IngredientRow = {
   slug: string | null;
   name: string | null;
   brand: string | null;
+  product_unit: string | null;
   image_url: string | null;
   wholesale_price: string | null;
   min_order_qty: number | null;
@@ -80,6 +81,7 @@ function mapIngredient(row: IngredientRow, approved: boolean) {
       slug: row.slug || "",
       name: row.name || row.product_name || "Nguyên liệu",
       brand: row.brand || "",
+      unit: row.product_unit || "sản phẩm",
       imageUrl: row.image_url || "",
       minOrderQty: row.min_order_qty || 1,
       categoryName: row.category_name || "Khác",
@@ -162,6 +164,7 @@ export async function GET(_request: Request, { params }: { params: { slug: strin
         p.slug,
         p.name,
         p.brand,
+        p.unit AS product_unit,
         p.image_url,
         p.wholesale_price::text,
         p.min_order_qty,
