@@ -70,19 +70,20 @@ function DesktopProductCard({ product, approved }: { product: ApiProduct; approv
   const hasPrice = typeof price === "number";
   const packageLabel = product.packageSize || product.packageSpec || product.unit;
   const description = product.shortDescription || product.description;
+  const detailHref = `/products/${product.slug || product.sku}`;
 
   return (
     <article className="rounded-[30px] bg-white p-5 shadow-lg ring-1 ring-[#efe7dc]">
-      <div className="grid h-40 place-items-center overflow-hidden rounded-[26px] bg-[#fff3ea] text-7xl">
+      <Link href={detailHref} className="grid h-40 place-items-center overflow-hidden rounded-[26px] bg-[#fff3ea] text-7xl">
         {product.imageUrl ? <img src={product.imageUrl} alt={product.name} className="h-full w-full object-cover" /> : getProductEmoji(product)}
-      </div>
+      </Link>
       {product.brand ? <p className="mt-4 text-xs font-black uppercase tracking-[0.14em] text-[#ff5a00]">{product.brand}</p> : null}
-      <h3 className="mt-2 min-h-14 text-xl font-black leading-tight">{product.name}</h3>
+      <Link href={detailHref} className="mt-2 block min-h-14 text-xl font-black leading-tight text-[#0b1220] hover:text-[#ff5a00]">{product.name}</Link>
       <p className="mt-2 text-sm font-bold text-slate-500">{packageLabel}</p>
       {description ? <p className="mt-2 line-clamp-2 min-h-10 text-sm font-semibold leading-5 text-slate-400">{description}</p> : null}
       {hasPrice ? <p className="mt-4 text-2xl font-black text-[#ff5a00]">{formatVnd(price)}</p> : <p className="mt-4 inline-flex rounded-full bg-[#fff3ea] px-3 py-2 text-sm font-black text-[#ff5a00] ring-1 ring-[#ffd0b3]">{product.publicPriceHint || "Giá sỉ sau duyệt"}</p>}
       <div className="mt-5 flex gap-2">
-        <button className="flex-1 rounded-2xl bg-[#fbfaf7] px-4 py-3 text-sm font-black ring-1 ring-[#eee7dc]">Chi tiết</button>
+        <Link href={detailHref} className="flex-1 rounded-2xl bg-[#fbfaf7] px-4 py-3 text-center text-sm font-black ring-1 ring-[#eee7dc]">Chi tiết</Link>
         {!approved ? <AccountAction href="/register" signedOutLabel="Mở giá" className="rounded-2xl bg-[#0b1220] px-4 py-3 text-sm font-black text-white">Mở giá</AccountAction> : null}
       </div>
     </article>
