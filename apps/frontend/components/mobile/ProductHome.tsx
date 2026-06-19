@@ -5,25 +5,35 @@ import { AccountAction } from "@/components/auth/AccountAction";
 import { MobilePageShell } from "@/components/mobile/MobilePageShell";
 import { addCartItem } from "@/lib/cartStorage";
 
-const tabs = [
-  { label: "Tất cả", icon: "▦", tone: "bg-[#fff3ea] text-[#ff5a00] ring-[#ffd0b3]" },
-  { label: "Trà sữa", icon: "🧋", tone: "bg-[#eefbf6] text-[#08775f] ring-[#b9eadb]" },
-  { label: "Mì cay", icon: "🍜", tone: "bg-[#fff0ef] text-[#dc2626] ring-[#ffc9c3]" },
-  { label: "Topping", icon: "🧊", tone: "bg-[#eef6ff] text-[#2563eb] ring-[#c7ddff]" },
-  { label: "Bao bì", icon: "🥡", tone: "bg-[#fff8e8] text-[#b77900] ring-[#ffe1a8]" },
-  { label: "Combo", icon: "📦", tone: "bg-[#f4efff] text-[#7c3aed] ring-[#dccbff]" },
-];
+type CategoryNode = {
+  id: string;
+  name: string;
+  slug: string;
+  sortOrder: number;
+  children: CategoryNode[];
+};
+
+type CategoriesResponse = {
+  primaryTabs: CategoryNode[];
+};
 
 type ApiProduct = {
   id: string;
   sku: string;
+  slug?: string;
   name: string;
+  brand?: string;
   description: string;
+  shortDescription?: string;
   unit: string;
+  packageSpec?: string;
+  packageSize?: string;
   imageUrl: string;
   minOrderQty: number;
   categoryName: string;
   categorySlug: string;
+  subcategoryName?: string;
+  subcategorySlug?: string;
   price: number | null;
   publicPriceHint?: string | null;
 };
@@ -36,11 +46,28 @@ type ProductsResponse = {
 type BottomNavKey = "home" | "products" | "recipes" | "cart" | "account";
 
 const categoryEmoji: Record<string, string> = {
-  "tra-sua": "🧋",
-  "mi-cay": "🍜",
+  all: "▦",
+  "tra-sua-pha-che": "🧋",
+  "mi-cay-han-quoc": "🍜",
+  "thuc-pham-dong-lanh": "❄️",
+  "combo-cong-thuc": "📦",
+  "brand-distribution": "🏷️",
+  "tra-nen-tra-tui-loc": "🍵",
+  "bot-sua-bot-beo": "🥛",
   topping: "🧊",
-  "bao-bi": "🥡",
-  combo: "📦",
+  "syrup-sot-mut": "🍯",
+  "bot-pudding-jelly": "🍮",
+  "nguyen-lieu-da-xay": "🥤",
+  "cot-dua": "🥥",
+};
+
+const categoryTones: Record<string, string> = {
+  all: "bg-[#fff3ea] text-[#ff5a00] ring-[#ffd0b3]",
+  "tra-sua-pha-che": "bg-[#eefbf6] text-[#08775f] ring-[#b9eadb]",
+  "mi-cay-han-quoc": "bg-[#fff0ef] text-[#dc2626] ring-[#ffc9c3]",
+  "thuc-pham-dong-lanh": "bg-[#eef6ff] text-[#2563eb] ring-[#c7ddff]",
+  "combo-cong-thuc": "bg-[#f4efff] text-[#7c3aed] ring-[#dccbff]",
+  "brand-distribution": "bg-[#fff8e8] text-[#b77900] ring-[#ffe1a8]",
 };
 
 function formatVnd(value: number) {
@@ -52,7 +79,22 @@ function formatVnd(value: number) {
 }
 
 function getProductEmoji(product: ApiProduct) {
-  return categoryEmoji[product.categorySlug] || "📦";
+  return categoryEmoji[product.subcategorySlug || ""] || categoryEmoji[product.categorySlug] || "📦";
+}
+
+function getTabIcon(slug: string) {
+  return categoryEmoji[slug] || "▦";
+}
+
+function getTabTone(slug: string) {
+  return categoryTones[slug] || "bg-[#fff3ea] text-[#ff5a00] ring-[#ffd0b3]";
+}
+
+function buildProductsUrl(categorySlug: string) {
+  const params = new URLSearchParams();
+  if (categorySlug && categorySlug !== "all") params.set("category", categorySlug);
+  params.set("limit", "80");
+  return `/api/products?${params.toString()}`;
 }
 
 function ProductCard({ product }: { product: ApiProduct }) {
@@ -61,6 +103,8 @@ function ProductCard({ product }: { product: ApiProduct }) {
   const minQty = Math.max(1, product.minOrderQty || 1);
   const [quantity, setQuantity] = useState(minQty);
   const [added, setAdded] = useState(false);
+  const packageLabel = product.packageSize || product.packageSpec || product.unit;
+  const description = product.shortDescription || product.description;
 
   function decreaseQuantity() {
     setQuantity((current) => Math.max(minQty, current - 1));
@@ -96,9 +140,10 @@ function ProductCard({ product }: { product: ApiProduct }) {
 
       <div className="relative flex gap-3">
         <div className="min-w-0 flex-1 pt-1">
+          {product.brand ? <p className="mb-1 text-[11px] font-black uppercase tracking-[0.12em] text-[#ff5a00]">{product.brand}</p> : null}
           <h2 className="max-w-[205px] text-[20px] font-black leading-tight tracking-tight text-[#0b1220]">{product.name}</h2>
-          <p className="mt-2 text-[14px] font-semibold text-slate-500">{product.unit}</p>
-          {product.description ? <p className="mt-1 line-clamp-2 text-[12px] font-semibold leading-snug text-slate-400">{product.description}</p> : null}
+          <p className="mt-2 text-[14px] font-semibold text-slate-500">{packageLabel}</p>
+          {description ? <p className="mt-1 line-clamp-2 text-[12px] font-semibold leading-snug text-slate-400">{description}</p> : null}
           {hasPrice ? (
             <p className="mt-3 text-[24px] font-black tracking-tight text-[#ff5a00]">{formatVnd(price)}</p>
           ) : (
@@ -156,17 +201,47 @@ function ProductListState({ children }: { children: string }) {
 export function ProductHome({ active = "home" }: { active?: BottomNavKey }) {
   const [approved, setApproved] = useState(false);
   const [products, setProducts] = useState<ApiProduct[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [categories, setCategories] = useState<CategoryNode[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [loadingProducts, setLoadingProducts] = useState(true);
+  const [loadingCategories, setLoadingCategories] = useState(true);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    var activeRequest = true;
+
+    async function loadCategories() {
+      try {
+        setLoadingCategories(true);
+        const response = await fetch("/api/categories", { cache: "no-store" });
+        if (!response.ok) throw new Error("Không tải được danh mục");
+        const data = (await response.json()) as CategoriesResponse;
+        if (!activeRequest) return;
+        setCategories(Array.isArray(data.primaryTabs) ? data.primaryTabs : []);
+      } catch (loadError) {
+        if (!activeRequest) return;
+        setError(loadError instanceof Error ? loadError.message : "Không tải được danh mục");
+        setCategories([]);
+      } finally {
+        if (activeRequest) setLoadingCategories(false);
+      }
+    }
+
+    loadCategories();
+
+    return () => {
+      activeRequest = false;
+    };
+  }, []);
 
   useEffect(() => {
     var activeRequest = true;
 
     async function loadProducts() {
       try {
-        setLoading(true);
+        setLoadingProducts(true);
         setError("");
-        const response = await fetch("/api/products", { cache: "no-store" });
+        const response = await fetch(buildProductsUrl(selectedCategory), { cache: "no-store" });
         if (!response.ok) throw new Error("Không tải được sản phẩm");
         const data = (await response.json()) as ProductsResponse;
         if (!activeRequest) return;
@@ -177,7 +252,7 @@ export function ProductHome({ active = "home" }: { active?: BottomNavKey }) {
         setError(loadError instanceof Error ? loadError.message : "Không tải được sản phẩm");
         setProducts([]);
       } finally {
-        if (activeRequest) setLoading(false);
+        if (activeRequest) setLoadingProducts(false);
       }
     }
 
@@ -186,7 +261,9 @@ export function ProductHome({ active = "home" }: { active?: BottomNavKey }) {
     return () => {
       activeRequest = false;
     };
-  }, []);
+  }, [selectedCategory]);
+
+  const loading = loadingCategories || loadingProducts;
 
   const subtitle = useMemo(() => {
     if (loading) return "Đang tải catalog";
@@ -220,12 +297,15 @@ export function ProductHome({ active = "home" }: { active?: BottomNavKey }) {
 
       <div className="-mx-4 mt-4 overflow-hidden border-y border-[#eee7dc] bg-[#f7f3eb]/95">
         <div className="flex touch-pan-x gap-2 overflow-x-auto overscroll-x-contain px-4 py-3 [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          {tabs.map((tab, index) => (
-            <button key={tab.label} type="button" aria-pressed={index === 0} className={`inline-flex shrink-0 items-center gap-1.5 rounded-[14px] px-3.5 py-2.5 text-[13px] font-black shadow-sm ring-1 ${index === 0 ? "bg-[#ff5a00] text-white ring-[#ff5a00] shadow-[0_8px_16px_rgba(255,90,0,0.18)]" : tab.tone}`}>
-              <span className="text-[16px] leading-none">{tab.icon}</span>
-              <span className="leading-none">{tab.label}</span>
-            </button>
-          ))}
+          {categories.map((tab) => {
+            const selected = tab.slug === selectedCategory;
+            return (
+              <button key={tab.slug} type="button" aria-pressed={selected} onClick={() => setSelectedCategory(tab.slug)} className={`inline-flex shrink-0 items-center gap-1.5 rounded-[14px] px-3.5 py-2.5 text-[13px] font-black shadow-sm ring-1 ${selected ? "bg-[#ff5a00] text-white ring-[#ff5a00] shadow-[0_8px_16px_rgba(255,90,0,0.18)]" : getTabTone(tab.slug)}`}>
+                <span className="text-[16px] leading-none">{getTabIcon(tab.slug)}</span>
+                <span className="leading-none">{tab.name}</span>
+              </button>
+            );
+          })}
         </div>
       </div>
 
