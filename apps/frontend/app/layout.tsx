@@ -3,7 +3,7 @@ import Script from "next/script";
 import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
 
-const oneSignalAppId = process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID || "2537a634-62ab-466b-bec5-a8ff353660a8";
+const oneSignalAppId = process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID;
 
 export const metadata: Metadata = {
   title: "Bếp Sỉ F&B",
@@ -29,17 +29,21 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Script src="/pwa-install-button.js?v=3" strategy="afterInteractive" />
         <Script src="/pwa-update-toast.js?v=3" strategy="afterInteractive" />
         <Script src="/pwa-register.js?v=3" strategy="afterInteractive" />
-        <Script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" strategy="afterInteractive" />
-        <Script id="onesignal-init" strategy="afterInteractive">
-          {`
-            window.OneSignalDeferred = window.OneSignalDeferred || [];
-            OneSignalDeferred.push(async function(OneSignal) {
-              await OneSignal.init({
-                appId: "${oneSignalAppId}",
-              });
-            });
-          `}
-        </Script>
+        {oneSignalAppId ? (
+          <>
+            <Script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" strategy="afterInteractive" />
+            <Script id="onesignal-init" strategy="afterInteractive">
+              {`
+                window.OneSignalDeferred = window.OneSignalDeferred || [];
+                OneSignalDeferred.push(async function(OneSignal) {
+                  await OneSignal.init({
+                    appId: "${oneSignalAppId}",
+                  });
+                });
+              `}
+            </Script>
+          </>
+        ) : null}
       </body>
     </html>
   );
