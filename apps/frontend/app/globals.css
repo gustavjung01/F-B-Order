@@ -11,3 +11,7 @@ body {
   background: #f8fafc;
   color: #0f172a;
 }
+
+header img[src="/brand/logo.webp"] + span {
+  display: none;
+}
