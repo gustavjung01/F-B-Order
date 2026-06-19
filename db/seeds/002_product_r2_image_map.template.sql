@@ -1,0 +1,49 @@
+-- Bếp Sỉ F&B - Product R2 image mapping template
+-- Copy this file to a real seed file before use, then replace example URLs with real R2 public URLs.
+-- This maps R2 URLs into:
+--   1) products.image_url       = primary cover image for fast listing cards
+--   2) product_images           = product gallery for detail page
+--
+-- R2 path convention:
+--   /products/{product-slug}/cover.webp
+--   /products/{product-slug}/1.webp
+--   /products/{product-slug}/2.webp
+--
+-- Important:
+-- - Do not store binary images in Git or Postgres.
+-- - DB stores URL only.
+-- - Keep this template free of private/signed URLs.
+
+-- Example: map one product cover + gallery.
+-- Replace the slug and URLs before running.
+--
+-- WITH target AS (
+--   SELECT id, name
+--   FROM products
+--   WHERE slug = 'bot-sua-sawasdee-1kg'
+--   LIMIT 1
+-- ), update_cover AS (
+--   UPDATE products
+--   SET image_url = 'https://r2-public-domain.example/products/bot-sua-sawasdee-1kg/cover.webp'
+--   WHERE id = (SELECT id FROM target)
+--   RETURNING id
+-- ), clear_gallery AS (
+--   DELETE FROM product_images
+--   WHERE product_id = (SELECT id FROM target)
+-- )
+-- INSERT INTO product_images (product_id, image_url, alt_text, sort_order, is_primary)
+-- VALUES
+--   ((SELECT id FROM target), 'https://r2-public-domain.example/products/bot-sua-sawasdee-1kg/cover.webp', (SELECT name FROM target), 0, true),
+--   ((SELECT id FROM target), 'https://r2-public-domain.example/products/bot-sua-sawasdee-1kg/1.webp', (SELECT name FROM target), 1, false),
+--   ((SELECT id FROM target), 'https://r2-public-domain.example/products/bot-sua-sawasdee-1kg/2.webp', (SELECT name FROM target), 2, false);
+
+-- Quick verification after mapping:
+-- SELECT
+--   p.slug,
+--   p.name,
+--   p.image_url,
+--   COUNT(pi.id) AS gallery_count
+-- FROM products p
+-- LEFT JOIN product_images pi ON pi.product_id = p.id
+-- GROUP BY p.slug, p.name, p.image_url
+-- ORDER BY p.slug;
