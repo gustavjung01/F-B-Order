@@ -62,19 +62,19 @@ function numberOrNull(value: string | null) {
 }
 
 function mapIngredient(row: IngredientRow, approved: boolean) {
-  const hasProduct = Boolean(row.product_id);
+  const hasActiveProduct = Boolean(row.product_id && row.slug);
   const price = approved && row.wholesale_price ? Number(row.wholesale_price) : null;
 
   return {
     id: row.id,
-    productId: row.product_id,
+    productId: hasActiveProduct ? row.product_id : null,
     productName: row.product_name || row.name || "Nguyên liệu",
     quantity: approved ? numberOrNull(row.quantity) : null,
     unit: approved ? row.unit || "" : "",
     note: approved ? row.note || "" : "Định lượng mở sau khi hồ sơ quán được duyệt.",
     optional: row.optional,
     sortOrder: row.sort_order,
-    product: hasProduct ? {
+    product: hasActiveProduct ? {
       id: row.product_id,
       sku: row.sku || "",
       slug: row.slug || "",
