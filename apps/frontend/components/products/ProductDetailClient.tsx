@@ -160,14 +160,15 @@ export function ProductDetailClient({ slug }: ProductDetailClientProps) {
   const description = currentProduct.shortDescription || currentProduct.description;
 
   function handleAddToCart() {
-    if (!hasPrice) return;
+    if (typeof currentProduct.price !== "number") return;
+    const unitPrice = currentProduct.price;
 
     addCartItem({
       productId: currentProduct.id,
       sku: currentProduct.sku,
       name: currentProduct.name,
       unit: currentProduct.unit || packageLabel || "sản phẩm",
-      price,
+      price: unitPrice,
       quantity,
       minOrderQty: minQty,
       imageUrl: primaryImageUrl,
