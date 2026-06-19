@@ -97,6 +97,46 @@ CREATE TABLE IF NOT EXISTS product_prices (
   UNIQUE(product_id, price_group_id, min_quantity)
 );
 
+CREATE TABLE IF NOT EXISTS recipes (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  slug TEXT UNIQUE NOT NULL,
+  title TEXT NOT NULL,
+  short_description TEXT,
+  description TEXT,
+  category_id UUID REFERENCES categories(id),
+  related_brand TEXT,
+  cover_image_url TEXT,
+  source_confidence TEXT NOT NULL DEFAULT 'needs_review',
+  status TEXT NOT NULL DEFAULT 'needs_review' CHECK (status IN ('needs_review', 'active', 'draft', 'inactive')),
+  sort_order INT NOT NULL DEFAULT 0,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS recipe_ingredients (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  recipe_id UUID NOT NULL REFERENCES recipes(id) ON DELETE CASCADE,
+  product_id UUID REFERENCES products(id),
+  product_name TEXT,
+  quantity NUMERIC(14,2),
+  unit TEXT,
+  note TEXT,
+  optional BOOLEAN NOT NULL DEFAULT false,
+  sort_order INT NOT NULL DEFAULT 0,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS recipe_steps (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  recipe_id UUID NOT NULL REFERENCES recipes(id) ON DELETE CASCADE,
+  step_no INT NOT NULL,
+  title TEXT,
+  content TEXT NOT NULL,
+  image_url TEXT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  UNIQUE(recipe_id, step_no)
+);
+
 CREATE TABLE IF NOT EXISTS orders (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   order_code TEXT UNIQUE NOT NULL,
