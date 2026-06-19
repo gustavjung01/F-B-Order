@@ -11,7 +11,7 @@ export default function SignUpPage() {
           Buoc nay dung de tao danh tinh dang nhap. Sau khi co tai khoan, khach moi tao ho so quan de admin duyet mo gia si.
         </p>
         <div className="mt-6 flex justify-center md:justify-start">
-          <SignUp routing="path" path="/sign-up" signInUrl="/sign-in" forceRedirectUrl="/register" />
+          <SignUp routing="path" path="/sign-up" signInUrl="/sign-in" forceRedirectUrl="/register" fallbackRedirectUrl="/register" />
         </div>
       </section>
     </ResponsivePageShell>
