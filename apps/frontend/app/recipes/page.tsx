@@ -3,9 +3,9 @@ import { ResponsivePageShell } from "@/components/responsive/ResponsivePageShell
 import { isApprovedCustomer } from "@/lib/mockCustomer";
 
 const recipes = [
-  { name: "Tra sua dau nuong", time: "12 phut", icon: "🧋", items: ["Hong tra", "Bot sua", "Syrup dau nuong", "Tran chau"] },
-  { name: "Mi cay kim chi hai san", time: "18 phut", icon: "🍜", items: ["Sot mi cay", "Mi Han", "Kim chi", "Topping hai san"] },
-  { name: "Sua tuoi tran chau duong den", time: "10 phut", icon: "🥛", items: ["Sua tuoi", "Duong den", "Tran chau", "Kem beo"] },
+  { name: "Tra sua dau nuong", time: "12 phut", icon: "\uD83E\uDDCB", items: ["Hong tra", "Bot sua", "Syrup dau nuong", "Tran chau"] },
+  { name: "Mi cay kim chi hai san", time: "18 phut", icon: "\uD83C\uDF5C", items: ["Sot mi cay", "Mi Han", "Kim chi", "Topping hai san"] },
+  { name: "Sua tuoi tran chau duong den", time: "10 phut", icon: "\uD83E\uDD5B", items: ["Sua tuoi", "Duong den", "Tran chau", "Kem beo"] },
 ];
 
 export default function RecipesPage() {
@@ -13,15 +13,8 @@ export default function RecipesPage() {
 
   return (
     <ResponsivePageShell active="recipes" title="Cong thuc" subtitle={approved ? "Cong thuc chi tiet" : "Xem y tuong truoc"}>
-      <section className="overflow-hidden rounded-[26px] bg-[#f4efff] p-5 shadow-[0_14px_30px_rgba(15,23,42,0.085)] ring-1 ring-white/80 md:p-8">
-        <div className="relative min-h-[160px] md:min-h-[190px]">
-          <div className="relative z-10 max-w-[680px]">
-            <p className="text-[12px] font-black uppercase tracking-[0.16em] text-[#7c3aed]">Cong thuc ban hang</p>
-            <h1 className="mt-3 text-[25px] font-black leading-[1.16] tracking-tight md:text-5xl">Xem y tuong mon, duyet quan de mo cong thuc</h1>
-            <p className="mt-3 text-[14px] font-semibold leading-6 text-slate-700 md:text-base md:leading-7">Trang nay van mo cho khach xem. Chi phan cong thuc chi tiet va gom nguyen lieu moi can tai khoan va ho so quan da duyet.</p>
-          </div>
-          <span className="absolute bottom-2 right-3 text-[82px] drop-shadow-sm md:text-[116px]">🧑‍🍳</span>
-        </div>
+      <section className="overflow-hidden rounded-[26px] bg-white shadow-[0_14px_30px_rgba(15,23,42,0.085)] ring-1 ring-white/80">
+        <img src="/home/home-cong-thuc.png" alt="Cong thuc" className="block h-auto w-full object-contain" draggable={false} />
       </section>
 
       <div className="mt-4 grid gap-3 md:grid-cols-3">
