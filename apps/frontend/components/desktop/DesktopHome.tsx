@@ -5,10 +5,10 @@ import { BrandLogo } from "@/components/brand/BrandLogo";
 import { getApprovalLabel, getApprovalTone, isApprovedCustomer, mockCustomer } from "@/lib/mockCustomer";
 
 const products = [
-  { name: "Tran chau den 3Q", unit: "Goi 1kg", price: "42.000d", image: "B" },
-  { name: "Bot sua Royal Auzan", unit: "Goi 1kg", price: "125.000d", image: "S" },
-  { name: "Syrup Vani", unit: "Chai 750ml", price: "72.000d", image: "V" },
-  { name: "Sua dac Ong Tho", unit: "Lon 380g", price: "28.000d", image: "O" },
+  { name: "Tran chau den 3Q", unit: "Goi 1kg", price: "42.000d", image: "\uD83E\uDDCB" },
+  { name: "Bot sua Royal Auzan", unit: "Goi 1kg", price: "125.000d", image: "\uD83E\uDD5B" },
+  { name: "Syrup Vani", unit: "Chai 750ml", price: "72.000d", image: "\uD83C\uDF6F" },
+  { name: "Sua dac Ong Tho", unit: "Lon 380g", price: "28.000d", image: "\uD83E\uDD6B" },
 ];
 
 export function DesktopHome() {
