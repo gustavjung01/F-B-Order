@@ -1,6 +1,8 @@
 -- Bếp Sỉ F&B - MVP schema draft
 -- DB target: Heroku Postgres
 
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
 CREATE TABLE IF NOT EXISTS price_groups (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   name TEXT NOT NULL,
@@ -41,14 +43,30 @@ CREATE TABLE IF NOT EXISTS categories (
 CREATE TABLE IF NOT EXISTS products (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   category_id UUID REFERENCES categories(id),
+  subcategory_id UUID REFERENCES categories(id),
   sku TEXT UNIQUE NOT NULL,
   name TEXT NOT NULL,
   slug TEXT UNIQUE NOT NULL,
+  brand TEXT,
   description TEXT,
+  short_description TEXT,
   unit TEXT,
   package_spec TEXT,
+  package_size TEXT,
+  origin TEXT,
+  image_url TEXT,
+  industry_group TEXT,
+  product_type TEXT NOT NULL DEFAULT 'physical' CHECK (product_type IN ('physical', 'bundle', 'recipe_content', 'service')),
+  use_cases JSONB NOT NULL DEFAULT '[]'::jsonb,
+  tags JSONB NOT NULL DEFAULT '[]'::jsonb,
+  selling_points JSONB NOT NULL DEFAULT '[]'::jsonb,
+  source_confidence TEXT NOT NULL DEFAULT 'needs_review',
   base_price NUMERIC(14,2) NOT NULL DEFAULT 0,
+  wholesale_price NUMERIC(14,2),
+  min_order_qty INT NOT NULL DEFAULT 1,
   stock_status TEXT NOT NULL DEFAULT 'available',
+  status TEXT NOT NULL DEFAULT 'needs_review' CHECK (status IN ('needs_review', 'active', 'draft', 'inactive')),
+  sort_order INT NOT NULL DEFAULT 0,
   is_active BOOLEAN NOT NULL DEFAULT true,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
@@ -57,6 +75,16 @@ CREATE TABLE IF NOT EXISTS product_aliases (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   product_id UUID NOT NULL REFERENCES products(id),
   alias TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS product_images (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  product_id UUID NOT NULL REFERENCES products(id) ON DELETE CASCADE,
+  image_url TEXT NOT NULL,
+  alt_text TEXT,
+  sort_order INT NOT NULL DEFAULT 0,
+  is_primary BOOLEAN NOT NULL DEFAULT false,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
 CREATE TABLE IF NOT EXISTS product_prices (
