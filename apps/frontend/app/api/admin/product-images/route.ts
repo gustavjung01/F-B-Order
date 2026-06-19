@@ -11,6 +11,13 @@ type ImageInput = {
   isPrimary?: boolean;
 };
 
+type NormalizedImage = {
+  imageUrl: string;
+  altText?: string;
+  sortOrder: number;
+  isPrimary: boolean;
+};
+
 type ProductImagePatchBody = {
   productId?: string;
   slug?: string;
@@ -39,6 +46,10 @@ type ProductRow = {
   image_url: string | null;
 };
 
+function isUuid(value: unknown): value is string {
+  return typeof value === "string" && /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value);
+}
+
 function isHttpUrl(value: unknown): value is string {
   if (typeof value !== "string") return false;
   try {
@@ -55,14 +66,14 @@ function normalizeSortOrder(value: unknown, fallback: number) {
   return Math.max(0, Math.trunc(numberValue));
 }
 
-function normalizeImages(body: ProductImagePatchBody) {
+function normalizeImages(body: ProductImagePatchBody): NormalizedImage[] {
   const fromImages = Array.isArray(body.images) ? body.images : [];
   const normalized = fromImages
-    .map((item, index): ImageInput | null => {
+    .map((item, index): NormalizedImage | null => {
       if (typeof item === "string") {
-        return { imageUrl: item, sortOrder: index, isPrimary: index === 0 };
+        return isHttpUrl(item) ? { imageUrl: item, sortOrder: index, isPrimary: index === 0 } : null;
       }
-      if (!item || typeof item !== "object") return null;
+      if (!item || typeof item !== "object" || !isHttpUrl(item.imageUrl)) return null;
       return {
         imageUrl: item.imageUrl,
         altText: item.altText,
@@ -70,7 +81,7 @@ function normalizeImages(body: ProductImagePatchBody) {
         isPrimary: Boolean(item.isPrimary),
       };
     })
-    .filter((item): item is ImageInput => Boolean(item && isHttpUrl(item.imageUrl)));
+    .filter((item): item is NormalizedImage => Boolean(item));
 
   if (isHttpUrl(body.imageUrl)) {
     normalized.unshift({
@@ -81,9 +92,8 @@ function normalizeImages(body: ProductImagePatchBody) {
     });
   }
 
-  const deduped = new Map<string, ImageInput>();
+  const deduped = new Map<string, NormalizedImage>();
   normalized.forEach((item, index) => {
-    if (!item.imageUrl) return;
     if (!deduped.has(item.imageUrl)) {
       deduped.set(item.imageUrl, {
         ...item,
@@ -92,7 +102,7 @@ function normalizeImages(body: ProductImagePatchBody) {
     }
   });
 
-  const images = Array.from(deduped.values()).sort((left, right) => normalizeSortOrder(left.sortOrder, 0) - normalizeSortOrder(right.sortOrder, 0));
+  const images = Array.from(deduped.values()).sort((left, right) => left.sortOrder - right.sortOrder);
   return images.map((image, index) => ({
     ...image,
     sortOrder: normalizeSortOrder(image.sortOrder, index),
@@ -160,8 +170,15 @@ export async function PATCH(request: Request) {
   if (!isAdmin) return NextResponse.json({ error: "FORBIDDEN" }, { status: 403 });
 
   const body = (await request.json().catch(() => ({}))) as ProductImagePatchBody;
-  if (!body.productId && !body.slug) {
+  const productId = body.productId || null;
+  const slug = body.slug || null;
+
+  if (!productId && !slug) {
     return NextResponse.json({ error: "PRODUCT_IDENTIFIER_REQUIRED" }, { status: 400 });
+  }
+
+  if (productId && !isUuid(productId)) {
+    return NextResponse.json({ error: "INVALID_PRODUCT_ID" }, { status: 400 });
   }
 
   const images = normalizeImages(body);
@@ -175,7 +192,7 @@ export async function PATCH(request: Request) {
      WHERE ($1::uuid IS NOT NULL AND id = $1::uuid)
         OR ($2::text IS NOT NULL AND slug = $2::text)
      LIMIT 1`,
-    [body.productId || null, body.slug || null]
+    [productId, slug]
   );
 
   const product = productResult.rows[0];
