@@ -29,9 +29,10 @@ export function DesktopHome() {
         </div>
       </header>
 
-      <section className="mx-auto grid max-w-7xl grid-cols-2 gap-6 px-8 py-10">
-        <Link href="/" aria-label="San pham" className="home-card-image-products block min-h-[310px] rounded-[40px] bg-white bg-cover bg-center shadow-lg ring-1 ring-white" />
-        <Link href="/recipes" aria-label="Cong thuc" className="home-card-image-recipes block min-h-[310px] rounded-[40px] bg-white bg-cover bg-center shadow-lg ring-1 ring-white" />
+      <section className="mx-auto max-w-7xl px-8 py-10">
+        <Link href="/products" aria-label="San pham" className="block overflow-hidden rounded-[40px] bg-white shadow-lg ring-1 ring-white">
+          <img src="/home/home-trang-chu.png" alt="San pham" className="block h-auto w-full object-contain" draggable={false} />
+        </Link>
       </section>
 
       <section className="mx-auto max-w-7xl px-8 pb-14">
