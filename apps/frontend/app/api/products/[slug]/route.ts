@@ -6,6 +6,8 @@ export const dynamic = "force-dynamic";
 
 type ProductDetailRow = {
   id: string;
+  category_id: string | null;
+  subcategory_id: string | null;
   sku: string;
   slug: string;
   name: string;
@@ -128,6 +130,8 @@ export async function GET(_request: Request, { params }: { params: { slug: strin
   const productResult = await db.query<ProductDetailRow>(
     `SELECT
       p.id,
+      p.category_id,
+      p.subcategory_id,
       p.sku,
       p.slug,
       p.name,
@@ -194,13 +198,13 @@ export async function GET(_request: Request, { params }: { params: { slug: strin
          AND p.status = 'active'
          AND p.is_active = true
          AND (
-           p.category_id = $2
-           OR p.subcategory_id = $3
-           OR (p.brand IS NOT NULL AND $4::text IS NOT NULL AND p.brand = $4)
+           ($2::uuid IS NOT NULL AND p.category_id = $2::uuid)
+           OR ($3::uuid IS NOT NULL AND p.subcategory_id = $3::uuid)
+           OR ($4::text IS NOT NULL AND p.brand = $4)
          )
        ORDER BY p.sort_order, p.created_at DESC
        LIMIT 8`,
-      [product.id, product.category_slug ? productResult.rows[0].id : null, null, product.brand]
+      [product.id, product.category_id, product.subcategory_id, product.brand]
     ),
   ]);
 
