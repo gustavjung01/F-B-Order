@@ -22,15 +22,26 @@ ALTER TABLE products
   ADD COLUMN IF NOT EXISTS selling_points JSONB NOT NULL DEFAULT '[]'::jsonb,
   ADD COLUMN IF NOT EXISTS source_confidence TEXT NOT NULL DEFAULT 'needs_review';
 
-ALTER TABLE products
-  ADD CONSTRAINT products_product_type_check
-  CHECK (product_type IN ('physical', 'bundle', 'recipe_content', 'service'))
-  NOT VALID;
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_constraint WHERE conname = 'products_product_type_check'
+  ) THEN
+    ALTER TABLE products
+      ADD CONSTRAINT products_product_type_check
+      CHECK (product_type IN ('physical', 'bundle', 'recipe_content', 'service'))
+      NOT VALID;
+  END IF;
 
-ALTER TABLE products
-  ADD CONSTRAINT products_status_check
-  CHECK (status IN ('needs_review', 'active', 'draft', 'inactive'))
-  NOT VALID;
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_constraint WHERE conname = 'products_status_check'
+  ) THEN
+    ALTER TABLE products
+      ADD CONSTRAINT products_status_check
+      CHECK (status IN ('needs_review', 'active', 'draft', 'inactive'))
+      NOT VALID;
+  END IF;
+END $$;
 
 CREATE INDEX IF NOT EXISTS idx_products_category_id ON products(category_id);
 CREATE INDEX IF NOT EXISTS idx_products_subcategory_id ON products(subcategory_id);
