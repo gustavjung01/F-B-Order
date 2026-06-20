@@ -22,7 +22,7 @@ export function DesktopPageShell({ title, subtitle, children }: DesktopPageShell
             <Link href="/" className="rounded-full px-4 py-2 hover:bg-white">San pham</Link>
             <Link href="/recipes" className="rounded-full px-4 py-2 hover:bg-white">Cong thuc</Link>
             <Link href="/cart" className="rounded-full px-4 py-2 hover:bg-white">Gio hang</Link>
-            <Link href="/account" className="rounded-full px-4 py-2 hover:bg-white">Tai khoan</Link>
+            <Link href="/register" className="rounded-full px-4 py-2 hover:bg-white">Tai khoan</Link>
           </nav>
 
           <AuthControls />
