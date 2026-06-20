@@ -4,6 +4,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
 
 const oneSignalAppId = process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID;
+const oneSignalEnabled = process.env.NEXT_PUBLIC_ENABLE_ONESIGNAL === "true" && Boolean(oneSignalAppId);
 
 export const metadata: Metadata = {
   title: "Bếp Sỉ F&B",
@@ -32,11 +33,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         >
           {children}
         </ClerkProvider>
-        <Script src="/open-external-browser.js?v=3" strategy="afterInteractive" />
-        <Script src="/pwa-install-button.js?v=3" strategy="afterInteractive" />
-        <Script src="/pwa-update-toast.js?v=3" strategy="afterInteractive" />
-        <Script src="/pwa-register.js?v=3" strategy="afterInteractive" />
-        {oneSignalAppId ? (
+        <Script src="/open-external-browser.js?v=4" strategy="afterInteractive" />
+        <Script src="/pwa-install-button.js?v=4" strategy="afterInteractive" />
+        <Script src="/pwa-update-toast.js?v=4" strategy="afterInteractive" />
+        <Script src="/pwa-register.js?v=4" strategy="afterInteractive" />
+        {oneSignalEnabled ? (
           <>
             <Script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" strategy="afterInteractive" />
             <Script id="onesignal-init" strategy="afterInteractive">
