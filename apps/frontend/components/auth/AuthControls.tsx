@@ -2,16 +2,24 @@
 
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+
+const authPaths = ["/sign-in", "/sign-up"];
 
 export function AuthControls() {
+  const pathname = usePathname();
+  const isAuthPage = authPaths.some((path) => pathname?.startsWith(path));
+
+  if (isAuthPage) return null;
+
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-1.5 rounded-[22px] bg-white/80 p-1 shadow-sm ring-1 ring-[#eee7dc]">
       <SignedOut>
-        <Link href="/sign-in" className="rounded-2xl bg-white px-4 py-2 text-sm font-black text-[#0b1220] shadow-sm ring-1 ring-[#eee7dc]">
-          Dang nhap
+        <Link href="/sign-in" className="rounded-[18px] px-4 py-2 text-sm font-black text-[#0b1220] transition hover:bg-[#fbfaf7]">
+          Đăng nhập
         </Link>
-        <Link href="/sign-up" className="rounded-2xl bg-[#0b1220] px-4 py-2 text-sm font-black text-white shadow-[0_12px_24px_rgba(15,23,42,0.16)]">
-          Dang ky tai khoan
+        <Link href="/sign-up" className="rounded-[18px] bg-[#0b1220] px-4 py-2 text-sm font-black text-white shadow-[0_10px_20px_rgba(15,23,42,0.14)] transition hover:bg-[#111827]">
+          Đăng ký
         </Link>
       </SignedOut>
       <SignedIn>
