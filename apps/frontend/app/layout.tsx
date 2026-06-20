@@ -5,6 +5,7 @@ import "./globals.css";
 
 const oneSignalAppId = process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID;
 const oneSignalEnabled = process.env.NEXT_PUBLIC_ENABLE_ONESIGNAL === "true" && Boolean(oneSignalAppId);
+const clerkPublishableKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
 
 export const metadata: Metadata = {
   title: "Bếp Sỉ F&B",
@@ -18,16 +19,30 @@ export const metadata: Metadata = {
   },
 };
 
+function MissingClerkConfig({ children }: { children: React.ReactNode }) {
+  if (clerkPublishableKey) return <>{children}</>;
+
+  return (
+    <main style={{ minHeight: "100vh", padding: 24, fontFamily: "sans-serif" }}>
+      <h1>Missing Clerk publishable key</h1>
+      <p>NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY is not configured for this deployment.</p>
+    </main>
+  );
+}
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="vi">
       <body>
-        <ClerkProvider
-          signInUrl="/sign-in"
-          signUpUrl="/sign-up"
-        >
-          {children}
-        </ClerkProvider>
+        <MissingClerkConfig>
+          <ClerkProvider
+            publishableKey={clerkPublishableKey}
+            signInUrl="/sign-in"
+            signUpUrl="/sign-up"
+          >
+            {children}
+          </ClerkProvider>
+        </MissingClerkConfig>
         <Script src="/disable-pwa.js?v=1" strategy="afterInteractive" />
         <Script src="/open-external-browser.js?v=4" strategy="afterInteractive" />
         {oneSignalEnabled ? (
