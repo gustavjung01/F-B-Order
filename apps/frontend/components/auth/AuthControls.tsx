@@ -7,11 +7,8 @@ export function AuthControls() {
   return (
     <div className="flex items-center gap-1.5 rounded-[22px] bg-white/80 p-1 shadow-sm ring-1 ring-[#eee7dc]">
       <SignedOut>
-        <Link href="/sign-in" className="rounded-[18px] px-4 py-2 text-sm font-black text-[#0b1220] transition hover:bg-[#fbfaf7]">
+        <Link href="/sign-in" className="rounded-[18px] bg-[#0b1220] px-4 py-2 text-sm font-black text-white shadow-[0_10px_20px_rgba(15,23,42,0.14)] transition hover:bg-[#111827]">
           Dang nhap
-        </Link>
-        <Link href="/sign-up" className="rounded-[18px] bg-[#0b1220] px-4 py-2 text-sm font-black text-white shadow-[0_10px_20px_rgba(15,23,42,0.14)] transition hover:bg-[#111827]">
-          Dang ky
         </Link>
       </SignedOut>
       <SignedIn>
