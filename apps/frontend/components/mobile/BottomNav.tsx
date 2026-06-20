@@ -1,11 +1,11 @@
 import Link from "next/link";
 
 const items = [
-  { href: "/", label: "Trang chu", icon: "⌂", key: "home" },
-  { href: "/", label: "Hang", icon: "▦", key: "products" },
-  { href: "/recipes", label: "Cong thuc", icon: "♨", key: "recipes" },
-  { href: "/cart", label: "Gio hang", icon: "♧", key: "cart" },
-  { href: "/account", label: "Tai khoan", icon: "♙", key: "account" },
+  { href: "/", label: "Trang chu", icon: "Home", key: "home" },
+  { href: "/", label: "Hang", icon: "Grid", key: "products" },
+  { href: "/recipes", label: "Cong thuc", icon: "Cook", key: "recipes" },
+  { href: "/cart", label: "Gio hang", icon: "Cart", key: "cart" },
+  { href: "/register", label: "Tai khoan", icon: "User", key: "account" },
 ];
 
 type BottomNavProps = {
@@ -20,7 +20,7 @@ export function BottomNav({ active }: BottomNavProps) {
           const isActive = item.key === active;
           return (
             <Link key={item.key} href={item.href} prefetch className={`relative flex h-[50px] flex-col items-center justify-center gap-0.5 rounded-[16px] text-[9.5px] font-extrabold transition ${isActive ? "bg-[#fff3ea] text-[#ff5a00]" : "text-slate-500"}`}>
-              <span className="relative text-[21px] leading-none">{item.icon}</span>
+              <span className="relative text-[10px] leading-none">{item.icon}</span>
               <span className="leading-none">{item.label}</span>
             </Link>
           );
