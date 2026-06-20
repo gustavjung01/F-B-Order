@@ -12,6 +12,13 @@ coverage
 .vercel
 .turbo
 
-.vercel-env-audit
+# Local agent/browser/test scratch files
+.tmp/
+tmp/
+.temp/
+.cache/
+.codex/
+playwright-report/
+test-results/
 
 .vercel-env-audit
