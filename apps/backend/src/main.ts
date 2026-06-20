@@ -11,7 +11,10 @@ const app = express();
 const port = Number(process.env.PORT || 5000);
 const corsOrigin = process.env.CORS_ORIGIN || process.env.FRONTEND_URL || "http://localhost:3000";
 const serviceName = process.env.APP_NAME || "bepsi-api";
-const clerkEnabled = Boolean(process.env.CLERK_SECRET_KEY);
+const clerkSecretKey = process.env.CLERK_SECRET_KEY?.trim();
+const clerkPublishableKey =
+  process.env.CLERK_PUBLISHABLE_KEY?.trim() || process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY?.trim();
+const clerkEnabled = Boolean(clerkSecretKey && clerkPublishableKey);
 
 app.disable("x-powered-by");
 app.use(helmet());
@@ -24,6 +27,10 @@ function healthPayload() {
     service: serviceName,
     port,
     clerkEnabled,
+    clerkMissing: {
+      secretKey: !clerkSecretKey,
+      publishableKey: !clerkPublishableKey,
+    },
     time: new Date().toISOString(),
   };
 }
@@ -41,11 +48,17 @@ app.get("/api/version", (_req, res) => {
 });
 
 if (clerkEnabled) {
-  app.use(clerkMiddleware());
+  app.use(clerkMiddleware({ secretKey: clerkSecretKey, publishableKey: clerkPublishableKey }));
   app.use("/api/auth", authRouter);
 } else {
   app.use("/api/auth", (_req, res) => {
-    res.status(503).json({ error: "CLERK_NOT_CONFIGURED" });
+    res.status(503).json({
+      error: "CLERK_NOT_CONFIGURED",
+      missing: {
+        secretKey: !clerkSecretKey,
+        publishableKey: !clerkPublishableKey,
+      },
+    });
   });
 }
 
