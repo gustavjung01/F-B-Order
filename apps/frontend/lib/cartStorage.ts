@@ -1,16 +1,25 @@
 export const CART_STORAGE_KEY = "bep_si_fb_cart_items_v1";
 export const CART_UPDATED_EVENT = "bep-si-fb-cart-updated";
 
-export type CartItem = {
-  productId: string;
+export type CartItemSnapshot = {
+  productName: string;
   sku: string;
-  name: string;
   unit: string;
+  unitLabel: string;
+  packageSize: string;
+  packageSizeLabel: string;
+  priceLabel: string;
+  imageUrl: string;
+  categorySlug: string;
+  categoryName: string;
+};
+
+export type CartItem = CartItemSnapshot & {
+  productId: string;
+  name: string;
   price: number;
   quantity: number;
   minOrderQty: number;
-  imageUrl: string;
-  categorySlug: string;
 };
 
 export type AddCartItemInput = Omit<CartItem, "quantity"> & {
@@ -27,30 +36,49 @@ function toPositiveInteger(value: unknown, fallback = 1) {
   return Math.max(1, Math.floor(numberValue));
 }
 
+function cleanText(value: unknown) {
+  return typeof value === "string" ? value.trim() : "";
+}
+
 function normalizeItem(value: unknown): CartItem | null {
   if (!value || typeof value !== "object") return null;
   const item = value as Partial<CartItem>;
-  const productId = String(item.productId || "");
-  const sku = String(item.sku || "");
-  const name = String(item.name || "");
-  const unit = String(item.unit || "");
+  const productId = cleanText(item.productId);
+  const sku = cleanText(item.sku);
+  const name = cleanText(item.name || item.productName);
+  const productName = cleanText(item.productName || item.name);
+  const unit = cleanText(item.unit || item.unitLabel);
+  const unitLabel = cleanText(item.unitLabel || item.unit);
+  const packageSize = cleanText(item.packageSize || item.packageSizeLabel);
+  const packageSizeLabel = cleanText(item.packageSizeLabel || item.packageSize);
+  const priceLabel = cleanText(item.priceLabel);
   const price = Number(item.price);
 
   if (!productId && !sku) return null;
-  if (!name || !unit) return null;
+  if (!name || !productName || !unit) return null;
   if (!Number.isFinite(price) || price < 0) return null;
 
   return {
     productId,
     sku,
     name,
+    productName,
     unit,
+    unitLabel: unitLabel || unit,
+    packageSize,
+    packageSizeLabel,
+    priceLabel,
     price,
     quantity: toPositiveInteger(item.quantity),
     minOrderQty: toPositiveInteger(item.minOrderQty),
-    imageUrl: String(item.imageUrl || ""),
-    categorySlug: String(item.categorySlug || ""),
+    imageUrl: cleanText(item.imageUrl),
+    categorySlug: cleanText(item.categorySlug),
+    categoryName: cleanText(item.categoryName),
   };
+}
+
+function getItemKey(item: Pick<CartItem, "productId" | "sku" | "packageSizeLabel" | "unitLabel">) {
+  return [item.productId || item.sku, item.packageSizeLabel, item.unitLabel].filter(Boolean).join("::");
 }
 
 function emitCartUpdated() {
@@ -86,8 +114,8 @@ export function addCartItem(input: AddCartItemInput) {
   if (!nextItem) return readCartItems();
 
   const items = readCartItems();
-  const itemKey = nextItem.productId || nextItem.sku;
-  const existingIndex = items.findIndex((item) => (item.productId || item.sku) === itemKey);
+  const itemKey = getItemKey(nextItem);
+  const existingIndex = items.findIndex((item) => getItemKey(item) === itemKey);
 
   if (existingIndex >= 0) {
     items[existingIndex] = {
@@ -108,13 +136,13 @@ export function updateCartItemQuantity(itemKey: string, quantity: number) {
   const safeQuantity = Math.floor(Number(quantity));
 
   if (!Number.isFinite(safeQuantity) || safeQuantity <= 0) {
-    const filtered = items.filter((item) => (item.productId || item.sku) !== itemKey);
+    const filtered = items.filter((item) => getItemKey(item) !== itemKey);
     writeCartItems(filtered);
     return filtered;
   }
 
   const updated = items.map((item) => {
-    if ((item.productId || item.sku) !== itemKey) return item;
+    if (getItemKey(item) !== itemKey) return item;
     return { ...item, quantity: Math.max(item.minOrderQty || 1, safeQuantity) };
   });
 
@@ -123,7 +151,7 @@ export function updateCartItemQuantity(itemKey: string, quantity: number) {
 }
 
 export function removeCartItem(itemKey: string) {
-  const items = readCartItems().filter((item) => (item.productId || item.sku) !== itemKey);
+  const items = readCartItems().filter((item) => getItemKey(item) !== itemKey);
   writeCartItems(items);
   return items;
 }
@@ -138,4 +166,8 @@ export function getCartCount(items: CartItem[]) {
 
 export function getCartTotal(items: CartItem[]) {
   return items.reduce((total, item) => total + item.price * item.quantity, 0);
+}
+
+export function getCartItemKey(item: CartItem) {
+  return getItemKey(item);
 }
