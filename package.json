@@ -1,7 +1,7 @@
 {
   "name": "f-b-order",
   "private": true,
-  "packageManager": "pnpm@10.8.2",
+  "packageManager": "pnpm@10.34.4",
   "engines": {
     "node": "22.x"
   },
