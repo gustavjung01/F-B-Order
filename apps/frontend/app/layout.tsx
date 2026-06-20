@@ -9,7 +9,8 @@ const clerkPublishableKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
 
 export const metadata: Metadata = {
   title: "Bếp Sỉ F&B",
-  description: "Web đặt hàng nguyên liệu F&B cho khách hàng.",
+  description: "PWA đặt hàng nguyên liệu F&B cho khách hàng.",
+  manifest: "/manifest.webmanifest",
   icons: {
     icon: [
       { url: "/favicon.ico" },
@@ -44,6 +45,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </ClerkProvider>
         </ClerkConfigGuard>
         <Script src="/open-external-browser.js?v=4" strategy="afterInteractive" />
+        <Script src="/pwa-install-button.js?v=5" strategy="afterInteractive" />
+        <Script src="/pwa-update-toast.js?v=5" strategy="afterInteractive" />
+        <Script src="/pwa-register.js?v=5" strategy="afterInteractive" />
         {oneSignalEnabled ? (
           <>
             <Script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" strategy="afterInteractive" />
