@@ -3,12 +3,21 @@
 Nguồn schema chuẩn hiện tại:
 
 ```bash
-psql "$DATABASE_URL" -f db/migrations/001_init_core.sql
+npm --workspace @fb-order/backend run db:migrate
 ```
 
 Seed kiểm thử local/dev:
 
 ```bash
+npm --workspace @fb-order/backend run db:seed:test
+```
+
+Không cần cài `psql` nếu chạy bằng script Node ở trên. Script sẽ đọc `DATABASE_URL` hoặc `BEPSI_DATABASE_URL` từ môi trường, `./.env`, `apps/backend/.env`, hoặc `apps/backend/.env.local`.
+
+Nếu máy đã có PostgreSQL client thì vẫn có thể chạy trực tiếp:
+
+```bash
+psql "$DATABASE_URL" -f db/migrations/001_init_core.sql
 psql "$DATABASE_URL" -f db/seeds/001_seed_test.sql
 ```
 
