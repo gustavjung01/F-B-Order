@@ -2,14 +2,13 @@
 
 import Link from "next/link";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
-import { BrandLogo } from "@/components/brand/BrandLogo";
 
 export function AppHeader() {
   return (
     <header className="fixed inset-x-0 top-0 z-40 border-b border-[#eee7dc]/70 bg-[#f7f3eb]/95 px-4 pb-3 pt-[calc(env(safe-area-inset-top)+10px)] backdrop-blur-xl">
       <div className="mx-auto flex max-w-md items-center justify-between gap-3">
-        <Link href="/" prefetch={false} aria-label="Bep Si F&B" className="flex h-12 w-[164px] items-center overflow-visible">
-          <BrandLogo className="h-12 w-[164px] origin-left scale-[1.1] object-left" />
+        <Link href="/" prefetch={false} aria-label="Bep Si F&B" className="flex h-[54px] w-[178px] items-center overflow-hidden">
+          <img src="/brand/logo.png" alt="Bep Si F&B" className="h-[98px] w-[232px] max-w-none -translate-y-[22px] object-contain object-left mix-blend-multiply" draggable={false} />
         </Link>
 
         <div className="flex shrink-0 items-center gap-2">
