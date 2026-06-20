@@ -1,5 +1,17 @@
-const CACHE_VERSION = "bep-si-fb-pwa-v9";
-const RUNTIME_CACHE = "bep-si-fb-runtime-v9";
+var oneSignalEnabled = false;
+
+try {
+  oneSignalEnabled = new URL(self.location.href).searchParams.get("onesignal") === "1";
+} catch (error) {
+  oneSignalEnabled = false;
+}
+
+if (oneSignalEnabled) {
+  importScripts("https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.sw.js");
+}
+
+const CACHE_VERSION = "bep-si-fb-pwa-v10";
+const RUNTIME_CACHE = "bep-si-fb-runtime-v10";
 
 const OFFLINE_FALLBACK = [
   "/",

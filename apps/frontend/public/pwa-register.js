@@ -37,7 +37,13 @@
   });
 
   window.addEventListener("load", function () {
-    navigator.serviceWorker.register("/service-worker.js").then(function (registration) {
+    var serviceWorkerUrl = "/service-worker.js";
+
+    if (window.__FB_ORDER_RUNTIME__ && window.__FB_ORDER_RUNTIME__.enableOneSignal) {
+      serviceWorkerUrl += "?onesignal=1";
+    }
+
+    navigator.serviceWorker.register(serviceWorkerUrl).then(function (registration) {
       installUpdateHandlers(registration);
       setTimeout(function () {
         registration.update().catch(function () {});

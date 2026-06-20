@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import Script from "next/script";
 import { ClerkProvider } from "@clerk/nextjs";
+import { OneSignalBootstrap } from "@/components/notifications/OneSignalBootstrap";
 import "./globals.css";
 
 const oneSignalAppId = process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID;
-const oneSignalEnabled = process.env.NEXT_PUBLIC_ENABLE_ONESIGNAL === "true" && Boolean(oneSignalAppId);
+const oneSignalEnabled = process.env.NEXT_PUBLIC_ENABLE_ONESIGNAL === "true" && Boolean(oneSignalAppId?.trim());
 const clerkPublishableKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
 
 export const metadata: Metadata = {
@@ -44,25 +45,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             {children}
           </ClerkProvider>
         </ClerkConfigGuard>
+        <Script id="runtime-flags" strategy="beforeInteractive">
+          {`
+            window.__FB_ORDER_RUNTIME__ = {
+              enableOneSignal: ${oneSignalEnabled ? "true" : "false"}
+            };
+          `}
+        </Script>
         <Script src="/open-external-browser.js?v=4" strategy="afterInteractive" />
         <Script src="/pwa-install-button.js?v=6" strategy="afterInteractive" />
         <Script src="/pwa-update-toast.js?v=6" strategy="afterInteractive" />
         <Script src="/pwa-register.js?v=6" strategy="afterInteractive" />
-        {oneSignalEnabled ? (
-          <>
-            <Script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" strategy="afterInteractive" />
-            <Script id="onesignal-init" strategy="afterInteractive">
-              {`
-                window.OneSignalDeferred = window.OneSignalDeferred || [];
-                OneSignalDeferred.push(async function(OneSignal) {
-                  await OneSignal.init({
-                    appId: "${oneSignalAppId}",
-                  });
-                });
-              `}
-            </Script>
-          </>
-        ) : null}
+        {oneSignalEnabled ? <OneSignalBootstrap appId={oneSignalAppId ?? ""} enabled={oneSignalEnabled} /> : null}
       </body>
     </html>
   );
