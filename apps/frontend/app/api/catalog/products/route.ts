@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { listCatalogProducts } from "@/data/catalog/catalog-service";
 
-export const dynamic = "force-static";
+export const dynamic = "force-dynamic";
 
 function getOptionalParam(request: NextRequest, key: string) {
   const value = request.nextUrl.searchParams.get(key);
