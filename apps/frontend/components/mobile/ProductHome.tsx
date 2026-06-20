@@ -152,11 +152,13 @@ export function ProductHome({ active = "home" }: { active?: BottomNavKey }) {
     <MobilePageShell active={active} title="Bếp Sỉ F&B" subtitle={subtitle}>
       <h1 className="sr-only">Sản phẩm</h1>
 
-      <div className="overflow-hidden rounded-[30px] bg-white p-4 shadow-[0_14px_30px_rgba(15,23,42,0.085)] ring-1 ring-white/80">
-        <p className="text-[12px] font-black uppercase tracking-[0.14em] text-[#ff5a00]">Catalog Hưng Phát</p>
-        <h2 className="mt-2 text-[28px] font-black leading-tight tracking-tight text-[#0b1220]">Nguyên liệu F&B cho quán</h2>
-        <p className="mt-2 text-[13px] font-bold leading-6 text-slate-500">Dữ liệu crawl từ nguồn công ty. Giá, đơn vị hoặc quy cách còn thiếu sẽ hiển thị Đang cập nhật.</p>
-        <input value={searchText} onChange={(event) => setSearchText(event.target.value)} placeholder="Tìm trà, bột sữa, topping..." className="mt-4 h-12 w-full rounded-[18px] border border-[#eee7dc] bg-[#fbfaf7] px-4 text-[15px] font-bold outline-none placeholder:text-slate-400 focus:border-[#ff5a00] focus:bg-white" />
+      <div className="relative min-h-[220px] overflow-hidden rounded-[30px] shadow-[0_14px_30px_rgba(15,23,42,0.085)] ring-1 ring-white/80">
+        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url('/images/hero/ingredients-banner.svg')" }} />
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.12)_0%,rgba(247,243,235,0.48)_46%,rgba(247,243,235,0.96)_100%)]" />
+        <div className="relative z-10 flex min-h-[220px] flex-col justify-end p-4">
+          <h2 className="max-w-[260px] text-[30px] font-black leading-tight tracking-tight text-[#0b1220] drop-shadow-[0_1px_0_rgba(255,255,255,0.65)]">Nguyên liệu F&B cho quán</h2>
+          <input value={searchText} onChange={(event) => setSearchText(event.target.value)} placeholder="Tìm trà, bột sữa, topping..." className="mt-4 h-12 w-full rounded-[18px] border border-white/80 bg-white/95 px-4 text-[15px] font-bold shadow-sm outline-none placeholder:text-slate-400 focus:border-[#ff5a00] focus:bg-white" />
+        </div>
       </div>
 
       <div className="-mx-4 mt-4 overflow-hidden border-y border-[#eee7dc] bg-[#f7f3eb]/95">
