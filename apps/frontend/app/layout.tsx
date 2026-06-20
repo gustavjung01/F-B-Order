@@ -19,12 +19,12 @@ export const metadata: Metadata = {
   },
 };
 
-function MissingClerkConfig({ children }: { children: React.ReactNode }) {
+function ClerkConfigGuard({ children }: { children: React.ReactNode }) {
   if (clerkPublishableKey) return <>{children}</>;
 
   return (
     <main style={{ minHeight: "100vh", padding: 24, fontFamily: "sans-serif" }}>
-      <h1>Missing Clerk publishable key</h1>
+      <h1>Missing Clerk configuration</h1>
       <p>NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY is not configured for this deployment.</p>
     </main>
   );
@@ -34,15 +34,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="vi">
       <body>
-        <MissingClerkConfig>
+        <ClerkConfigGuard>
           <ClerkProvider
             publishableKey={clerkPublishableKey}
             signInUrl="/sign-in"
+            signUpUrl="/sign-up"
           >
             {children}
           </ClerkProvider>
-        </MissingClerkConfig>
-        <Script src="/disable-pwa.js?v=1" strategy="afterInteractive" />
+        </ClerkConfigGuard>
         <Script src="/open-external-browser.js?v=4" strategy="afterInteractive" />
         {oneSignalEnabled ? (
           <>
