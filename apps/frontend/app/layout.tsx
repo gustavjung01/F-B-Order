@@ -8,8 +8,7 @@ const oneSignalEnabled = process.env.NEXT_PUBLIC_ENABLE_ONESIGNAL === "true" && 
 
 export const metadata: Metadata = {
   title: "Bếp Sỉ F&B",
-  description: "PWA đặt hàng nguyên liệu F&B cho khách hàng.",
-  manifest: "/manifest.webmanifest",
+  description: "Web đặt hàng nguyên liệu F&B cho khách hàng.",
   icons: {
     icon: [
       { url: "/favicon.ico" },
@@ -33,10 +32,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         >
           {children}
         </ClerkProvider>
+        <Script src="/disable-pwa.js?v=1" strategy="afterInteractive" />
         <Script src="/open-external-browser.js?v=4" strategy="afterInteractive" />
-        <Script src="/pwa-install-button.js?v=4" strategy="afterInteractive" />
-        <Script src="/pwa-update-toast.js?v=4" strategy="afterInteractive" />
-        <Script src="/pwa-register.js?v=4" strategy="afterInteractive" />
         {oneSignalEnabled ? (
           <>
             <Script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" strategy="afterInteractive" />
