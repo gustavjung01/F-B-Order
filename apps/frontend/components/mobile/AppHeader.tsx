@@ -13,7 +13,7 @@ export function AppHeader() {
         </Link>
 
         <div className="flex shrink-0 items-center gap-1.5">
-          <span aria-label="Thong bao" className="grid h-9 w-9 place-items-center rounded-full bg-white text-[15px] font-black text-[#ff5a00] shadow-sm ring-1 ring-[#eee7dc]">TB</span>
+          <span aria-label="Thong bao" className="grid h-9 w-9 place-items-center rounded-full bg-white text-[17px] font-black text-[#ff5a00] shadow-sm ring-1 ring-[#eee7dc]">🔔</span>
           <Link href="/" prefetch={false} aria-label="Search" className="grid h-9 w-9 place-items-center rounded-full bg-white text-[12px] font-black text-[#0b1220] shadow-sm ring-1 ring-[#eee7dc]">Tim</Link>
           <SignedIn>
             <div className="grid h-9 w-9 place-items-center rounded-full bg-white shadow-sm ring-1 ring-[#eee7dc]">
