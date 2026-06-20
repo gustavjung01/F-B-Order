@@ -5,7 +5,9 @@ type RawHungPhatCatalogProduct = (typeof hungPhatCatalog.products)[number];
 
 const UPDATING_LABEL = "Đang cập nhật";
 
-const categoryNameById = new Map(hungPhatCatalog.categories.map((category) => [category.id, category.name]));
+const categoryNameById = new Map<string, string>(
+  hungPhatCatalog.categories.map((category) => [category.id, category.name]),
+);
 
 const INTERNAL_ONLY_VALUES = new Set([
   "TODO",
