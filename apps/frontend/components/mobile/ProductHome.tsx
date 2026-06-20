@@ -1,20 +1,14 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { MobilePageShell } from "@/components/mobile/MobilePageShell";
+import { ProductQuickView } from "@/components/mobile/ProductQuickView";
 import type { CategoryWithCount, PublicProduct } from "@/data/catalog/product-model";
 
 type BottomNavKey = "home" | "products" | "recipes" | "cart" | "account";
 
-type CategoriesResponse = {
-  categories: CategoryWithCount[];
-};
-
-type ProductsResponse = {
-  products: PublicProduct[];
-  total: number;
-};
+type CategoriesResponse = { categories: CategoryWithCount[] };
+type ProductsResponse = { products: PublicProduct[]; total: number };
 
 const categoryEmoji: Record<string, string> = {
   all: "▦",
@@ -55,17 +49,15 @@ function isUpdating(value: string | null | undefined) {
   return !value || value === "Đang cập nhật";
 }
 
-function ProductCard({ product }: { product: PublicProduct }) {
-  const detailHref = `/products/${product.slug}`;
-
+function ProductCard({ product, onOpen }: { product: PublicProduct; onOpen: () => void }) {
   return (
     <article className="overflow-hidden rounded-[28px] border border-white/80 bg-white p-4 shadow-[0_16px_34px_rgba(15,23,42,0.095)] ring-1 ring-[#efe7dc]">
       <div className="flex gap-3">
         <div className="min-w-0 flex-1 pt-1">
           {!isUpdating(product.brand) ? <p className="mb-1 text-[11px] font-black uppercase tracking-[0.12em] text-[#ff5a00]">{product.brand}</p> : null}
-          <Link href={detailHref} className="block text-[20px] font-black leading-tight tracking-tight text-[#0b1220] active:text-[#ff5a00]">
+          <button type="button" onClick={onOpen} className="block text-left text-[20px] font-black leading-tight tracking-tight text-[#0b1220] active:text-[#ff5a00]">
             {product.name}
-          </Link>
+          </button>
           <p className="mt-2 text-[13px] font-black text-slate-500">{product.categoryName}</p>
           <div className="mt-2 space-y-1 text-[13px] font-semibold text-slate-500">
             <p>Quy cách: <span className="font-black text-[#0b1220]">{product.packageSizeLabel}</span></p>
@@ -74,14 +66,14 @@ function ProductCard({ product }: { product: PublicProduct }) {
           {product.shortDescription ? <p className="mt-2 line-clamp-2 text-[12px] font-semibold leading-snug text-slate-400">{product.shortDescription}</p> : null}
           <p className="mt-3 inline-flex rounded-full bg-[#fff3ea] px-3 py-2 text-[13px] font-black text-[#ff5a00] ring-1 ring-[#ffd0b3]">{product.priceLabel}</p>
         </div>
-        <Link href={detailHref} className="grid h-[112px] w-[116px] shrink-0 place-items-center overflow-hidden rounded-[25px] bg-gradient-to-br from-[#fffaf3] via-[#fff3e6] to-[#ede7dd] text-[62px] ring-1 ring-white/80">
+        <button type="button" onClick={onOpen} className="grid h-[112px] w-[116px] shrink-0 place-items-center overflow-hidden rounded-[25px] bg-gradient-to-br from-[#fffaf3] via-[#fff3e6] to-[#ede7dd] text-[62px] ring-1 ring-white/80">
           {product.imageUrl ? <img src={product.imageUrl} alt={product.name} className="h-full w-full object-cover" /> : getProductEmoji(product)}
-        </Link>
+        </button>
       </div>
       <div className="mt-4 flex items-center gap-3">
-        <Link href={detailHref} className="flex h-11 flex-1 items-center justify-center rounded-[16px] bg-[#fbfaf7] px-4 text-[15px] font-black text-[#0b1220] ring-1 ring-[#eee7dc]">
-          Xem chi tiết
-        </Link>
+        <button type="button" onClick={onOpen} className="flex h-11 flex-1 items-center justify-center rounded-[16px] bg-[#fbfaf7] px-4 text-[15px] font-black text-[#0b1220] ring-1 ring-[#eee7dc]">
+          Xem
+        </button>
         <span className="flex h-11 min-w-[128px] items-center justify-center rounded-[16px] bg-[#0b1220] px-4 text-[13px] font-black text-white shadow-[0_12px_22px_rgba(15,23,42,0.18)]">
           {product.orderLabel}
         </span>
@@ -98,14 +90,15 @@ export function ProductHome({ active = "home" }: { active?: BottomNavKey }) {
   const [products, setProducts] = useState<PublicProduct[]>([]);
   const [categories, setCategories] = useState<CategoryWithCount[]>([]);
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [selectedProduct, setSelectedProduct] = useState<PublicProduct | null>(null);
   const [searchText, setSearchText] = useState("");
+  const [totalProducts, setTotalProducts] = useState(0);
   const [loadingProducts, setLoadingProducts] = useState(true);
   const [loadingCategories, setLoadingCategories] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
     let activeRequest = true;
-
     async function loadCategories() {
       try {
         setLoadingCategories(true);
@@ -113,8 +106,7 @@ export function ProductHome({ active = "home" }: { active?: BottomNavKey }) {
         if (!response.ok) throw new Error("Không tải được danh mục");
         const data = (await response.json()) as CategoriesResponse;
         if (!activeRequest) return;
-        const parentCategories = Array.isArray(data.categories) ? data.categories.filter((category) => category.parentId === null) : [];
-        setCategories(parentCategories);
+        setCategories(Array.isArray(data.categories) ? data.categories.filter((category) => category.parentId === null) : []);
       } catch (loadError) {
         if (!activeRequest) return;
         setError(loadError instanceof Error ? loadError.message : "Không tải được danh mục");
@@ -123,16 +115,12 @@ export function ProductHome({ active = "home" }: { active?: BottomNavKey }) {
         if (activeRequest) setLoadingCategories(false);
       }
     }
-
     loadCategories();
-    return () => {
-      activeRequest = false;
-    };
+    return () => { activeRequest = false; };
   }, []);
 
   useEffect(() => {
     let activeRequest = true;
-
     async function loadProducts() {
       try {
         setLoadingProducts(true);
@@ -142,24 +130,23 @@ export function ProductHome({ active = "home" }: { active?: BottomNavKey }) {
         const data = (await response.json()) as ProductsResponse;
         if (!activeRequest) return;
         setProducts(Array.isArray(data.products) ? data.products : []);
+        setTotalProducts(Number.isFinite(data.total) ? data.total : 0);
       } catch (loadError) {
         if (!activeRequest) return;
         setError(loadError instanceof Error ? loadError.message : "Không tải được sản phẩm");
         setProducts([]);
+        setTotalProducts(0);
       } finally {
         if (activeRequest) setLoadingProducts(false);
       }
     }
-
     const timer = window.setTimeout(loadProducts, 180);
-    return () => {
-      activeRequest = false;
-      window.clearTimeout(timer);
-    };
+    return () => { activeRequest = false; window.clearTimeout(timer); };
   }, [selectedCategory, searchText]);
 
   const loading = loadingCategories || loadingProducts;
   const subtitle = useMemo(() => loading ? "Đang tải catalog" : "Catalog sản phẩm Hưng Phát", [loading]);
+  const tabs = [{ id: "all", name: "Tất cả", productCount: totalProducts, parentId: null, sortOrder: 0 }, ...categories];
 
   return (
     <MobilePageShell active={active} title="Bếp Sỉ F&B" subtitle={subtitle}>
@@ -169,22 +156,19 @@ export function ProductHome({ active = "home" }: { active?: BottomNavKey }) {
         <p className="text-[12px] font-black uppercase tracking-[0.14em] text-[#ff5a00]">Catalog Hưng Phát</p>
         <h2 className="mt-2 text-[28px] font-black leading-tight tracking-tight text-[#0b1220]">Nguyên liệu F&B cho quán</h2>
         <p className="mt-2 text-[13px] font-bold leading-6 text-slate-500">Dữ liệu crawl từ nguồn công ty. Giá, đơn vị hoặc quy cách còn thiếu sẽ hiển thị Đang cập nhật.</p>
-        <input
-          value={searchText}
-          onChange={(event) => setSearchText(event.target.value)}
-          placeholder="Tìm trà, bột sữa, topping..."
-          className="mt-4 h-12 w-full rounded-[18px] border border-[#eee7dc] bg-[#fbfaf7] px-4 text-[15px] font-bold outline-none placeholder:text-slate-400 focus:border-[#ff5a00] focus:bg-white"
-        />
+        <input value={searchText} onChange={(event) => setSearchText(event.target.value)} placeholder="Tìm trà, bột sữa, topping..." className="mt-4 h-12 w-full rounded-[18px] border border-[#eee7dc] bg-[#fbfaf7] px-4 text-[15px] font-bold outline-none placeholder:text-slate-400 focus:border-[#ff5a00] focus:bg-white" />
       </div>
 
       <div className="-mx-4 mt-4 overflow-hidden border-y border-[#eee7dc] bg-[#f7f3eb]/95">
         <div className="flex touch-pan-x gap-2 overflow-x-auto overscroll-x-contain px-4 py-3 [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          {[{ id: "all", name: "Tất cả", productCount: products.length, parentId: null, sortOrder: 0 }, ...categories].map((tab) => {
+          {tabs.map((tab) => {
             const selected = tab.id === selectedCategory;
+            const empty = tab.id !== "all" && tab.productCount === 0;
             return (
-              <button key={tab.id} type="button" aria-pressed={selected} onClick={() => setSelectedCategory(tab.id)} className={`inline-flex shrink-0 items-center gap-1.5 rounded-[14px] px-3.5 py-2.5 text-[13px] font-black shadow-sm ring-1 ${selected ? "bg-[#ff5a00] text-white ring-[#ff5a00] shadow-[0_8px_16px_rgba(255,90,0,0.18)]" : getTabTone(tab.id)}`}>
+              <button key={tab.id} type="button" aria-pressed={selected} onClick={() => setSelectedCategory(tab.id)} className={`inline-flex shrink-0 items-center gap-1.5 rounded-[14px] px-3.5 py-2.5 text-[13px] font-black shadow-sm ring-1 ${selected ? "bg-[#ff5a00] text-white ring-[#ff5a00] shadow-[0_8px_16px_rgba(255,90,0,0.18)]" : empty ? "bg-white text-slate-400 ring-[#eee7dc]" : getTabTone(tab.id)}`}>
                 <span className="text-[16px] leading-none">{categoryEmoji[tab.id] || "▦"}</span>
                 <span className="leading-none">{tab.name}</span>
+                <span className="rounded-full bg-white/60 px-1.5 py-0.5 text-[11px] leading-none">{tab.productCount}</span>
               </button>
             );
           })}
@@ -194,9 +178,11 @@ export function ProductHome({ active = "home" }: { active?: BottomNavKey }) {
       <div className="mt-4 space-y-3">
         {loading ? <ProductListState>Đang tải sản phẩm...</ProductListState> : null}
         {!loading && error ? <ProductListState>{error}</ProductListState> : null}
-        {!loading && !error && products.length === 0 ? <ProductListState>Chưa có sản phẩm phù hợp</ProductListState> : null}
-        {!loading && !error ? products.map((product) => <ProductCard key={product.id} product={product} />) : null}
+        {!loading && !error && products.length === 0 ? <ProductListState>Nhóm này đang cập nhật dữ liệu sản phẩm</ProductListState> : null}
+        {!loading && !error ? products.map((product) => <ProductCard key={product.id} product={product} onOpen={() => setSelectedProduct(product)} />) : null}
       </div>
+
+      {selectedProduct ? <ProductQuickView product={selectedProduct} onClose={() => setSelectedProduct(null)} /> : null}
     </MobilePageShell>
   );
 }
