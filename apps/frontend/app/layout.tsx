@@ -22,7 +22,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="vi">
       <body>
-        <ClerkProvider>
+        <ClerkProvider
+          signInUrl="/sign-in"
+          signUpUrl="/sign-up"
+          signInForceRedirectUrl="/account"
+          signUpForceRedirectUrl="/register"
+          signInFallbackRedirectUrl="/account"
+          signUpFallbackRedirectUrl="/register"
+        >
           {children}
         </ClerkProvider>
         <Script src="/open-external-browser.js?v=3" strategy="afterInteractive" />
