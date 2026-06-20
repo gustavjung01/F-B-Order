@@ -1,5 +1,5 @@
-const CACHE_VERSION = "bep-si-fb-pwa-v7";
-const RUNTIME_CACHE = "bep-si-fb-runtime-v7";
+const CACHE_VERSION = "bep-si-fb-pwa-v8";
+const RUNTIME_CACHE = "bep-si-fb-runtime-v8";
 
 const OFFLINE_FALLBACK = [
   "/",
@@ -38,10 +38,6 @@ self.addEventListener("message", function (event) {
   if (event.data && event.data.type === "SKIP_WAITING") self.skipWaiting();
 });
 
-function networkOnly(request) {
-  return fetch(request, { cache: "no-store" });
-}
-
 function networkFirst(request) {
   return fetch(request, { cache: "no-store" }).then(function (response) {
     var copy = response.clone();
@@ -77,15 +73,12 @@ self.addEventListener("fetch", function (event) {
   if (request.method !== "GET") return;
   if (url.origin !== self.location.origin) return;
 
+  if (AUTH_ROUTE_RE.test(url.pathname)) return;
+
   if (url.pathname === "/service-worker.js" || url.pathname === "/app-version.json" || url.pathname === "/manifest.webmanifest") {
     event.respondWith(fetch(request, { cache: "no-store" }).catch(function () {
       return caches.match(request);
     }));
-    return;
-  }
-
-  if (AUTH_ROUTE_RE.test(url.pathname)) {
-    event.respondWith(networkOnly(request));
     return;
   }
 
