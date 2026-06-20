@@ -11,10 +11,10 @@ type MobilePageShellProps = {
   children: ReactNode;
 };
 
-export function MobilePageShell({ active, title = "Bep Si F&B", subtitle = "Dat hang nguyen lieu", children }: MobilePageShellProps) {
+export function MobilePageShell({ active, children }: MobilePageShellProps) {
   return (
     <main className="min-h-screen bg-[#f7f3eb] pb-28 pt-[calc(env(safe-area-inset-top)+86px)] text-[#0b1220]">
-      <AppHeader title={title} subtitle={subtitle} />
+      <AppHeader />
       <section className="mx-auto max-w-md px-4 py-4">
         {children}
       </section>
