@@ -1,5 +1,5 @@
-const CACHE_VERSION = "bep-si-fb-pwa-v6";
-const RUNTIME_CACHE = "bep-si-fb-runtime-v6";
+const CACHE_VERSION = "bep-si-fb-pwa-v7";
+const RUNTIME_CACHE = "bep-si-fb-runtime-v7";
 
 const OFFLINE_FALLBACK = [
   "/",
@@ -8,6 +8,7 @@ const OFFLINE_FALLBACK = [
 ];
 
 const STATIC_ASSET_RE = /\.(?:js|css|png|jpg|jpeg|svg|webp|gif|ico|woff2?)$/i;
+const AUTH_ROUTE_RE = /^\/(?:sign-in|sign-up)(?:\/|$)/;
 
 self.addEventListener("install", function (event) {
   event.waitUntil(
@@ -36,6 +37,10 @@ self.addEventListener("activate", function (event) {
 self.addEventListener("message", function (event) {
   if (event.data && event.data.type === "SKIP_WAITING") self.skipWaiting();
 });
+
+function networkOnly(request) {
+  return fetch(request, { cache: "no-store" });
+}
 
 function networkFirst(request) {
   return fetch(request, { cache: "no-store" }).then(function (response) {
@@ -76,6 +81,11 @@ self.addEventListener("fetch", function (event) {
     event.respondWith(fetch(request, { cache: "no-store" }).catch(function () {
       return caches.match(request);
     }));
+    return;
+  }
+
+  if (AUTH_ROUTE_RE.test(url.pathname)) {
+    event.respondWith(networkOnly(request));
     return;
   }
 
