@@ -1,5 +1,5 @@
 {
-  "version": "deploy-clerk-service-worker-bypass-20260620",
-  "git": "deploy-clerk-service-worker-bypass",
-  "builtAt": "2026-06-20T00:20:00.000Z"
+  "version": "deploy-disable-pwa-clerk-auth-20260620",
+  "git": "deploy-disable-pwa-clerk-auth",
+  "builtAt": "2026-06-20T00:35:00.000Z"
 }
