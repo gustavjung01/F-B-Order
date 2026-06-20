@@ -1,5 +1,5 @@
 {
-  "version": "deploy-clerk-modal-session-fix-20260620",
-  "git": "deploy-clerk-modal-session-fix",
-  "builtAt": "2026-06-20T01:05:00.000Z"
+  "version": "deploy-full-page-auth-fallback-20260620",
+  "git": "deploy-full-page-auth-fallback",
+  "builtAt": "2026-06-20T01:25:00.000Z"
 }
