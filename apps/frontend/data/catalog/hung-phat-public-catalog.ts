@@ -1,4 +1,5 @@
 import { hungPhatCatalog, type HungPhatCatalogProduct } from "./hung-phat-catalog";
+import type { PublicProduct } from "./product-model";
 
 const UPDATING_LABEL = "Đang cập nhật";
 
@@ -19,24 +20,6 @@ const INTERNAL_ONLY_VALUES = new Set([
   "todo",
 ]);
 
-export type HungPhatPublicProduct = {
-  id: string;
-  slug: string;
-  name: string;
-  brand: string;
-  categoryId: string;
-  subcategoryId: string | null;
-  productType: HungPhatCatalogProduct["productType"];
-  catalogKind: HungPhatCatalogProduct["catalogKind"];
-  packageSizeLabel: string;
-  unitLabel: string;
-  priceLabel: string;
-  imageUrl: string | null;
-  shortDescription: string | null;
-  isOrderable: boolean;
-  orderLabel: string;
-};
-
 function publicText(value: string | number | null | undefined): string {
   if (value === null || value === undefined) return UPDATING_LABEL;
 
@@ -56,6 +39,12 @@ function publicText(value: string | number | null | undefined): string {
   return text;
 }
 
+function publicList(values: readonly string[]): string[] {
+  return values
+    .map((value) => publicText(value))
+    .filter((value) => value !== UPDATING_LABEL);
+}
+
 function publicPrice(product: HungPhatCatalogProduct): string {
   if (typeof product.priceRetail === "number" && product.priceRetail > 0) {
     return new Intl.NumberFormat("vi-VN", {
@@ -72,14 +61,15 @@ function publicDescription(product: HungPhatCatalogProduct): string | null {
   const description = publicText(product.shortDescription ?? product.description);
   if (description !== UPDATING_LABEL) return description;
 
-  if (product.useCases.length > 0) {
-    return `Phù hợp cho ${product.useCases.join(", ")}.`;
+  const useCases = publicList(product.useCases);
+  if (useCases.length > 0) {
+    return `Phù hợp cho ${useCases.join(", ")}.`;
   }
 
   return null;
 }
 
-export function toHungPhatPublicProduct(product: HungPhatCatalogProduct): HungPhatPublicProduct {
+export function toHungPhatPublicProduct(product: HungPhatCatalogProduct): PublicProduct {
   const imageUrl = product.imageUrls[0] ?? null;
 
   return {
@@ -96,6 +86,8 @@ export function toHungPhatPublicProduct(product: HungPhatCatalogProduct): HungPh
     priceLabel: publicPrice(product),
     imageUrl,
     shortDescription: publicDescription(product),
+    useCases: publicList(product.useCases),
+    sellingPoints: publicList(product.sellingPoints),
     isOrderable: product.isOrderable,
     orderLabel: product.isOrderable ? "Thêm vào giỏ" : "Liên hệ cập nhật giá",
   };
