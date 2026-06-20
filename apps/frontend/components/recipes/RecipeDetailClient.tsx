@@ -184,16 +184,23 @@ export function RecipeDetailClient({ slug }: RecipeDetailClientProps) {
       const product = ingredient.product;
       if (!product || typeof product.price !== "number") return;
       const minQty = Math.max(1, product.minOrderQty || 1);
+      const unit = product.unit || "sản phẩm";
       addCartItem({
         productId: product.id,
         sku: product.sku,
         name: product.name,
-        unit: product.unit || "sản phẩm",
+        productName: product.name,
+        unit,
+        unitLabel: unit,
+        packageSize: "",
+        packageSizeLabel: "Đang cập nhật",
         price: product.price,
+        priceLabel: formatVnd(product.price),
         quantity: minQty,
         minOrderQty: minQty,
         imageUrl: product.imageUrl,
         categorySlug: product.categorySlug,
+        categoryName: product.categoryName,
       });
     });
 
