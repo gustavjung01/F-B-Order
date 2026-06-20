@@ -1,3 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="900" height="348" viewBox="0 0 900 348" role="img" aria-label="Bếp Sỉ F&amp;B">
-  <image href="/brand/logo.png" width="900" height="348" preserveAspectRatio="xMidYMid meet"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="1448" height="594" viewBox="0 0 1448 594" role="img" aria-label="Bếp Sỉ F&amp;B">
+  <defs>
+    <filter id="removeWhite" color-interpolation-filters="sRGB">
+      <feColorMatrix in="SourceGraphic" result="alphaMask" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -3 -3 -3 0 8" />
+      <feComposite in="SourceGraphic" in2="alphaMask" operator="in" />
+    </filter>
+  </defs>
+  <image href="/brand/logo.png" width="1448" height="594" preserveAspectRatio="xMidYMid meet" filter="url(#removeWhite)" />
 </svg>
