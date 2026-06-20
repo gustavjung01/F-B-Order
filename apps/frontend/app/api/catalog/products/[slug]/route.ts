@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCatalogProductBySlug } from "@/data/catalog/catalog-service";
 
-export const dynamic = "force-static";
+export const dynamic = "force-dynamic";
 
 type RouteParams = {
   params: {
