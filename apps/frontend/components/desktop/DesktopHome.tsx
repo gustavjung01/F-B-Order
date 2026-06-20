@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { AccountAction } from "@/components/auth/AccountAction";
 import { AuthControls } from "@/components/auth/AuthControls";
-import { BrandLogo } from "@/components/brand/BrandLogo";
 
 type ApiProduct = {
   id: string;
@@ -63,6 +62,14 @@ function approvalLabel(approved: boolean) {
 
 function approvalTone(approved: boolean) {
   return approved ? "bg-[#e9fbf2] text-[#08775f] ring-[#b9eadb]" : "bg-[#fff3ea] text-[#ff5a00] ring-[#ffd0b3]";
+}
+
+function HeaderLogo() {
+  return (
+    <span className="flex h-[54px] w-[210px] items-center overflow-hidden">
+      <img src="/brand/logo.png" alt="Bep Si F&B" className="h-[96px] w-[250px] max-w-none -translate-y-[21px] object-contain object-left mix-blend-multiply" draggable={false} />
+    </span>
+  );
 }
 
 function DesktopProductCard({ product, approved }: { product: ApiProduct; approved: boolean }) {
@@ -141,15 +148,13 @@ export function DesktopHome() {
   return (
     <main className="min-h-screen bg-[#f7f3eb] text-[#0b1220]">
       <header className="sticky top-0 z-40 border-b border-[#eee7dc] bg-[#f7f3eb]/90 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-8 py-3">
-          <Link href="/" className="flex h-12 w-[190px] items-center overflow-visible">
-            <BrandLogo className="h-12 w-[190px] origin-left scale-[1.08] object-left" />
-          </Link>
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-8 py-2">
+          <Link href="/" className="flex items-center" aria-label="Bep Si F&B"><HeaderLogo /></Link>
           <nav className="flex gap-2 text-sm font-black text-slate-600">
             <Link href="/" className="rounded-full bg-white px-4 py-2 text-[#ff5a00]">Sản phẩm</Link>
             <Link href="/recipes" className="rounded-full px-4 py-2 hover:bg-white">Công thức</Link>
             <Link href="/cart" className="rounded-full px-4 py-2 hover:bg-white">Giỏ hàng</Link>
-            <Link href="/account" className="rounded-full px-4 py-2 hover:bg-white">Tài khoản</Link>
+            <Link href="/register" className="rounded-full px-4 py-2 hover:bg-white">Tài khoản</Link>
           </nav>
           <AuthControls />
         </div>
