@@ -1,5 +1,5 @@
-const CACHE_VERSION = "bep-si-fb-pwa-v8";
-const RUNTIME_CACHE = "bep-si-fb-runtime-v8";
+const CACHE_VERSION = "bep-si-fb-pwa-v9";
+const RUNTIME_CACHE = "bep-si-fb-runtime-v9";
 
 const OFFLINE_FALLBACK = [
   "/",
@@ -9,6 +9,7 @@ const OFFLINE_FALLBACK = [
 
 const STATIC_ASSET_RE = /\.(?:js|css|png|jpg|jpeg|svg|webp|gif|ico|woff2?)$/i;
 const AUTH_ROUTE_RE = /^\/(?:sign-in|sign-up)(?:\/|$)/;
+const CLERK_ROUTE_RE = /^\/__clerk(?:\/|$)/;
 
 self.addEventListener("install", function (event) {
   event.waitUntil(
@@ -73,7 +74,7 @@ self.addEventListener("fetch", function (event) {
   if (request.method !== "GET") return;
   if (url.origin !== self.location.origin) return;
 
-  if (AUTH_ROUTE_RE.test(url.pathname)) return;
+  if (AUTH_ROUTE_RE.test(url.pathname) || CLERK_ROUTE_RE.test(url.pathname)) return;
 
   if (url.pathname === "/service-worker.js" || url.pathname === "/app-version.json" || url.pathname === "/manifest.webmanifest") {
     event.respondWith(fetch(request, { cache: "no-store" }).catch(function () {
