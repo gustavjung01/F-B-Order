@@ -1,5 +1,5 @@
 {
-  "version": "deploy-disable-pwa-clerk-auth-20260620",
-  "git": "deploy-disable-pwa-clerk-auth",
-  "builtAt": "2026-06-20T00:35:00.000Z"
+  "version": "deploy-explicit-csp-clerk-auth-20260620",
+  "git": "deploy-explicit-csp-clerk-auth",
+  "builtAt": "2026-06-20T00:45:00.000Z"
 }
