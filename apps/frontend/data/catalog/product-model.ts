@@ -45,7 +45,9 @@ export type PublicProduct = {
   name: string;
   brand: string;
   categoryId: string;
+  categoryName: string;
   subcategoryId: string | null;
+  subcategoryName: string | null;
   productType: ProductType;
   catalogKind: ProductCatalogKind;
   packageSizeLabel: string;
