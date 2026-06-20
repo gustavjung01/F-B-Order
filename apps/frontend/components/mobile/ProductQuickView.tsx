@@ -100,7 +100,7 @@ export function ProductQuickView({ product, onClose }: { product: PublicProduct;
               <button type="button" onClick={() => setQuantity((current) => current + 1)} className="bg-white active:bg-[#fff3ea]">+</button>
             </div>
             <button type="button" onClick={handleAdd} disabled={!canAdd} className="h-12 flex-1 rounded-[16px] bg-[#ff5a00] px-4 text-[14px] font-black text-white shadow-[0_12px_22px_rgba(255,90,0,0.24)] disabled:cursor-not-allowed disabled:bg-slate-300 disabled:shadow-none">
-              {added ? "Đã thêm" : product.orderLabel}
+              {added ? "Đã thêm vào giỏ" : "Thêm vào giỏ hàng"}
             </button>
           </div>
         </div>
