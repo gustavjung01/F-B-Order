@@ -2,23 +2,14 @@
 
 import Link from "next/link";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
-import { BrandMark } from "@/components/brand/BrandMark";
+import { BrandLogo } from "@/components/brand/BrandLogo";
 
-type AppHeaderProps = {
-  title?: string;
-  subtitle?: string;
-};
-
-export function AppHeader({ title = "Bep Si F&B", subtitle = "Nguon hang cho quan" }: AppHeaderProps) {
+export function AppHeader() {
   return (
     <header className="fixed inset-x-0 top-0 z-40 border-b border-[#eee7dc]/70 bg-[#f7f3eb]/95 px-4 pb-3 pt-[calc(env(safe-area-inset-top)+10px)] backdrop-blur-xl">
-      <div className="mx-auto flex max-w-md items-center justify-between gap-4">
-        <Link href="/" prefetch={false} className="flex min-w-0 items-center gap-3">
-          <BrandMark className="h-11 w-auto max-w-[128px] shrink-0" />
-          <span className="min-w-0">
-            <strong className="block truncate text-[20px] font-black leading-tight tracking-tight text-[#0b1220]">{title}</strong>
-            <span className="block truncate text-[12px] font-semibold text-slate-500">{subtitle}</span>
-          </span>
+      <div className="mx-auto flex max-w-md items-center justify-between gap-3">
+        <Link href="/" prefetch={false} aria-label="Bep Si F&B" className="flex h-12 w-[164px] items-center overflow-visible">
+          <BrandLogo className="h-12 w-[164px] origin-left scale-[1.1] object-left" />
         </Link>
 
         <div className="flex shrink-0 items-center gap-2">
