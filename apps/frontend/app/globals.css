@@ -12,18 +12,6 @@ body {
   color: #0f172a;
 }
 
-header img[src="/brand/logo.webp"] {
-  content: url("/brand/logo.png");
-  width: 260px;
-  height: 64px;
-  object-fit: cover;
-  object-position: center;
-}
-
-header img[src="/brand/logo.webp"] + span {
-  display: none;
-}
-
 .home-card-image-products {
   background-image: url("/home/home-trang-chu.png");
 }
