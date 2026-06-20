@@ -5,9 +5,9 @@ type BrandLogoProps = {
 export function BrandLogo({ className = "h-14 w-auto" }: BrandLogoProps) {
   return (
     <img
-      src="/brand/logo-transparent.svg"
+      src="/brand/logo.png"
       alt="Bep Si F&B"
-      className={className}
+      className={`${className} object-contain mix-blend-multiply`}
       draggable={false}
     />
   );
