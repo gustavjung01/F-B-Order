@@ -47,6 +47,10 @@ function publicList(values: readonly string[]): string[] {
     .filter((value) => value !== UPDATING_LABEL);
 }
 
+function publicImageUrl(values: readonly string[]): string | null {
+  return values.length > 0 ? values[0] ?? null : null;
+}
+
 function publicPrice(product: RawHungPhatCatalogProduct): string {
   if (typeof product.priceRetail === "number" && product.priceRetail > 0) {
     return new Intl.NumberFormat("vi-VN", {
@@ -72,7 +76,8 @@ function publicDescription(product: RawHungPhatCatalogProduct): string | null {
 }
 
 export function toHungPhatPublicProduct(product: RawHungPhatCatalogProduct): PublicProduct {
-  const imageUrl = product.imageUrls[0] ?? null;
+  const imageUrls = product.imageUrls as readonly string[];
+  const imageUrl = publicImageUrl(imageUrls);
 
   return {
     id: product.id,
