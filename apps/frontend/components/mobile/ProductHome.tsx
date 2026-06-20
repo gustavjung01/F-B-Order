@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import homeHeroImage from "../../../../home.png";
 import { MobilePageShell } from "@/components/mobile/MobilePageShell";
 import { ProductQuickView } from "@/components/mobile/ProductQuickView";
 import type { CategoryWithCount, PublicProduct } from "@/data/catalog/product-model";
@@ -160,7 +159,7 @@ export function ProductHome({ active = "home" }: { active?: BottomNavKey }) {
       <h1 className="sr-only">Sản phẩm</h1>
 
       <div className="relative min-h-[220px] overflow-hidden rounded-[30px] shadow-[0_14px_30px_rgba(15,23,42,0.085)] ring-1 ring-white/80">
-        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${homeHeroImage.src})` }} />
+        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url('/images/hero/home.png')" }} />
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.08)_0%,rgba(255,247,237,0.22)_44%,rgba(247,243,235,0.90)_100%)]" />
         <div className="relative z-10 min-h-[220px] p-4">
           <div className="absolute inset-x-4 top-[48%] -translate-y-1/2 text-center">
