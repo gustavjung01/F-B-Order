@@ -5,6 +5,8 @@ type RawHungPhatCatalogProduct = (typeof hungPhatCatalog.products)[number];
 
 const UPDATING_LABEL = "Đang cập nhật";
 
+const categoryNameById = new Map(hungPhatCatalog.categories.map((category) => [category.id, category.name]));
+
 const INTERNAL_ONLY_VALUES = new Set([
   "TODO",
   "null",
@@ -51,6 +53,11 @@ function publicImageUrl(values: readonly string[]): string | null {
   return values.length > 0 ? values[0] ?? null : null;
 }
 
+function publicCategoryName(id: string | null | undefined): string {
+  if (!id) return UPDATING_LABEL;
+  return categoryNameById.get(id) ?? UPDATING_LABEL;
+}
+
 function publicPrice(product: RawHungPhatCatalogProduct): string {
   if (typeof product.priceRetail === "number" && product.priceRetail > 0) {
     return new Intl.NumberFormat("vi-VN", {
@@ -85,7 +92,9 @@ export function toHungPhatPublicProduct(product: RawHungPhatCatalogProduct): Pub
     name: publicText(product.name),
     brand: publicText(product.brand),
     categoryId: product.categoryId,
+    categoryName: publicCategoryName(product.categoryId),
     subcategoryId: product.subcategoryId,
+    subcategoryName: product.subcategoryId ? publicCategoryName(product.subcategoryId) : null,
     productType: product.productType,
     catalogKind: product.catalogKind,
     packageSizeLabel: publicText(product.packageSize),
