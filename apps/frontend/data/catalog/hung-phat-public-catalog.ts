@@ -1,5 +1,7 @@
-import { hungPhatCatalog, type HungPhatCatalogProduct } from "./hung-phat-catalog";
+import { hungPhatCatalog } from "./hung-phat-catalog";
 import type { PublicProduct } from "./product-model";
+
+type RawHungPhatCatalogProduct = (typeof hungPhatCatalog.products)[number];
 
 const UPDATING_LABEL = "Đang cập nhật";
 
@@ -45,7 +47,7 @@ function publicList(values: readonly string[]): string[] {
     .filter((value) => value !== UPDATING_LABEL);
 }
 
-function publicPrice(product: HungPhatCatalogProduct): string {
+function publicPrice(product: RawHungPhatCatalogProduct): string {
   if (typeof product.priceRetail === "number" && product.priceRetail > 0) {
     return new Intl.NumberFormat("vi-VN", {
       style: "currency",
@@ -57,7 +59,7 @@ function publicPrice(product: HungPhatCatalogProduct): string {
   return UPDATING_LABEL;
 }
 
-function publicDescription(product: HungPhatCatalogProduct): string | null {
+function publicDescription(product: RawHungPhatCatalogProduct): string | null {
   const description = publicText(product.shortDescription ?? product.description);
   if (description !== UPDATING_LABEL) return description;
 
@@ -69,7 +71,7 @@ function publicDescription(product: HungPhatCatalogProduct): string | null {
   return null;
 }
 
-export function toHungPhatPublicProduct(product: HungPhatCatalogProduct): PublicProduct {
+export function toHungPhatPublicProduct(product: RawHungPhatCatalogProduct): PublicProduct {
   const imageUrl = product.imageUrls[0] ?? null;
 
   return {
