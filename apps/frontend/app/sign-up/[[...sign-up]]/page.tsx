@@ -32,7 +32,13 @@ export default function SignUpPage() {
 
         <div className="rounded-[32px] bg-white p-4 shadow-[0_16px_34px_rgba(15,23,42,0.095)] ring-1 ring-[#efe7dc] md:p-6">
           <div className="flex justify-center">
-            <SignUp routing="path" path="/sign-up" signInUrl="/sign-in" />
+            <SignUp
+              routing="path"
+              path="/sign-up"
+              signInUrl="/sign-in"
+              forceRedirectUrl="/products"
+              fallbackRedirectUrl="/products"
+            />
           </div>
         </div>
       </section>
