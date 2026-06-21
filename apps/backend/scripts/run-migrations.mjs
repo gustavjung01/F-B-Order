@@ -24,11 +24,6 @@ if (!connectionString) {
   process.exit(1);
 }
 
-const migrationFiles = [
-  "db/migrations/001_init_core.sql",
-  "db/migrations/002_catalog_domain_boundary.sql",
-];
-
 const pool = new Pool({
   connectionString,
   ssl: connectionString.includes("localhost") || connectionString.includes("127.0.0.1")
@@ -37,13 +32,61 @@ const pool = new Pool({
   max: 1,
 });
 
+async function runSqlFile(relativePath) {
+  const absolutePath = path.join(repoRoot, relativePath);
+  const sql = fs.readFileSync(absolutePath, "utf8");
+  console.log(`Running ${relativePath}`);
+  await pool.query(sql);
+}
+
+async function normalizeLegacyCatalog() {
+  console.log("Normalizing legacy catalog rows");
+  await pool.query(`
+    BEGIN;
+
+    ALTER TABLE products ADD COLUMN IF NOT EXISTS catalog_kind TEXT NOT NULL DEFAULT 'sku_candidate';
+    ALTER TABLE products ADD COLUMN IF NOT EXISTS is_orderable BOOLEAN NOT NULL DEFAULT false;
+    ALTER TABLE products ADD COLUMN IF NOT EXISTS is_public BOOLEAN NOT NULL DEFAULT false;
+
+    UPDATE products
+    SET
+      product_type = 'bundle',
+      catalog_kind = 'bundle_candidate',
+      is_orderable = false,
+      updated_at = now()
+    WHERE product_type = 'recipe_content'
+       OR catalog_kind = 'content';
+
+    UPDATE products
+    SET
+      catalog_kind = 'sku_candidate',
+      status = 'inactive',
+      is_active = false,
+      is_public = false,
+      is_orderable = false,
+      updated_at = now()
+    WHERE catalog_kind = 'category_scaffold';
+
+    UPDATE products
+    SET
+      catalog_kind = CASE
+        WHEN product_type = 'bundle' THEN 'bundle_candidate'
+        ELSE 'sku_candidate'
+      END,
+      is_public = false,
+      is_orderable = false,
+      updated_at = now()
+    WHERE catalog_kind IS NULL
+       OR catalog_kind NOT IN ('sku_candidate', 'bundle_candidate');
+
+    COMMIT;
+  `);
+}
+
 try {
-  for (const relativePath of migrationFiles) {
-    const absolutePath = path.join(repoRoot, relativePath);
-    const sql = fs.readFileSync(absolutePath, "utf8");
-    console.log(`Running ${relativePath}`);
-    await pool.query(sql);
-  }
+  await runSqlFile("db/migrations/001_init_core.sql");
+  await normalizeLegacyCatalog();
+  await runSqlFile("db/migrations/002_catalog_domain_boundary.sql");
   console.log("Database migrations completed.");
 } catch (error) {
   console.error("Database migration failed.");
