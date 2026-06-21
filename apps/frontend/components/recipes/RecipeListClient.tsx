@@ -18,7 +18,6 @@ type ApiRecipe = {
   categoryName: string;
   categorySlug: string;
   ingredientCount: number;
-  mappedProductCount: number;
   isLocked: boolean;
   lockReason: string | null;
 };
@@ -60,7 +59,7 @@ function RecipeCard({ recipe, index, approved }: { recipe: ApiRecipe; index: num
         </Link>
         <div className="min-w-0 flex-1 md:mt-4">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="rounded-full bg-[#f4efff] px-3 py-1 text-[11px] font-black text-[#7c3aed] ring-1 ring-[#dccbff]">Ý tưởng #{index + 1}</span>
+            <span className="rounded-full bg-[#f4efff] px-3 py-1 text-[11px] font-black text-[#7c3aed] ring-1 ring-[#dccbff]">Công thức #{index + 1}</span>
             {recipe.relatedBrand ? <span className="rounded-full bg-[#eefbf6] px-3 py-1 text-[11px] font-black text-[#08775f] ring-1 ring-[#b9eadb]">{recipe.relatedBrand}</span> : null}
           </div>
           <Link href={href} className="mt-3 block text-[19px] font-black leading-tight tracking-tight text-[#0b1220] hover:text-[#ff5a00] md:text-2xl">{recipe.title}</Link>
@@ -68,9 +67,8 @@ function RecipeCard({ recipe, index, approved }: { recipe: ApiRecipe; index: num
         </div>
       </div>
 
-      <div className="mt-4 grid grid-cols-2 gap-2">
-        <span className="rounded-[14px] bg-[#fbfaf7] px-3 py-2 text-[12px] font-bold text-slate-600 ring-1 ring-[#eee7dc]">{recipe.ingredientCount} nguyên liệu</span>
-        <span className="rounded-[14px] bg-[#fbfaf7] px-3 py-2 text-[12px] font-bold text-slate-600 ring-1 ring-[#eee7dc]">{recipe.mappedProductCount} sản phẩm map</span>
+      <div className="mt-4">
+        <span className="inline-flex rounded-[14px] bg-[#fbfaf7] px-3 py-2 text-[12px] font-bold text-slate-600 ring-1 ring-[#eee7dc]">{recipe.ingredientCount} nguyên liệu</span>
       </div>
 
       {approved ? (
@@ -78,10 +76,10 @@ function RecipeCard({ recipe, index, approved }: { recipe: ApiRecipe; index: num
       ) : (
         <>
           <div className="mt-4 rounded-[18px] bg-[#fbfaf7] p-4 ring-1 ring-[#eee7dc]">
-            <p className="text-[13px] font-bold leading-6 text-slate-600">{recipe.lockReason || "Công thức chi tiết, định lượng và danh sách nguyên liệu sẽ mở sau khi hồ sơ quán được duyệt."}</p>
+            <p className="text-[13px] font-bold leading-6 text-slate-600">{recipe.lockReason || "Công thức chi tiết và định lượng sẽ mở sau khi hồ sơ quán được duyệt."}</p>
           </div>
           <div className="mt-4 grid gap-2 sm:grid-cols-2">
-            <Link href={href} className="flex h-11 items-center justify-center rounded-[16px] bg-[#fbfaf7] px-5 text-[15px] font-black text-[#0b1220] ring-1 ring-[#eee7dc]">Xem ý tưởng</Link>
+            <Link href={href} className="flex h-11 items-center justify-center rounded-[16px] bg-[#fbfaf7] px-5 text-[15px] font-black text-[#0b1220] ring-1 ring-[#eee7dc]">Xem giới thiệu</Link>
             <AccountAction href="/register" signedOutLabel="Mở công thức" className="flex h-11 items-center justify-center rounded-[16px] bg-[#0b1220] px-5 text-[15px] font-black text-white shadow-[0_12px_22px_rgba(15,23,42,0.18)]">Mở công thức</AccountAction>
           </div>
         </>
@@ -99,7 +97,7 @@ export function RecipeListClient() {
   useEffect(() => {
     if (!RECIPES_PUBLIC_ENABLED) return;
 
-    var activeRequest = true;
+    let activeRequest = true;
 
     async function loadRecipes() {
       try {
@@ -121,7 +119,6 @@ export function RecipeListClient() {
     }
 
     loadRecipes();
-
     return () => {
       activeRequest = false;
     };
@@ -131,7 +128,7 @@ export function RecipeListClient() {
     if (!RECIPES_PUBLIC_ENABLED) return "Tính năng đang được phát triển";
     if (loading) return "Đang tải công thức";
     if (approved) return "Công thức chi tiết đã mở";
-    return "Xem ý tưởng trước, duyệt hồ sơ để mở định lượng";
+    return "Xem giới thiệu trước, duyệt hồ sơ để mở định lượng";
   }, [approved, loading]);
 
   if (!RECIPES_PUBLIC_ENABLED) {
@@ -144,7 +141,7 @@ export function RecipeListClient() {
           <p className="text-sm font-black uppercase tracking-[0.16em] text-[#7c3aed]">Sắp ra mắt</p>
           <h2 className="mt-3 text-2xl font-black text-[#0b1220]">Công thức đang được phát triển</h2>
           <p className="mx-auto mt-3 max-w-2xl text-sm font-semibold leading-7 text-slate-500">
-            Khu vực này sẽ dành cho hướng dẫn chế biến, gợi ý menu và hỗ trợ công thức. Các combo sản phẩm không được hiển thị tại đây.
+            Khu vực này sẽ dành riêng cho hướng dẫn chế biến, định lượng và nội dung hỗ trợ khách hàng. Sản phẩm và combo không được hiển thị tại đây.
           </p>
         </div>
       </div>
