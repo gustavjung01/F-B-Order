@@ -19,6 +19,39 @@ const approvedIdentity: CustomerIdentity = {
   priceGroupId: null,
 };
 
+async function isolateCatalogFixture() {
+  await db.query("BEGIN");
+  try {
+    await db.query(`
+      DELETE FROM cart_items
+      WHERE product_id IN (
+        SELECT id FROM products WHERE source_key <> 'hung-phat'
+      )
+    `);
+    await db.query(`
+      UPDATE order_items
+      SET product_id = NULL
+      WHERE product_id IN (
+        SELECT id FROM products WHERE source_key <> 'hung-phat'
+      )
+    `);
+    await db.query(`
+      DELETE FROM product_bundle_items
+      WHERE bundle_product_id IN (
+        SELECT id FROM products WHERE source_key <> 'hung-phat'
+      )
+      OR component_product_id IN (
+        SELECT id FROM products WHERE source_key <> 'hung-phat'
+      )
+    `);
+    await db.query("DELETE FROM products WHERE source_key <> 'hung-phat'");
+    await db.query("COMMIT");
+  } catch (error) {
+    await db.query("ROLLBACK");
+    throw error;
+  }
+}
+
 async function requestJson(baseUrl: string, path: string) {
   const response = await fetch(`${baseUrl}${path}`);
   const raw = await response.text();
@@ -26,6 +59,8 @@ async function requestJson(baseUrl: string, path: string) {
 }
 
 async function main() {
+  await isolateCatalogFixture();
+
   const app = express();
   app.use("/api/catalog", createCatalogRouter(async () => approvedIdentity));
   const server = app.listen(0);
