@@ -8,6 +8,8 @@
     "lint": "echo \"lint backend later\"",
     "typecheck": "tsc --noEmit",
     "test:auth-pricing": "tsx scripts/test-auth-pricing.ts",
+    "test:catalog-contract": "tsx scripts/test-catalog-contract.ts",
+    "test:order-engine": "tsx scripts/test-order-engine.ts",
     "db:migrate": "node scripts/run-migrations.mjs",
     "db:migrate:baseline": "node scripts/run-migrations.mjs --baseline-existing",
     "db:test:migrations": "node scripts/test-migrations.mjs",
