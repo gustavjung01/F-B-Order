@@ -255,7 +255,7 @@ const scenarios = new Map([
   ["checksum", testChecksumMismatch],
 ]);
 
-const requestedScenarios = process.argv.slice(2);
+const requestedScenarios = process.argv.slice(2).filter((argument) => argument !== "--");
 const selectedScenarios = requestedScenarios.length > 0 ? requestedScenarios : [...scenarios.keys()];
 
 try {
