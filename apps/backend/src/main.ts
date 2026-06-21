@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import express from "express";
 import helmet from "helmet";
 import { authRouter } from "./modules/auth/auth.routes";
+import { catalogRouter } from "./modules/catalog/catalog.routes";
 
 dotenv.config();
 
@@ -44,8 +45,10 @@ app.get("/api/health", (_req, res) => {
 });
 
 app.get("/api/version", (_req, res) => {
-  res.json({ name: "Bếp Sỉ F&B API", service: serviceName, version: "vps-skeleton" });
+  res.json({ name: "Bếp Sỉ F&B API", service: serviceName, version: "catalog-v1" });
 });
+
+app.use("/api/catalog", catalogRouter);
 
 if (clerkEnabled) {
   app.use(clerkMiddleware({ secretKey: clerkSecretKey, publishableKey: clerkPublishableKey }));
