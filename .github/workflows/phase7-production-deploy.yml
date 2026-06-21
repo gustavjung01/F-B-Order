@@ -1,0 +1,217 @@
+name: Phase 7 production deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_sha:
+        description: Full 40-character commit SHA from main
+        required: true
+        type: string
+      confirmation:
+        description: Type DEPLOY_BEPSI_PRODUCTION
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: bepsi-production-deploy
+  cancel-in-progress: false
+
+jobs:
+  total-gate:
+    name: Total system gate
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: fb_order_phase7
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d fb_order_phase7"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5432/fb_order_phase7
+    steps:
+      - name: Validate production confirmation
+        env:
+          TARGET_SHA: ${{ inputs.target_sha }}
+          CONFIRMATION: ${{ inputs.confirmation }}
+        run: |
+          set -Eeuo pipefail
+          [[ "$TARGET_SHA" =~ ^[0-9a-f]{40}$ ]]
+          [[ "$CONFIRMATION" == "DEPLOY_BEPSI_PRODUCTION" ]]
+
+      - name: Checkout exact target
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.target_sha }}
+          fetch-depth: 0
+
+      - name: Verify target is latest main
+        env:
+          TARGET_SHA: ${{ inputs.target_sha }}
+        run: |
+          set -Eeuo pipefail
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          git fetch origin main:refs/remotes/origin/main
+          test "$(git rev-parse origin/main)" = "$TARGET_SHA"
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.34.4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Validate Phase 7 deploy contract
+        run: |
+          set -Eeuo pipefail
+          bash -n scripts/phase7/deploy-bepsi-backend.sh
+          bash -n scripts/phase7/deploy-bepsi-vercel.sh
+          node --check scripts/phase7/smoke-production.mjs
+          node scripts/phase7/test-deploy-contract.mjs
+
+      - name: Typecheck all workspaces
+        run: pnpm typecheck
+
+      - name: Build backend
+        run: pnpm build:backend
+
+      - name: Migrate clean database
+        run: pnpm db:migrate
+
+      - name: Seed compatibility fixture
+        run: pnpm db:seed:test
+
+      - name: Verify migration rerun
+        run: pnpm db:migrate
+
+      - name: Verify core order contract
+        run: pnpm db:verify:order-contract
+
+      - name: Verify approval pricing
+        run: pnpm test:auth-pricing
+
+      - name: Import catalog fixture
+        run: pnpm catalog:import
+
+      - name: Verify catalog contract
+        run: pnpm --filter @fb-order/backend test:catalog-contract
+
+      - name: Verify order engine
+        run: pnpm --filter @fb-order/backend test:order-engine
+
+      - name: Verify admin operations
+        run: pnpm --filter @fb-order/backend exec tsx scripts/test-admin-operations.ts
+
+      - name: Verify frontend backend cutover
+        run: pnpm --filter @fb-order/backend exec tsx scripts/test-frontend-cutover.ts
+
+  deploy-backend:
+    name: Deploy Bếp Sỉ backend
+    needs: total-gate
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Configure Bếp Sỉ SSH identity
+        env:
+          SSH_KEY: ${{ secrets.BEPSI_VPS_SSH_KEY }}
+          KNOWN_HOSTS: ${{ secrets.BEPSI_VPS_KNOWN_HOSTS }}
+        run: |
+          set -Eeuo pipefail
+          test -n "$SSH_KEY"
+          test -n "$KNOWN_HOSTS"
+          install -m 700 -d "$HOME/.ssh"
+          printf '%s\n' "$SSH_KEY" > "$HOME/.ssh/bepsi-production.key"
+          chmod 600 "$HOME/.ssh/bepsi-production.key"
+          printf '%s\n' "$KNOWN_HOSTS" > "$HOME/.ssh/known_hosts"
+          chmod 600 "$HOME/.ssh/known_hosts"
+
+      - name: Pull, migrate, import and restart Bếp Sỉ only
+        env:
+          TARGET_SHA: ${{ inputs.target_sha }}
+        run: |
+          set -Eeuo pipefail
+          ssh \
+            -i "$HOME/.ssh/bepsi-production.key" \
+            -o BatchMode=yes \
+            -o IdentitiesOnly=yes \
+            ubuntu@40.233.83.234 \
+            "bash -s -- '$TARGET_SHA'" <<'REMOTE'
+          set -Eeuo pipefail
+          TARGET_SHA="$1"
+          cd /srv/apps/bepsi/source
+          git switch main
+          git pull --ff-only origin main
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          bash scripts/phase7/deploy-bepsi-backend.sh "$TARGET_SHA"
+          REMOTE
+
+  deploy-vercel:
+    name: Activate Vercel production
+    needs: deploy-backend
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Checkout exact target
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.target_sha }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.34.4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build and deploy Vercel production
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: bash scripts/phase7/deploy-bepsi-vercel.sh "${{ inputs.target_sha }}"
+
+  production-smoke:
+    name: Production smoke and order visibility
+    needs: deploy-vercel
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Checkout smoke script
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.target_sha }}
+
+      - name: Verify production end to end
+        env:
+          API_BASE_URL: https://api.bepsi.click
+          WEB_BASE_URL: https://bepsi.click
+          PHASE7_REQUIRE_AUTH_SMOKE: "true"
+          PHASE7_APPROVED_CUSTOMER_TOKEN: ${{ secrets.PHASE7_APPROVED_CUSTOMER_TOKEN }}
+          PHASE7_ADMIN_TOKEN: ${{ secrets.PHASE7_ADMIN_TOKEN }}
+          PHASE7_SMOKE_PRODUCT_ID: ${{ secrets.PHASE7_SMOKE_PRODUCT_ID }}
+          PHASE7_SMOKE_QUANTITY: ${{ vars.PHASE7_SMOKE_QUANTITY }}
+        run: node scripts/phase7/smoke-production.mjs
