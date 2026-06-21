@@ -9,7 +9,7 @@ type ProductDetailPageProps = {
 
 export default function ProductDetailPage({ params }: ProductDetailPageProps) {
   return (
-    <ResponsivePageShell active="products" title="Chi tiết sản phẩm" subtitle="Catalog nguyên liệu">
+    <ResponsivePageShell active="home" title="Chi tiết sản phẩm" subtitle="Catalog nguyên liệu">
       <ProductDetailClient slug={params.slug} />
     </ResponsivePageShell>
   );

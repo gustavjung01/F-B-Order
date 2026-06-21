@@ -18,7 +18,9 @@
     "lint": "pnpm -r lint",
     "typecheck": "pnpm -r typecheck",
     "db:migrate": "pnpm --filter @fb-order/backend db:migrate",
-    "db:seed:test": "pnpm --filter @fb-order/backend db:seed:test"
+    "db:seed:test": "pnpm --filter @fb-order/backend db:seed:test",
+    "catalog:audit": "pnpm --filter @fb-order/backend catalog:audit",
+    "catalog:import": "pnpm --filter @fb-order/backend catalog:import"
   },
   "devDependencies": {
     "typescript": "^5.5.4"

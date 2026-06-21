@@ -1,7 +1,7 @@
 export type ProductSourceAccuracy = "company_crawl_confirmed" | "needs_company_sku_sheet";
 export type ProductStatus = "active" | "draft" | "needs_review";
-export type ProductType = "physical" | "bundle" | "recipe_content" | "service";
-export type ProductCatalogKind = "sku_candidate" | "category_scaffold" | "content" | "bundle_candidate";
+export type ProductType = "physical" | "bundle" | "service";
+export type ProductCatalogKind = "sku_candidate" | "bundle_candidate";
 
 export type Product = {
   id: string;
@@ -40,8 +40,10 @@ export type Product = {
 };
 
 export type PublicProduct = {
+  itemKind: "product";
   id: string;
   slug: string;
+  sku: string;
   name: string;
   brand: string;
   categoryId: string;
@@ -52,11 +54,14 @@ export type PublicProduct = {
   catalogKind: ProductCatalogKind;
   packageSizeLabel: string;
   unitLabel: string;
+  unitPrice: number;
+  minOrderQty: number;
   priceLabel: string;
   imageUrl: string | null;
   shortDescription: string | null;
   useCases: string[];
   sellingPoints: string[];
+  bundleItemCount: number;
   isOrderable: boolean;
   orderLabel: string;
 };

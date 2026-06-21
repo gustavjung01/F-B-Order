@@ -5,6 +5,9 @@ type RawHungPhatCatalogProduct = (typeof hungPhatCatalog.products)[number];
 
 const UPDATING_LABEL = "Đang cập nhật";
 const HUNG_PHAT_ASSET_BASE_URL = "https://cdn.bepsi.click";
+const PUBLIC_CATEGORY_NAME_OVERRIDES: Record<string, string> = {
+  "combo-cong-thuc": "Combo gợi ý",
+};
 
 const imageUrlByProductId: Record<string, string> = {
   "tra-ona": `${HUNG_PHAT_ASSET_BASE_URL}/catalog/hung-phat/products/tra-ona.jpg`,
@@ -23,13 +26,6 @@ const imageUrlByProductId: Record<string, string> = {
   "nuoc-cot-dua-sumi": `${HUNG_PHAT_ASSET_BASE_URL}/catalog/hung-phat/products/nuoc-cot-dua-sumi.jpg`,
   "barismate-nguyen-lieu-da-xay": `${HUNG_PHAT_ASSET_BASE_URL}/catalog/hung-phat/products/barismate-nguyen-lieu-da-xay.jpg`,
   "barismate-nguyen-lieu-tra-sua": `${HUNG_PHAT_ASSET_BASE_URL}/catalog/hung-phat/products/barismate-nguyen-lieu-tra-sua.jpg`,
-  "mi-cay-han-quoc-base": `${HUNG_PHAT_ASSET_BASE_URL}/catalog/hung-phat/covers/categories/cover-mi-cay-han-quoc-base.jpg`,
-  "sot-gia-vi-mi-cay": `${HUNG_PHAT_ASSET_BASE_URL}/catalog/hung-phat/covers/categories/cover-sot-gia-vi-mi-cay.jpg`,
-  "topping-mi-cay": `${HUNG_PHAT_ASSET_BASE_URL}/catalog/hung-phat/covers/categories/cover-topping-mi-cay.jpg`,
-  "thuc-pham-dong-lanh-general": `${HUNG_PHAT_ASSET_BASE_URL}/catalog/hung-phat/covers/categories/cover-thuc-pham-dong-lanh.jpg`,
-  "xien-que-an-vat": `${HUNG_PHAT_ASSET_BASE_URL}/catalog/hung-phat/covers/categories/cover-xien-que-an-vat.jpg`,
-  "vien-tha-lau-dong-lanh": `${HUNG_PHAT_ASSET_BASE_URL}/catalog/hung-phat/covers/categories/cover-vien-tha-lau-dong-lanh.jpg`,
-  "do-chien-dong-lanh": `${HUNG_PHAT_ASSET_BASE_URL}/catalog/hung-phat/covers/categories/cover-do-chien-dong-lanh.jpg`,
   "combo-12-cong-thuc-tra-trai-cay-loc-phat": `${HUNG_PHAT_ASSET_BASE_URL}/catalog/hung-phat/covers/recipes/cover-combo-12-cong-thuc-tra-trai-cay-loc-phat.jpg`,
   "combo-15-cong-thuc-tra-trai-cay": `${HUNG_PHAT_ASSET_BASE_URL}/catalog/hung-phat/covers/recipes/cover-combo-15-cong-thuc-tra-trai-cay.jpg`,
   "combo-10-cong-thuc-tra-sua-chuan-gu": `${HUNG_PHAT_ASSET_BASE_URL}/catalog/hung-phat/covers/recipes/cover-combo-10-cong-thuc-tra-sua-chuan-gu.jpg`,
@@ -39,7 +35,10 @@ const imageUrlByProductId: Record<string, string> = {
 };
 
 const categoryNameById = new Map<string, string>(
-  hungPhatCatalog.categories.map((category) => [category.id, category.name]),
+  hungPhatCatalog.categories.map((category) => [
+    category.id,
+    PUBLIC_CATEGORY_NAME_OVERRIDES[category.id] ?? category.name,
+  ]),
 );
 
 const INTERNAL_ONLY_VALUES = new Set([
@@ -121,36 +120,48 @@ function publicDescription(product: RawHungPhatCatalogProduct): string | null {
   return null;
 }
 
+function isBundleProduct(product: RawHungPhatCatalogProduct) {
+  return product.catalogKind === "content" || product.catalogKind === "bundle_candidate";
+}
+
 export function toHungPhatPublicProduct(product: RawHungPhatCatalogProduct): PublicProduct {
-  const imageUrl = publicImageUrl(product);
+  const bundle = isBundleProduct(product);
 
   return {
+    itemKind: "product",
     id: product.id,
     slug: product.slug,
+    sku: "",
     name: publicText(product.name),
     brand: publicText(product.brand),
     categoryId: product.categoryId,
     categoryName: publicCategoryName(product.categoryId),
     subcategoryId: product.subcategoryId,
     subcategoryName: product.subcategoryId ? publicCategoryName(product.subcategoryId) : null,
-    productType: product.productType,
-    catalogKind: product.catalogKind,
+    productType: bundle ? "bundle" : "physical",
+    catalogKind: bundle ? "bundle_candidate" : "sku_candidate",
     packageSizeLabel: publicText(product.packageSize),
     unitLabel: publicText(product.unit),
+    unitPrice: 0,
+    minOrderQty: Math.max(1, product.minOrderQty || 1),
     priceLabel: publicPrice(product),
-    imageUrl,
+    imageUrl: publicImageUrl(product),
     shortDescription: publicDescription(product),
     useCases: publicList(product.useCases),
     sellingPoints: publicList(product.sellingPoints),
-    isOrderable: product.isOrderable,
-    orderLabel: product.isOrderable ? "Thêm vào giỏ" : "Liên hệ cập nhật giá",
+    bundleItemCount: 0,
+    isOrderable: false,
+    orderLabel: "Liên hệ cập nhật giá",
   };
 }
 
 export const hungPhatPublicProducts = hungPhatCatalog.products
-  .filter((product) => product.catalogKind === "sku_candidate" || product.catalogKind === "content" || product.catalogKind === "bundle_candidate")
+  .filter((product) => product.catalogKind !== "category_scaffold")
   .map(toHungPhatPublicProduct);
 
-export const hungPhatPublicCategories = hungPhatCatalog.categories;
+export const hungPhatPublicCategories = hungPhatCatalog.categories.map((category) => ({
+  ...category,
+  name: PUBLIC_CATEGORY_NAME_OVERRIDES[category.id] ?? category.name,
+}));
 export const hungPhatPublicMerchant = hungPhatCatalog.merchant;
 export const HUNG_PHAT_UPDATING_LABEL = UPDATING_LABEL;

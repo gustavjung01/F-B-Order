@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getCatalogProductBySlug } from "@/data/catalog/catalog-service";
+import { proxyBackendJson } from "@/lib/backend-api";
 
 export const dynamic = "force-dynamic";
 
@@ -10,17 +10,13 @@ type RouteParams = {
 };
 
 export async function GET(_request: NextRequest, { params }: RouteParams) {
-  const product = getCatalogProductBySlug(params.slug);
-
-  if (!product) {
+  try {
+    return await proxyBackendJson(`/api/catalog/products/${encodeURIComponent(params.slug)}`);
+  } catch (error) {
+    console.error("catalog product proxy failed", error);
     return NextResponse.json(
-      {
-        error: "PRODUCT_NOT_FOUND",
-        message: "Không tìm thấy sản phẩm.",
-      },
-      { status: 404 },
+      { error: "BACKEND_CATALOG_UNAVAILABLE" },
+      { status: 503 },
     );
   }
-
-  return NextResponse.json({ product });
 }

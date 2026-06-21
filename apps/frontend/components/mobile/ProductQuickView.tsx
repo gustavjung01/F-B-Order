@@ -21,9 +21,14 @@ function isUpdating(value: string | null | undefined) {
 }
 
 export function ProductQuickView({ product, onClose }: { product: PublicProduct; onClose: () => void }) {
-  const [quantity, setQuantity] = useState(1);
+  const [quantity, setQuantity] = useState(product.minOrderQty);
   const [added, setAdded] = useState(false);
   const canAdd = product.isOrderable;
+  const isBundle = product.productType === "bundle";
+
+  useEffect(() => {
+    setQuantity(product.minOrderQty);
+  }, [product.id, product.minOrderQty]);
 
   useEffect(() => {
     function handleKey(event: KeyboardEvent) {
@@ -39,23 +44,25 @@ export function ProductQuickView({ product, onClose }: { product: PublicProduct;
 
   function handleAdd() {
     if (!canAdd) return;
+
     addCartItem({
       productId: product.id,
-      sku: "",
+      sku: product.sku,
       name: product.name,
       productName: product.name,
       unit: product.unitLabel,
       unitLabel: product.unitLabel,
       packageSize: product.packageSizeLabel,
       packageSizeLabel: product.packageSizeLabel,
-      price: 0,
+      price: product.unitPrice,
       priceLabel: product.priceLabel,
       quantity,
-      minOrderQty: 1,
+      minOrderQty: product.minOrderQty,
       imageUrl: product.imageUrl || "",
       categorySlug: product.categoryId,
       categoryName: product.categoryName,
     });
+
     setAdded(true);
     window.setTimeout(() => setAdded(false), 1200);
   }
@@ -67,7 +74,7 @@ export function ProductQuickView({ product, onClose }: { product: PublicProduct;
         <div className="mx-auto mt-2 h-1.5 w-12 rounded-full bg-slate-300" />
         <div className="flex items-center justify-between border-b border-[#eee7dc] px-4 py-3">
           <div>
-            <p className="text-[11px] font-black uppercase tracking-[0.14em] text-[#ff5a00]">Chi tiết sản phẩm</p>
+            <p className="text-[11px] font-black uppercase tracking-[0.14em] text-[#ff5a00]">{isBundle ? "Chi tiết combo" : "Chi tiết sản phẩm"}</p>
             <p className="text-sm font-bold text-slate-500">{product.categoryName}</p>
           </div>
           <button type="button" onClick={onClose} className="grid h-9 w-9 place-items-center rounded-full bg-white text-lg font-black text-slate-700 shadow-sm ring-1 ring-[#eee7dc]">×</button>
@@ -80,6 +87,11 @@ export function ProductQuickView({ product, onClose }: { product: PublicProduct;
 
           {!isUpdating(product.brand) ? <p className="mt-4 text-[11px] font-black uppercase tracking-[0.12em] text-[#ff5a00]">{product.brand}</p> : null}
           <h2 className="mt-2 text-[28px] font-black leading-tight tracking-tight text-[#0b1220]">{product.name}</h2>
+          {isBundle ? (
+            <p className="mt-3 inline-flex rounded-full bg-[#f4efff] px-3 py-2 text-sm font-black text-[#7c3aed] ring-1 ring-[#dccbff]">
+              {product.bundleItemCount > 0 ? `${product.bundleItemCount} sản phẩm trong combo` : "Thành phần combo đang cập nhật"}
+            </p>
+          ) : null}
           {product.shortDescription ? <p className="mt-3 text-[15px] font-semibold leading-7 text-slate-600">{product.shortDescription}</p> : null}
 
           <div className="mt-4 grid gap-3">
@@ -95,12 +107,12 @@ export function ProductQuickView({ product, onClose }: { product: PublicProduct;
         <div className="absolute inset-x-0 bottom-0 border-t border-[#eee7dc] bg-white/95 p-3 pb-[calc(env(safe-area-inset-bottom)+12px)] backdrop-blur-xl">
           <div className="flex items-center gap-2">
             <div className="grid h-12 w-32 grid-cols-3 overflow-hidden rounded-[16px] border border-[#eee7dc] bg-[#fbfaf7] text-[16px] font-black text-[#0b1220]">
-              <button type="button" onClick={() => setQuantity((current) => Math.max(1, current - 1))} className="bg-white active:bg-[#fff3ea]">−</button>
+              <button type="button" onClick={() => setQuantity((current) => Math.max(product.minOrderQty, current - 1))} className="bg-white active:bg-[#fff3ea]">−</button>
               <span className="grid place-items-center border-x border-[#eee7dc]">{quantity}</span>
               <button type="button" onClick={() => setQuantity((current) => current + 1)} className="bg-white active:bg-[#fff3ea]">+</button>
             </div>
             <button type="button" onClick={handleAdd} disabled={!canAdd} className="h-12 flex-1 rounded-[16px] bg-[#ff5a00] px-4 text-[14px] font-black text-white shadow-[0_12px_22px_rgba(255,90,0,0.24)] disabled:cursor-not-allowed disabled:bg-slate-300 disabled:shadow-none">
-              {added ? "Đã thêm vào giỏ" : "Thêm vào giỏ hàng"}
+              {added ? "Đã thêm vào giỏ" : product.orderLabel}
             </button>
           </div>
         </div>
