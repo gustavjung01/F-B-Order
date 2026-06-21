@@ -5,6 +5,9 @@ type RawHungPhatCatalogProduct = (typeof hungPhatCatalog.products)[number];
 
 const UPDATING_LABEL = "Đang cập nhật";
 const HUNG_PHAT_ASSET_BASE_URL = "https://cdn.bepsi.click";
+const PUBLIC_CATEGORY_NAME_OVERRIDES: Record<string, string> = {
+  "combo-cong-thuc": "Combo gợi ý",
+};
 
 const imageUrlByProductId: Record<string, string> = {
   "tra-ona": `${HUNG_PHAT_ASSET_BASE_URL}/catalog/hung-phat/products/tra-ona.jpg`,
@@ -39,7 +42,10 @@ const imageUrlByProductId: Record<string, string> = {
 };
 
 const categoryNameById = new Map<string, string>(
-  hungPhatCatalog.categories.map((category) => [category.id, category.name]),
+  hungPhatCatalog.categories.map((category) => [
+    category.id,
+    PUBLIC_CATEGORY_NAME_OVERRIDES[category.id] ?? category.name,
+  ]),
 );
 
 const INTERNAL_ONLY_VALUES = new Set([
@@ -148,9 +154,12 @@ export function toHungPhatPublicProduct(product: RawHungPhatCatalogProduct): Pub
 }
 
 export const hungPhatPublicProducts = hungPhatCatalog.products
-  .filter((product) => product.catalogKind === "sku_candidate" || product.catalogKind === "content" || product.catalogKind === "bundle_candidate")
+  .filter((product) => product.catalogKind === "sku_candidate" || product.catalogKind === "bundle_candidate")
   .map(toHungPhatPublicProduct);
 
-export const hungPhatPublicCategories = hungPhatCatalog.categories;
+export const hungPhatPublicCategories = hungPhatCatalog.categories.map((category) => ({
+  ...category,
+  name: PUBLIC_CATEGORY_NAME_OVERRIDES[category.id] ?? category.name,
+}));
 export const hungPhatPublicMerchant = hungPhatCatalog.merchant;
 export const HUNG_PHAT_UPDATING_LABEL = UPDATING_LABEL;
