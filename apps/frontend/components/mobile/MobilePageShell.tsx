@@ -1,11 +1,10 @@
 import type { ReactNode } from "react";
 import { AppHeader } from "@/components/mobile/AppHeader";
 import { BottomNav } from "@/components/mobile/BottomNav";
-
-type BottomNavKey = "home" | "products" | "recipes" | "cart" | "account";
+import type { AppNavKey } from "@/components/navigation/app-navigation";
 
 type MobilePageShellProps = {
-  active: BottomNavKey;
+  active: AppNavKey;
   title?: string;
   subtitle?: string;
   children: ReactNode;
