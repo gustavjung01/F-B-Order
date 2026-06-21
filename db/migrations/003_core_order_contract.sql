@@ -14,6 +14,10 @@ ALTER TABLE customers ADD COLUMN IF NOT EXISTS approval_decided_at TIMESTAMPTZ;
 ALTER TABLE customers ADD COLUMN IF NOT EXISTS approval_note TEXT;
 
 UPDATE customers
+SET approval_status = 'pending'
+WHERE approval_status IS NULL;
+
+UPDATE customers
 SET
   approval_decided_by_actor_type = COALESCE(approval_decided_by_actor_type, 'system'),
   approval_decided_by_actor_id = COALESCE(approval_decided_by_actor_id, 'system:migration'),
@@ -30,6 +34,12 @@ SET
   approval_decided_by_actor_id = NULL,
   approval_decided_at = NULL
 WHERE approval_status = 'pending';
+
+ALTER TABLE customers ALTER COLUMN approval_status SET DEFAULT 'pending';
+ALTER TABLE customers ALTER COLUMN approval_status SET NOT NULL;
+ALTER TABLE customers DROP CONSTRAINT IF EXISTS customers_approval_status_check;
+ALTER TABLE customers ADD CONSTRAINT customers_approval_status_check
+  CHECK (approval_status IN ('pending', 'approved', 'rejected'));
 
 ALTER TABLE customers DROP CONSTRAINT IF EXISTS customers_approval_actor_type_check;
 ALTER TABLE customers ADD CONSTRAINT customers_approval_actor_type_check

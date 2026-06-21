@@ -18,7 +18,42 @@ Seed kiểm thử local/dev:
 pnpm db:seed:test
 ```
 
+Kiểm tra contract customer approval và order trong một transaction tự rollback:
+
+```bash
+pnpm db:verify:order-contract
+```
+
 Không cần cài `psql`. Các script đọc `DATABASE_URL` hoặc `BEPSI_DATABASE_URL` từ môi trường, `./.env`, `apps/backend/.env`, hoặc `apps/backend/.env.local`.
+
+## Customer approval contract
+
+`customers.approval_status` chỉ nhận `pending`, `approved`, `rejected`.
+
+- `pending`: chưa có actor và thời điểm quyết định.
+- `approved` hoặc `rejected`: bắt buộc có `approval_decided_by_actor_type`, `approval_decided_by_actor_id`, `approval_decided_at`.
+- `approval_note` chứa ghi chú duyệt hoặc lý do reject.
+- Clerk tiếp tục là nguồn xác thực; database chỉ giữ profile và quyết định nghiệp vụ.
+
+## Order contract
+
+Trạng thái order chuẩn:
+
+```txt
+pending
+confirmed
+processing
+shipping
+completed
+cancelled
+rejected
+```
+
+`orders` giữ customer note, internal note, thông tin giao hàng, currency và tổng tiền do backend ghi.
+
+Các cột `order_items.sku`, `name`, `unit`, `unit_price`, `quantity`, `line_total` là snapshot bất biến tại thời điểm đặt. `product_id` chỉ dùng để truy vết. Bundle bắt buộc có `bundle_snapshot` chứa mảng `components`.
+
+`order_status_logs` là append-only. Mỗi log bắt buộc có `actor_type`, `actor_id`, `created_at`; update và delete bị database chặn.
 
 ## Ranh giới dữ liệu catalog
 

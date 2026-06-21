@@ -1,0 +1,62 @@
+name: Core order contract
+
+on:
+  push:
+    branches:
+      - "feat/core-order-schema"
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: fb_order_phase1
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d fb_order_phase1"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5432/fb_order_phase1
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.34.4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Migrate clean database
+        run: pnpm db:migrate
+
+      - name: Seed compatibility data
+        run: pnpm db:seed:test
+
+      - name: Re-run migrations
+        run: pnpm db:migrate
+
+      - name: Verify customer and order contract
+        run: pnpm db:verify:order-contract
+
+      - name: Typecheck
+        run: pnpm typecheck
