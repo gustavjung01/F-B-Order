@@ -32,6 +32,109 @@ CREATE TABLE IF NOT EXISTS product_bundle_items (
   UNIQUE(bundle_product_id, component_product_id)
 );
 
+-- Compatibility cleanup for databases that briefly used catalog_suggestions.
+DO $$
+BEGIN
+  IF to_regclass('public.catalog_suggestions') IS NOT NULL THEN
+    EXECUTE $migrate$
+      INSERT INTO products (
+        category_id,
+        subcategory_id,
+        sku,
+        name,
+        slug,
+        brand,
+        description,
+        short_description,
+        unit,
+        unit_label,
+        package_spec,
+        package_size,
+        package_size_label,
+        image_url,
+        industry_group,
+        product_type,
+        catalog_kind,
+        use_cases,
+        tags,
+        selling_points,
+        source_key,
+        source_confidence,
+        source_status_raw,
+        data_issues,
+        base_price,
+        wholesale_price,
+        min_order_qty,
+        stock_status,
+        status,
+        sort_order,
+        is_active,
+        is_orderable,
+        is_public
+      )
+      SELECT
+        suggestion.category_id,
+        suggestion.subcategory_id,
+        NULL,
+        suggestion.title,
+        suggestion.slug,
+        suggestion.related_brand,
+        suggestion.description,
+        suggestion.short_description,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        suggestion.cover_image_url,
+        'combo_cong_thuc',
+        'bundle',
+        'bundle_candidate',
+        suggestion.use_cases,
+        suggestion.tags,
+        '[]'::jsonb,
+        suggestion.source_key,
+        suggestion.source_confidence,
+        suggestion.source_status_raw,
+        '["missing_sku","missing_unit","missing_price_retail","missing_price_wholesale","missing_bundle_components"]'::jsonb,
+        0,
+        NULL,
+        1,
+        'available',
+        suggestion.status,
+        suggestion.sort_order,
+        suggestion.is_active,
+        false,
+        suggestion.is_public
+      FROM catalog_suggestions suggestion
+      ON CONFLICT (slug) DO UPDATE SET
+        category_id = EXCLUDED.category_id,
+        subcategory_id = EXCLUDED.subcategory_id,
+        name = EXCLUDED.name,
+        brand = COALESCE(EXCLUDED.brand, products.brand),
+        description = COALESCE(EXCLUDED.description, products.description),
+        short_description = COALESCE(EXCLUDED.short_description, products.short_description),
+        image_url = COALESCE(EXCLUDED.image_url, products.image_url),
+        industry_group = 'combo_cong_thuc',
+        product_type = 'bundle',
+        catalog_kind = 'bundle_candidate',
+        use_cases = EXCLUDED.use_cases,
+        tags = EXCLUDED.tags,
+        source_key = EXCLUDED.source_key,
+        source_confidence = EXCLUDED.source_confidence,
+        source_status_raw = EXCLUDED.source_status_raw,
+        data_issues = EXCLUDED.data_issues,
+        status = EXCLUDED.status,
+        sort_order = EXCLUDED.sort_order,
+        is_active = EXCLUDED.is_active,
+        is_public = EXCLUDED.is_public,
+        updated_at = now()
+    $migrate$;
+  END IF;
+END $$;
+
+DROP TABLE IF EXISTS catalog_suggestions;
+
 CREATE INDEX IF NOT EXISTS products_source_key_idx ON products(source_key);
 CREATE INDEX IF NOT EXISTS products_public_status_idx ON products(is_public, status, is_active);
 CREATE INDEX IF NOT EXISTS product_bundle_items_bundle_idx ON product_bundle_items(bundle_product_id);
@@ -41,8 +144,5 @@ DROP TRIGGER IF EXISTS set_product_bundle_items_updated_at ON product_bundle_ite
 CREATE TRIGGER set_product_bundle_items_updated_at
 BEFORE UPDATE ON product_bundle_items
 FOR EACH ROW EXECUTE FUNCTION set_updated_at();
-
--- Remove the abandoned suggestion-domain experiment if it was created in a dev database.
-DROP TABLE IF EXISTS catalog_suggestions;
 
 COMMIT;
