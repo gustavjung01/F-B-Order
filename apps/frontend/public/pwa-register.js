@@ -1,6 +1,26 @@
 (function () {
   if (!("serviceWorker" in navigator)) return;
 
+  var isLocalhost = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+
+  if (isLocalhost) {
+    window.addEventListener("load", function () {
+      navigator.serviceWorker.getRegistrations().then(function (registrations) {
+        return Promise.all(registrations.map(function (registration) {
+          return registration.unregister();
+        }));
+      }).then(function () {
+        if (!window.caches) return null;
+        return caches.keys().then(function (keys) {
+          return Promise.all(keys.map(function (key) {
+            return caches.delete(key);
+          }));
+        });
+      }).catch(function () {});
+    });
+    return;
+  }
+
   var applyingUpdate = false;
 
   function installUpdateHandlers(registration) {
