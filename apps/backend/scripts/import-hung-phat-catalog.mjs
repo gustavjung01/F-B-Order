@@ -26,7 +26,7 @@ if (!connectionString) {
   process.exit(1);
 }
 
-const imageUrlByItemId = {
+const imageUrlByProductId = {
   "tra-ona": "https://cdn.bepsi.click/catalog/hung-phat/products/tra-ona.jpg",
   "tra-loc-phat": "https://cdn.bepsi.click/catalog/hung-phat/products/tra-loc-phat.jpg",
   "tra-pha-may-2025": "https://cdn.bepsi.click/catalog/hung-phat/products/tra-pha-may-2025.jpg",
@@ -53,24 +53,44 @@ const imageUrlByItemId = {
 
 function parseCatalogSource() {
   const source = fs.readFileSync(sourcePath, "utf8");
-  const startMarker = "export const hungPhatCatalog = ";
-  const start = source.indexOf(startMarker);
+  const marker = "export const hungPhatCatalog = ";
+  const start = source.indexOf(marker);
   const end = source.lastIndexOf(" as const;");
 
   if (start < 0 || end < 0 || end <= start) {
     throw new Error("Cannot locate hungPhatCatalog JSON object.");
   }
 
-  const jsonText = source.slice(start + startMarker.length, end).trim();
-  return JSON.parse(jsonText);
+  return JSON.parse(source.slice(start + marker.length, end).trim());
 }
 
 function publicCategoryName(category) {
   return category.id === "combo-cong-thuc" ? "Combo gợi ý" : category.name;
 }
 
-function suggestionType(product) {
-  return product.catalogKind === "bundle_candidate" ? "menu_solution" : "combo";
+function isBundleSource(product) {
+  return product.catalogKind === "content" || product.catalogKind === "bundle_candidate";
+}
+
+function normalizeImportedProduct(product) {
+  const isBundle = isBundleSource(product);
+  const dataIssues = new Set(product.dataIssues || []);
+
+  if (isBundle) {
+    dataIssues.delete("missing_related_product_or_brand");
+    dataIssues.add("missing_bundle_components");
+    dataIssues.add("missing_sku");
+    dataIssues.add("missing_price_retail");
+    dataIssues.add("missing_price_wholesale");
+  }
+
+  return {
+    ...product,
+    productType: isBundle ? "bundle" : "physical",
+    catalogKind: isBundle ? "bundle_candidate" : "sku_candidate",
+    dataIssues: [...dataIssues],
+    isOrderable: false,
+  };
 }
 
 const pool = new Pool({
@@ -121,23 +141,13 @@ try {
     "UPDATE products SET is_active = false, status = 'inactive' WHERE source_key = $1",
     [SOURCE_KEY],
   );
-  await client.query(
-    "UPDATE catalog_suggestions SET is_active = false, status = 'inactive' WHERE source_key = $1",
-    [SOURCE_KEY],
-  );
 
-  const productRows = catalog.products.filter((product) => product.catalogKind === "sku_candidate");
-  const suggestionRows = catalog.products.filter(
-    (product) => product.catalogKind === "content" || product.catalogKind === "bundle_candidate",
-  );
+  const productRows = catalog.products
+    .filter((product) => product.catalogKind !== "category_scaffold")
+    .map(normalizeImportedProduct);
 
   for (const [index, product] of productRows.entries()) {
-    const imageUrl = imageUrlByItemId[product.id] || product.imageUrls?.[0] || null;
-    const isOrderable = Boolean(
-      product.isOrderable
-      && product.unit
-      && Number(product.priceWholesale) > 0,
-    );
+    const imageUrl = imageUrlByProductId[product.id] || product.imageUrls?.[0] || null;
 
     await client.query(`
       INSERT INTO products (
@@ -209,24 +219,24 @@ try {
         $24,
         $25,
         true,
-        $26,
+        false,
         true
       FROM categories category
-      LEFT JOIN categories subcategory ON subcategory.slug = $27
-      WHERE category.slug = $28
+      LEFT JOIN categories subcategory ON subcategory.slug = $26
+      WHERE category.slug = $27
       ON CONFLICT (slug) DO UPDATE SET
         category_id = EXCLUDED.category_id,
         subcategory_id = EXCLUDED.subcategory_id,
-        sku = COALESCE(EXCLUDED.sku, products.sku),
+        sku = COALESCE(products.sku, EXCLUDED.sku),
         name = EXCLUDED.name,
         brand = COALESCE(EXCLUDED.brand, products.brand),
         description = COALESCE(EXCLUDED.description, products.description),
         short_description = COALESCE(EXCLUDED.short_description, products.short_description),
-        unit = COALESCE(EXCLUDED.unit, products.unit),
-        unit_label = COALESCE(EXCLUDED.unit_label, products.unit_label),
-        package_spec = COALESCE(EXCLUDED.package_spec, products.package_spec),
-        package_size = COALESCE(EXCLUDED.package_size, products.package_size),
-        package_size_label = COALESCE(EXCLUDED.package_size_label, products.package_size_label),
+        unit = COALESCE(products.unit, EXCLUDED.unit),
+        unit_label = COALESCE(products.unit_label, EXCLUDED.unit_label),
+        package_spec = COALESCE(products.package_spec, EXCLUDED.package_spec),
+        package_size = COALESCE(products.package_size, EXCLUDED.package_size),
+        package_size_label = COALESCE(products.package_size_label, EXCLUDED.package_size_label),
         origin = COALESCE(EXCLUDED.origin, products.origin),
         image_url = COALESCE(EXCLUDED.image_url, products.image_url),
         industry_group = EXCLUDED.industry_group,
@@ -239,17 +249,17 @@ try {
         source_confidence = EXCLUDED.source_confidence,
         source_status_raw = EXCLUDED.source_status_raw,
         data_issues = EXCLUDED.data_issues,
-        base_price = CASE WHEN EXCLUDED.base_price > 0 THEN EXCLUDED.base_price ELSE products.base_price END,
-        wholesale_price = COALESCE(EXCLUDED.wholesale_price, products.wholesale_price),
-        min_order_qty = EXCLUDED.min_order_qty,
-        status = EXCLUDED.status,
+        base_price = CASE WHEN products.base_price > 0 THEN products.base_price ELSE EXCLUDED.base_price END,
+        wholesale_price = COALESCE(products.wholesale_price, EXCLUDED.wholesale_price),
+        min_order_qty = COALESCE(products.min_order_qty, EXCLUDED.min_order_qty),
+        status = CASE WHEN products.status = 'active' THEN products.status ELSE EXCLUDED.status END,
         sort_order = EXCLUDED.sort_order,
         is_active = true,
-        is_orderable = EXCLUDED.is_orderable,
+        is_orderable = products.is_orderable,
         is_public = true,
         updated_at = now()
     `, [
-      null,
+      product.sku || null,
       product.name,
       product.slug,
       product.brand,
@@ -274,99 +284,16 @@ try {
       product.minOrderQty || 1,
       product.status,
       index + 1,
-      isOrderable,
-      product.subcategoryId,
-      product.categoryId,
-    ]);
-  }
-
-  for (const [index, product] of suggestionRows.entries()) {
-    const imageUrl = imageUrlByItemId[product.id] || product.imageUrls?.[0] || null;
-
-    await client.query(`
-      INSERT INTO catalog_suggestions (
-        category_id,
-        subcategory_id,
-        slug,
-        title,
-        related_brand,
-        short_description,
-        description,
-        cover_image_url,
-        suggestion_type,
-        use_cases,
-        tags,
-        source_key,
-        source_confidence,
-        source_status_raw,
-        status,
-        sort_order,
-        is_active,
-        is_public
-      )
-      SELECT
-        category.id,
-        subcategory.id,
-        $1,
-        $2,
-        $3,
-        $4,
-        $5,
-        $6,
-        $7,
-        $8::jsonb,
-        $9::jsonb,
-        $10,
-        $11,
-        $12,
-        $13,
-        $14,
-        true,
-        true
-      FROM categories category
-      LEFT JOIN categories subcategory ON subcategory.slug = $15
-      WHERE category.slug = $16
-      ON CONFLICT (slug) DO UPDATE SET
-        category_id = EXCLUDED.category_id,
-        subcategory_id = EXCLUDED.subcategory_id,
-        title = EXCLUDED.title,
-        related_brand = EXCLUDED.related_brand,
-        short_description = EXCLUDED.short_description,
-        description = EXCLUDED.description,
-        cover_image_url = EXCLUDED.cover_image_url,
-        suggestion_type = EXCLUDED.suggestion_type,
-        use_cases = EXCLUDED.use_cases,
-        tags = EXCLUDED.tags,
-        source_key = EXCLUDED.source_key,
-        source_confidence = EXCLUDED.source_confidence,
-        source_status_raw = EXCLUDED.source_status_raw,
-        status = EXCLUDED.status,
-        sort_order = EXCLUDED.sort_order,
-        is_active = true,
-        is_public = true,
-        updated_at = now()
-    `, [
-      product.slug,
-      product.name,
-      product.brand,
-      product.shortDescription,
-      product.description,
-      imageUrl,
-      suggestionType(product),
-      JSON.stringify(product.useCases || []),
-      JSON.stringify(product.tags || []),
-      SOURCE_KEY,
-      product.sourceConfidence,
-      product.sourceStatusRaw,
-      product.status,
-      index + 1,
       product.subcategoryId,
       product.categoryId,
     ]);
   }
 
   await client.query("COMMIT");
-  console.log(`Catalog import completed: ${productRows.length} products, ${suggestionRows.length} suggestions.`);
+
+  const bundleCount = productRows.filter((product) => product.productType === "bundle").length;
+  const physicalCount = productRows.length - bundleCount;
+  console.log(`Catalog import completed: ${physicalCount} physical products, ${bundleCount} bundles.`);
 } catch (error) {
   await client.query("ROLLBACK");
   console.error("Catalog import failed.");
