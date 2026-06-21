@@ -173,7 +173,8 @@ try {
         status,
         sort_order,
         is_active,
-        is_orderable
+        is_orderable,
+        is_public
       )
       SELECT
         category.id,
@@ -208,7 +209,8 @@ try {
         $24,
         $25,
         true,
-        $26
+        $26,
+        true
       FROM categories category
       LEFT JOIN categories subcategory ON subcategory.slug = $27
       WHERE category.slug = $28
@@ -244,6 +246,7 @@ try {
         sort_order = EXCLUDED.sort_order,
         is_active = true,
         is_orderable = EXCLUDED.is_orderable,
+        is_public = true,
         updated_at = now()
     `, [
       null,
@@ -298,7 +301,8 @@ try {
         source_status_raw,
         status,
         sort_order,
-        is_active
+        is_active,
+        is_public
       )
       SELECT
         category.id,
@@ -317,6 +321,7 @@ try {
         $12,
         $13,
         $14,
+        true,
         true
       FROM categories category
       LEFT JOIN categories subcategory ON subcategory.slug = $15
@@ -338,6 +343,7 @@ try {
         status = EXCLUDED.status,
         sort_order = EXCLUDED.sort_order,
         is_active = true,
+        is_public = true,
         updated_at = now()
     `, [
       product.slug,
