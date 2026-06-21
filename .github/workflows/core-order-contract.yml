@@ -63,3 +63,9 @@ jobs:
 
       - name: Verify approval pricing
         run: pnpm test:auth-pricing
+
+      - name: Import catalog contract fixture
+        run: pnpm catalog:import
+
+      - name: Verify catalog contract
+        run: pnpm --filter @fb-order/backend exec tsx scripts/test-catalog-contract.ts
