@@ -11,7 +11,7 @@ ENV_FILE="/etc/app-env/bepsi.env"
 SERVICE_NAME="bepsi-api.service"
 API_BASE_URL="${API_BASE_URL:-https://api.bepsi.click}"
 LOCK_FILE="/var/lock/bepsi-phase7-deploy.lock"
-REPO_URL_PATTERN="github.com[:/]gustavjung01/F-B-Order(?:\.git)?$"
+REPO_URL_PATTERN='github\.com[:/]gustavjung01/F-B-Order(\.git)?$'
 
 log() {
   printf '[phase7-backend] %s\n' "$*"
