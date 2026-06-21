@@ -19,7 +19,7 @@ const PRODUCT_TABLE_HEADERS = [
   "Data status",
 ];
 
-const CONTENT_TABLE_HEADERS = [
+const BUNDLE_TABLE_HEADERS = [
   "Product ID",
   "Name",
   "Type",
@@ -125,8 +125,8 @@ function parseTables(markdown) {
 
     const headers = parseTableLine(line);
     const isProductTable = headersMatch(headers, PRODUCT_TABLE_HEADERS);
-    const isContentTable = headersMatch(headers, CONTENT_TABLE_HEADERS);
-    if (!isProductTable && !isContentTable) continue;
+    const isBundleTable = headersMatch(headers, BUNDLE_TABLE_HEADERS);
+    if (!isProductTable && !isBundleTable) continue;
 
     const separator = lines[index + 1] ?? "";
     if (!isSeparator(separator)) continue;
@@ -135,7 +135,7 @@ function parseTables(markdown) {
     while (cursor < lines.length && lines[cursor].trim().startsWith("|")) {
       const cells = parseTableLine(lines[cursor]);
       if (cells.length >= headers.length) {
-        rows.push({ headers, cells, kind: isProductTable ? "product" : "content" });
+        rows.push({ headers, cells, kind: isProductTable ? "product" : "bundle" });
       }
       cursor += 1;
     }
@@ -190,16 +190,12 @@ function normalizeProductRow(row) {
   };
 }
 
-function normalizeContentRow(row) {
-  const [id, name, type, relatedProductOrBrand, useCases, sourceStatusRaw] = row.cells;
-  const productType = cleanCell(type) === "bundle" ? "bundle" : "recipe_content";
-  const dataIssues = ["missing_image"];
-  if (!emptyToNull(relatedProductOrBrand)) dataIssues.push("missing_related_product_or_brand");
-  if (productType === "bundle") dataIssues.push("missing_price_retail", "missing_price_wholesale");
+function normalizeBundleRow(row) {
+  const [id, name, _type, relatedProductOrBrand, useCases, sourceStatusRaw] = row.cells;
 
   return {
     id: cleanCell(id),
-    slug: cleanCell(id).replace(/^combo-12-cong-thuc-tra-trai-cay-loc-phat$/, "bo-12-cong-thuc-tra-trai-cay-loc-phat"),
+    slug: cleanCell(id),
     name: cleanCell(name),
     brand: emptyToNull(relatedProductOrBrand),
     sku: null,
@@ -207,14 +203,14 @@ function normalizeContentRow(row) {
     categoryId: "combo-cong-thuc",
     subcategoryId: null,
     industryGroup: "combo_cong_thuc",
-    productType,
-    catalogKind: productType === "bundle" ? "bundle_candidate" : "content",
+    productType: "bundle",
+    catalogKind: "bundle_candidate",
     packageSize: null,
     unit: null,
     origin: null,
     useCases: splitList(useCases),
     sellingPoints: [],
-    priceRetail: productType === "recipe_content" ? 0 : null,
+    priceRetail: null,
     priceWholesale: null,
     currency: "VND",
     imageUrls: [],
@@ -224,7 +220,14 @@ function normalizeContentRow(row) {
     sourceStatusRaw: cleanCell(sourceStatusRaw),
     status: "needs_review",
     isOrderable: false,
-    dataIssues,
+    dataIssues: [
+      "missing_sku",
+      "missing_unit",
+      "missing_price_retail",
+      "missing_price_wholesale",
+      "missing_image",
+      "missing_bundle_components",
+    ],
   };
 }
 
@@ -284,7 +287,7 @@ function makeAuditCsv(products) {
 async function main() {
   const markdown = await fs.readFile(SOURCE_PATH, "utf8");
   const rows = parseTables(markdown);
-  const products = rows.map((row) => row.kind === "product" ? normalizeProductRow(row) : normalizeContentRow(row));
+  const products = rows.map((row) => row.kind === "product" ? normalizeProductRow(row) : normalizeBundleRow(row));
 
   await fs.mkdir(OUTPUT_DIR, { recursive: true });
   await fs.writeFile(PRODUCTS_JSON_PATH, `${JSON.stringify(products, null, 2)}\n`, "utf8");
