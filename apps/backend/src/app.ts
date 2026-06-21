@@ -5,6 +5,7 @@ import helmet from "helmet";
 import { createAdminCustomersRouter } from "./modules/admin/admin-customers.routes";
 import { anonymousIdentity, resolveRequestIdentity } from "./modules/auth/auth.identity";
 import { createAuthRouter } from "./modules/auth/auth.routes";
+import { createCartRouter } from "./modules/catalog/cart.routes";
 import { createCatalogRouter } from "./modules/catalog/catalog.routes";
 import { createAdminOrdersRouter } from "./modules/orders/admin-orders.routes";
 import { createOrdersRouter } from "./modules/orders/orders.routes";
@@ -41,7 +42,7 @@ export function createApp(config: AppConfig) {
   app.get("/health", (_req, res) => res.json(healthPayload()));
   app.get("/api/health", (_req, res) => res.json(healthPayload()));
   app.get("/api/version", (_req, res) => {
-    res.json({ name: "Bếp Sỉ F&B API", service: config.serviceName, version: "minimal-admin-v5" });
+    res.json({ name: "Bếp Sỉ F&B API", service: config.serviceName, version: "frontend-cutover-v6" });
   });
 
   if (clerkEnabled) {
@@ -60,6 +61,7 @@ export function createApp(config: AppConfig) {
 
   if (clerkEnabled) {
     app.use("/api/auth", createAuthRouter(resolveRequestIdentity));
+    app.use("/api/cart", createCartRouter(resolveRequestIdentity));
     app.use("/api/orders", createOrdersRouter(resolveRequestIdentity));
     app.use("/api/admin/customers", createAdminCustomersRouter(resolveRequestIdentity));
     app.use("/api/admin/orders", createAdminOrdersRouter(resolveRequestIdentity));
@@ -68,6 +70,7 @@ export function createApp(config: AppConfig) {
       res.status(503).json({ error: "CLERK_NOT_CONFIGURED" });
     };
     app.use("/api/auth", clerkUnavailable);
+    app.use("/api/cart", clerkUnavailable);
     app.use("/api/orders", clerkUnavailable);
     app.use("/api/admin/customers", clerkUnavailable);
     app.use("/api/admin/orders", clerkUnavailable);
