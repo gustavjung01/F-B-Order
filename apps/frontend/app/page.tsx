@@ -8,7 +8,7 @@ export default function HomePage() {
         <ProductHome active="home" />
       </div>
       <div className="hidden md:block">
-        <DesktopHome />
+        <DesktopHome active="home" />
       </div>
     </>
   );
