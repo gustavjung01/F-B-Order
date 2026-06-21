@@ -73,7 +73,17 @@ jobs:
         run: pnpm --filter @fb-order/backend build
 
       - name: Fresh database and second run
-        run: pnpm --filter @fb-order/backend db:test:migrations -- fresh-rerun
+        run: |
+          set -o pipefail
+          pnpm --filter @fb-order/backend db:test:migrations -- fresh-rerun 2>&1 | tee migration-fresh.log
+
+      - name: Upload fresh migration log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: migration-fresh-log
+          path: migration-fresh.log
+          if-no-files-found: error
 
       - name: Legacy Heroku fixture
         run: pnpm --filter @fb-order/backend db:test:migrations -- legacy
