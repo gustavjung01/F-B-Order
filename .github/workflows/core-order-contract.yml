@@ -63,3 +63,19 @@ jobs:
 
       - name: Verify approval pricing
         run: pnpm test:auth-pricing
+
+      - name: Import catalog contract fixture
+        run: pnpm catalog:import
+
+      - name: Verify catalog contract
+        run: |
+          set -o pipefail
+          pnpm --filter @fb-order/backend exec tsx scripts/test-catalog-contract.ts 2>&1 | tee catalog-contract.log
+
+      - name: Upload catalog contract log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: catalog-contract-log
+          path: catalog-contract.log
+          if-no-files-found: error
