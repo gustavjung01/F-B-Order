@@ -14,30 +14,19 @@ type ProductRow = {
   category_name: string;
   subcategory_id: string | null;
   subcategory_name: string | null;
-  product_type: string;
-  catalog_kind: string;
+  product_type: "physical" | "bundle" | "service";
+  catalog_kind: "sku_candidate" | "bundle_candidate";
   package_size_label: string | null;
   unit_label: string | null;
   base_price: string | null;
+  wholesale_price: string | null;
   image_url: string | null;
   short_description: string | null;
   use_cases: unknown;
   selling_points: unknown;
-};
-
-type SuggestionRow = {
-  id: string;
-  slug: string;
-  title: string;
-  related_brand: string | null;
-  category_id: string;
-  category_name: string;
-  subcategory_id: string | null;
-  subcategory_name: string | null;
-  suggestion_type: "combo" | "menu_solution" | "content";
-  cover_image_url: string | null;
-  short_description: string | null;
-  use_cases: unknown;
+  is_orderable: boolean;
+  sku: string | null;
+  bundle_item_count: string;
 };
 
 function readText(value: unknown): string | null {
@@ -65,6 +54,15 @@ function publicCategoryName(slug: string, name: string): string {
 }
 
 function toPublicProduct(row: ProductRow) {
+  const bundleItemCount = Number(row.bundle_item_count || 0);
+  const hasSellableData = Boolean(
+    row.sku
+      && row.unit_label
+      && Number(row.wholesale_price) > 0,
+  );
+  const hasValidBundle = row.product_type !== "bundle" || bundleItemCount > 0;
+  const orderable = Boolean(row.is_orderable && hasSellableData && hasValidBundle);
+
   return {
     itemKind: "product" as const,
     id: row.id,
@@ -84,28 +82,9 @@ function toPublicProduct(row: ProductRow) {
     shortDescription: row.short_description,
     useCases: Array.isArray(row.use_cases) ? row.use_cases : [],
     sellingPoints: Array.isArray(row.selling_points) ? row.selling_points : [],
-    isOrderable: false,
-    orderLabel: "Liên hệ cập nhật giá",
-  };
-}
-
-function toPublicSuggestion(row: SuggestionRow) {
-  return {
-    itemKind: "suggestion" as const,
-    id: row.id,
-    slug: row.slug,
-    name: row.title,
-    brand: row.related_brand || UPDATING_LABEL,
-    categoryId: row.category_id,
-    categoryName: publicCategoryName(row.category_id, row.category_name),
-    subcategoryId: row.subcategory_id,
-    subcategoryName: row.subcategory_name,
-    suggestionType: row.suggestion_type,
-    imageUrl: row.cover_image_url,
-    shortDescription: row.short_description,
-    useCases: Array.isArray(row.use_cases) ? row.use_cases : [],
-    isOrderable: false as const,
-    orderLabel: "Nội dung gợi ý",
+    bundleItemCount,
+    isOrderable: orderable,
+    orderLabel: orderable ? "Thêm vào giỏ" : "Liên hệ cập nhật giá",
   };
 }
 
@@ -124,10 +103,18 @@ const productSelect = `
     COALESCE(product.package_size_label, product.package_size, product.package_spec) AS package_size_label,
     COALESCE(product.unit_label, product.unit) AS unit_label,
     product.base_price,
+    product.wholesale_price,
     product.image_url,
     product.short_description,
     product.use_cases,
-    product.selling_points
+    product.selling_points,
+    product.is_orderable,
+    product.sku,
+    (
+      SELECT COUNT(*)
+      FROM product_bundle_items bundle_item
+      WHERE bundle_item.bundle_product_id = product.id
+    ) AS bundle_item_count
   FROM products product
   JOIN categories category ON category.id = product.category_id
   LEFT JOIN categories subcategory ON subcategory.id = product.subcategory_id
@@ -140,7 +127,7 @@ catalogRouter.get("/categories", async (_req, res) => {
       name: string;
       parent_id: string | null;
       sort_order: number;
-      item_count: string;
+      product_count: string;
     }>(`
       WITH category_counts AS (
         SELECT
@@ -155,22 +142,15 @@ catalogRouter.get("/categories", async (_req, res) => {
               AND product.is_public = true
               AND product.is_active = true
               AND product.status IN ('active', 'needs_review')
-          ) + (
-            SELECT COUNT(*)
-            FROM catalog_suggestions suggestion
-            WHERE suggestion.category_id = category.id
-              AND suggestion.is_public = true
-              AND suggestion.is_active = true
-              AND suggestion.status IN ('active', 'needs_review')
-          ) AS item_count
+          ) AS product_count
         FROM categories category
         LEFT JOIN categories parent ON parent.id = category.parent_id
         WHERE category.is_active = true
           AND category.parent_id IS NULL
       )
-      SELECT id, name, parent_id, sort_order, item_count
+      SELECT id, name, parent_id, sort_order, product_count
       FROM category_counts
-      WHERE item_count > 0
+      WHERE product_count > 0
       ORDER BY sort_order ASC, name ASC
     `);
 
@@ -180,7 +160,7 @@ catalogRouter.get("/categories", async (_req, res) => {
         name: publicCategoryName(row.id, row.name),
         parentId: row.parent_id,
         sortOrder: row.sort_order,
-        productCount: Number(row.item_count),
+        productCount: Number(row.product_count),
       })),
     });
   } catch (error) {
@@ -245,74 +225,6 @@ catalogRouter.get("/products", async (req, res) => {
   } catch (error) {
     console.error("catalog products failed", error);
     res.status(500).json({ error: "CATALOG_PRODUCTS_FAILED" });
-  }
-});
-
-catalogRouter.get("/suggestions", async (req, res) => {
-  const categoryId = readText(req.query.categoryId);
-  const search = readText(req.query.q);
-  const limit = readLimit(req.query.limit);
-
-  const where: string[] = [
-    "suggestion.is_public = true",
-    "suggestion.is_active = true",
-    "suggestion.status IN ('active', 'needs_review')",
-  ];
-  const values: unknown[] = [];
-
-  if (categoryId && categoryId !== "all") {
-    values.push(categoryId);
-    where.push(`category.slug = $${values.length}`);
-  }
-  if (search) {
-    values.push(`%${search}%`);
-    where.push(`(
-      suggestion.title ILIKE $${values.length}
-      OR COALESCE(suggestion.related_brand, '') ILIKE $${values.length}
-      OR COALESCE(suggestion.short_description, '') ILIKE $${values.length}
-    )`);
-  }
-
-  const countValues = [...values];
-  values.push(limit);
-
-  try {
-    const result = await getDb().query<SuggestionRow>(`
-      SELECT
-        suggestion.id::text,
-        suggestion.slug,
-        suggestion.title,
-        suggestion.related_brand,
-        category.slug AS category_id,
-        category.name AS category_name,
-        subcategory.slug AS subcategory_id,
-        subcategory.name AS subcategory_name,
-        suggestion.suggestion_type,
-        suggestion.cover_image_url,
-        suggestion.short_description,
-        suggestion.use_cases
-      FROM catalog_suggestions suggestion
-      JOIN categories category ON category.id = suggestion.category_id
-      LEFT JOIN categories subcategory ON subcategory.id = suggestion.subcategory_id
-      WHERE ${where.join(" AND ")}
-      ORDER BY suggestion.sort_order ASC, suggestion.title ASC
-      LIMIT $${values.length}
-    `, values);
-
-    const countResult = await getDb().query<{ total: string }>(`
-      SELECT COUNT(*) AS total
-      FROM catalog_suggestions suggestion
-      JOIN categories category ON category.id = suggestion.category_id
-      WHERE ${where.join(" AND ")}
-    `, countValues);
-
-    res.json({
-      suggestions: result.rows.map(toPublicSuggestion),
-      total: Number(countResult.rows[0]?.total ?? 0),
-    });
-  } catch (error) {
-    console.error("catalog suggestions failed", error);
-    res.status(500).json({ error: "CATALOG_SUGGESTIONS_FAILED" });
   }
 });
 
