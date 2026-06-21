@@ -1,0 +1,75 @@
+name: Migration CI
+
+on:
+  pull_request:
+    paths:
+      - "apps/backend/scripts/**"
+      - "db/migrations/**"
+      - "db/fixtures/**"
+      - "apps/backend/package.json"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - ".github/workflows/migration-ci.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "apps/backend/scripts/**"
+      - "db/migrations/**"
+      - "db/fixtures/**"
+      - "apps/backend/package.json"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - ".github/workflows/migration-ci.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  migration-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.34.4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Backend typecheck
+        run: pnpm --filter @fb-order/backend typecheck
+
+      - name: Backend build
+        run: pnpm --filter @fb-order/backend build
+
+      - name: Migration integration tests
+        run: pnpm --filter @fb-order/backend db:test:migrations
+        env:
+          TEST_DATABASE_URL: postgres://postgres:postgres@127.0.0.1:5432/postgres
