@@ -8,6 +8,7 @@ import { createAuthRouter } from "./modules/auth/auth.routes";
 import { createCartRouter } from "./modules/catalog/cart.routes";
 import { createCatalogRouter } from "./modules/catalog/catalog.routes";
 import { createAdminOrdersRouter } from "./modules/orders/admin-orders.routes";
+import { createCustomerOrdersRouter } from "./modules/orders/customer-orders.routes";
 import { createOrdersRouter } from "./modules/orders/orders.routes";
 
 export type AppConfig = {
@@ -63,6 +64,7 @@ export function createApp(config: AppConfig) {
     app.use("/api/auth", createAuthRouter(resolveRequestIdentity));
     app.use("/api/cart", createCartRouter(resolveRequestIdentity));
     app.use("/api/orders", createOrdersRouter(resolveRequestIdentity));
+    app.use("/api/customer/orders", createCustomerOrdersRouter(resolveRequestIdentity));
     app.use("/api/admin/customers", createAdminCustomersRouter(resolveRequestIdentity));
     app.use("/api/admin/orders", createAdminOrdersRouter(resolveRequestIdentity));
   } else {
@@ -72,6 +74,7 @@ export function createApp(config: AppConfig) {
     app.use("/api/auth", clerkUnavailable);
     app.use("/api/cart", clerkUnavailable);
     app.use("/api/orders", clerkUnavailable);
+    app.use("/api/customer/orders", clerkUnavailable);
     app.use("/api/admin/customers", clerkUnavailable);
     app.use("/api/admin/orders", clerkUnavailable);
   }
