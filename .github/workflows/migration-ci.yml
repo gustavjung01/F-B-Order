@@ -72,12 +72,12 @@ jobs:
       - name: Backend build
         run: pnpm --filter @fb-order/backend build
 
-      - name: Fresh database and second run
+      - name: Legacy fixture diagnostic
         run: |
           set -o pipefail
-          pnpm --filter @fb-order/backend db:test:migrations -- fresh-rerun 2>&1 | tee migration-fresh.log
+          pnpm --filter @fb-order/backend db:test:migrations -- legacy 2>&1 | tee migration-fresh.log
 
-      - name: Upload fresh migration log
+      - name: Upload legacy diagnostic log
         if: always()
         uses: actions/upload-artifact@v4
         with:
