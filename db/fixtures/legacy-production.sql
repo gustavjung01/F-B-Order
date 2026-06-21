@@ -116,7 +116,7 @@ CREATE TABLE order_items (
   unit TEXT,
   quantity NUMERIC(14,2) NOT NULL,
   unit_price NUMERIC(14,2) NOT NULL,
-  total_price NUMERIC(14,2) NOT NULL,
+  total_price NUMERIC(14,2),
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
