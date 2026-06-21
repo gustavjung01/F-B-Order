@@ -8,7 +8,7 @@ export default function ProductsPage() {
         <ProductHome active="products" />
       </div>
       <div className="hidden md:block">
-        <DesktopHome />
+        <DesktopHome active="products" />
       </div>
     </>
   );
