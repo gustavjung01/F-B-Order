@@ -85,8 +85,8 @@ export function ProductDetailClient({ slug }: ProductDetailClientProps) {
 
   return (
     <div className="space-y-6">
-      <Link href="/products" className="inline-flex rounded-full bg-white px-4 py-2 text-sm font-black text-[#ff5a00] ring-1 ring-[#ffd0b3]">
-        ← Quay lại sản phẩm
+      <Link href="/" className="inline-flex rounded-full bg-white px-4 py-2 text-sm font-black text-[#ff5a00] ring-1 ring-[#ffd0b3]">
+        ← Quay lại Trang chủ
       </Link>
 
       <section className="grid gap-5 md:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] md:items-start">
