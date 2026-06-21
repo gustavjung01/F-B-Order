@@ -40,13 +40,54 @@ async function runSqlFile(relativePath) {
 }
 
 async function normalizeLegacyCatalog() {
-  console.log("Normalizing legacy catalog rows");
+  console.log("Normalizing legacy catalog schema and rows");
   await pool.query(`
     BEGIN;
 
+    ALTER TABLE categories ADD COLUMN IF NOT EXISTS parent_id UUID REFERENCES categories(id);
+    ALTER TABLE categories ADD COLUMN IF NOT EXISTS description TEXT;
+    ALTER TABLE categories ADD COLUMN IF NOT EXISTS sort_order INT NOT NULL DEFAULT 0;
+    ALTER TABLE categories ADD COLUMN IF NOT EXISTS is_active BOOLEAN NOT NULL DEFAULT true;
+    ALTER TABLE categories ADD COLUMN IF NOT EXISTS created_at TIMESTAMPTZ NOT NULL DEFAULT now();
+    ALTER TABLE categories ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ NOT NULL DEFAULT now();
+
+    ALTER TABLE products ADD COLUMN IF NOT EXISTS subcategory_id UUID REFERENCES categories(id);
+    ALTER TABLE products ADD COLUMN IF NOT EXISTS brand TEXT;
+    ALTER TABLE products ADD COLUMN IF NOT EXISTS description TEXT;
+    ALTER TABLE products ADD COLUMN IF NOT EXISTS short_description TEXT;
+    ALTER TABLE products ADD COLUMN IF NOT EXISTS unit TEXT;
+    ALTER TABLE products ADD COLUMN IF NOT EXISTS unit_label TEXT;
+    ALTER TABLE products ADD COLUMN IF NOT EXISTS package_spec TEXT;
+    ALTER TABLE products ADD COLUMN IF NOT EXISTS package_size TEXT;
+    ALTER TABLE products ADD COLUMN IF NOT EXISTS package_size_label TEXT;
+    ALTER TABLE products ADD COLUMN IF NOT EXISTS origin TEXT;
+    ALTER TABLE products ADD COLUMN IF NOT EXISTS image_url TEXT;
+    ALTER TABLE products ADD COLUMN IF NOT EXISTS industry_group TEXT;
+    ALTER TABLE products ADD COLUMN IF NOT EXISTS product_type TEXT NOT NULL DEFAULT 'physical';
     ALTER TABLE products ADD COLUMN IF NOT EXISTS catalog_kind TEXT NOT NULL DEFAULT 'sku_candidate';
+    ALTER TABLE products ADD COLUMN IF NOT EXISTS use_cases JSONB NOT NULL DEFAULT '[]'::jsonb;
+    ALTER TABLE products ADD COLUMN IF NOT EXISTS tags JSONB NOT NULL DEFAULT '[]'::jsonb;
+    ALTER TABLE products ADD COLUMN IF NOT EXISTS selling_points JSONB NOT NULL DEFAULT '[]'::jsonb;
+    ALTER TABLE products ADD COLUMN IF NOT EXISTS source_key TEXT NOT NULL DEFAULT 'manual';
+    ALTER TABLE products ADD COLUMN IF NOT EXISTS source_confidence TEXT NOT NULL DEFAULT 'needs_review';
+    ALTER TABLE products ADD COLUMN IF NOT EXISTS source_status_raw TEXT;
+    ALTER TABLE products ADD COLUMN IF NOT EXISTS data_issues JSONB NOT NULL DEFAULT '[]'::jsonb;
+    ALTER TABLE products ADD COLUMN IF NOT EXISTS base_price NUMERIC(14,2) NOT NULL DEFAULT 0;
+    ALTER TABLE products ADD COLUMN IF NOT EXISTS wholesale_price NUMERIC(14,2);
+    ALTER TABLE products ADD COLUMN IF NOT EXISTS min_order_qty INT NOT NULL DEFAULT 1;
+    ALTER TABLE products ADD COLUMN IF NOT EXISTS stock_status TEXT NOT NULL DEFAULT 'available';
+    ALTER TABLE products ADD COLUMN IF NOT EXISTS status TEXT NOT NULL DEFAULT 'needs_review';
+    ALTER TABLE products ADD COLUMN IF NOT EXISTS sort_order INT NOT NULL DEFAULT 0;
+    ALTER TABLE products ADD COLUMN IF NOT EXISTS is_active BOOLEAN NOT NULL DEFAULT true;
     ALTER TABLE products ADD COLUMN IF NOT EXISTS is_orderable BOOLEAN NOT NULL DEFAULT false;
     ALTER TABLE products ADD COLUMN IF NOT EXISTS is_public BOOLEAN NOT NULL DEFAULT false;
+    ALTER TABLE products ADD COLUMN IF NOT EXISTS created_at TIMESTAMPTZ NOT NULL DEFAULT now();
+    ALTER TABLE products ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ NOT NULL DEFAULT now();
+
+    UPDATE categories
+    SET
+      created_at = COALESCE(created_at, now()),
+      updated_at = COALESCE(updated_at, created_at, now());
 
     UPDATE products
     SET
@@ -54,7 +95,7 @@ async function normalizeLegacyCatalog() {
       catalog_kind = 'bundle_candidate',
       is_orderable = false,
       updated_at = now()
-    WHERE product_type = 'recipe_content'
+    WHERE product_type::text = 'recipe_content'
        OR catalog_kind = 'content';
 
     UPDATE products
@@ -70,12 +111,13 @@ async function normalizeLegacyCatalog() {
     UPDATE products
     SET
       catalog_kind = CASE
-        WHEN product_type = 'bundle' THEN 'bundle_candidate'
+        WHEN product_type::text = 'bundle' THEN 'bundle_candidate'
         ELSE 'sku_candidate'
       END,
       is_public = false,
       is_orderable = false,
-      updated_at = now()
+      created_at = COALESCE(created_at, now()),
+      updated_at = COALESCE(updated_at, created_at, now())
     WHERE catalog_kind IS NULL
        OR catalog_kind NOT IN ('sku_candidate', 'bundle_candidate');
 
@@ -84,13 +126,10 @@ async function normalizeLegacyCatalog() {
 }
 
 async function normalizeLegacyOrders() {
-  console.log("Normalizing legacy core and order rows");
+  console.log("Normalizing legacy core and order schema and rows");
   await pool.query(`
     BEGIN;
 
-    -- CREATE TABLE IF NOT EXISTS cannot evolve an already-existing MVP table.
-    -- Add every compatibility column consumed by the canonical contract before
-    -- running migration 003. Existing canonical databases remain unchanged.
     ALTER TABLE customers ADD COLUMN IF NOT EXISTS approval_status TEXT NOT NULL DEFAULT 'pending';
     ALTER TABLE customers ADD COLUMN IF NOT EXISTS rejected_reason TEXT;
     ALTER TABLE customers ADD COLUMN IF NOT EXISTS created_at TIMESTAMPTZ NOT NULL DEFAULT now();
