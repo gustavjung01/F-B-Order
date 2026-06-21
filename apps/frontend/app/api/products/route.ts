@@ -21,7 +21,7 @@ function toLegacyProduct(product: PublicProduct) {
 
   return {
     id: product.id,
-    sku: "",
+    sku: product.sku,
     slug: product.slug,
     name: product.name,
     brand,
@@ -31,13 +31,16 @@ function toLegacyProduct(product: PublicProduct) {
     packageSpec: packageSize,
     packageSize,
     imageUrl: product.imageUrl || "",
-    minOrderQty: 1,
+    minOrderQty: product.minOrderQty,
     categoryName: product.categoryName,
     categorySlug: product.categoryId,
     subcategoryName: product.subcategoryName || "",
     subcategorySlug: product.subcategoryId || "",
-    price: null,
+    productType: product.productType,
+    bundleItemCount: product.bundleItemCount,
+    price: product.unitPrice,
     publicPriceHint: product.priceLabel,
+    isOrderable: product.isOrderable,
   };
 }
 
