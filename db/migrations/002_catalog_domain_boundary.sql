@@ -5,9 +5,12 @@ BEGIN;
 
 ALTER TABLE products ALTER COLUMN sku DROP NOT NULL;
 ALTER TABLE products ADD COLUMN IF NOT EXISTS catalog_kind TEXT NOT NULL DEFAULT 'sku_candidate';
+ALTER TABLE products ADD COLUMN IF NOT EXISTS source_key TEXT NOT NULL DEFAULT 'manual';
 ALTER TABLE products ADD COLUMN IF NOT EXISTS source_status_raw TEXT;
 ALTER TABLE products ADD COLUMN IF NOT EXISTS data_issues JSONB NOT NULL DEFAULT '[]'::jsonb;
 ALTER TABLE products ADD COLUMN IF NOT EXISTS is_orderable BOOLEAN NOT NULL DEFAULT false;
+
+CREATE INDEX IF NOT EXISTS products_source_key_idx ON products(source_key);
 
 CREATE TABLE IF NOT EXISTS catalog_suggestions (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -22,6 +25,7 @@ CREATE TABLE IF NOT EXISTS catalog_suggestions (
   suggestion_type TEXT NOT NULL DEFAULT 'combo' CHECK (suggestion_type IN ('combo', 'menu_solution', 'content')),
   use_cases JSONB NOT NULL DEFAULT '[]'::jsonb,
   tags JSONB NOT NULL DEFAULT '[]'::jsonb,
+  source_key TEXT NOT NULL DEFAULT 'manual',
   source_confidence TEXT NOT NULL DEFAULT 'needs_review',
   source_status_raw TEXT,
   status TEXT NOT NULL DEFAULT 'needs_review' CHECK (status IN ('needs_review', 'active', 'draft', 'inactive')),
@@ -33,6 +37,7 @@ CREATE TABLE IF NOT EXISTS catalog_suggestions (
 
 CREATE INDEX IF NOT EXISTS catalog_suggestions_category_id_idx ON catalog_suggestions(category_id);
 CREATE INDEX IF NOT EXISTS catalog_suggestions_status_idx ON catalog_suggestions(status, is_active);
+CREATE INDEX IF NOT EXISTS catalog_suggestions_source_key_idx ON catalog_suggestions(source_key);
 
 DROP TRIGGER IF EXISTS set_catalog_suggestions_updated_at ON catalog_suggestions;
 CREATE TRIGGER set_catalog_suggestions_updated_at
