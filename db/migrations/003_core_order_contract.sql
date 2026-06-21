@@ -75,6 +75,8 @@ ALTER TABLE orders ADD COLUMN IF NOT EXISTS shipping_phone TEXT;
 ALTER TABLE orders ADD COLUMN IF NOT EXISTS shipping_address TEXT;
 
 ALTER TABLE orders DROP CONSTRAINT IF EXISTS orders_status_check;
+ALTER TABLE orders ALTER COLUMN status DROP DEFAULT;
+ALTER TABLE orders ALTER COLUMN status TYPE TEXT USING status::text;
 
 UPDATE orders
 SET
@@ -191,6 +193,11 @@ ALTER TABLE order_items ADD CONSTRAINT order_items_bundle_snapshot_required_chec
 -- Append-only order status history ------------------------------------------
 ALTER TABLE order_status_logs ADD COLUMN IF NOT EXISTS actor_type TEXT NOT NULL DEFAULT 'system';
 ALTER TABLE order_status_logs ADD COLUMN IF NOT EXISTS actor_id TEXT;
+
+ALTER TABLE order_status_logs DROP CONSTRAINT IF EXISTS order_status_logs_from_status_check;
+ALTER TABLE order_status_logs DROP CONSTRAINT IF EXISTS order_status_logs_to_status_check;
+ALTER TABLE order_status_logs ALTER COLUMN from_status TYPE TEXT USING from_status::text;
+ALTER TABLE order_status_logs ALTER COLUMN to_status TYPE TEXT USING to_status::text;
 
 UPDATE order_status_logs
 SET
