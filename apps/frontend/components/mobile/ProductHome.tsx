@@ -1,14 +1,11 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useState } from "react";
+import { useCatalogBrowser } from "@/components/catalog/useCatalogBrowser";
 import { MobilePageShell } from "@/components/mobile/MobilePageShell";
 import { ProductQuickView } from "@/components/mobile/ProductQuickView";
-import type { CategoryWithCount, PublicProduct } from "@/data/catalog/product-model";
-
-type BottomNavKey = "home" | "products" | "recipes" | "cart" | "account";
-
-type CategoriesResponse = { categories: CategoryWithCount[] };
-type ProductsResponse = { products: PublicProduct[]; total: number };
+import type { AppNavKey } from "@/components/navigation/app-navigation";
+import type { PublicProduct } from "@/data/catalog/product-model";
 
 const categoryEmoji: Record<string, string> = {
   all: "▦",
@@ -28,14 +25,6 @@ const categoryTones: Record<string, string> = {
   "combo-cong-thuc": "bg-[#f4efff] text-[#7c3aed] ring-[#dccbff]",
   "brand-distribution": "bg-[#fff8e8] text-[#b77900] ring-[#ffe1a8]",
 };
-
-function buildProductsUrl(categoryId: string, q: string) {
-  const params = new URLSearchParams();
-  if (categoryId !== "all") params.set("categoryId", categoryId);
-  if (q.trim()) params.set("q", q.trim());
-  params.set("limit", "80");
-  return `/api/catalog/products?${params.toString()}`;
-}
 
 function getTabTone(id: string) {
   return categoryTones[id] || "bg-[#fff3ea] text-[#ff5a00] ring-[#ffd0b3]";
@@ -86,67 +75,20 @@ function ProductListState({ children }: { children: string }) {
   return <div className="rounded-[24px] border border-dashed border-[#e7dccd] bg-white/70 px-5 py-8 text-center text-[15px] font-black text-slate-500 shadow-sm">{children}</div>;
 }
 
-export function ProductHome({ active = "home" }: { active?: BottomNavKey }) {
-  const [products, setProducts] = useState<PublicProduct[]>([]);
-  const [categories, setCategories] = useState<CategoryWithCount[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState("all");
+export function ProductHome({ active = "home" }: { active?: AppNavKey }) {
   const [selectedProduct, setSelectedProduct] = useState<PublicProduct | null>(null);
-  const [searchText, setSearchText] = useState("");
-  const [totalProducts, setTotalProducts] = useState(0);
-  const [loadingProducts, setLoadingProducts] = useState(true);
-  const [loadingCategories, setLoadingCategories] = useState(true);
-  const [error, setError] = useState("");
+  const {
+    products,
+    tabs,
+    selectedCategory,
+    setSelectedCategory,
+    searchText,
+    setSearchText,
+    loading,
+    error,
+  } = useCatalogBrowser();
 
-  useEffect(() => {
-    let activeRequest = true;
-    async function loadCategories() {
-      try {
-        setLoadingCategories(true);
-        const response = await fetch("/api/catalog/categories", { cache: "no-store" });
-        if (!response.ok) throw new Error("Không tải được danh mục");
-        const data = (await response.json()) as CategoriesResponse;
-        if (!activeRequest) return;
-        setCategories(Array.isArray(data.categories) ? data.categories.filter((category) => category.parentId === null) : []);
-      } catch (loadError) {
-        if (!activeRequest) return;
-        setError(loadError instanceof Error ? loadError.message : "Không tải được danh mục");
-        setCategories([]);
-      } finally {
-        if (activeRequest) setLoadingCategories(false);
-      }
-    }
-    loadCategories();
-    return () => { activeRequest = false; };
-  }, []);
-
-  useEffect(() => {
-    let activeRequest = true;
-    async function loadProducts() {
-      try {
-        setLoadingProducts(true);
-        setError("");
-        const response = await fetch(buildProductsUrl(selectedCategory, searchText), { cache: "no-store" });
-        if (!response.ok) throw new Error("Không tải được sản phẩm");
-        const data = (await response.json()) as ProductsResponse;
-        if (!activeRequest) return;
-        setProducts(Array.isArray(data.products) ? data.products : []);
-        setTotalProducts(Number.isFinite(data.total) ? data.total : 0);
-      } catch (loadError) {
-        if (!activeRequest) return;
-        setError(loadError instanceof Error ? loadError.message : "Không tải được sản phẩm");
-        setProducts([]);
-        setTotalProducts(0);
-      } finally {
-        if (activeRequest) setLoadingProducts(false);
-      }
-    }
-    const timer = window.setTimeout(loadProducts, 180);
-    return () => { activeRequest = false; window.clearTimeout(timer); };
-  }, [selectedCategory, searchText]);
-
-  const loading = loadingCategories || loadingProducts;
-  const subtitle = useMemo(() => loading ? "Đang tải catalog" : "Catalog sản phẩm Hưng Phát", [loading]);
-  const tabs = [{ id: "all", name: "Tất cả", productCount: totalProducts, parentId: null, sortOrder: 0 }, ...categories];
+  const subtitle = loading ? "Đang tải catalog" : "Catalog sản phẩm Hưng Phát";
 
   return (
     <MobilePageShell active={active} title="Bếp Sỉ F&B" subtitle={subtitle}>
