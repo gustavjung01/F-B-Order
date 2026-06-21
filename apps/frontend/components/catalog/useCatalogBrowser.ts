@@ -1,25 +1,45 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import type { CategoryWithCount, PublicProduct } from "@/data/catalog/product-model";
+import type {
+  CategoryWithCount,
+  PublicCatalogItem,
+  PublicCatalogSuggestion,
+  PublicProduct,
+} from "@/data/catalog/product-model";
 
 type CategoriesResponse = { categories: CategoryWithCount[] };
 type ProductsResponse = { products: PublicProduct[]; total: number };
+type SuggestionsResponse = { suggestions: PublicCatalogSuggestion[]; total: number };
 
-function buildProductsUrl(categoryId: string, q: string) {
+function buildCatalogUrl(kind: "products" | "suggestions", categoryId: string, q: string) {
   const params = new URLSearchParams();
   if (categoryId !== "all") params.set("categoryId", categoryId);
   if (q.trim()) params.set("q", q.trim());
   params.set("limit", "80");
-  return `/api/catalog/products?${params.toString()}`;
+  return `/api/catalog/${kind}?${params.toString()}`;
+}
+
+async function readProducts(categoryId: string, q: string): Promise<PublicProduct[]> {
+  const response = await fetch(buildCatalogUrl("products", categoryId, q), { cache: "no-store" });
+  if (!response.ok) throw new Error("Không tải được sản phẩm");
+  const data = (await response.json()) as ProductsResponse;
+  return Array.isArray(data.products) ? data.products : [];
+}
+
+async function readSuggestions(categoryId: string, q: string): Promise<PublicCatalogSuggestion[]> {
+  const response = await fetch(buildCatalogUrl("suggestions", categoryId, q), { cache: "no-store" });
+  if (!response.ok) throw new Error("Không tải được combo gợi ý");
+  const data = (await response.json()) as SuggestionsResponse;
+  return Array.isArray(data.suggestions) ? data.suggestions : [];
 }
 
 export function useCatalogBrowser() {
-  const [products, setProducts] = useState<PublicProduct[]>([]);
+  const [items, setItems] = useState<PublicCatalogItem[]>([]);
   const [categories, setCategories] = useState<CategoryWithCount[]>([]);
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [searchText, setSearchText] = useState("");
-  const [loadingProducts, setLoadingProducts] = useState(true);
+  const [loadingItems, setLoadingItems] = useState(true);
   const [loadingCategories, setLoadingCategories] = useState(true);
   const [error, setError] = useState("");
 
@@ -56,32 +76,43 @@ export function useCatalogBrowser() {
   useEffect(() => {
     let activeRequest = true;
 
-    async function loadProducts() {
+    async function loadItems() {
       try {
-        setLoadingProducts(true);
+        setLoadingItems(true);
         setError("");
-        const response = await fetch(buildProductsUrl(selectedCategory, searchText), { cache: "no-store" });
-        if (!response.ok) throw new Error("Không tải được sản phẩm");
-        const data = (await response.json()) as ProductsResponse;
+
+        let nextItems: PublicCatalogItem[];
+        if (selectedCategory === "combo-cong-thuc") {
+          nextItems = await readSuggestions(selectedCategory, searchText);
+        } else if (selectedCategory === "all") {
+          const [products, suggestions] = await Promise.all([
+            readProducts("all", searchText),
+            readSuggestions("all", searchText),
+          ]);
+          nextItems = [...products, ...suggestions];
+        } else {
+          nextItems = await readProducts(selectedCategory, searchText);
+        }
+
         if (!activeRequest) return;
-        setProducts(Array.isArray(data.products) ? data.products : []);
+        setItems(nextItems);
       } catch (loadError) {
         if (!activeRequest) return;
-        setError(loadError instanceof Error ? loadError.message : "Không tải được sản phẩm");
-        setProducts([]);
+        setError(loadError instanceof Error ? loadError.message : "Không tải được catalog");
+        setItems([]);
       } finally {
-        if (activeRequest) setLoadingProducts(false);
+        if (activeRequest) setLoadingItems(false);
       }
     }
 
-    const timer = window.setTimeout(loadProducts, 180);
+    const timer = window.setTimeout(loadItems, 180);
     return () => {
       activeRequest = false;
       window.clearTimeout(timer);
     };
   }, [selectedCategory, searchText]);
 
-  const loading = loadingCategories || loadingProducts;
+  const loading = loadingCategories || loadingItems;
   const catalogTotal = useMemo(
     () => categories.reduce((total, category) => total + category.productCount, 0),
     [categories],
@@ -95,7 +126,7 @@ export function useCatalogBrowser() {
   );
 
   return {
-    products,
+    items,
     tabs,
     selectedCategory,
     setSelectedCategory,
