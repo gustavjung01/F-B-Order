@@ -55,7 +55,20 @@ async function isolateCatalogFixture() {
 async function requestJson(baseUrl: string, path: string) {
   const response = await fetch(`${baseUrl}${path}`);
   const raw = await response.text();
-  return { status: response.status, body: JSON.parse(raw), raw };
+  const contentType = response.headers.get("content-type") || "";
+
+  if (!contentType.includes("application/json")) {
+    throw new Error(`Expected JSON from ${path}, received ${contentType || "no content type"}: ${raw.slice(0, 200)}`);
+  }
+  if (!response.ok) {
+    throw new Error(`HTTP ${response.status} from ${path}: ${raw.slice(0, 200)}`);
+  }
+
+  try {
+    return { status: response.status, body: JSON.parse(raw), raw };
+  } catch (error) {
+    throw new Error(`Invalid JSON from ${path}: ${raw.slice(0, 200)}`, { cause: error });
+  }
 }
 
 async function main() {
@@ -64,7 +77,21 @@ async function main() {
   const app = express();
   app.use("/api/catalog", createCatalogRouter(async () => approvedIdentity));
   const server = app.listen(0);
-  await new Promise<void>((resolve) => server.once("listening", resolve));
+  await new Promise<void>((resolve, reject) => {
+    const timeout = setTimeout(() => {
+      server.close();
+      reject(new Error("Catalog contract test server listen timeout"));
+    }, 5000);
+
+    server.once("listening", () => {
+      clearTimeout(timeout);
+      resolve();
+    });
+    server.once("error", (error) => {
+      clearTimeout(timeout);
+      reject(error);
+    });
+  });
   const address = server.address() as AddressInfo;
   const baseUrl = `http://127.0.0.1:${address.port}`;
 
