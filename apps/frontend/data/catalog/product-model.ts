@@ -1,7 +1,7 @@
 export type ProductSourceAccuracy = "company_crawl_confirmed" | "needs_company_sku_sheet";
 export type ProductStatus = "active" | "draft" | "needs_review";
-export type ProductType = "physical" | "bundle" | "recipe_content" | "service";
-export type ProductCatalogKind = "sku_candidate" | "category_scaffold" | "content" | "bundle_candidate";
+export type ProductType = "physical" | "bundle" | "service";
+export type ProductCatalogKind = "sku_candidate" | "bundle_candidate";
 
 export type Product = {
   id: string;
@@ -58,29 +58,10 @@ export type PublicProduct = {
   shortDescription: string | null;
   useCases: string[];
   sellingPoints: string[];
+  bundleItemCount: number;
   isOrderable: boolean;
   orderLabel: string;
 };
-
-export type PublicCatalogSuggestion = {
-  itemKind: "suggestion";
-  id: string;
-  slug: string;
-  name: string;
-  brand: string;
-  categoryId: string;
-  categoryName: string;
-  subcategoryId: string | null;
-  subcategoryName: string | null;
-  suggestionType: "combo" | "menu_solution" | "content";
-  imageUrl: string | null;
-  shortDescription: string | null;
-  useCases: string[];
-  isOrderable: false;
-  orderLabel: string;
-};
-
-export type PublicCatalogItem = PublicProduct | PublicCatalogSuggestion;
 
 export type Category = {
   id: string;
