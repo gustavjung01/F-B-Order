@@ -1,5 +1,5 @@
 -- Bếp Sỉ F&B - core customer approval and order contract
--- Idempotent migration: safe to run repeatedly after 001 and 002.
+-- Idempotent migration: safe to run repeatedly after 001, 002 and 003.
 
 BEGIN;
 

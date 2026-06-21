@@ -1,0 +1,90 @@
+name: Migration CI
+
+on:
+  pull_request:
+    paths:
+      - "apps/backend/scripts/**"
+      - "db/migrations/**"
+      - "db/fixtures/**"
+      - "apps/backend/package.json"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - ".github/workflows/migration-ci.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "apps/backend/scripts/**"
+      - "db/migrations/**"
+      - "db/fixtures/**"
+      - "apps/backend/package.json"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - ".github/workflows/migration-ci.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  migration-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      TEST_DATABASE_URL: postgres://postgres:postgres@127.0.0.1:5432/postgres
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        with:
+          persist-credentials: false
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
+        with:
+          version: 10.34.4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Backend typecheck
+        run: pnpm --filter @fb-order/backend typecheck
+
+      - name: Backend build
+        run: pnpm --filter @fb-order/backend build
+
+      - name: Fresh database and second run
+        run: pnpm --filter @fb-order/backend db:test:migrations -- fresh-rerun
+
+      - name: Legacy Heroku fixture
+        run: pnpm --filter @fb-order/backend db:test:migrations -- legacy
+
+      - name: Existing production baseline
+        run: pnpm --filter @fb-order/backend db:test:migrations -- baseline
+
+      - name: Advisory lock
+        run: pnpm --filter @fb-order/backend db:test:migrations -- lock
+
+      - name: Checksum mismatch
+        run: pnpm --filter @fb-order/backend db:test:migrations -- checksum

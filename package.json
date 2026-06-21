@@ -18,6 +18,8 @@
     "lint": "pnpm -r lint",
     "typecheck": "pnpm -r typecheck",
     "db:migrate": "pnpm --filter @fb-order/backend db:migrate",
+    "db:migrate:baseline": "pnpm --filter @fb-order/backend db:migrate:baseline",
+    "db:test:migrations": "pnpm --filter @fb-order/backend db:test:migrations",
     "db:verify:order-contract": "pnpm --filter @fb-order/backend db:verify:order-contract",
     "db:seed:test": "pnpm --filter @fb-order/backend db:seed:test",
     "catalog:audit": "pnpm --filter @fb-order/backend catalog:audit",

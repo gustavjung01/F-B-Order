@@ -3,6 +3,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import dotenv from "dotenv";
 import pg from "pg";
+import { runMigrations } from "./migration-runner-lib.mjs";
 
 const { Pool } = pg;
 const __filename = fileURLToPath(import.meta.url);
@@ -16,6 +17,13 @@ for (const envPath of [
   path.join(backendRoot, ".env.local"),
 ]) {
   if (fs.existsSync(envPath)) dotenv.config({ path: envPath });
+}
+
+const supportedArgs = new Set(["--baseline-existing"]);
+const unknownArgs = process.argv.slice(2).filter((arg) => !supportedArgs.has(arg));
+if (unknownArgs.length > 0) {
+  console.error(`Unknown migration argument(s): ${unknownArgs.join(", ")}`);
+  process.exit(1);
 }
 
 const connectionString = process.env.DATABASE_URL || process.env.BEPSI_DATABASE_URL;
@@ -32,18 +40,12 @@ const pool = new Pool({
   max: 1,
 });
 
-async function runSqlFile(relativePath) {
-  const absolutePath = path.join(repoRoot, relativePath);
-  const sql = fs.readFileSync(absolutePath, "utf8");
-  console.log(`Running ${relativePath}`);
-  await pool.query(sql);
-}
-
 try {
-  await runSqlFile("db/migrations/001_init_core.sql");
-  await runSqlFile("db/migrations/002_catalog_domain_boundary.sql");
-  await runSqlFile("db/migrations/003_legacy_production_bridge.sql");
-  await runSqlFile("db/migrations/003_core_order_contract.sql");
+  await runMigrations({
+    pool,
+    repoRoot,
+    baseline: process.argv.includes("--baseline-existing"),
+  });
   console.log("Database migrations completed.");
 } catch (error) {
   console.error("Database migration failed.");
