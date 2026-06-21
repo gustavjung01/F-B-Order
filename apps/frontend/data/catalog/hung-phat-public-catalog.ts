@@ -96,6 +96,10 @@ function isBundleProduct(product: RawHungPhatCatalogProduct) {
   return product.catalogKind === "content" || product.catalogKind === "bundle_candidate";
 }
 
+function isPubliclyActive(status: string): boolean {
+  return status === "active" || status === "needs_review";
+}
+
 export function toHungPhatPublicProduct(product: RawHungPhatCatalogProduct): PublicProduct {
   const bundle = isBundleProduct(product);
   const brand = publicText(product.brand);
@@ -123,7 +127,7 @@ export function toHungPhatPublicProduct(product: RawHungPhatCatalogProduct): Pub
     useCases: publicList(product.useCases),
     sellingPoints: publicList(product.sellingPoints),
     isPublic: true,
-    isActive: product.status === "active" || product.status === "needs_review",
+    isActive: isPubliclyActive(product.status),
     isOrderable: false,
     catalogEligible: false,
     priceVisibility: "hidden",
