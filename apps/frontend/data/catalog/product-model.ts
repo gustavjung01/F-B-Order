@@ -43,6 +43,7 @@ export type PublicProduct = {
   itemKind: "product";
   id: string;
   slug: string;
+  sku: string;
   name: string;
   brand: string;
   categoryId: string;
@@ -53,6 +54,8 @@ export type PublicProduct = {
   catalogKind: ProductCatalogKind;
   packageSizeLabel: string;
   unitLabel: string;
+  unitPrice: number;
+  minOrderQty: number;
   priceLabel: string;
   imageUrl: string | null;
   shortDescription: string | null;
