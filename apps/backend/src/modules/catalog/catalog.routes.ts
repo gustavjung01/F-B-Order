@@ -8,6 +8,7 @@ const UPDATING_LABEL = "Đang cập nhật";
 type ProductRow = {
   id: string;
   slug: string;
+  sku: string | null;
   name: string;
   brand: string | null;
   category_id: string;
@@ -20,12 +21,12 @@ type ProductRow = {
   unit_label: string | null;
   base_price: string | null;
   wholesale_price: string | null;
+  min_order_qty: string | number;
   image_url: string | null;
   short_description: string | null;
   use_cases: unknown;
   selling_points: unknown;
   is_orderable: boolean;
-  sku: string | null;
   bundle_item_count: string;
 };
 
@@ -39,27 +40,29 @@ function readLimit(value: unknown, fallback = 80): number {
   return Math.min(Math.max(parsed, 1), 100);
 }
 
-function formatVnd(value: unknown): string {
-  const price = Number(value);
-  if (!Number.isFinite(price) || price <= 0) return UPDATING_LABEL;
+function formatVnd(value: number): string {
+  if (!Number.isFinite(value) || value <= 0) return UPDATING_LABEL;
   return new Intl.NumberFormat("vi-VN", {
     style: "currency",
     currency: "VND",
     maximumFractionDigits: 0,
-  }).format(price);
+  }).format(value);
 }
 
 function publicCategoryName(slug: string, name: string): string {
   return slug === "combo-cong-thuc" ? "Combo gợi ý" : name;
 }
 
+function toPositiveNumber(value: unknown, fallback: number): number {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
+}
+
 function toPublicProduct(row: ProductRow) {
   const bundleItemCount = Number(row.bundle_item_count || 0);
-  const hasSellableData = Boolean(
-    row.sku
-      && row.unit_label
-      && Number(row.wholesale_price) > 0,
-  );
+  const unitPrice = toPositiveNumber(row.wholesale_price, toPositiveNumber(row.base_price, 0));
+  const minOrderQty = Math.max(1, Math.floor(toPositiveNumber(row.min_order_qty, 1)));
+  const hasSellableData = Boolean(row.sku && row.unit_label && unitPrice > 0);
   const hasValidBundle = row.product_type !== "bundle" || bundleItemCount > 0;
   const orderable = Boolean(row.is_orderable && hasSellableData && hasValidBundle);
 
@@ -67,6 +70,7 @@ function toPublicProduct(row: ProductRow) {
     itemKind: "product" as const,
     id: row.id,
     slug: row.slug,
+    sku: row.sku || "",
     name: row.name,
     brand: row.brand || UPDATING_LABEL,
     categoryId: row.category_id,
@@ -77,7 +81,9 @@ function toPublicProduct(row: ProductRow) {
     catalogKind: row.catalog_kind,
     packageSizeLabel: row.package_size_label || UPDATING_LABEL,
     unitLabel: row.unit_label || UPDATING_LABEL,
-    priceLabel: formatVnd(row.base_price),
+    unitPrice,
+    minOrderQty,
+    priceLabel: formatVnd(unitPrice),
     imageUrl: row.image_url,
     shortDescription: row.short_description,
     useCases: Array.isArray(row.use_cases) ? row.use_cases : [],
@@ -92,6 +98,7 @@ const productSelect = `
   SELECT
     product.id::text,
     product.slug,
+    product.sku,
     product.name,
     product.brand,
     category.slug AS category_id,
@@ -104,12 +111,12 @@ const productSelect = `
     COALESCE(product.unit_label, product.unit) AS unit_label,
     product.base_price,
     product.wholesale_price,
+    product.min_order_qty,
     product.image_url,
     product.short_description,
     product.use_cases,
     product.selling_points,
     product.is_orderable,
-    product.sku,
     (
       SELECT COUNT(*)
       FROM product_bundle_items bundle_item
