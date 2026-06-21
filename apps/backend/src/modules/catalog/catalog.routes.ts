@@ -157,7 +157,12 @@ catalogRouter.get("/categories", async (_req, res) => {
       )
       SELECT id, name, parent_id, sort_order, product_count
       FROM category_counts
-      WHERE product_count > 0
+      WHERE id IN (
+        'tra-sua-pha-che',
+        'mi-cay-han-quoc',
+        'thuc-pham-dong-lanh',
+        'combo-cong-thuc'
+      )
       ORDER BY sort_order ASC, name ASC
     `);
 
