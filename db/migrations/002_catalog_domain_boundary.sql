@@ -10,8 +10,6 @@ ALTER TABLE products ADD COLUMN IF NOT EXISTS source_status_raw TEXT;
 ALTER TABLE products ADD COLUMN IF NOT EXISTS data_issues JSONB NOT NULL DEFAULT '[]'::jsonb;
 ALTER TABLE products ADD COLUMN IF NOT EXISTS is_orderable BOOLEAN NOT NULL DEFAULT false;
 
-CREATE INDEX IF NOT EXISTS products_source_key_idx ON products(source_key);
-
 CREATE TABLE IF NOT EXISTS catalog_suggestions (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   category_id UUID REFERENCES categories(id),
@@ -35,6 +33,71 @@ CREATE TABLE IF NOT EXISTS catalog_suggestions (
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+-- Move any legacy recipe-content rows out of products before tightening the constraint.
+INSERT INTO catalog_suggestions (
+  category_id,
+  subcategory_id,
+  slug,
+  title,
+  related_brand,
+  short_description,
+  description,
+  cover_image_url,
+  suggestion_type,
+  use_cases,
+  tags,
+  source_key,
+  source_confidence,
+  source_status_raw,
+  status,
+  sort_order,
+  is_active
+)
+SELECT
+  category_id,
+  subcategory_id,
+  slug,
+  name,
+  brand,
+  short_description,
+  description,
+  image_url,
+  'content',
+  use_cases,
+  tags,
+  source_key,
+  source_confidence,
+  source_status_raw,
+  status,
+  sort_order,
+  is_active
+FROM products
+WHERE product_type = 'recipe_content'
+ON CONFLICT (slug) DO UPDATE SET
+  title = EXCLUDED.title,
+  related_brand = EXCLUDED.related_brand,
+  short_description = EXCLUDED.short_description,
+  description = EXCLUDED.description,
+  cover_image_url = EXCLUDED.cover_image_url,
+  source_key = EXCLUDED.source_key,
+  source_confidence = EXCLUDED.source_confidence,
+  source_status_raw = EXCLUDED.source_status_raw,
+  status = EXCLUDED.status,
+  sort_order = EXCLUDED.sort_order,
+  is_active = EXCLUDED.is_active,
+  updated_at = now();
+
+DELETE FROM products WHERE product_type = 'recipe_content';
+
+ALTER TABLE products DROP CONSTRAINT IF EXISTS products_product_type_check;
+ALTER TABLE products ADD CONSTRAINT products_product_type_check
+  CHECK (product_type IN ('physical', 'bundle', 'service'));
+
+ALTER TABLE products DROP CONSTRAINT IF EXISTS products_catalog_kind_check;
+ALTER TABLE products ADD CONSTRAINT products_catalog_kind_check
+  CHECK (catalog_kind IN ('sku_candidate', 'bundle_candidate'));
+
+CREATE INDEX IF NOT EXISTS products_source_key_idx ON products(source_key);
 CREATE INDEX IF NOT EXISTS catalog_suggestions_category_id_idx ON catalog_suggestions(category_id);
 CREATE INDEX IF NOT EXISTS catalog_suggestions_status_idx ON catalog_suggestions(status, is_active);
 CREATE INDEX IF NOT EXISTS catalog_suggestions_source_key_idx ON catalog_suggestions(source_key);
