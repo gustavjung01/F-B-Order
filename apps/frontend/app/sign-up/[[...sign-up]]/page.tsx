@@ -36,8 +36,8 @@ export default function SignUpPage() {
               routing="path"
               path="/sign-up"
               signInUrl="/sign-in"
-              forceRedirectUrl="/products"
-              fallbackRedirectUrl="/products"
+              forceRedirectUrl="/"
+              fallbackRedirectUrl="/"
             />
           </div>
         </div>
