@@ -3,6 +3,7 @@ export const MIGRATION_FILES = Object.freeze([
   "db/migrations/002_catalog_domain_boundary.sql",
   "db/migrations/003_legacy_production_bridge.sql",
   "db/migrations/004_core_order_contract.sql",
+  "db/migrations/005_order_engine.sql",
 ]);
 
 export const MIGRATION_LOCK_KEYS = Object.freeze([5100, 20260621]);
