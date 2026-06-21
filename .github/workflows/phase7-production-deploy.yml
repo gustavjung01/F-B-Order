@@ -55,14 +55,14 @@ jobs:
           ref: ${{ inputs.target_sha }}
           fetch-depth: 0
 
-      - name: Verify target belongs to main
+      - name: Verify target is latest main
         env:
           TARGET_SHA: ${{ inputs.target_sha }}
         run: |
           set -Eeuo pipefail
           test "$(git rev-parse HEAD)" = "$TARGET_SHA"
-          git fetch origin main
-          git merge-base --is-ancestor "$TARGET_SHA" origin/main
+          git fetch origin main:refs/remotes/origin/main
+          test "$(git rev-parse origin/main)" = "$TARGET_SHA"
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -77,6 +77,14 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Validate Phase 7 deploy contract
+        run: |
+          set -Eeuo pipefail
+          bash -n scripts/phase7/deploy-bepsi-backend.sh
+          bash -n scripts/phase7/deploy-bepsi-vercel.sh
+          node --check scripts/phase7/smoke-production.mjs
+          node scripts/phase7/test-deploy-contract.mjs
 
       - name: Typecheck all workspaces
         run: pnpm typecheck
