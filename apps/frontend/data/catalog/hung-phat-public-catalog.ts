@@ -154,7 +154,7 @@ export function toHungPhatPublicProduct(product: RawHungPhatCatalogProduct): Pub
 }
 
 export const hungPhatPublicProducts = hungPhatCatalog.products
-  .filter((product) => product.catalogKind === "sku_candidate" || product.catalogKind === "bundle_candidate")
+  .filter((product) => product.catalogKind === "sku_candidate" || product.catalogKind === "content" || product.catalogKind === "bundle_candidate")
   .map(toHungPhatPublicProduct);
 
 export const hungPhatPublicCategories = hungPhatCatalog.categories.map((category) => ({
