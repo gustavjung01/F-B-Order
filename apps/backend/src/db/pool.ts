@@ -1,13 +1,11 @@
 import dotenv from "dotenv";
-import pg from "pg";
+import { Pool } from "pg";
 
 dotenv.config();
 
-const { Pool } = pg;
+let pool: Pool | null = null;
 
-let pool: pg.Pool | null = null;
-
-export function getDb(): pg.Pool {
+export function getDb(): Pool {
   if (pool) return pool;
 
   const connectionString = process.env.DATABASE_URL || process.env.BEPSI_DATABASE_URL;
