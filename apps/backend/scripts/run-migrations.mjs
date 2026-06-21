@@ -126,14 +126,49 @@ async function normalizeLegacyCatalog() {
 }
 
 async function normalizeLegacyOrders() {
-  console.log("Normalizing legacy core and order schema and rows");
+  console.log("Normalizing legacy customer, core and order schema and rows");
   await pool.query(`
     BEGIN;
 
+    ALTER TABLE customers ADD COLUMN IF NOT EXISTS clerk_user_id TEXT;
+    ALTER TABLE customers ADD COLUMN IF NOT EXISTS name TEXT;
+    ALTER TABLE customers ADD COLUMN IF NOT EXISTS shop_name TEXT;
+    ALTER TABLE customers ADD COLUMN IF NOT EXISTS contact_name TEXT;
+    ALTER TABLE customers ADD COLUMN IF NOT EXISTS phone TEXT;
+    ALTER TABLE customers ADD COLUMN IF NOT EXISTS address TEXT;
+    ALTER TABLE customers ADD COLUMN IF NOT EXISTS area TEXT;
+    ALTER TABLE customers ADD COLUMN IF NOT EXISTS tax_code TEXT;
+    ALTER TABLE customers ADD COLUMN IF NOT EXISTS business_type TEXT;
+    ALTER TABLE customers ADD COLUMN IF NOT EXISTS note TEXT;
+    ALTER TABLE customers ADD COLUMN IF NOT EXISTS price_group_id UUID REFERENCES price_groups(id);
+    ALTER TABLE customers ADD COLUMN IF NOT EXISTS sales_owner TEXT;
+    ALTER TABLE customers ADD COLUMN IF NOT EXISTS sales_owner_name TEXT;
+    ALTER TABLE customers ADD COLUMN IF NOT EXISTS sales_owner_phone TEXT;
     ALTER TABLE customers ADD COLUMN IF NOT EXISTS approval_status TEXT NOT NULL DEFAULT 'pending';
     ALTER TABLE customers ADD COLUMN IF NOT EXISTS rejected_reason TEXT;
+    ALTER TABLE customers ADD COLUMN IF NOT EXISTS status TEXT NOT NULL DEFAULT 'active';
     ALTER TABLE customers ADD COLUMN IF NOT EXISTS created_at TIMESTAMPTZ NOT NULL DEFAULT now();
     ALTER TABLE customers ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ NOT NULL DEFAULT now();
+
+    UPDATE customers
+    SET
+      name = COALESCE(
+        NULLIF(name, ''),
+        NULLIF(shop_name, ''),
+        NULLIF(contact_name, ''),
+        NULLIF(phone, ''),
+        'Legacy customer ' || id::text
+      ),
+      approval_status = COALESCE(NULLIF(approval_status, ''), 'pending'),
+      status = COALESCE(NULLIF(status, ''), 'active'),
+      created_at = COALESCE(created_at, now()),
+      updated_at = COALESCE(updated_at, created_at, now());
+
+    ALTER TABLE customers ALTER COLUMN name SET NOT NULL;
+
+    CREATE UNIQUE INDEX IF NOT EXISTS customers_clerk_user_id_unique_idx
+      ON customers(clerk_user_id)
+      WHERE clerk_user_id IS NOT NULL;
 
     ALTER TABLE orders ADD COLUMN IF NOT EXISTS subtotal NUMERIC(14,2) NOT NULL DEFAULT 0;
     ALTER TABLE orders ADD COLUMN IF NOT EXISTS discount_total NUMERIC(14,2) NOT NULL DEFAULT 0;
