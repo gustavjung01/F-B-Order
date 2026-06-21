@@ -40,6 +40,7 @@ export type Product = {
 };
 
 export type PublicProduct = {
+  itemKind: "product";
   id: string;
   slug: string;
   name: string;
@@ -60,6 +61,26 @@ export type PublicProduct = {
   isOrderable: boolean;
   orderLabel: string;
 };
+
+export type PublicCatalogSuggestion = {
+  itemKind: "suggestion";
+  id: string;
+  slug: string;
+  name: string;
+  brand: string;
+  categoryId: string;
+  categoryName: string;
+  subcategoryId: string | null;
+  subcategoryName: string | null;
+  suggestionType: "combo" | "menu_solution" | "content";
+  imageUrl: string | null;
+  shortDescription: string | null;
+  useCases: string[];
+  isOrderable: false;
+  orderLabel: string;
+};
+
+export type PublicCatalogItem = PublicProduct | PublicCatalogSuggestion;
 
 export type Category = {
   id: string;
