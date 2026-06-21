@@ -8,6 +8,8 @@
     "lint": "echo \"lint backend later\"",
     "typecheck": "tsc --noEmit",
     "db:migrate": "node scripts/run-migrations.mjs",
+    "db:migrate:baseline": "node scripts/run-migrations.mjs --baseline-existing",
+    "db:test:migrations": "node scripts/test-migrations.mjs",
     "db:audit:schema": "node scripts/audit-db-schema.mjs",
     "db:verify:order-contract": "node scripts/verify-core-order-contract.mjs",
     "db:seed:test": "node scripts/run-sql.mjs db/seeds/001_seed_test.sql",
