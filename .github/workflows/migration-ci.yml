@@ -72,18 +72,8 @@ jobs:
       - name: Backend build
         run: pnpm --filter @fb-order/backend build
 
-      - name: Legacy fixture diagnostic
-        run: |
-          set -o pipefail
-          pnpm --filter @fb-order/backend db:test:migrations -- legacy 2>&1 | tee migration-fresh.log
-
-      - name: Upload legacy diagnostic log
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: migration-fresh-log
-          path: migration-fresh.log
-          if-no-files-found: error
+      - name: Fresh database and second run
+        run: pnpm --filter @fb-order/backend db:test:migrations -- fresh-rerun
 
       - name: Legacy Heroku fixture
         run: pnpm --filter @fb-order/backend db:test:migrations -- legacy
