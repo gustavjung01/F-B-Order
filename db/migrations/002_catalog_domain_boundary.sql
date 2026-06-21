@@ -9,6 +9,7 @@ ALTER TABLE products ADD COLUMN IF NOT EXISTS source_key TEXT NOT NULL DEFAULT '
 ALTER TABLE products ADD COLUMN IF NOT EXISTS source_status_raw TEXT;
 ALTER TABLE products ADD COLUMN IF NOT EXISTS data_issues JSONB NOT NULL DEFAULT '[]'::jsonb;
 ALTER TABLE products ADD COLUMN IF NOT EXISTS is_orderable BOOLEAN NOT NULL DEFAULT false;
+ALTER TABLE products ADD COLUMN IF NOT EXISTS is_public BOOLEAN NOT NULL DEFAULT false;
 
 CREATE TABLE IF NOT EXISTS catalog_suggestions (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -29,6 +30,7 @@ CREATE TABLE IF NOT EXISTS catalog_suggestions (
   status TEXT NOT NULL DEFAULT 'needs_review' CHECK (status IN ('needs_review', 'active', 'draft', 'inactive')),
   sort_order INT NOT NULL DEFAULT 0,
   is_active BOOLEAN NOT NULL DEFAULT true,
+  is_public BOOLEAN NOT NULL DEFAULT false,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
@@ -51,7 +53,8 @@ INSERT INTO catalog_suggestions (
   source_status_raw,
   status,
   sort_order,
-  is_active
+  is_active,
+  is_public
 )
 SELECT
   category_id,
@@ -70,7 +73,8 @@ SELECT
   source_status_raw,
   status,
   sort_order,
-  is_active
+  is_active,
+  is_public
 FROM products
 WHERE product_type = 'recipe_content'
 ON CONFLICT (slug) DO UPDATE SET
@@ -85,6 +89,7 @@ ON CONFLICT (slug) DO UPDATE SET
   status = EXCLUDED.status,
   sort_order = EXCLUDED.sort_order,
   is_active = EXCLUDED.is_active,
+  is_public = EXCLUDED.is_public,
   updated_at = now();
 
 DELETE FROM products WHERE product_type = 'recipe_content';
@@ -98,8 +103,10 @@ ALTER TABLE products ADD CONSTRAINT products_catalog_kind_check
   CHECK (catalog_kind IN ('sku_candidate', 'bundle_candidate'));
 
 CREATE INDEX IF NOT EXISTS products_source_key_idx ON products(source_key);
+CREATE INDEX IF NOT EXISTS products_public_status_idx ON products(is_public, status, is_active);
 CREATE INDEX IF NOT EXISTS catalog_suggestions_category_id_idx ON catalog_suggestions(category_id);
 CREATE INDEX IF NOT EXISTS catalog_suggestions_status_idx ON catalog_suggestions(status, is_active);
+CREATE INDEX IF NOT EXISTS catalog_suggestions_public_status_idx ON catalog_suggestions(is_public, status, is_active);
 CREATE INDEX IF NOT EXISTS catalog_suggestions_source_key_idx ON catalog_suggestions(source_key);
 
 DROP TRIGGER IF EXISTS set_catalog_suggestions_updated_at ON catalog_suggestions;
