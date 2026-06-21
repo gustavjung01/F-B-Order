@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useCatalogBrowser } from "@/components/catalog/useCatalogBrowser";
 import { DesktopHeader } from "@/components/desktop/DesktopHeader";
 import type { AppNavKey } from "@/components/navigation/app-navigation";
-import type { PublicCatalogItem } from "@/data/catalog/product-model";
+import type { PublicProduct } from "@/data/catalog/product-model";
 
 const categoryEmoji: Record<string, string> = {
   all: "▦",
@@ -27,57 +27,43 @@ function getTabTone(id: string) {
   return categoryTones[id] || "bg-white text-slate-600 ring-[#eee7dc]";
 }
 
-function getItemEmoji(item: PublicCatalogItem) {
-  return categoryEmoji[item.categoryId] || categoryEmoji[item.subcategoryId || ""] || "📦";
+function getProductEmoji(product: PublicProduct) {
+  return categoryEmoji[product.categoryId] || categoryEmoji[product.subcategoryId || ""] || "📦";
 }
 
 function isUpdating(value: string | null | undefined) {
   return !value || value === "Đang cập nhật";
 }
 
-function DesktopCatalogCard({ item }: { item: PublicCatalogItem }) {
-  const isProduct = item.itemKind === "product";
-  const detailHref = isProduct ? `/products/${item.slug}` : null;
+function DesktopProductCard({ product }: { product: PublicProduct }) {
+  const detailHref = `/products/${product.slug}`;
+  const isBundle = product.productType === "bundle";
 
   return (
     <article className="rounded-[30px] bg-white p-5 shadow-lg ring-1 ring-[#efe7dc]">
-      {detailHref ? (
-        <Link href={detailHref} className="grid h-40 place-items-center overflow-hidden rounded-[26px] bg-[#fff3ea] text-7xl">
-          {item.imageUrl ? <img src={item.imageUrl} alt={item.name} className="h-full w-full object-cover" /> : getItemEmoji(item)}
-        </Link>
-      ) : (
-        <div className="grid h-40 place-items-center overflow-hidden rounded-[26px] bg-gradient-to-br from-[#fffaf3] to-[#f4efff] text-7xl">
-          {item.imageUrl ? <img src={item.imageUrl} alt={item.name} className="h-full w-full object-cover" /> : getItemEmoji(item)}
-        </div>
-      )}
+      <Link href={detailHref} className="grid h-40 place-items-center overflow-hidden rounded-[26px] bg-[#fff3ea] text-7xl">
+        {product.imageUrl ? <img src={product.imageUrl} alt={product.name} className="h-full w-full object-cover" /> : getProductEmoji(product)}
+      </Link>
+      {!isUpdating(product.brand) ? <p className="mt-4 text-xs font-black uppercase tracking-[0.14em] text-[#ff5a00]">{product.brand}</p> : null}
+      <Link href={detailHref} className="mt-2 block min-h-14 text-xl font-black leading-tight text-[#0b1220] hover:text-[#ff5a00]">{product.name}</Link>
+      <p className="mt-2 text-sm font-black text-slate-500">{product.categoryName}</p>
 
-      {!isUpdating(item.brand) ? <p className="mt-4 text-xs font-black uppercase tracking-[0.14em] text-[#ff5a00]">{item.brand}</p> : null}
-      {detailHref ? (
-        <Link href={detailHref} className="mt-2 block min-h-14 text-xl font-black leading-tight text-[#0b1220] hover:text-[#ff5a00]">{item.name}</Link>
+      {isBundle ? (
+        <p className="mt-3 inline-flex rounded-full bg-[#f4efff] px-3 py-2 text-sm font-black text-[#7c3aed] ring-1 ring-[#dccbff]">
+          Combo gợi ý{product.bundleItemCount > 0 ? ` · ${product.bundleItemCount} sản phẩm` : ""}
+        </p>
       ) : (
-        <h3 className="mt-2 min-h-14 text-xl font-black leading-tight text-[#0b1220]">{item.name}</h3>
-      )}
-      <p className="mt-2 text-sm font-black text-slate-500">{item.categoryName}</p>
-
-      {isProduct ? (
         <div className="mt-2 space-y-1 text-sm font-semibold text-slate-500">
-          <p>Quy cách: <span className="font-black text-[#0b1220]">{item.packageSizeLabel}</span></p>
-          <p>Đơn vị: <span className="font-black text-[#0b1220]">{item.unitLabel}</span></p>
+          <p>Quy cách: <span className="font-black text-[#0b1220]">{product.packageSizeLabel}</span></p>
+          <p>Đơn vị: <span className="font-black text-[#0b1220]">{product.unitLabel}</span></p>
         </div>
-      ) : (
-        <p className="mt-3 inline-flex rounded-full bg-[#f4efff] px-3 py-2 text-sm font-black text-[#7c3aed] ring-1 ring-[#dccbff]">Combo gợi ý</p>
       )}
 
-      {item.shortDescription ? <p className="mt-2 line-clamp-2 min-h-10 text-sm font-semibold leading-5 text-slate-400">{item.shortDescription}</p> : null}
-      {isProduct ? <p className="mt-4 inline-flex rounded-full bg-[#fff3ea] px-3 py-2 text-sm font-black text-[#ff5a00] ring-1 ring-[#ffd0b3]">{item.priceLabel}</p> : null}
-
+      {product.shortDescription ? <p className="mt-2 line-clamp-2 min-h-10 text-sm font-semibold leading-5 text-slate-400">{product.shortDescription}</p> : null}
+      <p className="mt-4 inline-flex rounded-full bg-[#fff3ea] px-3 py-2 text-sm font-black text-[#ff5a00] ring-1 ring-[#ffd0b3]">{product.priceLabel}</p>
       <div className="mt-5 flex gap-2">
-        {detailHref ? (
-          <Link href={detailHref} className="flex-1 rounded-2xl bg-[#fbfaf7] px-4 py-3 text-center text-sm font-black ring-1 ring-[#eee7dc]">Chi tiết</Link>
-        ) : (
-          <span className="flex-1 rounded-2xl bg-[#f4efff] px-4 py-3 text-center text-sm font-black text-[#7c3aed] ring-1 ring-[#dccbff]">Gợi ý triển khai menu</span>
-        )}
-        <span className="rounded-2xl bg-[#0b1220] px-4 py-3 text-sm font-black text-white">{item.orderLabel}</span>
+        <Link href={detailHref} className="flex-1 rounded-2xl bg-[#fbfaf7] px-4 py-3 text-center text-sm font-black ring-1 ring-[#eee7dc]">Chi tiết</Link>
+        <span className="rounded-2xl bg-[#0b1220] px-4 py-3 text-sm font-black text-white">{product.orderLabel}</span>
       </div>
     </article>
   );
@@ -93,7 +79,7 @@ function ProductGridState({ children }: { children: string }) {
 
 export function DesktopHome({ active = "home" }: { active?: AppNavKey }) {
   const {
-    items,
+    products,
     tabs,
     selectedCategory,
     setSelectedCategory,
@@ -145,16 +131,16 @@ export function DesktopHome({ active = "home" }: { active?: AppNavKey }) {
 
       <section className="mx-auto max-w-7xl px-8 pb-14">
         <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-4xl font-black">{loading ? "Đang tải catalog" : "Catalog"}</h2>
+          <h2 className="text-4xl font-black">{loading ? "Đang tải sản phẩm" : "Sản phẩm"}</h2>
           <span className="rounded-full bg-white px-4 py-2 text-sm font-black text-slate-500 ring-1 ring-[#eee7dc]">Cùng dữ liệu với PWA</span>
         </div>
 
-        {loading ? <ProductGridState>Đang tải catalog...</ProductGridState> : null}
+        {loading ? <ProductGridState>Đang tải sản phẩm...</ProductGridState> : null}
         {!loading && error ? <ProductGridState>{error}</ProductGridState> : null}
-        {!loading && !error && items.length === 0 ? <ProductGridState>Nhóm này đang cập nhật dữ liệu</ProductGridState> : null}
-        {!loading && !error && items.length > 0 ? (
+        {!loading && !error && products.length === 0 ? <ProductGridState>Nhóm này đang cập nhật dữ liệu sản phẩm</ProductGridState> : null}
+        {!loading && !error && products.length > 0 ? (
           <div className="grid grid-cols-4 gap-5">
-            {items.map((item) => <DesktopCatalogCard key={`${item.itemKind}-${item.id}`} item={item} />)}
+            {products.map((product) => <DesktopProductCard key={product.id} product={product} />)}
           </div>
         ) : null}
       </section>
