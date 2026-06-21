@@ -6,6 +6,12 @@ import { MobilePageShell } from "@/components/mobile/MobilePageShell";
 import { ProductQuickView } from "@/components/mobile/ProductQuickView";
 import type { AppNavKey } from "@/components/navigation/app-navigation";
 import type { PublicProduct } from "@/data/catalog/product-model";
+import {
+  getProductDisplayPackage,
+  getProductDisplayUnit,
+  getProductOrderMessage,
+  getProductPriceLabel,
+} from "@/lib/catalog-display";
 
 const categoryEmoji: Record<string, string> = {
   all: "▦",
@@ -32,10 +38,6 @@ function getProductEmoji(product: PublicProduct) {
   return categoryEmoji[product.categoryId] || categoryEmoji[product.subcategoryId || ""] || "📦";
 }
 
-function isUpdating(value: string | null | undefined) {
-  return !value || value === "Đang cập nhật";
-}
-
 function ProductCard({ product, onOpen }: { product: PublicProduct; onOpen: () => void }) {
   const isBundle = product.productType === "bundle";
 
@@ -43,7 +45,7 @@ function ProductCard({ product, onOpen }: { product: PublicProduct; onOpen: () =
     <article className="overflow-hidden rounded-[28px] border border-white/80 bg-white p-4 shadow-[0_16px_34px_rgba(15,23,42,0.095)] ring-1 ring-[#efe7dc]">
       <div className="flex gap-3">
         <div className="min-w-0 flex-1 pt-1">
-          {!isUpdating(product.brand) ? <p className="mb-1 text-[11px] font-black uppercase tracking-[0.12em] text-[#ff5a00]">{product.brand}</p> : null}
+          {product.brand ? <p className="mb-1 text-[11px] font-black uppercase tracking-[0.12em] text-[#ff5a00]">{product.brand}</p> : null}
           <button type="button" onClick={onOpen} className="block text-left text-[20px] font-black leading-tight tracking-tight text-[#0b1220] active:text-[#ff5a00]">
             {product.name}
           </button>
@@ -55,13 +57,13 @@ function ProductCard({ product, onOpen }: { product: PublicProduct; onOpen: () =
             </p>
           ) : (
             <div className="mt-2 space-y-1 text-[13px] font-semibold text-slate-500">
-              <p>Quy cách: <span className="font-black text-[#0b1220]">{product.packageSizeLabel}</span></p>
-              <p>Đơn vị: <span className="font-black text-[#0b1220]">{product.unitLabel}</span></p>
+              <p>Quy cách: <span className="font-black text-[#0b1220]">{getProductDisplayPackage(product)}</span></p>
+              <p>Đơn vị: <span className="font-black text-[#0b1220]">{getProductDisplayUnit(product)}</span></p>
             </div>
           )}
 
           {product.shortDescription ? <p className="mt-2 line-clamp-2 text-[12px] font-semibold leading-snug text-slate-400">{product.shortDescription}</p> : null}
-          <p className="mt-3 inline-flex rounded-full bg-[#fff3ea] px-3 py-2 text-[13px] font-black text-[#ff5a00] ring-1 ring-[#ffd0b3]">{product.priceLabel}</p>
+          <p className="mt-3 inline-flex rounded-full bg-[#fff3ea] px-3 py-2 text-[13px] font-black text-[#ff5a00] ring-1 ring-[#ffd0b3]">{getProductPriceLabel(product)}</p>
         </div>
 
         <button type="button" onClick={onOpen} className="grid h-[112px] w-[116px] shrink-0 place-items-center overflow-hidden rounded-[25px] bg-gradient-to-br from-[#fffaf3] via-[#fff3e6] to-[#ede7dd] text-[62px] ring-1 ring-white/80">
@@ -73,8 +75,8 @@ function ProductCard({ product, onOpen }: { product: PublicProduct; onOpen: () =
         <button type="button" onClick={onOpen} className="flex h-11 flex-1 items-center justify-center rounded-[16px] bg-[#fbfaf7] px-4 text-[15px] font-black text-[#0b1220] ring-1 ring-[#eee7dc]">
           Xem
         </button>
-        <span className="flex h-11 min-w-[128px] items-center justify-center rounded-[16px] bg-[#0b1220] px-4 text-[13px] font-black text-white shadow-[0_12px_22px_rgba(15,23,42,0.18)]">
-          {product.orderLabel}
+        <span className={`flex h-11 min-w-[128px] items-center justify-center rounded-[16px] px-4 text-center text-[12px] font-black ${product.isOrderable ? "bg-[#0b1220] text-white" : "bg-slate-200 text-slate-600"}`}>
+          {getProductOrderMessage(product)}
         </span>
       </div>
     </article>
@@ -98,16 +100,10 @@ export function ProductHome({ active = "home" }: { active?: AppNavKey }) {
     error,
   } = useCatalogBrowser();
 
-  const subtitle = loading ? "Đang tải catalog" : "Catalog sản phẩm Hưng Phát";
+  const subtitle = loading ? "Đang tải catalog" : "Catalog sản phẩm Bếp Sỉ";
 
   return (
     <MobilePageShell active={active} title="Bếp Sỉ F&B" subtitle={subtitle}>
-      <style>{`
-        @keyframes heroTitleGradient {
-          0%, 100% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-        }
-      `}</style>
       <h1 className="sr-only">Sản phẩm</h1>
 
       <div className="relative min-h-[220px] overflow-hidden rounded-[30px] shadow-[0_14px_30px_rgba(15,23,42,0.085)] ring-1 ring-white/80">
@@ -115,7 +111,7 @@ export function ProductHome({ active = "home" }: { active?: AppNavKey }) {
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.08)_0%,rgba(255,247,237,0.22)_44%,rgba(247,243,235,0.90)_100%)]" />
         <div className="relative z-10 min-h-[220px] p-4">
           <div className="absolute inset-x-4 top-[48%] -translate-y-1/2 text-center">
-            <h2 className="mx-auto inline-block whitespace-nowrap bg-[linear-gradient(90deg,#0b1220,#ff5a00,#08775f,#0b1220)] bg-[length:260%_100%] bg-clip-text text-[clamp(22px,6.7vw,30px)] font-black leading-none tracking-[-0.045em] text-transparent drop-shadow-[0_1px_0_rgba(255,255,255,0.78)]" style={{ animation: "heroTitleGradient 4.8s ease-in-out infinite" }}>
+            <h2 className="mx-auto inline-block whitespace-nowrap text-[clamp(22px,6.7vw,30px)] font-black leading-none tracking-[-0.045em] text-[#0b1220]">
               Nguyên liệu F&B cho quán
             </h2>
           </div>
@@ -129,7 +125,7 @@ export function ProductHome({ active = "home" }: { active?: AppNavKey }) {
             const selected = tab.id === selectedCategory;
             const empty = tab.id !== "all" && tab.productCount === 0;
             return (
-              <button key={tab.id} type="button" aria-pressed={selected} onClick={() => setSelectedCategory(tab.id)} className={`inline-flex shrink-0 items-center gap-1.5 rounded-[14px] px-3.5 py-2.5 text-[13px] font-black shadow-sm ring-1 ${selected ? "bg-[#ff5a00] text-white ring-[#ff5a00] shadow-[0_8px_16px_rgba(255,90,0,0.18)]" : empty ? "bg-white text-slate-400 ring-[#eee7dc]" : getTabTone(tab.id)}`}>
+              <button key={tab.id} type="button" aria-pressed={selected} onClick={() => setSelectedCategory(tab.id)} className={`inline-flex shrink-0 items-center gap-1.5 rounded-[14px] px-3.5 py-2.5 text-[13px] font-black shadow-sm ring-1 ${selected ? "bg-[#ff5a00] text-white ring-[#ff5a00]" : empty ? "bg-white text-slate-400 ring-[#eee7dc]" : getTabTone(tab.id)}`}>
                 <span className="text-[16px] leading-none">{categoryEmoji[tab.id] || "▦"}</span>
                 <span className="leading-none">{tab.name}</span>
                 <span className="rounded-full bg-white/60 px-1.5 py-0.5 text-[11px] leading-none">{tab.productCount}</span>
