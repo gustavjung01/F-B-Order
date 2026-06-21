@@ -1,0 +1,88 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+TARGET_SHA="${1:-}"
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+FRONTEND_DIR="${REPO_ROOT}/apps/frontend"
+EXPECTED_API_URL="https://api.bepsi.click"
+
+log() {
+  printf '[phase7-vercel] %s\n' "$*"
+}
+
+die() {
+  printf '[phase7-vercel] ERROR: %s\n' "$*" >&2
+  exit 1
+}
+
+[[ "$TARGET_SHA" =~ ^[0-9a-f]{40}$ ]] || die "Target commit must be a full 40-character SHA."
+for command in git corepack node; do
+  command -v "$command" >/dev/null 2>&1 || die "Required command is missing: $command"
+done
+
+: "${VERCEL_TOKEN:?VERCEL_TOKEN is required}"
+: "${VERCEL_ORG_ID:?VERCEL_ORG_ID is required}"
+: "${VERCEL_PROJECT_ID:?VERCEL_PROJECT_ID is required}"
+
+ACTUAL_SHA="$(git -C "$REPO_ROOT" rev-parse HEAD)"
+[[ "$ACTUAL_SHA" == "$TARGET_SHA" ]] || die "Checkout is ${ACTUAL_SHA}, expected ${TARGET_SHA}."
+[[ -z "$(git -C "$REPO_ROOT" status --porcelain)" ]] || die "Repository checkout is not clean."
+
+corepack enable
+
+log "Pulling Vercel production project settings"
+pnpm dlx vercel@latest pull \
+  --yes \
+  --environment=production \
+  --token="$VERCEL_TOKEN" \
+  --cwd "$FRONTEND_DIR"
+
+PRODUCTION_ENV_FILE="${FRONTEND_DIR}/.vercel/.env.production.local"
+[[ -f "$PRODUCTION_ENV_FILE" ]] || die "Vercel production environment file was not generated."
+
+node --input-type=module - "$PRODUCTION_ENV_FILE" "$EXPECTED_API_URL" <<'NODE'
+import fs from "node:fs";
+
+const [envPath, expectedApiUrl] = process.argv.slice(2);
+const source = fs.readFileSync(envPath, "utf8");
+const values = new Map();
+for (const rawLine of source.split(/\r?\n/)) {
+  const line = rawLine.trim();
+  if (!line || line.startsWith("#")) continue;
+  const separator = line.indexOf("=");
+  if (separator < 1) continue;
+  const key = line.slice(0, separator).trim();
+  let value = line.slice(separator + 1).trim();
+  if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
+    value = value.slice(1, -1);
+  }
+  values.set(key, value);
+}
+
+const required = {
+  NEXT_PUBLIC_DATA_MODE: "backend",
+  BACKEND_API_URL: expectedApiUrl,
+  NEXT_PUBLIC_API_URL: expectedApiUrl,
+};
+for (const [key, expected] of Object.entries(required)) {
+  if (values.get(key) !== expected) {
+    throw new Error(`Vercel production variable ${key} must equal ${expected}.`);
+  }
+}
+NODE
+
+log "Building Vercel production artifact"
+pnpm dlx vercel@latest build \
+  --prod \
+  --token="$VERCEL_TOKEN" \
+  --cwd "$FRONTEND_DIR"
+
+log "Deploying Vercel production artifact"
+DEPLOYMENT_URL="$(pnpm dlx vercel@latest deploy \
+  --prebuilt \
+  --prod \
+  --token="$VERCEL_TOKEN" \
+  --cwd "$FRONTEND_DIR")"
+
+[[ "$DEPLOYMENT_URL" == https://* ]] || die "Vercel did not return a deployment URL."
+log "Vercel production deployment completed: ${DEPLOYMENT_URL}"
