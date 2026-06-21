@@ -102,11 +102,15 @@ async function queryDatabase(connectionString, sql, params = []) {
   }
 }
 
+async function migrateFreshDatabase(connectionString) {
+  await runNodeScript(runnerPath, connectionString);
+  await runNodeScript(verifierPath, connectionString);
+}
+
 async function testFreshAndRerun() {
   await withDatabase("fresh", async (connectionString) => {
     console.log("\n[TEST] fresh PostgreSQL database");
-    await runNodeScript(runnerPath, connectionString);
-    await runNodeScript(verifierPath, connectionString);
+    await migrateFreshDatabase(connectionString);
 
     const firstLedger = await queryDatabase(
       connectionString,
@@ -124,8 +128,14 @@ async function testFreshAndRerun() {
        FROM schema_migrations ORDER BY filename`,
     );
     assert.deepEqual(secondLedger.rows, firstLedger.rows);
+  });
+}
 
+async function testAdvisoryLock() {
+  await withDatabase("lock", async (connectionString) => {
     console.log("\n[TEST] advisory lock serializes migration runners");
+    await migrateFreshDatabase(connectionString);
+
     const lockPool = new Pool({ connectionString, max: 1 });
     const lockClient = await lockPool.connect();
     const [lockKeyA, lockKeyB] = MIGRATION_LOCK_KEYS;
@@ -144,19 +154,27 @@ async function testFreshAndRerun() {
       blockedOutput += chunk.toString();
     });
 
-    await new Promise((resolve) => setTimeout(resolve, 750));
-    assert.equal(blockedRunner.exitCode, null, "Second runner did not wait for the advisory lock");
-    await lockClient.query("SELECT pg_advisory_unlock($1, $2)", [lockKeyA, lockKeyB]);
-    lockClient.release();
-    await lockPool.end();
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 750));
+      assert.equal(blockedRunner.exitCode, null, "Second runner did not wait for the advisory lock");
+    } finally {
+      await lockClient.query("SELECT pg_advisory_unlock($1, $2)", [lockKeyA, lockKeyB]);
+      lockClient.release();
+      await lockPool.end();
+    }
 
     const blockedExitCode = await new Promise((resolve, reject) => {
       blockedRunner.once("error", reject);
       blockedRunner.once("close", resolve);
     });
     assert.equal(blockedExitCode, 0, blockedOutput);
+  });
+}
 
+async function testChecksumMismatch() {
+  await withDatabase("checksum", async (connectionString) => {
     console.log("\n[TEST] checksum mismatch is rejected");
+    await migrateFreshDatabase(connectionString);
     await queryDatabase(
       connectionString,
       `UPDATE schema_migrations
@@ -212,7 +230,7 @@ async function testLegacyFixture() {
 async function testExistingBaseline() {
   await withDatabase("baseline", async (connectionString) => {
     console.log("\n[TEST] adopt an already-migrated production baseline");
-    await runNodeScript(runnerPath, connectionString);
+    await migrateFreshDatabase(connectionString);
     await queryDatabase(connectionString, "DROP TABLE schema_migrations");
     await runNodeScript(runnerPath, connectionString, ["--baseline-existing"]);
 
@@ -229,10 +247,26 @@ async function testExistingBaseline() {
   });
 }
 
+const scenarios = new Map([
+  ["fresh-rerun", testFreshAndRerun],
+  ["legacy", testLegacyFixture],
+  ["baseline", testExistingBaseline],
+  ["lock", testAdvisoryLock],
+  ["checksum", testChecksumMismatch],
+]);
+
+const requestedScenarios = process.argv.slice(2);
+const selectedScenarios = requestedScenarios.length > 0 ? requestedScenarios : [...scenarios.keys()];
+
 try {
-  await testFreshAndRerun();
-  await testLegacyFixture();
-  await testExistingBaseline();
+  for (const scenarioName of selectedScenarios) {
+    const scenario = scenarios.get(scenarioName);
+    if (!scenario) {
+      throw new Error(`Unknown migration test scenario: ${scenarioName}`);
+    }
+    await scenario();
+    console.log(`\nPASS: ${scenarioName}`);
+  }
   console.log("\nMigration integration tests passed.");
 } catch (error) {
   console.error("\nMigration integration tests failed.");
