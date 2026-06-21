@@ -60,15 +60,15 @@ export type PublicProduct = {
   slug: string;
   sku: string | null;
   name: string;
-  brand: string | null;
+  brand: string;
   categoryId: string;
   categoryName: string;
   subcategoryId: string | null;
   subcategoryName: string | null;
   productType: ProductType;
   catalogKind: ProductCatalogKind;
-  packageSizeLabel: string | null;
-  unitLabel: string | null;
+  packageSizeLabel: string;
+  unitLabel: string;
   minOrderQty: number;
   imageUrl: string | null;
   shortDescription: string | null;
