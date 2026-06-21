@@ -11,13 +11,19 @@ ALTER TABLE products ADD COLUMN IF NOT EXISTS data_issues JSONB NOT NULL DEFAULT
 ALTER TABLE products ADD COLUMN IF NOT EXISTS is_orderable BOOLEAN NOT NULL DEFAULT false;
 ALTER TABLE products ADD COLUMN IF NOT EXISTS is_public BOOLEAN NOT NULL DEFAULT false;
 
-ALTER TABLE products DROP CONSTRAINT IF EXISTS products_product_type_check;
-ALTER TABLE products ADD CONSTRAINT products_product_type_check
-  CHECK (product_type IN ('physical', 'bundle', 'service'));
-
-ALTER TABLE products DROP CONSTRAINT IF EXISTS products_catalog_kind_check;
-ALTER TABLE products ADD CONSTRAINT products_catalog_kind_check
-  CHECK (catalog_kind IN ('sku_candidate', 'bundle_candidate'));
+-- Legacy catalog imports stored the six sellable combos as recipe_content.
+-- Normalize them before replacing the old product_type constraint.
+UPDATE products
+SET
+  product_type = 'bundle',
+  catalog_kind = 'bundle_candidate',
+  is_orderable = false,
+  data_issues = CASE
+    WHEN data_issues @> '["missing_bundle_components"]'::jsonb THEN data_issues
+    ELSE data_issues || '["missing_bundle_components"]'::jsonb
+  END,
+  updated_at = now()
+WHERE product_type = 'recipe_content';
 
 CREATE TABLE IF NOT EXISTS product_bundle_items (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -127,6 +133,7 @@ BEGIN
         status = EXCLUDED.status,
         sort_order = EXCLUDED.sort_order,
         is_active = EXCLUDED.is_active,
+        is_orderable = false,
         is_public = EXCLUDED.is_public,
         updated_at = now()
     $migrate$;
@@ -134,6 +141,15 @@ BEGIN
 END $$;
 
 DROP TABLE IF EXISTS catalog_suggestions;
+
+-- Tighten constraints only after every legacy row has been normalized.
+ALTER TABLE products DROP CONSTRAINT IF EXISTS products_product_type_check;
+ALTER TABLE products ADD CONSTRAINT products_product_type_check
+  CHECK (product_type IN ('physical', 'bundle', 'service'));
+
+ALTER TABLE products DROP CONSTRAINT IF EXISTS products_catalog_kind_check;
+ALTER TABLE products ADD CONSTRAINT products_catalog_kind_check
+  CHECK (catalog_kind IN ('sku_candidate', 'bundle_candidate'));
 
 CREATE INDEX IF NOT EXISTS products_source_key_idx ON products(source_key);
 CREATE INDEX IF NOT EXISTS products_public_status_idx ON products(is_public, status, is_active);
