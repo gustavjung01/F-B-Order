@@ -19,7 +19,6 @@ export function useCatalogBrowser() {
   const [categories, setCategories] = useState<CategoryWithCount[]>([]);
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [searchText, setSearchText] = useState("");
-  const [totalProducts, setTotalProducts] = useState(0);
   const [loadingProducts, setLoadingProducts] = useState(true);
   const [loadingCategories, setLoadingCategories] = useState(true);
   const [error, setError] = useState("");
@@ -66,12 +65,10 @@ export function useCatalogBrowser() {
         const data = (await response.json()) as ProductsResponse;
         if (!activeRequest) return;
         setProducts(Array.isArray(data.products) ? data.products : []);
-        setTotalProducts(Number.isFinite(data.total) ? data.total : 0);
       } catch (loadError) {
         if (!activeRequest) return;
         setError(loadError instanceof Error ? loadError.message : "Không tải được sản phẩm");
         setProducts([]);
-        setTotalProducts(0);
       } finally {
         if (activeRequest) setLoadingProducts(false);
       }
@@ -85,12 +82,16 @@ export function useCatalogBrowser() {
   }, [selectedCategory, searchText]);
 
   const loading = loadingCategories || loadingProducts;
+  const catalogTotal = useMemo(
+    () => categories.reduce((total, category) => total + category.productCount, 0),
+    [categories],
+  );
   const tabs = useMemo(
     () => [
-      { id: "all", name: "Tất cả", productCount: totalProducts, parentId: null, sortOrder: 0 },
+      { id: "all", name: "Tất cả", productCount: catalogTotal, parentId: null, sortOrder: 0 },
       ...categories,
     ],
-    [categories, totalProducts],
+    [catalogTotal, categories],
   );
 
   return {
@@ -102,6 +103,5 @@ export function useCatalogBrowser() {
     setSearchText,
     loading,
     error,
-    totalProducts,
   };
 }
