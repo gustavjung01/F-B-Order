@@ -9,6 +9,7 @@
     "typecheck": "tsc --noEmit",
     "db:migrate": "node scripts/run-migrations.mjs",
     "db:seed:test": "node scripts/run-sql.mjs db/seeds/001_seed_test.sql",
+    "catalog:audit": "node scripts/audit-catalog-source.mjs",
     "catalog:import": "node scripts/import-hung-phat-catalog.mjs"
   },
   "dependencies": {
