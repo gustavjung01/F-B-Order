@@ -87,6 +87,7 @@ try {
   await runSqlFile("db/migrations/001_init_core.sql");
   await normalizeLegacyCatalog();
   await runSqlFile("db/migrations/002_catalog_domain_boundary.sql");
+  await runSqlFile("db/migrations/003_core_order_contract.sql");
   console.log("Database migrations completed.");
 } catch (error) {
   console.error("Database migration failed.");

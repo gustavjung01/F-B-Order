@@ -28,6 +28,10 @@ INSERT INTO customers (
   area,
   price_group_id,
   approval_status,
+  approval_decided_by_actor_type,
+  approval_decided_by_actor_id,
+  approval_decided_at,
+  approval_note,
   status,
   note
 )
@@ -41,6 +45,10 @@ SELECT
   'dev-test',
   wholesale_group.id,
   'approved',
+  'system',
+  'system:dev-seed',
+  now(),
+  'Approved automatically for local seed verification.',
   'active',
   'Seed test để kiểm tra flow DB/order, không phải khách thật.'
 FROM wholesale_group
@@ -59,6 +67,10 @@ SET
   area = 'dev-test',
   price_group_id = wholesale_group.id,
   approval_status = 'approved',
+  approval_decided_by_actor_type = 'system',
+  approval_decided_by_actor_id = 'system:dev-seed',
+  approval_decided_at = COALESCE(customers.approval_decided_at, now()),
+  approval_note = 'Approved automatically for local seed verification.',
   status = 'active',
   note = 'Seed test để kiểm tra flow DB/order, không phải khách thật.',
   updated_at = now()
