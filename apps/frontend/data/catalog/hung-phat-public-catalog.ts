@@ -60,33 +60,22 @@ const INTERNAL_ONLY_VALUES = new Set([
 
 function publicText(value: string | number | null | undefined): string {
   if (value === null || value === undefined) return UPDATING_LABEL;
-
   const text = String(value).trim();
   if (!text) return UPDATING_LABEL;
-
   const upperText = text.toUpperCase();
-  if (INTERNAL_ONLY_VALUES.has(text) || INTERNAL_ONLY_VALUES.has(upperText)) {
-    return UPDATING_LABEL;
-  }
-
-  if (/\bTODO\b/i.test(text)) return UPDATING_LABEL;
-  if (/missing_/i.test(text)) return UPDATING_LABEL;
-  if (/needs_/i.test(text)) return UPDATING_LABEL;
+  if (INTERNAL_ONLY_VALUES.has(text) || INTERNAL_ONLY_VALUES.has(upperText)) return UPDATING_LABEL;
+  if (/\bTODO\b/i.test(text) || /missing_/i.test(text) || /needs_/i.test(text)) return UPDATING_LABEL;
   if (/public-snippet|inferred-category/i.test(text)) return UPDATING_LABEL;
-
   return text;
 }
 
 function publicList(values: readonly string[]): string[] {
-  return values
-    .map((value) => publicText(value))
-    .filter((value) => value !== UPDATING_LABEL);
+  return values.map((value) => publicText(value)).filter((value) => value !== UPDATING_LABEL);
 }
 
 function publicImageUrl(product: RawHungPhatCatalogProduct): string | null {
   const mappedImageUrl = imageUrlByProductId[product.id];
   if (mappedImageUrl) return mappedImageUrl;
-
   const imageUrls = product.imageUrls as readonly string[];
   return imageUrls.length > 0 ? imageUrls[0] ?? null : null;
 }
@@ -99,13 +88,8 @@ function publicCategoryName(id: string | null | undefined): string {
 function publicDescription(product: RawHungPhatCatalogProduct): string | null {
   const description = publicText(product.shortDescription ?? product.description);
   if (description !== UPDATING_LABEL) return description;
-
   const useCases = publicList(product.useCases);
-  if (useCases.length > 0) {
-    return `Phù hợp cho ${useCases.join(", ")}.`;
-  }
-
-  return null;
+  return useCases.length > 0 ? `Phù hợp cho ${useCases.join(", ")}.` : null;
 }
 
 function isBundleProduct(product: RawHungPhatCatalogProduct) {
@@ -124,15 +108,15 @@ export function toHungPhatPublicProduct(product: RawHungPhatCatalogProduct): Pub
     slug: product.slug,
     sku: null,
     name: publicText(product.name),
-    brand: brand === UPDATING_LABEL ? null : brand,
+    brand,
     categoryId: product.categoryId,
     categoryName: publicCategoryName(product.categoryId),
     subcategoryId: product.subcategoryId,
     subcategoryName: product.subcategoryId ? publicCategoryName(product.subcategoryId) : null,
     productType: bundle ? "bundle" : "physical",
     catalogKind: bundle ? "bundle_candidate" : "sku_candidate",
-    packageSizeLabel: packageSizeLabel === UPDATING_LABEL ? null : packageSizeLabel,
-    unitLabel: unitLabel === UPDATING_LABEL ? null : unitLabel,
+    packageSizeLabel,
+    unitLabel,
     minOrderQty: Math.max(1, product.minOrderQty || 1),
     imageUrl: publicImageUrl(product),
     shortDescription: publicDescription(product),
@@ -143,19 +127,11 @@ export function toHungPhatPublicProduct(product: RawHungPhatCatalogProduct): Pub
     isOrderable: false,
     catalogEligible: false,
     priceVisibility: "hidden",
-    pricing: {
-      visibility: "hidden",
-      reason: "STATIC_MODE",
-      canOrder: false,
-    },
+    pricing: { visibility: "hidden", reason: "STATIC_MODE", canOrder: false },
     bundleItemCount: 0,
     dataIssues: [...product.dataIssues, "static_mode_order_disabled"],
     orderLabel: "Chế độ catalog tĩnh",
-    displayFallbacks: {
-      brand: brand === UPDATING_LABEL ? UPDATING_LABEL : brand,
-      packageSizeLabel,
-      unitLabel,
-    },
+    displayFallbacks: { brand, packageSizeLabel, unitLabel },
   };
 }
 
