@@ -60,3 +60,6 @@ jobs:
 
       - name: Typecheck
         run: pnpm typecheck
+
+      - name: Verify approval pricing
+        run: pnpm test:auth-pricing
