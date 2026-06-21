@@ -40,7 +40,9 @@ function publicCategoryName(slug: string, name: string): string {
 
 function positiveInteger(value: unknown, fallback: number): number {
   const parsed = Number(value);
-  return Number.isFinite(parsed) && parsed > 0 ? Math.floor(parsed) : fallback;
+  if (!Number.isFinite(parsed)) return fallback;
+  const normalized = Math.floor(parsed);
+  return normalized >= 1 ? normalized : fallback;
 }
 
 export function toCatalogProduct(row: CatalogProductRow, identity: RequestIdentity) {
