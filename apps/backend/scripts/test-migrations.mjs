@@ -4,7 +4,11 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { spawn } from "node:child_process";
 import pg from "pg";
-import { MIGRATION_FILES, MIGRATION_LOCK_KEYS } from "./migration-plan.mjs";
+import {
+  BASELINE_MIGRATION_FILES,
+  MIGRATION_FILES,
+  MIGRATION_LOCK_KEYS,
+} from "./migration-plan.mjs";
 
 const { Pool } = pg;
 const __filename = fileURLToPath(import.meta.url);
@@ -104,6 +108,14 @@ async function queryDatabase(connectionString, sql, params = []) {
 
 async function migrateFreshDatabase(connectionString) {
   await runNodeScript(runnerPath, connectionString);
+  await runNodeScript(verifierPath, connectionString);
+}
+
+async function installAuditedBaselineSchema(connectionString) {
+  for (const filename of BASELINE_MIGRATION_FILES) {
+    const sql = fs.readFileSync(path.join(repoRoot, filename), "utf8");
+    await queryDatabase(connectionString, sql);
+  }
   await runNodeScript(verifierPath, connectionString);
 }
 
@@ -229,21 +241,83 @@ async function testLegacyFixture() {
 
 async function testExistingBaseline() {
   await withDatabase("baseline", async (connectionString) => {
-    console.log("\n[TEST] adopt an already-migrated production baseline");
-    await migrateFreshDatabase(connectionString);
-    await queryDatabase(connectionString, "DROP TABLE schema_migrations");
+    console.log("\n[TEST] adopt the audited phase 1 production baseline");
+    await installAuditedBaselineSchema(connectionString);
+
+    const beforeBaseline = await queryDatabase(
+      connectionString,
+      `SELECT EXISTS (
+         SELECT 1
+         FROM information_schema.columns
+         WHERE table_schema = 'public'
+           AND table_name = 'orders'
+           AND column_name = 'idempotency_key'
+       ) AS has_idempotency_key`,
+    );
+    assert.equal(beforeBaseline.rows[0].has_idempotency_key, false);
+
     await runNodeScript(runnerPath, connectionString, ["--baseline-existing"]);
 
-    const ledger = await queryDatabase(
+    const baselineLedger = await queryDatabase(
       connectionString,
       `SELECT filename, execution_time_ms, execution_mode
        FROM schema_migrations ORDER BY filename`,
     );
-    assert.equal(ledger.rowCount, MIGRATION_FILES.length);
-    assert.ok(ledger.rows.every((row) => row.execution_mode === "baselined"));
-    assert.ok(ledger.rows.every((row) => row.execution_time_ms === 0));
+    assert.equal(baselineLedger.rowCount, BASELINE_MIGRATION_FILES.length);
+    assert.deepEqual(
+      baselineLedger.rows.map((row) => row.filename),
+      [...BASELINE_MIGRATION_FILES].sort(),
+    );
+    assert.ok(baselineLedger.rows.every((row) => row.execution_mode === "baselined"));
+    assert.ok(baselineLedger.rows.every((row) => row.execution_time_ms === 0));
+
+    const afterBaseline = await queryDatabase(
+      connectionString,
+      `SELECT EXISTS (
+         SELECT 1
+         FROM information_schema.columns
+         WHERE table_schema = 'public'
+           AND table_name = 'orders'
+           AND column_name = 'idempotency_key'
+       ) AS has_idempotency_key`,
+    );
+    assert.equal(afterBaseline.rows[0].has_idempotency_key, false);
 
     await runNodeScript(runnerPath, connectionString);
+
+    const finalLedger = await queryDatabase(
+      connectionString,
+      `SELECT filename, execution_mode
+       FROM schema_migrations ORDER BY filename`,
+    );
+    assert.equal(finalLedger.rowCount, MIGRATION_FILES.length);
+    const orderEngineMigration = finalLedger.rows.find(
+      (row) => row.filename === "db/migrations/005_order_engine.sql",
+    );
+    assert.equal(orderEngineMigration?.execution_mode, "executed");
+
+    const afterMigrate = await queryDatabase(
+      connectionString,
+      `SELECT
+         EXISTS (
+           SELECT 1
+           FROM information_schema.columns
+           WHERE table_schema = 'public'
+             AND table_name = 'orders'
+             AND column_name = 'idempotency_key'
+         ) AS has_idempotency_key,
+         EXISTS (
+           SELECT 1
+           FROM information_schema.columns
+           WHERE table_schema = 'public'
+             AND table_name = 'orders'
+             AND column_name = 'request_fingerprint'
+         ) AS has_request_fingerprint`,
+    );
+    assert.deepEqual(afterMigrate.rows[0], {
+      has_idempotency_key: true,
+      has_request_fingerprint: true,
+    });
   });
 }
 
