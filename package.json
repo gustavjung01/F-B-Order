@@ -17,6 +17,7 @@
     "build:backend": "pnpm --filter @fb-order/backend build",
     "lint": "pnpm -r lint",
     "typecheck": "pnpm -r typecheck",
+    "test:auth-pricing": "pnpm --filter @fb-order/backend test:auth-pricing",
     "db:migrate": "pnpm --filter @fb-order/backend db:migrate",
     "db:migrate:baseline": "pnpm --filter @fb-order/backend db:migrate:baseline",
     "db:test:migrations": "pnpm --filter @fb-order/backend db:test:migrations",
