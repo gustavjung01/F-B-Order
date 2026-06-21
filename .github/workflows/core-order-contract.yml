@@ -68,4 +68,14 @@ jobs:
         run: pnpm catalog:import
 
       - name: Verify catalog contract
-        run: pnpm --filter @fb-order/backend exec tsx scripts/test-catalog-contract.ts
+        run: |
+          set -o pipefail
+          pnpm --filter @fb-order/backend exec tsx scripts/test-catalog-contract.ts 2>&1 | tee catalog-contract.log
+
+      - name: Upload catalog contract log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: catalog-contract-log
+          path: catalog-contract.log
+          if-no-files-found: error
