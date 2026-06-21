@@ -83,10 +83,60 @@ async function normalizeLegacyCatalog() {
   `);
 }
 
+async function normalizeLegacyOrders() {
+  console.log("Normalizing legacy order rows");
+  await pool.query(`
+    BEGIN;
+
+    -- Some production databases were created from the early MVP schema while
+    -- others already contain the canonical columns. Keep both shapes readable
+    -- so the core order contract migration can be safely re-run.
+    ALTER TABLE orders ADD COLUMN IF NOT EXISTS note TEXT;
+    ALTER TABLE orders ADD COLUMN IF NOT EXISTS delivery_address TEXT;
+
+    ALTER TABLE order_items ADD COLUMN IF NOT EXISTS name TEXT;
+    ALTER TABLE order_items ADD COLUMN IF NOT EXISTS product_name TEXT;
+    ALTER TABLE order_items ADD COLUMN IF NOT EXISTS line_total NUMERIC(14,2);
+    ALTER TABLE order_items ADD COLUMN IF NOT EXISTS total_price NUMERIC(14,2);
+
+    ALTER TABLE order_status_logs
+      ADD COLUMN IF NOT EXISTS changed_by_clerk_user_id TEXT;
+
+    UPDATE order_items item
+    SET name = COALESCE(
+      item.name,
+      item.product_name,
+      product.name,
+      item.sku,
+      'Legacy item ' || item.id::text
+    )
+    FROM products product
+    WHERE item.product_id = product.id
+      AND item.name IS NULL;
+
+    UPDATE order_items
+    SET name = COALESCE(
+      name,
+      product_name,
+      sku,
+      'Legacy item ' || id::text
+    )
+    WHERE name IS NULL;
+
+    UPDATE order_items
+    SET
+      line_total = COALESCE(line_total, total_price, round(unit_price * quantity, 2)),
+      total_price = COALESCE(total_price, line_total, round(unit_price * quantity, 2));
+
+    COMMIT;
+  `);
+}
+
 try {
   await runSqlFile("db/migrations/001_init_core.sql");
   await normalizeLegacyCatalog();
   await runSqlFile("db/migrations/002_catalog_domain_boundary.sql");
+  await normalizeLegacyOrders();
   await runSqlFile("db/migrations/003_core_order_contract.sql");
   console.log("Database migrations completed.");
 } catch (error) {
