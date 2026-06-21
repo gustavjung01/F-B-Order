@@ -79,3 +79,6 @@ jobs:
           name: catalog-contract-log
           path: catalog-contract.log
           if-no-files-found: error
+
+      - name: Verify order engine
+        run: pnpm --filter @fb-order/backend test:order-engine
