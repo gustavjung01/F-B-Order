@@ -84,23 +84,52 @@ async function normalizeLegacyCatalog() {
 }
 
 async function normalizeLegacyOrders() {
-  console.log("Normalizing legacy order rows");
+  console.log("Normalizing legacy core and order rows");
   await pool.query(`
     BEGIN;
 
-    -- Some production databases were created from the early MVP schema while
-    -- others already contain the canonical columns. Keep both shapes readable
-    -- so the core order contract migration can be safely re-run.
+    -- CREATE TABLE IF NOT EXISTS cannot evolve an already-existing MVP table.
+    -- Add every compatibility column consumed by the canonical contract before
+    -- running migration 003. Existing canonical databases remain unchanged.
+    ALTER TABLE customers ADD COLUMN IF NOT EXISTS approval_status TEXT NOT NULL DEFAULT 'pending';
+    ALTER TABLE customers ADD COLUMN IF NOT EXISTS rejected_reason TEXT;
+    ALTER TABLE customers ADD COLUMN IF NOT EXISTS created_at TIMESTAMPTZ NOT NULL DEFAULT now();
+    ALTER TABLE customers ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ NOT NULL DEFAULT now();
+
+    ALTER TABLE orders ADD COLUMN IF NOT EXISTS subtotal NUMERIC(14,2) NOT NULL DEFAULT 0;
+    ALTER TABLE orders ADD COLUMN IF NOT EXISTS discount_total NUMERIC(14,2) NOT NULL DEFAULT 0;
+    ALTER TABLE orders ADD COLUMN IF NOT EXISTS total_amount NUMERIC(14,2) NOT NULL DEFAULT 0;
     ALTER TABLE orders ADD COLUMN IF NOT EXISTS note TEXT;
     ALTER TABLE orders ADD COLUMN IF NOT EXISTS delivery_address TEXT;
+    ALTER TABLE orders ADD COLUMN IF NOT EXISTS created_at TIMESTAMPTZ NOT NULL DEFAULT now();
+    ALTER TABLE orders ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ NOT NULL DEFAULT now();
 
+    UPDATE orders
+    SET
+      subtotal = GREATEST(COALESCE(subtotal, total_amount, 0), 0),
+      discount_total = LEAST(
+        GREATEST(COALESCE(discount_total, 0), 0),
+        GREATEST(COALESCE(subtotal, total_amount, 0), 0)
+      ),
+      total_amount = GREATEST(COALESCE(total_amount, subtotal - discount_total, 0), 0),
+      created_at = COALESCE(created_at, now()),
+      updated_at = COALESCE(updated_at, created_at, now());
+
+    ALTER TABLE order_items ADD COLUMN IF NOT EXISTS sku TEXT;
     ALTER TABLE order_items ADD COLUMN IF NOT EXISTS name TEXT;
     ALTER TABLE order_items ADD COLUMN IF NOT EXISTS product_name TEXT;
+    ALTER TABLE order_items ADD COLUMN IF NOT EXISTS unit TEXT;
+    ALTER TABLE order_items ADD COLUMN IF NOT EXISTS quantity NUMERIC(14,2);
+    ALTER TABLE order_items ADD COLUMN IF NOT EXISTS unit_price NUMERIC(14,2);
     ALTER TABLE order_items ADD COLUMN IF NOT EXISTS line_total NUMERIC(14,2);
     ALTER TABLE order_items ADD COLUMN IF NOT EXISTS total_price NUMERIC(14,2);
+    ALTER TABLE order_items ADD COLUMN IF NOT EXISTS created_at TIMESTAMPTZ NOT NULL DEFAULT now();
 
-    ALTER TABLE order_status_logs
-      ADD COLUMN IF NOT EXISTS changed_by_clerk_user_id TEXT;
+    UPDATE order_items
+    SET
+      quantity = COALESCE(NULLIF(quantity, 0), 1),
+      unit_price = GREATEST(COALESCE(unit_price, 0), 0),
+      created_at = COALESCE(created_at, now());
 
     UPDATE order_items item
     SET name = COALESCE(
@@ -115,18 +144,20 @@ async function normalizeLegacyOrders() {
       AND item.name IS NULL;
 
     UPDATE order_items
-    SET name = COALESCE(
-      name,
-      product_name,
-      sku,
-      'Legacy item ' || id::text
-    )
-    WHERE name IS NULL;
-
-    UPDATE order_items
     SET
-      line_total = COALESCE(line_total, total_price, round(unit_price * quantity, 2)),
-      total_price = COALESCE(total_price, line_total, round(unit_price * quantity, 2));
+      name = COALESCE(name, product_name, sku, 'Legacy item ' || id::text),
+      product_name = COALESCE(product_name, name, sku, 'Legacy item ' || id::text),
+      line_total = round(unit_price * quantity, 2),
+      total_price = round(unit_price * quantity, 2);
+
+    ALTER TABLE order_status_logs ADD COLUMN IF NOT EXISTS from_status TEXT;
+    ALTER TABLE order_status_logs ADD COLUMN IF NOT EXISTS to_status TEXT;
+    ALTER TABLE order_status_logs ADD COLUMN IF NOT EXISTS changed_by_clerk_user_id TEXT;
+    ALTER TABLE order_status_logs ADD COLUMN IF NOT EXISTS note TEXT;
+    ALTER TABLE order_status_logs ADD COLUMN IF NOT EXISTS created_at TIMESTAMPTZ NOT NULL DEFAULT now();
+
+    UPDATE order_status_logs
+    SET created_at = COALESCE(created_at, now());
 
     COMMIT;
   `);
