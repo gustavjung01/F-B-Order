@@ -85,3 +85,6 @@ jobs:
 
       - name: Verify admin operations
         run: pnpm --filter @fb-order/backend exec tsx scripts/test-admin-operations.ts
+
+      - name: Verify frontend backend cutover
+        run: pnpm --filter @fb-order/backend exec tsx scripts/test-frontend-cutover.ts

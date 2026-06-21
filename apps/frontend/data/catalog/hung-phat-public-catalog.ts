@@ -60,33 +60,22 @@ const INTERNAL_ONLY_VALUES = new Set([
 
 function publicText(value: string | number | null | undefined): string {
   if (value === null || value === undefined) return UPDATING_LABEL;
-
   const text = String(value).trim();
   if (!text) return UPDATING_LABEL;
-
   const upperText = text.toUpperCase();
-  if (INTERNAL_ONLY_VALUES.has(text) || INTERNAL_ONLY_VALUES.has(upperText)) {
-    return UPDATING_LABEL;
-  }
-
-  if (/\bTODO\b/i.test(text)) return UPDATING_LABEL;
-  if (/missing_/i.test(text)) return UPDATING_LABEL;
-  if (/needs_/i.test(text)) return UPDATING_LABEL;
+  if (INTERNAL_ONLY_VALUES.has(text) || INTERNAL_ONLY_VALUES.has(upperText)) return UPDATING_LABEL;
+  if (/\bTODO\b/i.test(text) || /missing_/i.test(text) || /needs_/i.test(text)) return UPDATING_LABEL;
   if (/public-snippet|inferred-category/i.test(text)) return UPDATING_LABEL;
-
   return text;
 }
 
 function publicList(values: readonly string[]): string[] {
-  return values
-    .map((value) => publicText(value))
-    .filter((value) => value !== UPDATING_LABEL);
+  return values.map((value) => publicText(value)).filter((value) => value !== UPDATING_LABEL);
 }
 
 function publicImageUrl(product: RawHungPhatCatalogProduct): string | null {
   const mappedImageUrl = imageUrlByProductId[product.id];
   if (mappedImageUrl) return mappedImageUrl;
-
   const imageUrls = product.imageUrls as readonly string[];
   return imageUrls.length > 0 ? imageUrls[0] ?? null : null;
 }
@@ -96,62 +85,57 @@ function publicCategoryName(id: string | null | undefined): string {
   return categoryNameById.get(id) ?? UPDATING_LABEL;
 }
 
-function publicPrice(product: RawHungPhatCatalogProduct): string {
-  if (typeof product.priceRetail === "number" && product.priceRetail > 0) {
-    return new Intl.NumberFormat("vi-VN", {
-      style: "currency",
-      currency: product.currency,
-      maximumFractionDigits: 0,
-    }).format(product.priceRetail);
-  }
-
-  return UPDATING_LABEL;
-}
-
 function publicDescription(product: RawHungPhatCatalogProduct): string | null {
   const description = publicText(product.shortDescription ?? product.description);
   if (description !== UPDATING_LABEL) return description;
-
   const useCases = publicList(product.useCases);
-  if (useCases.length > 0) {
-    return `Phù hợp cho ${useCases.join(", ")}.`;
-  }
-
-  return null;
+  return useCases.length > 0 ? `Phù hợp cho ${useCases.join(", ")}.` : null;
 }
 
 function isBundleProduct(product: RawHungPhatCatalogProduct) {
   return product.catalogKind === "content" || product.catalogKind === "bundle_candidate";
 }
 
+function isPubliclyActive(status: string): boolean {
+  return status === "active" || status === "needs_review";
+}
+
 export function toHungPhatPublicProduct(product: RawHungPhatCatalogProduct): PublicProduct {
   const bundle = isBundleProduct(product);
+  const brand = publicText(product.brand);
+  const packageSizeLabel = publicText(product.packageSize);
+  const unitLabel = publicText(product.unit);
 
   return {
     itemKind: "product",
     id: product.id,
     slug: product.slug,
-    sku: "",
+    sku: null,
     name: publicText(product.name),
-    brand: publicText(product.brand),
+    brand,
     categoryId: product.categoryId,
     categoryName: publicCategoryName(product.categoryId),
     subcategoryId: product.subcategoryId,
     subcategoryName: product.subcategoryId ? publicCategoryName(product.subcategoryId) : null,
     productType: bundle ? "bundle" : "physical",
     catalogKind: bundle ? "bundle_candidate" : "sku_candidate",
-    packageSizeLabel: publicText(product.packageSize),
-    unitLabel: publicText(product.unit),
-    unitPrice: 0,
+    packageSizeLabel,
+    unitLabel,
     minOrderQty: Math.max(1, product.minOrderQty || 1),
-    priceLabel: publicPrice(product),
     imageUrl: publicImageUrl(product),
     shortDescription: publicDescription(product),
     useCases: publicList(product.useCases),
     sellingPoints: publicList(product.sellingPoints),
-    bundleItemCount: 0,
+    isPublic: true,
+    isActive: isPubliclyActive(product.status),
     isOrderable: false,
-    orderLabel: "Liên hệ cập nhật giá",
+    catalogEligible: false,
+    priceVisibility: "hidden",
+    pricing: { visibility: "hidden", reason: "STATIC_MODE", canOrder: false },
+    bundleItemCount: 0,
+    dataIssues: [...product.dataIssues, "static_mode_order_disabled"],
+    orderLabel: "Chế độ catalog tĩnh",
+    displayFallbacks: { brand, packageSizeLabel, unitLabel },
   };
 }
 

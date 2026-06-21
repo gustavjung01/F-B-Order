@@ -1,8 +1,5 @@
 function normalizeBackendApiBaseUrl(value: string): string {
   const normalized = value.trim().replace(/\/+$/, "");
-
-  // Vercel must receive the backend origin only. Accept an accidental trailing
-  // /api as well so catalog requests never become /api/api/catalog/*.
   return normalized.replace(/\/api$/i, "");
 }
 
@@ -14,19 +11,32 @@ const BACKEND_API_URL = normalizeBackendApiBaseUrl(
 
 export function getBackendApiUrl(pathname: string): string {
   if (!BACKEND_API_URL) {
-    throw new Error("BACKEND_API_URL or NEXT_PUBLIC_API_URL is required");
+    throw new Error("BACKEND_API_URL or NEXT_PUBLIC_API_URL is required in backend mode");
   }
 
   const normalizedPath = pathname.startsWith("/") ? pathname : `/${pathname}`;
   return `${BACKEND_API_URL}${normalizedPath}`;
 }
 
-export async function proxyBackendJson(pathname: string): Promise<Response> {
+type BackendProxyOptions = {
+  method?: string;
+  body?: string;
+  headers?: HeadersInit;
+};
+
+export async function proxyBackendJson(
+  pathname: string,
+  options: BackendProxyOptions = {},
+): Promise<Response> {
+  const headers = new Headers(options.headers);
+  headers.set("accept", "application/json");
+  if (options.body !== undefined) headers.set("content-type", "application/json");
+
   const upstream = await fetch(getBackendApiUrl(pathname), {
+    method: options.method || "GET",
+    body: options.body,
     cache: "no-store",
-    headers: {
-      accept: "application/json",
-    },
+    headers,
   });
 
   const body = await upstream.text();

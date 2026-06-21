@@ -2,6 +2,7 @@ export type ProductSourceAccuracy = "company_crawl_confirmed" | "needs_company_s
 export type ProductStatus = "active" | "draft" | "needs_review";
 export type ProductType = "physical" | "bundle" | "service";
 export type ProductCatalogKind = "sku_candidate" | "bundle_candidate";
+export type PriceSource = "price_group" | "wholesale" | "base";
 
 export type Product = {
   id: string;
@@ -39,11 +40,25 @@ export type Product = {
   dataIssues: string[];
 };
 
+export type ProductPricing =
+  | {
+      visibility: "hidden";
+      reason: string;
+      canOrder: false;
+    }
+  | {
+      visibility: "visible";
+      amount: number;
+      currency: "VND";
+      source: PriceSource;
+      canOrder: boolean;
+    };
+
 export type PublicProduct = {
   itemKind: "product";
   id: string;
   slug: string;
-  sku: string;
+  sku: string | null;
   name: string;
   brand: string;
   categoryId: string;
@@ -54,16 +69,25 @@ export type PublicProduct = {
   catalogKind: ProductCatalogKind;
   packageSizeLabel: string;
   unitLabel: string;
-  unitPrice: number;
   minOrderQty: number;
-  priceLabel: string;
   imageUrl: string | null;
   shortDescription: string | null;
   useCases: string[];
   sellingPoints: string[];
-  bundleItemCount: number;
+  isPublic: boolean;
+  isActive: boolean;
   isOrderable: boolean;
+  catalogEligible: boolean;
+  priceVisibility: ProductPricing["visibility"];
+  pricing: ProductPricing;
+  bundleItemCount: number;
+  dataIssues: string[];
   orderLabel: string;
+  displayFallbacks: {
+    brand: string;
+    packageSizeLabel: string;
+    unitLabel: string;
+  };
 };
 
 export type Category = {
@@ -71,6 +95,8 @@ export type Category = {
   name: string;
   parentId: string | null;
   sortOrder: number;
+  isActive?: boolean;
+  hasProducts?: boolean;
 };
 
 export type CategoryWithCount = Category & {

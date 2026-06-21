@@ -1,8 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { addCartItem } from "@/lib/cartStorage";
 import type { PublicProduct } from "@/data/catalog/product-model";
+import {
+  getProductDisplayPackage,
+  getProductDisplayUnit,
+  getProductOrderMessage,
+  getProductPriceLabel,
+} from "@/lib/catalog-display";
+import { addCartItem } from "@/lib/cartStorage";
 
 const emojiByCategory: Record<string, string> = {
   "tra-sua-pha-che": "🧋",
@@ -16,14 +22,9 @@ function productEmoji(product: PublicProduct) {
   return emojiByCategory[product.categoryId] || emojiByCategory[product.subcategoryId || ""] || "📦";
 }
 
-function isUpdating(value: string | null | undefined) {
-  return !value || value === "Đang cập nhật";
-}
-
 export function ProductQuickView({ product, onClose }: { product: PublicProduct; onClose: () => void }) {
   const [quantity, setQuantity] = useState(product.minOrderQty);
   const [added, setAdded] = useState(false);
-  const canAdd = product.isOrderable;
   const isBundle = product.productType === "bundle";
 
   useEffect(() => {
@@ -43,26 +44,8 @@ export function ProductQuickView({ product, onClose }: { product: PublicProduct;
   }, [onClose]);
 
   function handleAdd() {
-    if (!canAdd) return;
-
-    addCartItem({
-      productId: product.id,
-      sku: product.sku,
-      name: product.name,
-      productName: product.name,
-      unit: product.unitLabel,
-      unitLabel: product.unitLabel,
-      packageSize: product.packageSizeLabel,
-      packageSizeLabel: product.packageSizeLabel,
-      price: product.unitPrice,
-      priceLabel: product.priceLabel,
-      quantity,
-      minOrderQty: product.minOrderQty,
-      imageUrl: product.imageUrl || "",
-      categorySlug: product.categoryId,
-      categoryName: product.categoryName,
-    });
-
+    if (!product.isOrderable) return;
+    addCartItem({ productId: product.id, quantity });
     setAdded(true);
     window.setTimeout(() => setAdded(false), 1200);
   }
@@ -85,7 +68,7 @@ export function ProductQuickView({ product, onClose }: { product: PublicProduct;
             {product.imageUrl ? <img src={product.imageUrl} alt={product.name} className="h-full w-full object-contain" /> : productEmoji(product)}
           </div>
 
-          {!isUpdating(product.brand) ? <p className="mt-4 text-[11px] font-black uppercase tracking-[0.12em] text-[#ff5a00]">{product.brand}</p> : null}
+          {product.brand ? <p className="mt-4 text-[11px] font-black uppercase tracking-[0.12em] text-[#ff5a00]">{product.brand}</p> : null}
           <h2 className="mt-2 text-[28px] font-black leading-tight tracking-tight text-[#0b1220]">{product.name}</h2>
           {isBundle ? (
             <p className="mt-3 inline-flex rounded-full bg-[#f4efff] px-3 py-2 text-sm font-black text-[#7c3aed] ring-1 ring-[#dccbff]">
@@ -95,9 +78,9 @@ export function ProductQuickView({ product, onClose }: { product: PublicProduct;
           {product.shortDescription ? <p className="mt-3 text-[15px] font-semibold leading-7 text-slate-600">{product.shortDescription}</p> : null}
 
           <div className="mt-4 grid gap-3">
-            <div className="rounded-[20px] bg-white p-4 ring-1 ring-[#eee7dc]"><p className="text-xs font-black text-slate-400">Quy cách</p><p className="mt-1 font-black text-[#0b1220]">{product.packageSizeLabel}</p></div>
-            <div className="rounded-[20px] bg-white p-4 ring-1 ring-[#eee7dc]"><p className="text-xs font-black text-slate-400">Đơn vị bán</p><p className="mt-1 font-black text-[#0b1220]">{product.unitLabel}</p></div>
-            <div className="rounded-[20px] bg-[#fff3ea] p-4 ring-1 ring-[#ffd0b3]"><p className="text-xs font-black text-[#ff5a00]">Giá</p><p className="mt-1 text-2xl font-black text-[#ff5a00]">{product.priceLabel}</p></div>
+            <div className="rounded-[20px] bg-white p-4 ring-1 ring-[#eee7dc]"><p className="text-xs font-black text-slate-400">Quy cách</p><p className="mt-1 font-black text-[#0b1220]">{getProductDisplayPackage(product)}</p></div>
+            <div className="rounded-[20px] bg-white p-4 ring-1 ring-[#eee7dc]"><p className="text-xs font-black text-slate-400">Đơn vị bán</p><p className="mt-1 font-black text-[#0b1220]">{getProductDisplayUnit(product)}</p></div>
+            <div className="rounded-[20px] bg-[#fff3ea] p-4 ring-1 ring-[#ffd0b3]"><p className="text-xs font-black text-[#ff5a00]">Giá</p><p className="mt-1 text-2xl font-black text-[#ff5a00]">{getProductPriceLabel(product)}</p></div>
           </div>
 
           {product.useCases.length ? <div className="mt-4"><h3 className="font-black">Ứng dụng</h3><div className="mt-2 flex flex-wrap gap-2">{product.useCases.map((item) => <span key={item} className="rounded-full bg-white px-3 py-2 text-sm font-bold text-slate-600 ring-1 ring-[#eee7dc]">{item}</span>)}</div></div> : null}
@@ -111,8 +94,8 @@ export function ProductQuickView({ product, onClose }: { product: PublicProduct;
               <span className="grid place-items-center border-x border-[#eee7dc]">{quantity}</span>
               <button type="button" onClick={() => setQuantity((current) => current + 1)} className="bg-white active:bg-[#fff3ea]">+</button>
             </div>
-            <button type="button" onClick={handleAdd} disabled={!canAdd} className="h-12 flex-1 rounded-[16px] bg-[#ff5a00] px-4 text-[14px] font-black text-white shadow-[0_12px_22px_rgba(255,90,0,0.24)] disabled:cursor-not-allowed disabled:bg-slate-300 disabled:shadow-none">
-              {added ? "Đã thêm vào giỏ" : product.orderLabel}
+            <button type="button" onClick={handleAdd} disabled={!product.isOrderable} className="h-12 flex-1 rounded-[16px] bg-[#ff5a00] px-4 text-[14px] font-black text-white shadow-[0_12px_22px_rgba(255,90,0,0.24)] disabled:cursor-not-allowed disabled:bg-slate-300 disabled:shadow-none">
+              {added ? "Đã thêm vào giỏ" : getProductOrderMessage(product)}
             </button>
           </div>
         </div>
