@@ -25,6 +25,18 @@ function normalizedIssues(value: unknown): string[] {
 export function evaluateCatalogOrderability(input: CatalogOrderabilityInput): CatalogOrderability {
   const issues = new Set(normalizedIssues(input.sourceDataIssues));
   const blockingIssues = new Set<string>();
+  const managedIssues = [
+    "not_public",
+    "inactive",
+    "ordering_disabled",
+    "missing_sku",
+    "missing_unit",
+    "missing_price",
+    "missing_bundle_components",
+    "invalid_bundle_components",
+  ];
+  managedIssues.forEach((issue) => issues.delete(issue));
+
   const addBlockingIssue = (issue: string) => {
     issues.add(issue);
     blockingIssues.add(issue);
