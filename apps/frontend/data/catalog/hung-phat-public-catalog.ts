@@ -96,18 +96,6 @@ function publicCategoryName(id: string | null | undefined): string {
   return categoryNameById.get(id) ?? UPDATING_LABEL;
 }
 
-function publicPrice(product: RawHungPhatCatalogProduct): string {
-  if (typeof product.priceRetail === "number" && product.priceRetail > 0) {
-    return new Intl.NumberFormat("vi-VN", {
-      style: "currency",
-      currency: product.currency,
-      maximumFractionDigits: 0,
-    }).format(product.priceRetail);
-  }
-
-  return UPDATING_LABEL;
-}
-
 function publicDescription(product: RawHungPhatCatalogProduct): string | null {
   const description = publicText(product.shortDescription ?? product.description);
   if (description !== UPDATING_LABEL) return description;
@@ -126,32 +114,48 @@ function isBundleProduct(product: RawHungPhatCatalogProduct) {
 
 export function toHungPhatPublicProduct(product: RawHungPhatCatalogProduct): PublicProduct {
   const bundle = isBundleProduct(product);
+  const brand = publicText(product.brand);
+  const packageSizeLabel = publicText(product.packageSize);
+  const unitLabel = publicText(product.unit);
 
   return {
     itemKind: "product",
     id: product.id,
     slug: product.slug,
-    sku: "",
+    sku: null,
     name: publicText(product.name),
-    brand: publicText(product.brand),
+    brand: brand === UPDATING_LABEL ? null : brand,
     categoryId: product.categoryId,
     categoryName: publicCategoryName(product.categoryId),
     subcategoryId: product.subcategoryId,
     subcategoryName: product.subcategoryId ? publicCategoryName(product.subcategoryId) : null,
     productType: bundle ? "bundle" : "physical",
     catalogKind: bundle ? "bundle_candidate" : "sku_candidate",
-    packageSizeLabel: publicText(product.packageSize),
-    unitLabel: publicText(product.unit),
-    unitPrice: 0,
+    packageSizeLabel: packageSizeLabel === UPDATING_LABEL ? null : packageSizeLabel,
+    unitLabel: unitLabel === UPDATING_LABEL ? null : unitLabel,
     minOrderQty: Math.max(1, product.minOrderQty || 1),
-    priceLabel: publicPrice(product),
     imageUrl: publicImageUrl(product),
     shortDescription: publicDescription(product),
     useCases: publicList(product.useCases),
     sellingPoints: publicList(product.sellingPoints),
-    bundleItemCount: 0,
+    isPublic: true,
+    isActive: product.status === "active" || product.status === "needs_review",
     isOrderable: false,
-    orderLabel: "Liên hệ cập nhật giá",
+    catalogEligible: false,
+    priceVisibility: "hidden",
+    pricing: {
+      visibility: "hidden",
+      reason: "STATIC_MODE",
+      canOrder: false,
+    },
+    bundleItemCount: 0,
+    dataIssues: [...product.dataIssues, "static_mode_order_disabled"],
+    orderLabel: "Chế độ catalog tĩnh",
+    displayFallbacks: {
+      brand: brand === UPDATING_LABEL ? UPDATING_LABEL : brand,
+      packageSizeLabel,
+      unitLabel,
+    },
   };
 }
 
