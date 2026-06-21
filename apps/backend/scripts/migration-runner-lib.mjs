@@ -1,7 +1,11 @@
 import { createHash } from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
-import { MIGRATION_FILES, MIGRATION_LOCK_KEYS } from "./migration-plan.mjs";
+import {
+  BASELINE_MIGRATION_FILES,
+  MIGRATION_FILES,
+  MIGRATION_LOCK_KEYS,
+} from "./migration-plan.mjs";
 
 const LEDGER_TABLE_SQL = `
   CREATE TABLE IF NOT EXISTS schema_migrations (
@@ -57,6 +61,15 @@ export function loadMigrations(repoRoot) {
       checksum: checksumSql(rawSql),
       sql: stripOuterTransaction(rawSql),
     };
+  });
+}
+
+function selectBaselineMigrations(migrations) {
+  const migrationsByFilename = new Map(migrations.map((migration) => [migration.filename, migration]));
+  return BASELINE_MIGRATION_FILES.map((filename) => {
+    const migration = migrationsByFilename.get(filename);
+    if (!migration) throw new Error(`Baseline migration is missing from the plan: ${filename}`);
+    return migration;
   });
 }
 
@@ -237,7 +250,7 @@ export async function runMigrations({ pool, repoRoot, baseline = false, logger =
     await ensureLedger(client);
 
     if (baseline) {
-      await baselineExisting(client, migrations, logger);
+      await baselineExisting(client, selectBaselineMigrations(migrations), logger);
     } else {
       await applyPending(client, migrations, logger);
     }
