@@ -24,33 +24,27 @@ function normalizedIssues(value: unknown): string[] {
 
 export function evaluateCatalogOrderability(input: CatalogOrderabilityInput): CatalogOrderability {
   const issues = new Set(normalizedIssues(input.sourceDataIssues));
+  const blockingIssues = new Set<string>();
+  const addBlockingIssue = (issue: string) => {
+    issues.add(issue);
+    blockingIssues.add(issue);
+  };
   const hasPrice = selectApprovedCustomerPrice(input) !== null;
 
-  if (!input.isPublic) issues.add("not_public");
-  if (!input.isActive) issues.add("inactive");
-  if (!input.orderingEnabled) issues.add("ordering_disabled");
-  if (!input.sku?.trim()) issues.add("missing_sku");
-  if (!input.unitLabel?.trim()) issues.add("missing_unit");
-  if (!hasPrice) issues.add("missing_price");
+  if (!input.isPublic) addBlockingIssue("not_public");
+  if (!input.isActive) addBlockingIssue("inactive");
+  if (!input.orderingEnabled) addBlockingIssue("ordering_disabled");
+  if (!input.sku?.trim()) addBlockingIssue("missing_sku");
+  if (!input.unitLabel?.trim()) addBlockingIssue("missing_unit");
+  if (!hasPrice) addBlockingIssue("missing_price");
 
   if (input.productType === "bundle") {
-    if (input.bundleItemCount < 1) issues.add("missing_bundle_components");
-    if (input.invalidBundleItemCount > 0) issues.add("invalid_bundle_components");
+    if (input.bundleItemCount < 1) addBlockingIssue("missing_bundle_components");
+    if (input.invalidBundleItemCount > 0) addBlockingIssue("invalid_bundle_components");
   }
 
-  const blockingIssues = new Set([
-    "not_public",
-    "inactive",
-    "ordering_disabled",
-    "missing_sku",
-    "missing_unit",
-    "missing_price",
-    "missing_bundle_components",
-    "invalid_bundle_components",
-  ]);
-
   return {
-    catalogEligible: ![...issues].some((issue) => blockingIssues.has(issue)),
+    catalogEligible: blockingIssues.size === 0,
     dataIssues: [...issues].sort(),
   };
 }
