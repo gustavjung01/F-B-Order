@@ -61,6 +61,14 @@ jobs:
       - name: Typecheck
         run: pnpm typecheck
 
+      - name: Verify Phase 7 deploy contract
+        run: |
+          set -Eeuo pipefail
+          bash -n scripts/phase7/deploy-bepsi-backend.sh
+          bash -n scripts/phase7/deploy-bepsi-vercel.sh
+          node --check scripts/phase7/smoke-production.mjs
+          node scripts/phase7/test-deploy-contract.mjs
+
       - name: Verify approval pricing
         run: pnpm test:auth-pricing
 
