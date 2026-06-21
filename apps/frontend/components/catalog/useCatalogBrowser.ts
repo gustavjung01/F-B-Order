@@ -82,12 +82,12 @@ export function useCatalogBrowser() {
         setError("");
 
         let nextItems: PublicCatalogItem[];
-        if (selectedCategory === "combo-cong-thuc") {
-          nextItems = await readSuggestions(selectedCategory, searchText);
-        } else if (selectedCategory === "all") {
+        const includesSuggestions = selectedCategory === "all" || selectedCategory === "combo-cong-thuc";
+
+        if (includesSuggestions) {
           const [products, suggestions] = await Promise.all([
-            readProducts("all", searchText),
-            readSuggestions("all", searchText),
+            readProducts(selectedCategory, searchText),
+            readSuggestions(selectedCategory, searchText),
           ]);
           nextItems = [...products, ...suggestions];
         } else {
