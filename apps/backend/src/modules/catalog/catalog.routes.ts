@@ -5,6 +5,41 @@ export const catalogRouter = Router();
 
 const UPDATING_LABEL = "Đang cập nhật";
 
+type ProductRow = {
+  id: string;
+  slug: string;
+  name: string;
+  brand: string | null;
+  category_id: string;
+  category_name: string;
+  subcategory_id: string | null;
+  subcategory_name: string | null;
+  product_type: string;
+  catalog_kind: string;
+  package_size_label: string | null;
+  unit_label: string | null;
+  base_price: string | null;
+  image_url: string | null;
+  short_description: string | null;
+  use_cases: unknown;
+  selling_points: unknown;
+};
+
+type SuggestionRow = {
+  id: string;
+  slug: string;
+  title: string;
+  related_brand: string | null;
+  category_id: string;
+  category_name: string;
+  subcategory_id: string | null;
+  subcategory_name: string | null;
+  suggestion_type: "combo" | "menu_solution" | "content";
+  cover_image_url: string | null;
+  short_description: string | null;
+  use_cases: unknown;
+};
+
 function readText(value: unknown): string | null {
   return typeof value === "string" && value.trim() ? value.trim() : null;
 }
@@ -29,6 +64,75 @@ function publicCategoryName(slug: string, name: string): string {
   return slug === "combo-cong-thuc" ? "Combo gợi ý" : name;
 }
 
+function toPublicProduct(row: ProductRow) {
+  return {
+    itemKind: "product" as const,
+    id: row.id,
+    slug: row.slug,
+    name: row.name,
+    brand: row.brand || UPDATING_LABEL,
+    categoryId: row.category_id,
+    categoryName: publicCategoryName(row.category_id, row.category_name),
+    subcategoryId: row.subcategory_id,
+    subcategoryName: row.subcategory_name,
+    productType: row.product_type,
+    catalogKind: row.catalog_kind,
+    packageSizeLabel: row.package_size_label || UPDATING_LABEL,
+    unitLabel: row.unit_label || UPDATING_LABEL,
+    priceLabel: formatVnd(row.base_price),
+    imageUrl: row.image_url,
+    shortDescription: row.short_description,
+    useCases: Array.isArray(row.use_cases) ? row.use_cases : [],
+    sellingPoints: Array.isArray(row.selling_points) ? row.selling_points : [],
+    isOrderable: false,
+    orderLabel: "Liên hệ cập nhật giá",
+  };
+}
+
+function toPublicSuggestion(row: SuggestionRow) {
+  return {
+    itemKind: "suggestion" as const,
+    id: row.id,
+    slug: row.slug,
+    name: row.title,
+    brand: row.related_brand || UPDATING_LABEL,
+    categoryId: row.category_id,
+    categoryName: publicCategoryName(row.category_id, row.category_name),
+    subcategoryId: row.subcategory_id,
+    subcategoryName: row.subcategory_name,
+    suggestionType: row.suggestion_type,
+    imageUrl: row.cover_image_url,
+    shortDescription: row.short_description,
+    useCases: Array.isArray(row.use_cases) ? row.use_cases : [],
+    isOrderable: false as const,
+    orderLabel: "Nội dung gợi ý",
+  };
+}
+
+const productSelect = `
+  SELECT
+    product.id::text,
+    product.slug,
+    product.name,
+    product.brand,
+    category.slug AS category_id,
+    category.name AS category_name,
+    subcategory.slug AS subcategory_id,
+    subcategory.name AS subcategory_name,
+    product.product_type,
+    product.catalog_kind,
+    COALESCE(product.package_size_label, product.package_size, product.package_spec) AS package_size_label,
+    COALESCE(product.unit_label, product.unit) AS unit_label,
+    product.base_price,
+    product.image_url,
+    product.short_description,
+    product.use_cases,
+    product.selling_points
+  FROM products product
+  JOIN categories category ON category.id = product.category_id
+  LEFT JOIN categories subcategory ON subcategory.id = product.subcategory_id
+`;
+
 catalogRouter.get("/categories", async (_req, res) => {
   try {
     const result = await getDb().query<{
@@ -36,31 +140,38 @@ catalogRouter.get("/categories", async (_req, res) => {
       name: string;
       parent_id: string | null;
       sort_order: number;
-      product_count: string;
+      item_count: string;
     }>(`
-      SELECT
-        category.slug AS id,
-        category.name,
-        parent.slug AS parent_id,
-        category.sort_order,
-        (
-          SELECT COUNT(*)
-          FROM products product
-          WHERE product.category_id = category.id
-            AND product.is_active = true
-            AND product.status IN ('active', 'needs_review')
-        ) + (
-          SELECT COUNT(*)
-          FROM catalog_suggestions suggestion
-          WHERE suggestion.category_id = category.id
-            AND suggestion.is_active = true
-            AND suggestion.status IN ('active', 'needs_review')
-        ) AS product_count
-      FROM categories category
-      LEFT JOIN categories parent ON parent.id = category.parent_id
-      WHERE category.is_active = true
-        AND category.parent_id IS NULL
-      ORDER BY category.sort_order ASC, category.name ASC
+      WITH category_counts AS (
+        SELECT
+          category.slug AS id,
+          category.name,
+          parent.slug AS parent_id,
+          category.sort_order,
+          (
+            SELECT COUNT(*)
+            FROM products product
+            WHERE product.category_id = category.id
+              AND product.is_public = true
+              AND product.is_active = true
+              AND product.status IN ('active', 'needs_review')
+          ) + (
+            SELECT COUNT(*)
+            FROM catalog_suggestions suggestion
+            WHERE suggestion.category_id = category.id
+              AND suggestion.is_public = true
+              AND suggestion.is_active = true
+              AND suggestion.status IN ('active', 'needs_review')
+          ) AS item_count
+        FROM categories category
+        LEFT JOIN categories parent ON parent.id = category.parent_id
+        WHERE category.is_active = true
+          AND category.parent_id IS NULL
+      )
+      SELECT id, name, parent_id, sort_order, item_count
+      FROM category_counts
+      WHERE item_count > 0
+      ORDER BY sort_order ASC, name ASC
     `);
 
     res.json({
@@ -69,7 +180,7 @@ catalogRouter.get("/categories", async (_req, res) => {
         name: publicCategoryName(row.id, row.name),
         parentId: row.parent_id,
         sortOrder: row.sort_order,
-        productCount: Number(row.product_count),
+        productCount: Number(row.item_count),
       })),
     });
   } catch (error) {
@@ -85,6 +196,7 @@ catalogRouter.get("/products", async (req, res) => {
   const limit = readLimit(req.query.limit);
 
   const where: string[] = [
+    "product.is_public = true",
     "product.is_active = true",
     "product.status IN ('active', 'needs_review')",
   ];
@@ -107,62 +219,17 @@ catalogRouter.get("/products", async (req, res) => {
     )`);
   }
 
+  const countValues = [...values];
   values.push(limit);
-  const limitParam = `$${values.length}`;
 
   try {
-    const result = await getDb().query<{
-      id: string;
-      slug: string;
-      name: string;
-      brand: string | null;
-      category_id: string;
-      category_name: string;
-      subcategory_id: string | null;
-      subcategory_name: string | null;
-      product_type: string;
-      catalog_kind: string;
-      package_size_label: string | null;
-      unit_label: string | null;
-      base_price: string | null;
-      image_url: string | null;
-      short_description: string | null;
-      use_cases: unknown;
-      selling_points: unknown;
-      is_orderable: boolean;
-      sku: string | null;
-      wholesale_price: string | null;
-    }>(`
-      SELECT
-        product.id::text,
-        product.slug,
-        product.name,
-        product.brand,
-        category.slug AS category_id,
-        category.name AS category_name,
-        subcategory.slug AS subcategory_id,
-        subcategory.name AS subcategory_name,
-        product.product_type,
-        product.catalog_kind,
-        COALESCE(product.package_size_label, product.package_size, product.package_spec) AS package_size_label,
-        COALESCE(product.unit_label, product.unit) AS unit_label,
-        product.base_price,
-        product.image_url,
-        product.short_description,
-        product.use_cases,
-        product.selling_points,
-        product.is_orderable,
-        product.sku,
-        product.wholesale_price
-      FROM products product
-      JOIN categories category ON category.id = product.category_id
-      LEFT JOIN categories subcategory ON subcategory.id = product.subcategory_id
+    const result = await getDb().query<ProductRow>(`
+      ${productSelect}
       WHERE ${where.join(" AND ")}
       ORDER BY product.sort_order ASC, product.name ASC
-      LIMIT ${limitParam}
+      LIMIT $${values.length}
     `, values);
 
-    const countValues = values.slice(0, -1);
     const countResult = await getDb().query<{ total: string }>(`
       SELECT COUNT(*) AS total
       FROM products product
@@ -172,37 +239,7 @@ catalogRouter.get("/products", async (req, res) => {
     `, countValues);
 
     res.json({
-      products: result.rows.map((row) => {
-        const orderable = Boolean(
-          row.is_orderable
-          && row.sku
-          && row.unit_label
-          && Number(row.wholesale_price) > 0,
-        );
-
-        return {
-          itemKind: "product",
-          id: row.id,
-          slug: row.slug,
-          name: row.name,
-          brand: row.brand || UPDATING_LABEL,
-          categoryId: row.category_id,
-          categoryName: publicCategoryName(row.category_id, row.category_name),
-          subcategoryId: row.subcategory_id,
-          subcategoryName: row.subcategory_name,
-          productType: row.product_type,
-          catalogKind: row.catalog_kind,
-          packageSizeLabel: row.package_size_label || UPDATING_LABEL,
-          unitLabel: row.unit_label || UPDATING_LABEL,
-          priceLabel: formatVnd(row.base_price),
-          imageUrl: row.image_url,
-          shortDescription: row.short_description,
-          useCases: Array.isArray(row.use_cases) ? row.use_cases : [],
-          sellingPoints: Array.isArray(row.selling_points) ? row.selling_points : [],
-          isOrderable: orderable,
-          orderLabel: orderable ? "Thêm vào giỏ" : "Liên hệ cập nhật giá",
-        };
-      }),
+      products: result.rows.map(toPublicProduct),
       total: Number(countResult.rows[0]?.total ?? 0),
     });
   } catch (error) {
@@ -217,6 +254,7 @@ catalogRouter.get("/suggestions", async (req, res) => {
   const limit = readLimit(req.query.limit);
 
   const where: string[] = [
+    "suggestion.is_public = true",
     "suggestion.is_active = true",
     "suggestion.status IN ('active', 'needs_review')",
   ];
@@ -235,23 +273,11 @@ catalogRouter.get("/suggestions", async (req, res) => {
     )`);
   }
 
+  const countValues = [...values];
   values.push(limit);
 
   try {
-    const result = await getDb().query<{
-      id: string;
-      slug: string;
-      title: string;
-      related_brand: string | null;
-      category_id: string;
-      category_name: string;
-      subcategory_id: string | null;
-      subcategory_name: string | null;
-      suggestion_type: string;
-      cover_image_url: string | null;
-      short_description: string | null;
-      use_cases: unknown;
-    }>(`
+    const result = await getDb().query<SuggestionRow>(`
       SELECT
         suggestion.id::text,
         suggestion.slug,
@@ -273,25 +299,16 @@ catalogRouter.get("/suggestions", async (req, res) => {
       LIMIT $${values.length}
     `, values);
 
+    const countResult = await getDb().query<{ total: string }>(`
+      SELECT COUNT(*) AS total
+      FROM catalog_suggestions suggestion
+      JOIN categories category ON category.id = suggestion.category_id
+      WHERE ${where.join(" AND ")}
+    `, countValues);
+
     res.json({
-      suggestions: result.rows.map((row) => ({
-        itemKind: "suggestion",
-        id: row.id,
-        slug: row.slug,
-        name: row.title,
-        brand: row.related_brand || UPDATING_LABEL,
-        categoryId: row.category_id,
-        categoryName: publicCategoryName(row.category_id, row.category_name),
-        subcategoryId: row.subcategory_id,
-        subcategoryName: row.subcategory_name,
-        suggestionType: row.suggestion_type,
-        imageUrl: row.cover_image_url,
-        shortDescription: row.short_description,
-        useCases: Array.isArray(row.use_cases) ? row.use_cases : [],
-        isOrderable: false,
-        orderLabel: "Nội dung gợi ý",
-      })),
-      total: result.rowCount,
+      suggestions: result.rows.map(toPublicSuggestion),
+      total: Number(countResult.rows[0]?.total ?? 0),
     });
   } catch (error) {
     console.error("catalog suggestions failed", error);
@@ -301,53 +318,10 @@ catalogRouter.get("/suggestions", async (req, res) => {
 
 catalogRouter.get("/products/:slug", async (req, res) => {
   try {
-    const result = await getDb().query<{
-      id: string;
-      slug: string;
-      name: string;
-      brand: string | null;
-      category_id: string;
-      category_name: string;
-      subcategory_id: string | null;
-      subcategory_name: string | null;
-      product_type: string;
-      catalog_kind: string;
-      package_size_label: string | null;
-      unit_label: string | null;
-      base_price: string | null;
-      image_url: string | null;
-      short_description: string | null;
-      use_cases: unknown;
-      selling_points: unknown;
-      is_orderable: boolean;
-      sku: string | null;
-      wholesale_price: string | null;
-    }>(`
-      SELECT
-        product.id::text,
-        product.slug,
-        product.name,
-        product.brand,
-        category.slug AS category_id,
-        category.name AS category_name,
-        subcategory.slug AS subcategory_id,
-        subcategory.name AS subcategory_name,
-        product.product_type,
-        product.catalog_kind,
-        COALESCE(product.package_size_label, product.package_size, product.package_spec) AS package_size_label,
-        COALESCE(product.unit_label, product.unit) AS unit_label,
-        product.base_price,
-        product.image_url,
-        product.short_description,
-        product.use_cases,
-        product.selling_points,
-        product.is_orderable,
-        product.sku,
-        product.wholesale_price
-      FROM products product
-      JOIN categories category ON category.id = product.category_id
-      LEFT JOIN categories subcategory ON subcategory.id = product.subcategory_id
+    const result = await getDb().query<ProductRow>(`
+      ${productSelect}
       WHERE product.slug = $1
+        AND product.is_public = true
         AND product.is_active = true
         AND product.status IN ('active', 'needs_review')
       LIMIT 1
@@ -359,37 +333,7 @@ catalogRouter.get("/products/:slug", async (req, res) => {
       return;
     }
 
-    const orderable = Boolean(
-      row.is_orderable
-      && row.sku
-      && row.unit_label
-      && Number(row.wholesale_price) > 0,
-    );
-
-    res.json({
-      product: {
-        itemKind: "product",
-        id: row.id,
-        slug: row.slug,
-        name: row.name,
-        brand: row.brand || UPDATING_LABEL,
-        categoryId: row.category_id,
-        categoryName: publicCategoryName(row.category_id, row.category_name),
-        subcategoryId: row.subcategory_id,
-        subcategoryName: row.subcategory_name,
-        productType: row.product_type,
-        catalogKind: row.catalog_kind,
-        packageSizeLabel: row.package_size_label || UPDATING_LABEL,
-        unitLabel: row.unit_label || UPDATING_LABEL,
-        priceLabel: formatVnd(row.base_price),
-        imageUrl: row.image_url,
-        shortDescription: row.short_description,
-        useCases: Array.isArray(row.use_cases) ? row.use_cases : [],
-        sellingPoints: Array.isArray(row.selling_points) ? row.selling_points : [],
-        isOrderable: orderable,
-        orderLabel: orderable ? "Thêm vào giỏ" : "Liên hệ cập nhật giá",
-      },
-    });
+    res.json({ product: toPublicProduct(row) });
   } catch (error) {
     console.error("catalog product detail failed", error);
     res.status(500).json({ error: "CATALOG_PRODUCT_FAILED" });
