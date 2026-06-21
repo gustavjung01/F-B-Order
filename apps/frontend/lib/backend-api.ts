@@ -1,8 +1,16 @@
-const BACKEND_API_URL = (
+function normalizeBackendApiBaseUrl(value: string): string {
+  const normalized = value.trim().replace(/\/+$/, "");
+
+  // Vercel must receive the backend origin only. Accept an accidental trailing
+  // /api as well so catalog requests never become /api/api/catalog/*.
+  return normalized.replace(/\/api$/i, "");
+}
+
+const BACKEND_API_URL = normalizeBackendApiBaseUrl(
   process.env.BACKEND_API_URL
   || process.env.NEXT_PUBLIC_API_URL
-  || ""
-).replace(/\/$/, "");
+  || "",
+);
 
 export function getBackendApiUrl(pathname: string): string {
   if (!BACKEND_API_URL) {
@@ -26,6 +34,8 @@ export async function proxyBackendJson(pathname: string): Promise<Response> {
     status: upstream.status,
     headers: {
       "content-type": upstream.headers.get("content-type") || "application/json; charset=utf-8",
+      "x-bepsi-upstream-path": pathname,
+      "x-bepsi-upstream-status": String(upstream.status),
     },
   });
 }
