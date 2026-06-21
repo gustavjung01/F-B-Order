@@ -7,8 +7,9 @@
     "start": "node dist/main.js",
     "lint": "echo \"lint backend later\"",
     "typecheck": "tsc --noEmit",
-    "db:migrate": "node scripts/run-sql.mjs db/migrations/001_init_core.sql",
-    "db:seed:test": "node scripts/run-sql.mjs db/seeds/001_seed_test.sql"
+    "db:migrate": "node scripts/run-migrations.mjs",
+    "db:seed:test": "node scripts/run-sql.mjs db/seeds/001_seed_test.sql",
+    "catalog:import": "node scripts/import-hung-phat-catalog.mjs"
   },
   "dependencies": {
     "@clerk/express": "latest",
