@@ -3,7 +3,7 @@ import { ResponsivePageShell } from "@/components/responsive/ResponsivePageShell
 
 export default function RecipesPage() {
   return (
-    <ResponsivePageShell active="recipes" title="Công thức" subtitle="Ý tưởng món bán kèm nguyên liệu">
+    <ResponsivePageShell active="recipes" title="Công thức" subtitle="Tính năng đang được phát triển">
       <RecipeListClient />
     </ResponsivePageShell>
   );
