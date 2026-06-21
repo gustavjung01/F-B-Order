@@ -17,27 +17,23 @@ if (start < 0 || end < 0 || end <= start) {
 }
 
 const catalog = JSON.parse(source.slice(start + marker.length, end).trim());
-const products = catalog.products.filter((item) => item.catalogKind === "sku_candidate");
-const suggestions = catalog.products.filter(
+const physicalProducts = catalog.products.filter((item) => item.catalogKind === "sku_candidate");
+const bundleProducts = catalog.products.filter(
   (item) => item.catalogKind === "content" || item.catalogKind === "bundle_candidate",
 );
 const scaffolds = catalog.products.filter((item) => item.catalogKind === "category_scaffold");
+const importedProducts = [...physicalProducts, ...bundleProducts];
 const ids = catalog.products.map((item) => item.id);
 
 const failures = [];
 
-if (products.length !== 16) failures.push(`Expected 16 products, received ${products.length}`);
-if (suggestions.length !== 6) failures.push(`Expected 6 suggestions, received ${suggestions.length}`);
-if (scaffolds.length !== 7) failures.push(`Expected 7 scaffolds, received ${scaffolds.length}`);
+if (physicalProducts.length !== 16) failures.push(`Expected 16 physical products, received ${physicalProducts.length}`);
+if (bundleProducts.length !== 6) failures.push(`Expected 6 bundle products, received ${bundleProducts.length}`);
+if (importedProducts.length !== 22) failures.push(`Expected 22 public products, received ${importedProducts.length}`);
+if (scaffolds.length !== 7) failures.push(`Expected 7 excluded scaffolds, received ${scaffolds.length}`);
 if (new Set(ids).size !== ids.length) failures.push("Catalog IDs must be unique");
-if (products.some((item) => item.productType === "recipe_content")) {
-  failures.push("recipe_content must not enter products");
-}
-if (suggestions.some((item) => item.categoryId !== "combo-cong-thuc")) {
-  failures.push("All current suggestions must belong to combo-cong-thuc");
-}
-if (suggestions.some((item) => item.isOrderable)) {
-  failures.push("Catalog suggestions must never be orderable");
+if (bundleProducts.some((item) => item.categoryId !== "combo-cong-thuc")) {
+  failures.push("All six bundles must belong to combo-cong-thuc");
 }
 
 if (failures.length > 0) {
@@ -47,6 +43,7 @@ if (failures.length > 0) {
 }
 
 console.log("Catalog audit passed.");
-console.log(`Products: ${products.length}`);
-console.log(`Suggestions: ${suggestions.length}`);
+console.log(`Physical products: ${physicalProducts.length}`);
+console.log(`Bundle products: ${bundleProducts.length}`);
+console.log(`Public products: ${importedProducts.length}`);
 console.log(`Excluded scaffolds: ${scaffolds.length}`);
