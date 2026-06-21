@@ -10,8 +10,8 @@ if (oneSignalEnabled) {
   importScripts("https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.sw.js");
 }
 
-const CACHE_VERSION = "bep-si-fb-pwa-v10";
-const RUNTIME_CACHE = "bep-si-fb-runtime-v10";
+const CACHE_VERSION = "bep-si-fb-pwa-v11";
+const RUNTIME_CACHE = "bep-si-fb-runtime-v11";
 
 const OFFLINE_FALLBACK = [
   "/",
@@ -51,6 +51,10 @@ self.addEventListener("message", function (event) {
   if (event.data && event.data.type === "SKIP_WAITING") self.skipWaiting();
 });
 
+function failedFetchResponse() {
+  return Response.error();
+}
+
 function networkFirst(request) {
   return fetch(request, { cache: "no-store" }).then(function (response) {
     var copy = response.clone();
@@ -60,7 +64,10 @@ function networkFirst(request) {
     return response;
   }).catch(function () {
     return caches.match(request).then(function (cached) {
-      return cached || caches.match("/");
+      if (cached) return cached;
+      return caches.match("/").then(function (fallback) {
+        return fallback || failedFetchResponse();
+      });
     });
   });
 }
@@ -72,7 +79,7 @@ function staleWhileRevalidate(request) {
         if (response && response.ok) cache.put(request, response.clone());
         return response;
       }).catch(function () {
-        return cached;
+        return cached || failedFetchResponse();
       });
       return cached || fetchPromise;
     });
@@ -90,7 +97,9 @@ self.addEventListener("fetch", function (event) {
 
   if (url.pathname === "/service-worker.js" || url.pathname === "/app-version.json" || url.pathname === "/manifest.webmanifest") {
     event.respondWith(fetch(request, { cache: "no-store" }).catch(function () {
-      return caches.match(request);
+      return caches.match(request).then(function (cached) {
+        return cached || failedFetchResponse();
+      });
     }));
     return;
   }
