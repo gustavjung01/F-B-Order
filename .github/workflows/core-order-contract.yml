@@ -82,3 +82,6 @@ jobs:
 
       - name: Verify order engine
         run: pnpm --filter @fb-order/backend test:order-engine
+
+      - name: Verify admin operations
+        run: pnpm --filter @fb-order/backend exec tsx scripts/test-admin-operations.ts
