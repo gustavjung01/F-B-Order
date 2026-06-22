@@ -1,4 +1,4 @@
-﻿import assert from "node:assert/strict";
+import assert from "node:assert/strict";
 import type { AddressInfo } from "node:net";
 import express from "express";
 import { getDb } from "../src/db/pool";
@@ -10,6 +10,40 @@ import {
 import { createAuthRouter } from "../src/modules/auth/auth.routes";
 
 const TEST_CLERK_USER_ID = "user_phase72_customer_profile";
+function assertSafeTestDatabase(): void {
+  const connectionString =
+    process.env.DATABASE_URL || process.env.BEPSI_DATABASE_URL;
+
+  if (!connectionString) {
+    throw new Error("DATABASE_URL or BEPSI_DATABASE_URL is required.");
+  }
+
+  if (process.env.ALLOW_DESTRUCTIVE_TEST_DB !== "1") {
+    throw new Error(
+      "Refusing to run database-writing test. Set ALLOW_DESTRUCTIVE_TEST_DB=1 explicitly.",
+    );
+  }
+
+  const databaseUrl = new URL(connectionString);
+  const hostname = databaseUrl.hostname.toLowerCase();
+  const databaseName = decodeURIComponent(
+    databaseUrl.pathname.replace(/^\/+/, ""),
+  );
+  const isLocal =
+    hostname === "127.0.0.1" ||
+    hostname === "localhost" ||
+    hostname === "::1";
+  const isTestDatabase = /(test|phase72)/i.test(databaseName);
+
+  if (!isLocal || !isTestDatabase) {
+    throw new Error(
+      `Refusing unsafe database: host=${hostname} database=${databaseName}`,
+    );
+  }
+}
+
+assertSafeTestDatabase();
+
 const db = getDb();
 
 async function cleanTestCustomer(): Promise<void> {

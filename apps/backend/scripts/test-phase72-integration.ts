@@ -19,6 +19,40 @@ const CUSTOMER_B_CLERK_ID = "user_phase72_customer_b";
 const UNMAPPED_CLERK_ID = "user_phase72_unmapped";
 const PRODUCT_SKU = "PHASE72-SMOKE-001";
 
+function assertSafeTestDatabase(): void {
+  const connectionString =
+    process.env.DATABASE_URL || process.env.BEPSI_DATABASE_URL;
+
+  if (!connectionString) {
+    throw new Error("DATABASE_URL or BEPSI_DATABASE_URL is required.");
+  }
+
+  if (process.env.ALLOW_DESTRUCTIVE_TEST_DB !== "1") {
+    throw new Error(
+      "Refusing to run database-writing test. Set ALLOW_DESTRUCTIVE_TEST_DB=1 explicitly.",
+    );
+  }
+
+  const databaseUrl = new URL(connectionString);
+  const hostname = databaseUrl.hostname.toLowerCase();
+  const databaseName = decodeURIComponent(
+    databaseUrl.pathname.replace(/^\/+/, ""),
+  );
+  const isLocal =
+    hostname === "127.0.0.1" ||
+    hostname === "localhost" ||
+    hostname === "::1";
+  const isTestDatabase = /(test|phase72)/i.test(databaseName);
+
+  if (!isLocal || !isTestDatabase) {
+    throw new Error(
+      `Refusing unsafe database: host=${hostname} database=${databaseName}`,
+    );
+  }
+}
+
+assertSafeTestDatabase();
+
 const db = getDb();
 
 type JsonRecord = Record<string, any>;
