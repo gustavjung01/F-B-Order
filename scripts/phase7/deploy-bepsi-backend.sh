@@ -12,6 +12,8 @@ SERVICE_NAME="bepsi-api.service"
 API_BASE_URL="${API_BASE_URL:-https://api.bepsi.click}"
 LOCK_FILE="/var/lock/bepsi-phase7-deploy.lock"
 REPO_URL_PATTERN='github\.com[:/]gustavjung01/F-B-Order(\.git)?$'
+DEPLOY_USER="$(id -un)"
+DEPLOY_GROUP="$(id -gn)"
 
 log() {
   printf '[phase7-backend] %s\n' "$*"
@@ -46,8 +48,12 @@ SERVICE_UNIT="$(sudo systemctl cat "$SERVICE_NAME")"
 printf '%s' "$SERVICE_UNIT" | grep -Fq "$CURRENT_LINK" || die "${SERVICE_NAME} is not configured to run from ${CURRENT_LINK}."
 printf '%s' "$SERVICE_UNIT" | grep -Eiq 'vlgn|tocviet' && die "Service unit contains another application path."
 
-mkdir -p "$RELEASES_DIR" "$BACKUP_DIR"
-chmod 700 "$BACKUP_DIR"
+log "Preparing writable Bếp Sỉ deployment directories"
+sudo install -d -o "$DEPLOY_USER" -g "$DEPLOY_GROUP" -m 0750 "$RELEASES_DIR"
+sudo install -d -o "$DEPLOY_USER" -g "$DEPLOY_GROUP" -m 0700 "$BACKUP_DIR"
+sudo touch "$LOCK_FILE"
+sudo chown "$DEPLOY_USER:$DEPLOY_GROUP" "$LOCK_FILE"
+sudo chmod 0600 "$LOCK_FILE"
 
 exec 9>"$LOCK_FILE"
 flock -n 9 || die "Another Bếp Sỉ production deployment is running."
@@ -77,8 +83,8 @@ rollback_code() {
   local status=$?
   if [[ "$SWITCHED" -eq 1 ]]; then
     log "Deployment failed after release switch; restoring ${PREVIOUS_TARGET}"
-    ln -sfn "$PREVIOUS_TARGET" "${CURRENT_LINK}.rollback"
-    mv -Tf "${CURRENT_LINK}.rollback" "$CURRENT_LINK"
+    sudo ln -sfn "$PREVIOUS_TARGET" "${CURRENT_LINK}.rollback"
+    sudo mv -Tf "${CURRENT_LINK}.rollback" "$CURRENT_LINK"
     sudo systemctl restart "$SERVICE_NAME" || true
   fi
   log "Database changes are forward-only; no automatic down migration was attempted."
@@ -108,25 +114,56 @@ rm -rf "$RELEASE_DIR"
 mv "$TEMP_RELEASE" "$RELEASE_DIR"
 
 cd "$RELEASE_DIR"
-corepack enable
-pnpm install --frozen-lockfile
-pnpm build:backend
+corepack pnpm install --frozen-lockfile
+corepack pnpm build:backend
 
 log "Auditing production database before migration"
-pnpm --filter @fb-order/backend db:audit:schema > "${BACKUP_DIR}/schema-before-${TIMESTAMP}-${TARGET_SHA:0:12}.json"
+corepack pnpm --filter @fb-order/backend db:audit:schema > "${BACKUP_DIR}/schema-before-${TIMESTAMP}-${TARGET_SHA:0:12}.json"
 
-log "Running production migrations"
-pnpm db:migrate
+log "Verifying the audited Phase 1 production contract"
+corepack pnpm db:verify:order-contract
+
+LEDGER_ROW_COUNT="$(node --input-type=module <<'NODE'
+import pg from "pg";
+
+const { Pool } = pg;
+const connectionString = process.env.BEPSI_DATABASE_URL || process.env.DATABASE_URL;
+const pool = new Pool({ connectionString, max: 1 });
+try {
+  const exists = await pool.query(`
+    SELECT to_regclass('public.schema_migrations') IS NOT NULL AS exists
+  `);
+  if (!exists.rows[0].exists) {
+    console.log("missing");
+  } else {
+    const count = await pool.query("SELECT count(*)::int AS count FROM schema_migrations");
+    console.log(String(count.rows[0].count));
+  }
+} finally {
+  await pool.end();
+}
+NODE
+)"
+
+if [[ "$LEDGER_ROW_COUNT" == "missing" || "$LEDGER_ROW_COUNT" == "0" ]]; then
+  log "Adopting the audited Phase 1 production schema into the migration ledger"
+  corepack pnpm db:migrate:baseline
+else
+  log "Migration ledger already contains ${LEDGER_ROW_COUNT} row(s); baseline adoption is not required"
+fi
+
+log "Running pending production migrations"
+corepack pnpm db:migrate
 
 log "Importing production catalog"
-pnpm catalog:import
+corepack pnpm catalog:import
 
 log "Auditing production database after migration and import"
-pnpm --filter @fb-order/backend db:audit:schema > "${BACKUP_DIR}/schema-after-${TIMESTAMP}-${TARGET_SHA:0:12}.json"
+corepack pnpm --filter @fb-order/backend db:audit:schema > "${BACKUP_DIR}/schema-after-${TIMESTAMP}-${TARGET_SHA:0:12}.json"
 
 log "Switching Bếp Sỉ current release"
-ln -sfn "$RELEASE_DIR" "${CURRENT_LINK}.next"
-mv -Tf "${CURRENT_LINK}.next" "$CURRENT_LINK"
+sudo ln -sfn "$RELEASE_DIR" "${CURRENT_LINK}.next"
+sudo mv -Tf "${CURRENT_LINK}.next" "$CURRENT_LINK"
 SWITCHED=1
 
 log "Restarting only ${SERVICE_NAME}"
