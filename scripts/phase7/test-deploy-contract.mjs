@@ -19,9 +19,15 @@ assert.match(workflow, /workflow_dispatch:/, "production workflow must be manual
 assert.doesNotMatch(workflow, /^\s{2}(push|pull_request|schedule):/m, "production workflow must not have automatic triggers");
 assert.match(workflow, /confirmation=DEPLOY_BEPSI_PRODUCTION|DEPLOY_BEPSI_PRODUCTION/, "confirmation phrase is missing");
 assert.match(workflow, /concurrency:[\s\S]*bepsi-production-deploy/, "production concurrency lock is missing");
-assert.match(workflow, /needs: total-gate/, "backend deploy must depend on total gate");
-assert.match(workflow, /needs: deploy-backend/, "Vercel deploy must depend on backend deploy");
-assert.match(workflow, /needs: deploy-vercel/, "production smoke must depend on Vercel deploy");
+assert.match(workflow, /deploy-backend:[\s\S]*?needs:\s*total-gate/, "backend deploy must depend on total gate");
+assert.match(workflow, /deploy-vercel:[\s\S]*?needs:[\s\S]*?- deploy-backend/, "Vercel deploy must depend on backend deploy");
+assert.match(workflow, /production-smoke:[\s\S]*?needs:[\s\S]*?- deploy-vercel/, "production smoke must depend on Vercel deploy");
+assert.match(workflow, /id:\s*validate-inputs/, "manual input normalization step is missing");
+assert.match(workflow, /target_sha=\$TARGET_SHA.*GITHUB_OUTPUT/, "normalized target SHA output is missing");
+assert.match(workflow, /needs\.total-gate\.outputs\.target_sha/, "normalized target SHA is not propagated to deploy jobs");
+assert.match(workflow, /Invalid target_sha/, "explicit invalid SHA annotation is missing");
+assert.match(workflow, /Invalid confirmation/, "explicit confirmation annotation is missing");
+assert.match(workflow, /Outdated target_sha/, "explicit outdated SHA annotation is missing");
 
 for (const expected of [
   "/srv/apps/bepsi/source",
