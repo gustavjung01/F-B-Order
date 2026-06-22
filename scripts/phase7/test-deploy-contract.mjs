@@ -32,12 +32,19 @@ assert.match(workflow, /Outdated target_sha/, "explicit outdated SHA annotation 
 for (const expected of [
   "/srv/apps/bepsi/source",
   "/srv/apps/bepsi/current",
+  "/srv/apps/bepsi/releases",
+  "/srv/apps/bepsi/backups",
   "/etc/app-env/bepsi.env",
   "bepsi-api.service",
   "pg_dump",
+  "pnpm db:verify:order-contract",
+  "pnpm db:migrate:baseline",
   "pnpm db:migrate",
   "pnpm catalog:import",
   "flock",
+  "sudo install -d",
+  "sudo ln -sfn",
+  "schema_migrations",
 ]) {
   assert.ok(backend.includes(expected), `backend deploy contract is missing ${expected}`);
 }
@@ -47,6 +54,11 @@ assert.doesNotMatch(backend, /systemctl\s+restart\s+(vlgn|tocviet)/i, "other bac
 assert.doesNotMatch(backend, /systemctl\s+restart\s+all/i, "broad systemd restart is forbidden");
 assert.match(backend, /Refusing to touch another application/, "cross-application path guard is missing");
 assert.match(backend, /Database changes are forward-only/, "forward-only migration warning is missing");
+assert.match(backend, /LEDGER_ROW_COUNT/, "migration ledger detection is missing");
+assert.match(backend, /missing.*0/s, "empty or missing ledger baseline condition is missing");
+assert.match(backend, /sudo install -d[\s\S]*RELEASES_DIR/, "release directory ownership preparation is missing");
+assert.match(backend, /sudo install -d[\s\S]*BACKUP_DIR/, "backup directory ownership preparation is missing");
+assert.match(backend, /sudo chown[\s\S]*LOCK_FILE/, "deploy lock ownership preparation is missing");
 
 for (const expected of [
   "NEXT_PUBLIC_DATA_MODE",
