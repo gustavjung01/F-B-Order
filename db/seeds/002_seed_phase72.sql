@@ -1,5 +1,14 @@
 BEGIN;
 
+DO $$
+BEGIN
+  IF current_database() !~* '(test|phase72)' THEN
+    RAISE EXCEPTION
+      'Refusing to run Phase 7.2 test seed on database %',
+      current_database();
+  END IF;
+END
+$$;
 INSERT INTO categories (
   name,
   slug,
