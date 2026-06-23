@@ -4,68 +4,43 @@ import Link from "next/link";
 import { useCatalogBrowser } from "@/components/catalog/useCatalogBrowser";
 import { DesktopHeader } from "@/components/desktop/DesktopHeader";
 import type { AppNavKey } from "@/components/navigation/app-navigation";
-import type { PublicProduct } from "@/data/catalog/product-model";
+import type { CatalogV2VariantCard } from "@/data/catalog-v2/product-model";
 import {
-  getProductDisplayPackage,
-  getProductDisplayUnit,
-  getProductOrderMessage,
-  getProductPriceLabel,
-} from "@/lib/catalog-display";
+  getCatalogV2OptionSummary,
+  getCatalogV2OrderLabel,
+  getCatalogV2PriceLabel,
+} from "@/lib/catalog-v2-display";
 
-const categoryEmoji: Record<string, string> = {
-  all: "▦",
-  "tra-sua-pha-che": "🧋",
-  "mi-cay-han-quoc": "🍜",
-  "thuc-pham-dong-lanh": "❄️",
-  "combo-cong-thuc": "📦",
-  topping: "🧊",
-};
-
-const categoryTones: Record<string, string> = {
-  all: "bg-[#fff3ea] text-[#ff5a00] ring-[#ffd0b3]",
-  "tra-sua-pha-che": "bg-[#eefbf6] text-[#08775f] ring-[#b9eadb]",
-  "mi-cay-han-quoc": "bg-[#fff0ef] text-[#dc2626] ring-[#ffc9c3]",
-  "thuc-pham-dong-lanh": "bg-[#eef6ff] text-[#2563eb] ring-[#c7ddff]",
-  "combo-cong-thuc": "bg-[#f4efff] text-[#7c3aed] ring-[#dccbff]",
-};
-
-function getTabTone(id: string) {
-  return categoryTones[id] || "bg-white text-slate-600 ring-[#eee7dc]";
+function categoryEmoji(id: string) {
+  const value = id.toLowerCase();
+  if (value === "all") return "▦";
+  if (value.includes("tra") || value.includes("pha-che")) return "🧋";
+  if (value.includes("topping")) return "🧊";
+  if (value.includes("bot")) return "🥛";
+  if (value.includes("syrup") || value.includes("mut")) return "🍓";
+  if (value.includes("dung-cu")) return "🥄";
+  return "📦";
 }
 
-function getProductEmoji(product: PublicProduct) {
-  return categoryEmoji[product.categoryId] || categoryEmoji[product.subcategoryId || ""] || "📦";
-}
-
-function DesktopProductCard({ product }: { product: PublicProduct }) {
-  const detailHref = `/products/${product.slug}`;
-  const isBundle = product.productType === "bundle";
+function DesktopProductCard({ product }: { product: CatalogV2VariantCard }) {
+  const detailHref = `/products/${product.variant_id}`;
 
   return (
     <article className="rounded-[30px] bg-white p-5 shadow-lg ring-1 ring-[#efe7dc]">
       <Link href={detailHref} className="grid h-40 place-items-center overflow-hidden rounded-[26px] bg-[#fff3ea] text-7xl">
-        {product.imageUrl ? <img src={product.imageUrl} alt={product.name} className="h-full w-full object-cover" /> : getProductEmoji(product)}
+        {product.image.url ? <img src={product.image.url} alt={product.name} className="h-full w-full object-contain" /> : categoryEmoji(product.industryKey)}
       </Link>
       {product.brand ? <p className="mt-4 text-xs font-black uppercase tracking-[0.14em] text-[#ff5a00]">{product.brand}</p> : null}
       <Link href={detailHref} className="mt-2 block min-h-14 text-xl font-black leading-tight text-[#0b1220] hover:text-[#ff5a00]">{product.name}</Link>
-      <p className="mt-2 text-sm font-black text-slate-500">{product.categoryName}</p>
-
-      {isBundle ? (
-        <p className="mt-3 inline-flex rounded-full bg-[#f4efff] px-3 py-2 text-sm font-black text-[#7c3aed] ring-1 ring-[#dccbff]">
-          Combo gợi ý{product.bundleItemCount > 0 ? ` · ${product.bundleItemCount} sản phẩm` : ""}
-        </p>
-      ) : (
-        <div className="mt-2 space-y-1 text-sm font-semibold text-slate-500">
-          <p>Quy cách: <span className="font-black text-[#0b1220]">{getProductDisplayPackage(product)}</span></p>
-          <p>Đơn vị: <span className="font-black text-[#0b1220]">{getProductDisplayUnit(product)}</span></p>
-        </div>
-      )}
-
-      {product.shortDescription ? <p className="mt-2 line-clamp-2 min-h-10 text-sm font-semibold leading-5 text-slate-400">{product.shortDescription}</p> : null}
-      <p className="mt-4 inline-flex rounded-full bg-[#fff3ea] px-3 py-2 text-sm font-black text-[#ff5a00] ring-1 ring-[#ffd0b3]">{getProductPriceLabel(product)}</p>
+      <p className="mt-2 text-sm font-black text-slate-500">{product.industry}</p>
+      <div className="mt-2 space-y-1 text-sm font-semibold text-slate-500">
+        <p>SKU: <span className="font-black text-[#0b1220]">{product.sku}</span></p>
+        <p>Phân loại: <span className="font-black text-[#0b1220]">{getCatalogV2OptionSummary(product)}</span></p>
+      </div>
+      <p className="mt-4 inline-flex rounded-full bg-[#fff3ea] px-3 py-2 text-sm font-black text-[#ff5a00] ring-1 ring-[#ffd0b3]">{getCatalogV2PriceLabel(product)}</p>
       <div className="mt-5 flex gap-2">
-        <Link href={detailHref} className="flex-1 rounded-2xl bg-[#fbfaf7] px-4 py-3 text-center text-sm font-black ring-1 ring-[#eee7dc]">Chi tiết</Link>
-        <span className={`rounded-2xl px-4 py-3 text-center text-xs font-black ${product.isOrderable ? "bg-[#0b1220] text-white" : "bg-slate-200 text-slate-600"}`}>{getProductOrderMessage(product)}</span>
+        <Link href={detailHref} className="flex-1 rounded-2xl bg-[#fbfaf7] px-4 py-3 text-center text-sm font-black ring-1 ring-[#eee7dc]">Chọn phân loại</Link>
+        <span className={`rounded-2xl px-4 py-3 text-center text-xs font-black ${product.isOrderable ? "bg-[#0b1220] text-white" : "bg-slate-200 text-slate-600"}`}>{getCatalogV2OrderLabel(product)}</span>
       </div>
     </article>
   );
@@ -89,6 +64,7 @@ export function DesktopHome({ active = "home" }: { active?: AppNavKey }) {
     setSearchText,
     loading,
     error,
+    total,
   } = useCatalogBrowser();
 
   return (
@@ -102,7 +78,7 @@ export function DesktopHome({ active = "home" }: { active?: AppNavKey }) {
             <input
               value={searchText}
               onChange={(event) => setSearchText(event.target.value)}
-              placeholder="Tìm trà, bột sữa, topping..."
+              placeholder="Tìm tên sản phẩm hoặc SKU..."
               className="h-14 w-full rounded-[20px] border border-white/80 bg-white/95 px-5 text-base font-bold shadow-lg outline-none placeholder:text-slate-400 focus:border-[#ff5a00]"
             />
           </div>
@@ -113,16 +89,15 @@ export function DesktopHome({ active = "home" }: { active?: AppNavKey }) {
         <div className="flex flex-wrap gap-3">
           {tabs.map((tab) => {
             const selected = tab.id === selectedCategory;
-            const empty = tab.id !== "all" && tab.productCount === 0;
             return (
               <button
                 key={tab.id}
                 type="button"
                 aria-pressed={selected}
                 onClick={() => setSelectedCategory(tab.id)}
-                className={`inline-flex items-center gap-2 rounded-[16px] px-4 py-3 text-sm font-black shadow-sm ring-1 transition ${selected ? "bg-[#ff5a00] text-white ring-[#ff5a00]" : empty ? "bg-white text-slate-400 ring-[#eee7dc]" : getTabTone(tab.id)}`}
+                className={`inline-flex items-center gap-2 rounded-[16px] px-4 py-3 text-sm font-black shadow-sm ring-1 transition ${selected ? "bg-[#ff5a00] text-white ring-[#ff5a00]" : "bg-white text-slate-600 ring-[#eee7dc]"}`}
               >
-                <span className="text-lg leading-none">{categoryEmoji[tab.id] || "▦"}</span>
+                <span className="text-lg leading-none">{categoryEmoji(tab.id)}</span>
                 <span>{tab.name}</span>
                 <span className="rounded-full bg-white/60 px-2 py-0.5 text-xs">{tab.productCount}</span>
               </button>
@@ -133,16 +108,16 @@ export function DesktopHome({ active = "home" }: { active?: AppNavKey }) {
 
       <section className="mx-auto max-w-7xl px-8 pb-14">
         <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-4xl font-black">{loading ? "Đang tải sản phẩm" : "Sản phẩm"}</h2>
-          <span className="rounded-full bg-white px-4 py-2 text-sm font-black text-slate-500 ring-1 ring-[#eee7dc]">Cùng contract với PWA</span>
+          <h2 className="text-4xl font-black">{loading ? "Đang tải sản phẩm" : `${total} card biến thể`}</h2>
+          <span className="rounded-full bg-white px-4 py-2 text-sm font-black text-slate-500 ring-1 ring-[#eee7dc]">Giỏ lưu variant_id</span>
         </div>
 
         {loading ? <ProductGridState>Đang tải sản phẩm...</ProductGridState> : null}
         {!loading && error ? <ProductGridState>{error}</ProductGridState> : null}
-        {!loading && !error && products.length === 0 ? <ProductGridState>Nhóm này đang cập nhật dữ liệu sản phẩm</ProductGridState> : null}
+        {!loading && !error && products.length === 0 ? <ProductGridState>Không có sản phẩm phù hợp</ProductGridState> : null}
         {!loading && !error && products.length > 0 ? (
           <div className="grid grid-cols-4 gap-5">
-            {products.map((product) => <DesktopProductCard key={product.id} product={product} />)}
+            {products.map((product) => <DesktopProductCard key={product.variant_id} product={product} />)}
           </div>
         ) : null}
       </section>
