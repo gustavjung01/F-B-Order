@@ -50,6 +50,43 @@ const showValue = (value) => {
 };
 const parsePrice = (value) => /^\d+(\.\d+)?$/.test(clean(value)) ? Math.round(Number(value) * 1000) : 0;
 
+function normalizeForMatch(value) {
+  return clean(value)
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase();
+}
+
+function industryFor(sourceGroup) {
+  const normalized = normalizeForMatch(sourceGroup);
+
+  if (normalized.includes("my cay") || normalized.includes("mi cay")) {
+    return "Nguyên Liệu Mì Cay";
+  }
+  if (normalized.includes("dong lanh")) {
+    return "Đông Lạnh";
+  }
+  if (normalized.includes("banh trang")) {
+    return "Nguyên Liệu Bánh Tráng";
+  }
+  if (
+    normalized.includes("ong hut") ||
+    normalized.includes("muong") ||
+    normalized.includes("nap") ||
+    normalized.includes("bao ly")
+  ) {
+    return "Bao Bì";
+  }
+
+  return "Nguyên Liệu Trà Sữa";
+}
+
+function subcategoryFor(sourceGroup) {
+  return clean(sourceGroup)
+    .replace(/^\d+\s*[.\-]?\s*/u, "")
+    .replace(/^\.+\s*/u, "");
+}
+
 const byParent = new Map();
 const skuCounts = new Map();
 for (const variant of variants) {
@@ -60,6 +97,7 @@ for (const variant of variants) {
 
 const cards = parents.map((parent, index) => {
   const sourceVariants = byParent.get(parent.parent_key) || [];
+  const sourceGroup = sourceVariants[0]?.source_group || "Chưa phân nhóm";
   const optionValues = new Map();
   let missingImage = false;
 
@@ -110,7 +148,9 @@ const cards = parents.map((parent, index) => {
     productKey: parent.parent_key,
     name: parent.name,
     brand: parent.brand || "",
-    category: sourceVariants[0]?.source_group || "Chưa phân nhóm",
+    category: industryFor(sourceGroup),
+    subcategory: subcategoryFor(sourceGroup),
+    sourceGroup,
     priceFrom: validPrices.length ? Math.min(...validPrices) : 0,
     status: "draft",
     imageKey: cover,
@@ -136,12 +176,18 @@ assert(cards.reduce((sum, card) => sum + card.variantCount, 0) === 275, "Variant
 const berrino = cards.find((card) => card.productKey === "sinh-to-berrino");
 assert(berrino?.variantCount === 12, `Berrino must be 1 card with 12 variants, found ${berrino?.variantCount || 0}.`);
 
+const industryCounts = Object.fromEntries(
+  [...new Set(cards.map((card) => card.category))]
+    .map((industry) => [industry, cards.filter((card) => card.category === industry).length]),
+);
+
 const template = fs.readFileSync(templatePath, "utf8");
 const payload = {
   catalogVersion: "hung-phat-v2-parent-draft",
   generatedAt: new Date().toISOString(),
   expectedCardCount: 188,
   variantCount: 275,
+  industryCounts,
   products: cards,
 };
 fs.writeFileSync(outputPath, template.replace("__CATALOG_PAYLOAD__", safeJson(payload)), "utf8");
@@ -153,5 +199,6 @@ console.log(JSON.stringify({
   variantCount: 275,
   berrinoCardCount: 1,
   berrinoVariantCount: 12,
+  industryCounts,
   output: outputPath,
 }, null, 2));
