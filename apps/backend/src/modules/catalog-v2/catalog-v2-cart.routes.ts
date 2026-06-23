@@ -165,5 +165,30 @@ export function createCatalogV2CartRouter(identityResolver: IdentityResolver) {
     }
   });
 
+  router.delete("/items/:variantId", async (req, res) => {
+    try {
+      const identity = requireApprovedCustomer(await identityResolver(req));
+      const variantId = req.params.variantId.trim().toLowerCase();
+      if (!UUID_PATTERN.test(variantId)) {
+        res.status(400).json({ error: "INVALID_VARIANT_ID" });
+        return;
+      }
+
+      const result = await getDb().query(
+        `DELETE FROM cart_items item
+         USING carts cart
+         WHERE item.cart_id = cart.id
+           AND cart.customer_id = $1
+           AND cart.status = 'active'
+           AND item.variant_id = $2`,
+        [identity.customerId, variantId],
+      );
+
+      res.json({ variant_id: variantId, removed: (result.rowCount ?? 0) > 0 });
+    } catch (error) {
+      sendError(res, error);
+    }
+  });
+
   return router;
 }
