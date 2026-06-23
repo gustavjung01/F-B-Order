@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Preview catalog Hưng Phát v2</title>
+  <link rel="stylesheet" href="./preview.css" />
+</head>
+<body>
+  <main class="page">
+    <header class="top">
+      <h1>Preview catalog Hưng Phát v2</h1>
+      <p class="sub">275 card · xem bằng popup liên tục, không chuyển trang · chỉ đánh dấu lỗi cần sửa.</p>
+      <div id="stats" class="stats"></div>
+      <div class="controls">
+        <input id="q" class="ctl" placeholder="Tìm tên, SKU, brand..." />
+        <select id="cat" class="ctl"><option value="all">Tất cả nhóm</option></select>
+        <select id="issue" class="ctl">
+          <option value="all">Tất cả card</option>
+          <option value="has">Chỉ card có lỗi</option>
+          <option value="missingImage">Thiếu ảnh</option>
+          <option value="wrongName">Tên sai</option>
+          <option value="wrongOption">Option sai</option>
+          <option value="duplicateSku">SKU trùng</option>
+          <option value="wrongPrice">Giá sai</option>
+        </select>
+        <select id="review" class="ctl">
+          <option value="all">Tất cả trạng thái</option>
+          <option value="unreviewed">Chưa duyệt</option>
+          <option value="reviewed">Đã duyệt</option>
+          <option value="marked">Đã đánh dấu</option>
+        </select>
+        <button id="export" class="export">Xuất CSV lỗi</button>
+      </div>
+    </header>
+    <section id="grid" class="grid"></section>
+  </main>
+
+  <div id="modal" class="modal" hidden>
+    <button class="back" aria-label="Đóng"></button>
+    <section class="box" role="dialog" aria-modal="true">
+      <header class="head">
+        <button id="prevTop" class="x">‹</button>
+        <strong id="headName"></strong>
+        <button id="close" class="x">×</button>
+      </header>
+      <div class="content">
+        <div id="left" class="left"></div>
+        <div id="right" class="right"></div>
+      </div>
+      <footer class="foot">
+        <button id="prev" class="nav">← Trước</button>
+        <span id="count" class="count"></span>
+        <button id="next" class="nav">Sau →</button>
+        <button id="done" class="done">Đánh dấu đã duyệt</button>
+      </footer>
+    </section>
+  </div>
+
+  <script id="data" type="application/json">__CATALOG_PAYLOAD__</script>
+  <script src="./preview.js"></script>
+</body>
+</html>
