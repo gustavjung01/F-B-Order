@@ -1,0 +1,40 @@
+product_key,sku,parent_key,variant_key,options_json,source_row
+tra-den-loc-phat-bgkq-0149,BGKQ-0149,tra-loc-phat,tra-loc-phat--den,"{""type"": ""den""}",166
+tra-olong-loc-phat-bgkq-0150,BGKQ-0150,tra-loc-phat,tra-loc-phat--olong,"{""type"": ""olong""}",167
+hong-tra-tui-loc-tnb-bgkq-0158,BGKQ-0158,tra-tui-loc-tnb,tra-tui-loc-tnb--hong,"{""type"": ""hong""}",175
+tra-dao-tui-loc-tnb-bgkq-0159,BGKQ-0159,tra-tui-loc-tnb,tra-tui-loc-tnb--dao,"{""type"": ""dao""}",176
+tra-lai-tui-loc-tnb-bgkq-0160,BGKQ-0160,tra-tui-loc-tnb,tra-tui-loc-tnb--lai,"{""type"": ""lai""}",177
+tra-den-phuc-long-bgkq-0161,BGKQ-0161,tra-phuc-long,tra-phuc-long--den,"{""type"": ""den""}",178
+tra-sen-lai-phuc-long-bgkq-0162,BGKQ-0162,tra-phuc-long,tra-phuc-long--sen-lai,"{""type"": ""sen-lai""}",179
+tra-olong-phuc-long-bgkq-0163,BGKQ-0163,tra-phuc-long,tra-phuc-long--olong,"{""type"": ""olong""}",180
+tra-thai-xanh-do-cty-bgkq-0168,BGKQ-0168,tra-thai,tra-thai--xanh-do,"{""type"": ""xanh-do""}",185
+tra-thai-xanh-thuong-bgkq-0169,BGKQ-0169,tra-thai,tra-thai--xanh,"{""type"": ""xanh""}",186
+tra-gao-novia-bgkq-0170,BGKQ-0170,tra-novia,tra-novia--gao,"{""type"": ""gao""}",187
+tra-den-novia-bgkq-0171,BGKQ-0171,tra-novia,tra-novia--den,"{""type"": ""den""}",188
+tra-lai-novia-bgkq-0172,BGKQ-0172,tra-novia,tra-novia--lai,"{""type"": ""lai""}",189
+hong-tra-co-gai-bgkq-0173,BGKQ-0173,tra-co-gai,tra-co-gai--hong,"{""type"": ""hong""}",190
+tra-den-co-gai-bgkq-0174,BGKQ-0174,tra-co-gai,tra-co-gai--den,"{""type"": ""den""}",191
+tra-lai-co-gai-bgkq-0175,BGKQ-0175,tra-co-gai,tra-co-gai--lai,"{""type"": ""lai""}",192
+pho-mai-khoi-2-5kg-mozela-bgkq-0197,BGKQ-0197,pho-mai-mozzarella,pho-mai-mozzarella--2-5kg,"{""size"": ""2.5kg""}",215
+pho-mai-khoi-3-6-kg-mozela-bgkq-0198,BGKQ-0198,pho-mai-mozzarella,pho-mai-mozzarella--3-6kg,"{""size"": ""3.6kg""}",216
+ong-hut-ts-trang-bgkq-0203,BGKQ-0203,ong-hut,ong-hut--tra-sua-trang-khac,"{""color"": ""trang"", ""diameter"": ""khac"", ""type"": ""tra-sua""}",222
+ong-hut-ts-trang-boc-mang-bgkq-0204,BGKQ-0204,ong-hut,ong-hut--boc-mang-trang-khac,"{""color"": ""trang"", ""diameter"": ""khac"", ""type"": ""boc-mang""}",223
+ong-hut-trang-phi-6-8-bgkq-0205,BGKQ-0205,ong-hut,ong-hut--thuong-trang-6-8,"{""color"": ""trang"", ""diameter"": ""6-8"", ""type"": ""thuong""}",224
+ong-hut-ts-den-phi-6-8-bgkq-0206,BGKQ-0206,ong-hut,ong-hut--tra-sua-den-6-8,"{""color"": ""den"", ""diameter"": ""6-8"", ""type"": ""tra-sua""}",225
+muong-ukp-bgkq-0207,BGKQ-0207,muong-nhua,muong-nhua--ukp,"{""type"": ""ukp""}",227
+muong-thuong-ngan-bgkq-0208,BGKQ-0208,muong-nhua,muong-nhua--thuong-ngan,"{""type"": ""thuong ngan""}",228
+muong-dai-bgkq-0209,BGKQ-0209,muong-nhua,muong-nhua--dai,"{""type"": ""dai""}",229
+nap-ngang-bgkq-0210,BGKQ-0210,nap-ly,nap-ly--ngang,"{""type"": ""ngang""}",231
+nap-cau-vuong-bgkq-0211,BGKQ-0211,nap-ly,nap-ly--cau-vuong,"{""type"": ""cau vuong""}",232
+bich-1ly-ngang-bgkq-0212,BGKQ-0212,bao-ly,bao-ly--1ly-ngang,"{""type"": ""1ly ngang""}",234
+bich-2ly-ngang-bgkq-0213,BGKQ-0213,bao-ly,bao-ly--2ly-ngang,"{""type"": ""2ly ngang""}",235
+bich-1ly-thuong-bgkq-0214,BGKQ-0214,bao-ly,bao-ly--1ly-thuong,"{""type"": ""1ly thuong""}",236
+bich-chu-t-bgkq-0215,BGKQ-0215,bao-ly,bao-ly--chu-t,"{""type"": ""chu t""}",237
+bich-1lit-bgkq-0216,BGKQ-0216,bao-ly,bao-ly--1lit,"{""type"": ""1lit""}",238
+cuon-ep-bgkq-0217,BGKQ-0217,bao-ly,bao-ly--ep,"{""type"": ""ep""}",239
+mi-koreno-100-goi-bgkq-0218,BGKQ-0218,mi-koreno,mi-koreno--thuong-100-goi,"{""pack"": ""100-goi"", ""type"": ""thuong""}",241
+mi-lau-koreno-80-goi-bgkq-0219,BGKQ-0219,mi-koreno,mi-koreno--lau-80-goi,"{""pack"": ""80-goi"", ""type"": ""lau""}",242
+khoai-tay-2kg-bgkq-0236,BGKQ-0236,khoai-tay-dong-lanh,khoai-tay-dong-lanh--2kg,"{""size"": ""2kg""}",260
+khoai-tay-1kg-bgkq-0237,BGKQ-0237,khoai-tay-dong-lanh,khoai-tay-dong-lanh--1kg,"{""size"": ""1kg""}",261
+nuoc-bo-1-lit-bgkq-0272,BGKQ-0272,nuoc-bo,nuoc-bo--1l,"{""size"": ""1L""}",297
+nuoc-bo-bgkq-0273,BGKQ-0273,nuoc-bo,nuoc-bo--khac,"{""size"": ""khac""}",298
