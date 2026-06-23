@@ -97,6 +97,11 @@ function displayOptions(value: unknown): Record<string, unknown> {
   );
 }
 
+function optionText(options: Record<string, unknown>, key: string): string | null {
+  const value = options[key];
+  return typeof value === "string" && value.trim() ? value.trim() : null;
+}
+
 function displayOptionGroups(value: unknown): Array<{ name: string; values: unknown[] }> {
   if (!Array.isArray(value)) return [];
   return value
@@ -114,6 +119,13 @@ function displayOptionGroups(value: unknown): Array<{ name: string; values: unkn
 
 function toVariantCard(row: VariantRow, identity: RequestIdentity) {
   const pricing = evaluateCatalogV2Pricing(identity, row);
+  const options = displayOptions(row.options);
+  const sizeLabel = optionText(options, "size");
+  const packageLabel = optionText(options, "package");
+  const sellUnit = optionText(options, "sell_unit");
+  const specificationLabel = [sizeLabel, packageLabel, sellUnit ? `ĐVT: ${sellUnit}` : null]
+    .filter((value): value is string => Boolean(value))
+    .join(" · ") || null;
 
   return {
     id: row.variant_id,
@@ -130,7 +142,11 @@ function toVariantCard(row: VariantRow, identity: RequestIdentity) {
     industry: row.industry,
     industryKey: row.industry_key,
     subcategory: row.subcategory,
-    options: displayOptions(row.options),
+    options,
+    sizeLabel,
+    packageLabel,
+    sellUnit,
+    specificationLabel,
     priceMode: row.price_mode,
     price: pricing.amount,
     priceLabel: pricing.label,
