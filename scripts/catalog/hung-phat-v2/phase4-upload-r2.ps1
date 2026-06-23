@@ -72,14 +72,16 @@ foreach ($requiredPath in @(
   Assert-True (Test-Path -LiteralPath $requiredPath) "Required Phase 4 path does not exist: $requiredPath"
 }
 
-$localProductFiles = Get-RelativeFileNames -Root $ProductsDir -Filter "*.webp"
-$localManifestFiles = Get-RelativeFileNames -Root $ManifestsDir -Filter "*.json"
+# Always force command output into arrays. Windows PowerShell unwraps zero/one-item
+# results, which makes .Count unsafe under StrictMode.
+$localProductFiles = @(Get-RelativeFileNames -Root $ProductsDir -Filter "*.webp")
+$localManifestFiles = @(Get-RelativeFileNames -Root $ManifestsDir -Filter "*.json")
 
 Assert-True ($localProductFiles.Count -gt 0) "No product images found in $ProductsDir"
 Assert-True ($localManifestFiles.Count -gt 0) "No manifests found in $ManifestsDir"
 
-$productFileDuplicates = Get-DuplicatesCaseInsensitive -Values $localProductFiles
-$manifestFileDuplicates = Get-DuplicatesCaseInsensitive -Values $localManifestFiles
+$productFileDuplicates = @(Get-DuplicatesCaseInsensitive -Values $localProductFiles)
+$manifestFileDuplicates = @(Get-DuplicatesCaseInsensitive -Values $localManifestFiles)
 Assert-Equal $productFileDuplicates.Count 0 "duplicate local product filename count"
 Assert-Equal $manifestFileDuplicates.Count 0 "duplicate local manifest filename count"
 
@@ -131,7 +133,7 @@ foreach ($record in $productImagesManifest) {
   }
 }
 
-$manifestObjectDuplicates = Get-DuplicatesCaseInsensitive -Values @($manifestObjectKeys)
+$manifestObjectDuplicates = @(Get-DuplicatesCaseInsensitive -Values @($manifestObjectKeys))
 Assert-Equal $badObjectKeys.Count 0 "invalid manifest objectKey count"
 Assert-Equal $missingLocalObjects.Count 0 "manifest object missing locally count"
 Assert-Equal $manifestObjectDuplicates.Count 0 "duplicate manifest objectKey count"
