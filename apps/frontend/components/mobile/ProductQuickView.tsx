@@ -5,6 +5,7 @@ import type {
   CatalogV2DetailResponse,
   CatalogV2VariantCard,
 } from "@/data/catalog-v2/product-model";
+import { fetchCatalogV2Detail } from "@/lib/catalog-v2-client";
 import {
   getCatalogV2OrderLabel,
   getCatalogV2PriceHeading,
@@ -45,11 +46,7 @@ export function ProductQuickView({ product, onClose }: { product: CatalogV2Varia
       try {
         setLoading(true);
         setMessage("");
-        const response = await fetch(`/api/catalog-v2/products/${encodeURIComponent(product.variant_id)}`, {
-          cache: "no-store",
-        });
-        if (!response.ok) throw new Error("Không tải được phân loại sản phẩm");
-        const data = (await response.json()) as CatalogV2DetailResponse;
+        const data = await fetchCatalogV2Detail(product.variant_id);
         if (!active) return;
         setDetail(data);
         setSelectedVariantId(data.selectedVariantId || product.variant_id);
