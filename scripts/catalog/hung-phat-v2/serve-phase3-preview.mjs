@@ -9,8 +9,12 @@ function getArg(name, fallback) {
   return found ? found.slice(prefix.length) : fallback;
 }
 
-const root = path.resolve(getArg("root", process.cwd()));
-const port = Number(getArg("port", "4173"));
+const root = path.resolve(
+  getArg("root", process.env.BEPSI_PREVIEW_ROOT || process.cwd()),
+);
+const port = Number(
+  getArg("port", process.env.BEPSI_PREVIEW_PORT || "4173"),
+);
 
 if (!Number.isInteger(port) || port <= 0 || port > 65535) {
   throw new Error(`Invalid port: ${port}`);
@@ -42,7 +46,10 @@ function send(response, statusCode, body, headers = {}) {
 
 const server = http.createServer((request, response) => {
   try {
-    const requestUrl = new URL(request.url || "/", `http://${request.headers.host || `127.0.0.1:${port}`}`);
+    const requestUrl = new URL(
+      request.url || "/",
+      `http://${request.headers.host || `127.0.0.1:${port}`}`,
+    );
     let relativePath = decodeURIComponent(requestUrl.pathname);
     if (relativePath === "/") relativePath = "/index.html";
 
@@ -65,6 +72,11 @@ const server = http.createServer((request, response) => {
   } catch (error) {
     send(response, 500, error instanceof Error ? error.message : "Internal Server Error");
   }
+});
+
+server.on("error", (error) => {
+  console.error(error instanceof Error ? error.message : String(error));
+  process.exitCode = 1;
 });
 
 server.listen(port, "127.0.0.1", () => {
