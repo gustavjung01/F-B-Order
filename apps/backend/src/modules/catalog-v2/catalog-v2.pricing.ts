@@ -73,8 +73,8 @@ export function evaluateCatalogV2Pricing(identity: RequestIdentity, row: Catalog
   }
 
   return {
-    visibility: "hidden" as const,
-    label: null,
+    visibility: "label" as const,
+    label: approved ? "Chưa thiết lập giá quán" : "Chưa thiết lập giá lẻ",
     amount: null,
     currency: CATALOG_V2_CURRENCY,
     source: null,
