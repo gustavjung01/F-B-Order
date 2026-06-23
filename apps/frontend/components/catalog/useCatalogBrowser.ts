@@ -2,23 +2,43 @@
 
 import { useEffect, useMemo, useState } from "react";
 import type {
-  CatalogV2ListResponse,
-  CatalogV2Tab,
+  CatalogV2FilterOption,
   CatalogV2VariantCard,
 } from "@/data/catalog-v2/product-model";
+import { fetchCatalogV2List } from "@/lib/catalog-v2-client";
 
-function buildProductsUrl(industryKey: string, q: string) {
+function buildProductsUrl(industryKey: string, brand: string, q: string) {
   const params = new URLSearchParams();
   if (industryKey !== "all") params.set("industry", industryKey);
+  if (brand !== "all") params.set("brand", brand);
   if (q.trim()) params.set("q", q.trim());
   params.set("limit", "500");
   return `/api/catalog-v2/products?${params.toString()}`;
 }
 
+function buildOptions(
+  products: CatalogV2VariantCard[],
+  keySelector: (product: CatalogV2VariantCard) => string | null,
+  nameSelector: (product: CatalogV2VariantCard) => string | null,
+): CatalogV2FilterOption[] {
+  const counts = new Map<string, { name: string; count: number }>();
+  for (const product of products) {
+    const id = keySelector(product);
+    const name = nameSelector(product);
+    if (!id || !name) continue;
+    const current = counts.get(id);
+    counts.set(id, { name, count: (current?.count ?? 0) + 1 });
+  }
+  return [...counts.entries()]
+    .sort((left, right) => left[1].name.localeCompare(right[1].name, "vi"))
+    .map(([id, value]) => ({ id, name: value.name, productCount: value.count }));
+}
+
 export function useCatalogBrowser() {
   const [products, setProducts] = useState<CatalogV2VariantCard[]>([]);
   const [allProducts, setAllProducts] = useState<CatalogV2VariantCard[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [selectedIndustry, setSelectedIndustry] = useState("all");
+  const [selectedBrand, setSelectedBrand] = useState("all");
   const [searchText, setSearchText] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -30,15 +50,15 @@ export function useCatalogBrowser() {
       try {
         setLoading(true);
         setError("");
-        const response = await fetch(buildProductsUrl(selectedCategory, searchText), {
-          cache: "no-store",
-        });
-        if (!response.ok) throw new Error("Không tải được catalog 275 sản phẩm");
-        const data = (await response.json()) as CatalogV2ListResponse;
+        const data = await fetchCatalogV2List(
+          buildProductsUrl(selectedIndustry, selectedBrand, searchText),
+        );
         if (!activeRequest) return;
         const nextProducts = Array.isArray(data.products) ? data.products : [];
         setProducts(nextProducts);
-        if (selectedCategory === "all" && !searchText.trim()) setAllProducts(nextProducts);
+        if (selectedIndustry === "all" && selectedBrand === "all" && !searchText.trim()) {
+          setAllProducts(nextProducts);
+        }
       } catch (loadError) {
         if (!activeRequest) return;
         setError(loadError instanceof Error ? loadError.message : "Không tải được sản phẩm");
@@ -53,31 +73,38 @@ export function useCatalogBrowser() {
       activeRequest = false;
       window.clearTimeout(timer);
     };
-  }, [selectedCategory, searchText]);
+  }, [selectedIndustry, selectedBrand, searchText]);
 
-  const tabs = useMemo<CatalogV2Tab[]>(() => {
-    const counts = new Map<string, { name: string; count: number }>();
-    for (const product of allProducts) {
-      const current = counts.get(product.industryKey);
-      counts.set(product.industryKey, {
-        name: product.industry,
-        count: (current?.count ?? 0) + 1,
-      });
-    }
+  const industrySource = selectedBrand === "all"
+    ? allProducts
+    : allProducts.filter((product) => product.brand === selectedBrand);
+  const brandSource = selectedIndustry === "all"
+    ? allProducts
+    : allProducts.filter((product) => product.industryKey === selectedIndustry);
 
-    return [
-      { id: "all", name: "Tất cả", productCount: allProducts.length },
-      ...[...counts.entries()]
-        .sort((left, right) => left[1].name.localeCompare(right[1].name, "vi"))
-        .map(([id, value]) => ({ id, name: value.name, productCount: value.count })),
-    ];
-  }, [allProducts]);
+  const industries = useMemo(
+    () => buildOptions(industrySource, (product) => product.industryKey, (product) => product.industry),
+    [industrySource],
+  );
+  const brands = useMemo(
+    () => buildOptions(brandSource, (product) => product.brand, (product) => product.brand),
+    [brandSource],
+  );
+
+  function resetFilters() {
+    setSelectedIndustry("all");
+    setSelectedBrand("all");
+  }
 
   return {
     products,
-    tabs,
-    selectedCategory,
-    setSelectedCategory,
+    industries,
+    brands,
+    selectedIndustry,
+    setSelectedIndustry,
+    selectedBrand,
+    setSelectedBrand,
+    resetFilters,
     searchText,
     setSearchText,
     loading,
