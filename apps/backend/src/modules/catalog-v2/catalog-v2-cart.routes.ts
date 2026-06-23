@@ -43,7 +43,8 @@ export function createCatalogV2CartRouter(identityResolver: IdentityResolver) {
   router.post("/items", async (req, res) => {
     try {
       const identity = requireApprovedCustomer(await identityResolver(req));
-      const variantId = typeof req.body?.variantId === "string" ? req.body.variantId.trim().toLowerCase() : "";
+      const rawVariantId = req.body?.variant_id ?? req.body?.variantId;
+      const variantId = typeof rawVariantId === "string" ? rawVariantId.trim().toLowerCase() : "";
       const quantity = Number(req.body?.quantity);
 
       if (!UUID_PATTERN.test(variantId)) {
@@ -101,6 +102,7 @@ export function createCatalogV2CartRouter(identityResolver: IdentityResolver) {
       if (!pricing.canOrder || pricing.amount === null) {
         res.status(422).json({
           error: pricing.reason || "VARIANT_NOT_ORDERABLE",
+          variant_id: variantId,
           variantId,
           priceMode: variant.price_mode,
         });
@@ -135,11 +137,14 @@ export function createCatalogV2CartRouter(identityResolver: IdentityResolver) {
         res.status(201).json({
           cartId,
           item: {
+            variant_id: variantId,
             variantId,
+            product_id: variant.product_id,
             productId: variant.product_id,
             sku: variant.sku,
             name: variant.name,
             quantity,
+            price: pricing.amount,
             unitPrice: pricing.amount,
             lineTotal: Math.round(pricing.amount * quantity * 100) / 100,
             priceSource: pricing.source,
