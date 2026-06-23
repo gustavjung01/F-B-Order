@@ -7,7 +7,9 @@ import type {
 } from "@/data/catalog-v2/product-model";
 import {
   getCatalogV2OrderLabel,
+  getCatalogV2PriceHeading,
   getCatalogV2PriceLabel,
+  getCatalogV2PriceNote,
 } from "@/lib/catalog-v2-display";
 import { addCartItem } from "@/lib/cartStorage";
 
@@ -135,6 +137,8 @@ export function ProductQuickView({ product, onClose }: { product: CatalogV2Varia
     }
   }
 
+  const priceNote = getCatalogV2PriceNote(selectedVariant);
+
   return (
     <div className="fixed inset-0 z-[80] bg-slate-950/45 backdrop-blur-[2px]" role="dialog" aria-modal="true">
       <button type="button" aria-label="Đóng" className="absolute inset-0 h-full w-full" onClick={onClose} />
@@ -156,6 +160,23 @@ export function ProductQuickView({ product, onClose }: { product: CatalogV2Varia
           {selectedVariant.brand ? <p className="mt-4 text-[11px] font-black uppercase tracking-[0.12em] text-[#ff5a00]">{selectedVariant.brand}</p> : null}
           <h2 className="mt-2 text-[28px] font-black leading-tight tracking-tight text-[#0b1220]">{selectedVariant.name}</h2>
           <p className="mt-2 text-sm font-bold text-slate-500">SKU: {selectedVariant.sku}</p>
+
+          <div className="mt-4 grid gap-2">
+            <div className="rounded-[18px] bg-white p-3 ring-1 ring-[#eee7dc]">
+              <p className="text-[11px] font-black uppercase tracking-[0.12em] text-slate-400">Dung tích / khối lượng</p>
+              <p className="mt-1 text-sm font-black">{selectedVariant.sizeLabel || "Chưa có trong bảng nguồn"}</p>
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              <div className="rounded-[18px] bg-white p-3 ring-1 ring-[#eee7dc]">
+                <p className="text-[11px] font-black uppercase tracking-[0.12em] text-slate-400">Quy cách</p>
+                <p className="mt-1 text-sm font-black">{selectedVariant.packageLabel || "Đang cập nhật"}</p>
+              </div>
+              <div className="rounded-[18px] bg-white p-3 ring-1 ring-[#eee7dc]">
+                <p className="text-[11px] font-black uppercase tracking-[0.12em] text-slate-400">Đơn vị bán</p>
+                <p className="mt-1 text-sm font-black">{selectedVariant.sellUnit || "Đang cập nhật"}</p>
+              </div>
+            </div>
+          </div>
 
           {loading ? <p className="mt-4 rounded-[18px] bg-white p-4 text-sm font-black text-slate-500 ring-1 ring-[#eee7dc]">Đang tải phân loại...</p> : null}
 
@@ -183,8 +204,9 @@ export function ProductQuickView({ product, onClose }: { product: CatalogV2Varia
           ))}
 
           <div className="mt-5 rounded-[20px] bg-[#fff3ea] p-4 ring-1 ring-[#ffd0b3]">
-            <p className="text-xs font-black text-[#ff5a00]">Giá phân loại đang chọn</p>
+            <p className="text-xs font-black uppercase tracking-[0.12em] text-[#ff5a00]">{getCatalogV2PriceHeading(selectedVariant)}</p>
             <p className="mt-1 text-2xl font-black text-[#ff5a00]">{getCatalogV2PriceLabel(selectedVariant)}</p>
+            {priceNote ? <p className="mt-2 text-sm font-bold text-slate-600">{priceNote}</p> : null}
             {!selectedVariant.isOrderable ? <p className="mt-2 text-sm font-bold text-slate-600">{getCatalogV2OrderLabel(selectedVariant)}</p> : null}
           </div>
 
