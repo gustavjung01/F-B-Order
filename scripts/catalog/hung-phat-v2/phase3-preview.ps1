@@ -1,5 +1,6 @@
 param(
   [string]$SourceImages = "F:\1_A_Disk_D\khuong-binh\bep-si\image\bepsi-link-mapper\bepsi_link_mapper\catalog-v2\preview\assets",
+  [string]$NormalizedDir = "F:\1_A_Disk_D\khuong-binh\bep-si\image\bepsi-link-mapper\bepsi_link_mapper\catalog-v2\normalized-v2",
   [int]$Port = 4183
 )
 
@@ -8,16 +9,16 @@ Set-StrictMode -Version Latest
 
 $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..\..\..")).Path
 $builder = Join-Path $PSScriptRoot "build-phase3-preview.mjs"
+$parentRewriter = Join-Path $PSScriptRoot "rewrite-phase3-parent-preview.ps1"
 $server = Join-Path $PSScriptRoot "serve-phase3-preview.mjs"
 $output = Join-Path $repoRoot "artifacts\catalog\hung-phat-v2-preview\index.html"
 $outputDir = Split-Path -Parent $output
 $url = "http://127.0.0.1:$Port/"
 
-if (-not (Test-Path -LiteralPath $SourceImages)) {
-  throw "Local preview image source does not exist: $SourceImages"
-}
-if (-not (Test-Path -LiteralPath $server)) {
-  throw "Preview server script does not exist: $server"
+foreach ($required in @($SourceImages, $NormalizedDir, $parentRewriter, $server)) {
+  if (-not (Test-Path -LiteralPath $required)) {
+    throw "Required Phase 3 path does not exist: $required"
+  }
 }
 
 function Test-PreviewServer {
@@ -33,7 +34,12 @@ Push-Location $repoRoot
 try {
   & node $builder "--source-images=$SourceImages"
   if ($LASTEXITCODE -ne 0) {
-    throw "Phase 3 preview builder failed with exit code $LASTEXITCODE."
+    throw "Phase 3 asset builder failed with exit code $LASTEXITCODE."
+  }
+
+  & $parentRewriter -NormalizedDir $NormalizedDir
+  if ($LASTEXITCODE -ne 0) {
+    throw "Phase 3 parent preview rewrite failed with exit code $LASTEXITCODE."
   }
 
   if (-not (Test-Path -LiteralPath $output)) {
@@ -76,8 +82,9 @@ try {
     Set-Content -LiteralPath (Join-Path $outputDir ".server.pid") -Value $serverProcess.Id -Encoding ASCII
   }
 
-  Write-Host "PASS: Phase 3 popup preview generated." -ForegroundColor Green
+  Write-Host "PASS: Phase 3 parent-card popup preview generated." -ForegroundColor Green
   Write-Host "Preview URL: $url"
+  Write-Host "Model: 188 parent cards / 275 sellable variants"
   Write-Host "Images: local assets served over localhost"
   Start-Process $url
 } finally {
