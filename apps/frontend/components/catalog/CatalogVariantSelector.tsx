@@ -102,19 +102,21 @@ export function CatalogVariantSelector({
   const uniqueVariantCount = new Set(validRows.map((item) => item.variant.variant_id)).size;
 
   function updateOption(rowId: number, groupIndex: number, groupKey: string, value: string) {
-    setRows((current) => current.map((row, rowIndex) => {
-      if (row.id !== rowId) return row;
-      const nextOptions = { ...row.options, [groupKey]: value };
-      for (let index = groupIndex + 1; index < detail.optionGroups.length; index += 1) {
-        delete nextOptions[detail.optionGroups[index].key];
-      }
-      const nextRow = { ...row, options: nextOptions };
-      if (rowIndex === 0) {
-        const exact = findVariant(detail, nextRow);
-        if (exact) onPrimaryVariantChange?.(exact);
-      }
-      return nextRow;
-    }));
+    const currentRowIndex = rows.findIndex((row) => row.id === rowId);
+    const currentRow = rows[currentRowIndex];
+    if (!currentRow) return;
+
+    const nextOptions = { ...currentRow.options, [groupKey]: value };
+    for (let index = groupIndex + 1; index < detail.optionGroups.length; index += 1) {
+      delete nextOptions[detail.optionGroups[index].key];
+    }
+    const nextRow = { ...currentRow, options: nextOptions };
+    setRows((current) => current.map((row) => (row.id === rowId ? nextRow : row)));
+
+    if (currentRowIndex === 0) {
+      const exact = findVariant(detail, nextRow);
+      if (exact) onPrimaryVariantChange?.(exact);
+    }
     setMessage("");
   }
 
@@ -137,9 +139,8 @@ export function CatalogVariantSelector({
     }
 
     const firstGroup = detail.optionGroups[0];
-    const nextOptions = firstGroup && last.options[firstGroup.key]
-      ? { [firstGroup.key]: last.options[firstGroup.key] }
-      : {};
+    const keepFirstGroup = detail.optionGroups.length > 1 && firstGroup && last.options[firstGroup.key];
+    const nextOptions = keepFirstGroup ? { [firstGroup.key]: last.options[firstGroup.key] } : {};
     setRows((current) => [
       ...current,
       { id: nextId.current++, options: nextOptions, quantity: 1 },
@@ -280,7 +281,7 @@ export function CatalogVariantSelector({
         type="button"
         onClick={() => void addAllToCart()}
         disabled={adding || validRows.length === 0}
-        className="h-13 w-full rounded-[18px] bg-[#ff5a00] px-5 py-3.5 text-sm font-black text-white shadow-[0_14px_26px_rgba(255,90,0,0.22)] disabled:cursor-not-allowed disabled:bg-slate-300 disabled:shadow-none"
+        className="h-[52px] w-full rounded-[18px] bg-[#ff5a00] px-5 py-3.5 text-sm font-black text-white shadow-[0_14px_26px_rgba(255,90,0,0.22)] disabled:cursor-not-allowed disabled:bg-slate-300 disabled:shadow-none"
       >
         {adding
           ? "Đang thêm..."
