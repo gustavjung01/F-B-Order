@@ -59,7 +59,7 @@ export function createApp(config: AppConfig) {
 
   const identityResolver = clerkEnabled ? resolveRequestIdentity : async () => anonymousIdentity;
 
-  // Phase 5 contract. List = 275 sellable variant cards; detail groups siblings by parent product.
+  // Catalog v2 contract: list = 188 parent-product cards; detail = sellable sibling variants.
   app.use("/catalog", createCatalogV2Router(identityResolver));
   app.use("/api/catalog-v2", createCatalogV2Router(identityResolver));
 
