@@ -4,9 +4,9 @@ import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ResponsivePageShell } from "@/components/responsive/ResponsivePageShell";
 import type {
-  CatalogV2DetailResponse,
   CatalogV2VariantCard,
 } from "@/data/catalog-v2/product-model";
+import { fetchCatalogV2Detail } from "@/lib/catalog-v2-client";
 import {
   getCatalogV2OptionSummary,
   getCatalogV2PriceLabel,
@@ -41,7 +41,7 @@ function syncErrorMessage(status: number, code?: string) {
   if (code === "CUSTOMER_PROFILE_REQUIRED") return "Bạn cần tạo hồ sơ quán trước khi đặt hàng.";
   if (code === "CUSTOMER_NOT_APPROVED") return "Hồ sơ quán chưa được duyệt.";
   if (code === "MARKET_PRICE") return "Sản phẩm thời giá không thể nằm trong giỏ đặt trực tiếp.";
-  if (code === "SHOP_PRICE_UNAVAILABLE") return "Sản phẩm chưa có giá quán.";
+  if (code === "DEALER_PRICE_UNAVAILABLE") return "Sản phẩm chưa có giá đại lý.";
   return "Backend chưa đồng bộ được giỏ hàng.";
 }
 
@@ -85,13 +85,7 @@ export default function CartPage() {
       setError("");
       const nextLines = await Promise.all(storedItems.map(async (item): Promise<HydratedCartLine> => {
         try {
-          const response = await fetch(`/api/catalog-v2/products/${encodeURIComponent(item.variantId)}`, {
-            cache: "no-store",
-          });
-          if (!response.ok) {
-            return { item, variant: null, error: response.status === 404 ? "Biến thể không còn tồn tại" : "Không tải được biến thể" };
-          }
-          const detail = (await response.json()) as CatalogV2DetailResponse;
+          const detail = await fetchCatalogV2Detail(item.variantId);
           const variant = detail.variants.find((candidate) => candidate.variant_id === item.variantId) || null;
           return { item, variant, error: variant ? null : "Biến thể không còn tồn tại" };
         } catch {
@@ -189,7 +183,7 @@ export default function CartPage() {
       <section className="rounded-[26px] bg-[#fff1d7] p-5 shadow-[0_14px_30px_rgba(15,23,42,0.085)] ring-1 ring-white/80 md:p-8">
         <p className="text-[12px] font-black uppercase tracking-[0.16em] text-[#ff5a00]">Catalog v2</p>
         <h1 className="mt-3 text-[26px] font-black leading-tight tracking-tight md:text-5xl">Giỏ hàng lưu đúng variant_id</h1>
-        <p className="mt-3 text-[14px] font-semibold leading-6 text-slate-700 md:text-base">Tên, SKU, giá và ảnh luôn được tải lại từ biến thể thật. Không lưu lựa chọn vị/size/màu bằng text đoán.</p>
+        <p className="mt-3 text-[14px] font-semibold leading-6 text-slate-700 md:text-base">Tên, SKU, giá đại lý và ảnh luôn được tải lại từ biến thể thật.</p>
       </section>
 
       {error ? <p className="mt-4 rounded-[20px] bg-red-50 p-4 text-sm font-black text-red-700 ring-1 ring-red-100">{error}</p> : null}
@@ -198,7 +192,7 @@ export default function CartPage() {
       {loaded && storedItems.length === 0 ? (
         <section className="mt-4 rounded-[26px] bg-white p-5 ring-1 ring-[#efe7dc]">
           <h2 className="text-[24px] font-black">Giỏ hàng đang trống</h2>
-          <Link href="/products" className="mt-5 inline-flex rounded-[18px] bg-[#0b1220] px-5 py-3 text-sm font-black text-white">Xem 275 sản phẩm</Link>
+          <Link href="/products" className="mt-5 inline-flex rounded-[18px] bg-[#0b1220] px-5 py-3 text-sm font-black text-white">Xem 188 sản phẩm</Link>
         </section>
       ) : null}
 
@@ -218,7 +212,8 @@ export default function CartPage() {
                       <Link href={`/products/${variant.variant_id}`} className="text-[18px] font-black leading-tight hover:text-[#ff5a00]">{variant.name}</Link>
                       <p className="mt-1 text-xs font-bold text-slate-500">{variant.sku}</p>
                       <p className="mt-1 text-xs font-bold text-slate-500">{getCatalogV2OptionSummary(variant)}</p>
-                      <p className="mt-2 text-sm font-black text-[#ff5a00]">{getCatalogV2PriceLabel(variant)}</p>
+                      <p className="mt-2 text-xs font-black uppercase tracking-[0.1em] text-[#ff5a00]">Giá đại lý</p>
+                      <p className="mt-1 text-sm font-black text-[#ff5a00]">{getCatalogV2PriceLabel(variant)}</p>
                       {variant.price !== null ? <p className="mt-1 text-lg font-black text-[#ff5a00]">{formatMoney(variant.price * line.item.quantity)}</p> : null}
                     </div>
                   </div>
@@ -242,15 +237,15 @@ export default function CartPage() {
         <section className="mt-4 rounded-[26px] bg-white p-5 shadow-[0_16px_34px_rgba(15,23,42,0.095)] ring-1 ring-[#efe7dc]">
           <div className="flex items-center justify-between gap-3">
             <div>
-              <p className="text-xs font-black uppercase tracking-[0.14em] text-slate-400">Tạm tính theo variant</p>
+              <p className="text-xs font-black uppercase tracking-[0.14em] text-slate-400">Tạm tính theo giá đại lý</p>
               <p className="mt-1 text-2xl font-black text-[#ff5a00]">{completePriceCount === lines.length ? formatMoney(totalPreview) : "Có dòng chưa có giá"}</p>
             </div>
             <button type="button" onClick={() => void clearCart()} className="text-sm font-black text-slate-500">Xóa giỏ</button>
           </div>
           <div className="mt-4 rounded-[18px] bg-[#fbfaf7] p-4 text-sm font-bold leading-6 text-slate-600 ring-1 ring-[#eee7dc]">
-            Catalog và giỏ variant_id đã hoàn tất. Tạo order từ variant_id sẽ được nối ở bước backend order v2, không gửi nhầm variant UUID vào API order cũ.
+            Giỏ hàng lưu variant_id. Bước tiếp theo là nối order v2 theo đúng biến thể.
           </div>
-          <button type="button" disabled className="mt-4 h-13 w-full cursor-not-allowed rounded-[18px] bg-slate-300 px-5 py-3 text-base font-black text-white">
+          <button type="button" disabled className="mt-4 h-[52px] w-full cursor-not-allowed rounded-[18px] bg-slate-300 px-5 py-3 text-base font-black text-white">
             Checkout variant đang chờ order v2
           </button>
         </section>
