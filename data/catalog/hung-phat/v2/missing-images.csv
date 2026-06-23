@@ -1,4 +1,4 @@
-product_key,name,image_key,expected_filename,reason
+﻿product_key,name,image_key,expected_filename,reason
 sinh-to-berrino-dau-bgkq-0015,Sinh Tố Berrino Dâu,bgkq-0015,bgkq-0015-sinh-to-berrino-dau-thung12-chai.webp,MISSING_IMAGE
 tc-cafe-gia-uy-mini-bgkq-0068,Tc Cafe Gia Uy mini,bgkq-0068,bgkq-0068-tc-cafe-gia-uy-mini-thung-10-goi.webp,MISSING_IMAGE
 flan-mota-bgkq-0108,Flan  mota,bgkq-0108,bgkq-0108-flan-mota-thung-12-goi.webp,MISSING_IMAGE

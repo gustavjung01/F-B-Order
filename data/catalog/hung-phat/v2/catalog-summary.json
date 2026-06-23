@@ -1,17 +1,19 @@
 {
-  "catalogVersion": "hung-phat-v2",
-  "sourceRows": 276,
-  "excludedRows": 1,
-  "cardCount": 275,
-  "variantCount": 275,
-  "productOptionRows": 472,
-  "imageRecords": 275,
-  "missingImageCount": 6,
-  "duplicateProductKey": 0,
-  "duplicateSku": 0,
-  "status": "PASS",
-  "r2Prefixes": {
-    "products": "catalog/hung-phat/v2/products/",
-    "manifests": "catalog/hung-phat/v2/manifests/"
-  }
+    "catalogVersion":  "hung-phat-v2",
+    "sourceRows":  276,
+    "excludedRows":  1,
+    "cardCount":  275,
+    "variantCount":  275,
+    "productOptionRows":  472,
+    "imageRecords":  275,
+    "mappedImageCount":  269,
+    "missingImageCount":  6,
+    "duplicateProductKey":  0,
+    "duplicateSku":  0,
+    "phase1Status":  "PASS",
+    "phase2MappingStatus":  "PASS",
+    "r2Prefixes":  {
+                       "products":  "catalog/hung-phat/v2/products/",
+                       "manifests":  "catalog/hung-phat/v2/manifests/"
+                   }
 }
