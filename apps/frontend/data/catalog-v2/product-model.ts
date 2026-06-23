@@ -3,11 +3,9 @@ export type CatalogV2Pricing = {
   label: string | null;
   amount: number | null;
   currency: "VND";
-  source: "price_group" | "shop" | "retail" | "market" | null;
+  source: "dealer" | "market" | null;
   canOrder: boolean;
   reason: string | null;
-  estimated: boolean;
-  estimateMarkupPercent: number | null;
 };
 
 export type CatalogV2Image = {
@@ -47,6 +45,7 @@ export type CatalogV2VariantCard = {
 };
 
 export type CatalogV2OptionGroup = {
+  key: string;
   name: string;
   values: string[];
 };
@@ -65,7 +64,7 @@ export type CatalogV2ParentProduct = {
 export type CatalogV2ListResponse = {
   products: CatalogV2VariantCard[];
   total: number;
-  cardModel: "variant";
+  cardModel: "parent";
 };
 
 export type CatalogV2DetailResponse = {
@@ -75,7 +74,7 @@ export type CatalogV2DetailResponse = {
   selectedVariantId: string;
 };
 
-export type CatalogV2Tab = {
+export type CatalogV2FilterOption = {
   id: string;
   name: string;
   productCount: number;
