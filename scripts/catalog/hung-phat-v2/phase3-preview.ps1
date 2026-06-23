@@ -1,5 +1,6 @@
 param(
-  [string]$SourceImages = "F:\1_A_Disk_D\khuong-binh\bep-si\image\bepsi-link-mapper\bepsi_link_mapper\catalog-v2\preview\assets"
+  [string]$SourceImages = "F:\1_A_Disk_D\khuong-binh\bep-si\image\bepsi-link-mapper\bepsi_link_mapper\catalog-v2\preview\assets",
+  [int]$Port = 4173
 )
 
 $ErrorActionPreference = "Stop"
@@ -7,10 +8,25 @@ Set-StrictMode -Version Latest
 
 $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..\..\..")).Path
 $builder = Join-Path $PSScriptRoot "build-phase3-preview.mjs"
+$server = Join-Path $PSScriptRoot "serve-phase3-preview.mjs"
 $output = Join-Path $repoRoot "artifacts\catalog\hung-phat-v2-preview\index.html"
+$outputDir = Split-Path -Parent $output
+$url = "http://127.0.0.1:$Port/"
 
 if (-not (Test-Path -LiteralPath $SourceImages)) {
   throw "Local preview image source does not exist: $SourceImages"
+}
+if (-not (Test-Path -LiteralPath $server)) {
+  throw "Preview server script does not exist: $server"
+}
+
+function Test-PreviewServer {
+  try {
+    $response = Invoke-WebRequest -Uri $url -UseBasicParsing -TimeoutSec 2
+    return $response.StatusCode -eq 200 -and $response.Content -match "Preview catalog Hưng Phát v2"
+  } catch {
+    return $false
+  }
 }
 
 Push-Location $repoRoot
@@ -24,10 +40,41 @@ try {
     throw "Preview output was not created: $output"
   }
 
+  if (-not (Test-PreviewServer)) {
+    $nodePath = (Get-Command node -ErrorAction Stop).Source
+    $serverProcess = Start-Process `
+      -FilePath $nodePath `
+      -ArgumentList @($server, "--root=$outputDir", "--port=$Port") `
+      -WindowStyle Hidden `
+      -PassThru
+
+    $ready = $false
+    for ($attempt = 0; $attempt -lt 30; $attempt += 1) {
+      Start-Sleep -Milliseconds 200
+      if (Test-PreviewServer) {
+        $ready = $true
+        break
+      }
+      if ($serverProcess.HasExited) {
+        break
+      }
+    }
+
+    if (-not $ready) {
+      if (-not $serverProcess.HasExited) {
+        Stop-Process -Id $serverProcess.Id -Force -ErrorAction SilentlyContinue
+      }
+      throw "Could not start Phase 3 preview server on $url"
+    }
+
+    Set-Content -LiteralPath (Join-Path $outputDir ".server.pid") -Value $serverProcess.Id -Encoding ASCII
+  }
+
   Write-Host "PASS: Phase 3 ordering-style popup preview generated." -ForegroundColor Green
-  Write-Host "Preview: $output"
-  Write-Host "Images: local assets (no img.bepsi.click DNS dependency)"
-  Start-Process -FilePath $output
+  Write-Host "Preview URL: $url"
+  Write-Host "Images: local assets served over localhost"
+  Write-Host "No file:// origin errors; no public R2 DNS dependency"
+  Start-Process $url
 } finally {
   Pop-Location
 }
