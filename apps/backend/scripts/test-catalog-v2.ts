@@ -7,6 +7,8 @@ type CatalogCard = {
   productId: string;
   variantId: string;
   sku: string;
+  brand: string | null;
+  industryKey: string;
   priceMode: "fixed" | "market";
   price: number | null;
   priceLabel: string | null;
@@ -27,7 +29,8 @@ async function main() {
     variants: number;
     dealer_prices: number;
     retail_prices: number;
-    specifications: number;
+    package_info: number;
+    exact_sizes: number;
   }>(`
     SELECT
       (SELECT COUNT(*) FROM catalog_products
@@ -48,14 +51,20 @@ async function main() {
       (SELECT COUNT(*) FROM catalog_variants
        WHERE catalog_version = 'hung-phat-v2'
          AND is_active = true
-         AND (options ? 'size' OR options ? 'package' OR options ? 'sell_unit'))::int AS specifications
+         AND (options ? 'size' OR options ? 'package' OR options ? 'sell_unit'))::int AS package_info,
+      (SELECT COUNT(*) FROM catalog_variants
+       WHERE catalog_version = 'hung-phat-v2'
+         AND is_active = true
+         AND (options ? 'size' OR options ? 'weight' OR options ? 'volume' OR options ? 'capacity'))::int AS exact_sizes
   `);
 
   assert.equal(counts.rows[0]?.products, 188);
   assert.equal(counts.rows[0]?.variants, 275);
   assert.equal(counts.rows[0]?.dealer_prices, 272);
   assert.equal(counts.rows[0]?.retail_prices, 0);
-  assert.equal(counts.rows[0]?.specifications, 275);
+  assert.equal(counts.rows[0]?.package_info, 275);
+  assert.ok((counts.rows[0]?.exact_sizes ?? 0) > 0);
+  assert.ok((counts.rows[0]?.exact_sizes ?? 0) < 275);
 
   const app = createApp({
     port: 0,
@@ -89,6 +98,14 @@ async function main() {
     assert.ok(fixedCards.every((item) => item.pricing.source === "dealer"));
     assert.ok(marketCards.every((item) => item.price === null && item.priceLabel === "Thời giá"));
 
+    const firstBranded = listBody.products.find((item) => item.brand);
+    assert.ok(firstBranded?.brand);
+    const brandResponse = await fetch(`${baseUrl}/catalog/products?brand=${encodeURIComponent(firstBranded.brand)}&limit=500`);
+    assert.equal(brandResponse.status, 200);
+    const brandBody = await brandResponse.json() as { products: CatalogCard[] };
+    assert.ok(brandBody.products.length > 0);
+    assert.ok(brandBody.products.every((item) => item.brand === firstBranded.brand));
+
     const selectedVariantId = listBody.products[0].variantId;
     const detailResponse = await fetch(`${baseUrl}/catalog/products/${selectedVariantId}`);
     assert.equal(detailResponse.status, 200);
@@ -102,15 +119,12 @@ async function main() {
     assert.ok(detailBody.product.id);
     assert.ok(detailBody.product.productKey);
     assert.ok(Array.isArray(detailBody.optionGroups));
-    assert.ok(detailBody.optionGroups.every((group) => group.key && group.name && Array.isArray(group.values)));
+    assert.ok(detailBody.optionGroups.every((group) => group.key && group.name && group.values.length > 1));
     assert.ok(detailBody.variants.length >= 1);
     assert.equal(detailBody.selectedVariantId, selectedVariantId);
     assert.ok(detailBody.variants.some((variant) => variant.variantId === selectedVariantId));
 
-    const brand = listBody.products.find((item) => item.productId)?.productId;
-    assert.ok(brand);
-
-    console.log("Catalog v2 API contract passed: 188 parent cards / 275 variants / 272 dealer prices / 275 specifications.");
+    console.log(`Catalog v2 API contract passed: 188 parent cards / 275 variants / 272 dealer prices / ${counts.rows[0]?.exact_sizes} exact sizes.`);
   } finally {
     await new Promise<void>((resolve, reject) => {
       server.close((error) => error ? reject(error) : resolve());
