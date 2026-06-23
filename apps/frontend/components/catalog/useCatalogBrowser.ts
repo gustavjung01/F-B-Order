@@ -1,76 +1,50 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import type { CategoryWithCount, PublicProduct } from "@/data/catalog/product-model";
+import type {
+  CatalogV2ListResponse,
+  CatalogV2Tab,
+  CatalogV2VariantCard,
+} from "@/data/catalog-v2/product-model";
 
-type CategoriesResponse = { categories: CategoryWithCount[] };
-type ProductsResponse = { products: PublicProduct[]; total: number };
-
-function buildProductsUrl(categoryId: string, q: string) {
+function buildProductsUrl(industryKey: string, q: string) {
   const params = new URLSearchParams();
-  if (categoryId !== "all") params.set("categoryId", categoryId);
+  if (industryKey !== "all") params.set("industry", industryKey);
   if (q.trim()) params.set("q", q.trim());
-  params.set("limit", "80");
-  return `/api/catalog/products?${params.toString()}`;
+  params.set("limit", "500");
+  return `/api/catalog-v2/products?${params.toString()}`;
 }
 
 export function useCatalogBrowser() {
-  const [products, setProducts] = useState<PublicProduct[]>([]);
-  const [categories, setCategories] = useState<CategoryWithCount[]>([]);
+  const [products, setProducts] = useState<CatalogV2VariantCard[]>([]);
+  const [allProducts, setAllProducts] = useState<CatalogV2VariantCard[]>([]);
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [searchText, setSearchText] = useState("");
-  const [loadingProducts, setLoadingProducts] = useState(true);
-  const [loadingCategories, setLoadingCategories] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-
-  useEffect(() => {
-    let activeRequest = true;
-
-    async function loadCategories() {
-      try {
-        setLoadingCategories(true);
-        const response = await fetch("/api/catalog/categories", { cache: "no-store" });
-        if (!response.ok) throw new Error("Không tải được danh mục");
-        const data = (await response.json()) as CategoriesResponse;
-        if (!activeRequest) return;
-        setCategories(
-          Array.isArray(data.categories)
-            ? data.categories.filter((category) => category.parentId === null && category.id !== "all")
-            : [],
-        );
-      } catch (loadError) {
-        if (!activeRequest) return;
-        setError(loadError instanceof Error ? loadError.message : "Không tải được danh mục");
-        setCategories([]);
-      } finally {
-        if (activeRequest) setLoadingCategories(false);
-      }
-    }
-
-    loadCategories();
-    return () => {
-      activeRequest = false;
-    };
-  }, []);
 
   useEffect(() => {
     let activeRequest = true;
 
     async function loadProducts() {
       try {
-        setLoadingProducts(true);
+        setLoading(true);
         setError("");
-        const response = await fetch(buildProductsUrl(selectedCategory, searchText), { cache: "no-store" });
-        if (!response.ok) throw new Error("Không tải được sản phẩm");
-        const data = (await response.json()) as ProductsResponse;
+        const response = await fetch(buildProductsUrl(selectedCategory, searchText), {
+          cache: "no-store",
+        });
+        if (!response.ok) throw new Error("Không tải được catalog 275 sản phẩm");
+        const data = (await response.json()) as CatalogV2ListResponse;
         if (!activeRequest) return;
-        setProducts(Array.isArray(data.products) ? data.products : []);
+        const nextProducts = Array.isArray(data.products) ? data.products : [];
+        setProducts(nextProducts);
+        if (selectedCategory === "all" && !searchText.trim()) setAllProducts(nextProducts);
       } catch (loadError) {
         if (!activeRequest) return;
         setError(loadError instanceof Error ? loadError.message : "Không tải được sản phẩm");
         setProducts([]);
       } finally {
-        if (activeRequest) setLoadingProducts(false);
+        if (activeRequest) setLoading(false);
       }
     }
 
@@ -81,18 +55,23 @@ export function useCatalogBrowser() {
     };
   }, [selectedCategory, searchText]);
 
-  const loading = loadingCategories || loadingProducts;
-  const catalogTotal = useMemo(
-    () => categories.reduce((total, category) => total + category.productCount, 0),
-    [categories],
-  );
-  const tabs = useMemo(
-    () => [
-      { id: "all", name: "Tất cả", productCount: catalogTotal, parentId: null, sortOrder: 0 },
-      ...categories,
-    ],
-    [catalogTotal, categories],
-  );
+  const tabs = useMemo<CatalogV2Tab[]>(() => {
+    const counts = new Map<string, { name: string; count: number }>();
+    for (const product of allProducts) {
+      const current = counts.get(product.industryKey);
+      counts.set(product.industryKey, {
+        name: product.industry,
+        count: (current?.count ?? 0) + 1,
+      });
+    }
+
+    return [
+      { id: "all", name: "Tất cả", productCount: allProducts.length },
+      ...[...counts.entries()]
+        .sort((left, right) => left[1].name.localeCompare(right[1].name, "vi"))
+        .map(([id, value]) => ({ id, name: value.name, productCount: value.count })),
+    ];
+  }, [allProducts]);
 
   return {
     products,
@@ -103,5 +82,6 @@ export function useCatalogBrowser() {
     setSearchText,
     loading,
     error,
+    total: products.length,
   };
 }
