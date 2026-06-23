@@ -1,6 +1,6 @@
 param(
   [string]$SourceImages = "F:\1_A_Disk_D\khuong-binh\bep-si\image\bepsi-link-mapper\bepsi_link_mapper\catalog-v2\preview\assets",
-  [int]$Port = 4173
+  [int]$Port = 4183
 )
 
 $ErrorActionPreference = "Stop"
@@ -41,10 +41,13 @@ try {
   }
 
   if (-not (Test-PreviewServer)) {
+    $env:BEPSI_PREVIEW_ROOT = $outputDir
+    $env:BEPSI_PREVIEW_PORT = [string]$Port
     $nodePath = (Get-Command node -ErrorAction Stop).Source
     $serverProcess = Start-Process `
       -FilePath $nodePath `
-      -ArgumentList @($server, "--root=$outputDir", "--port=$Port") `
+      -WorkingDirectory $PSScriptRoot `
+      -ArgumentList "serve-phase3-preview.mjs" `
       -WindowStyle Hidden `
       -PassThru
 
@@ -60,6 +63,9 @@ try {
       }
     }
 
+    Remove-Item Env:BEPSI_PREVIEW_ROOT -ErrorAction SilentlyContinue
+    Remove-Item Env:BEPSI_PREVIEW_PORT -ErrorAction SilentlyContinue
+
     if (-not $ready) {
       if (-not $serverProcess.HasExited) {
         Stop-Process -Id $serverProcess.Id -Force -ErrorAction SilentlyContinue
@@ -70,10 +76,9 @@ try {
     Set-Content -LiteralPath (Join-Path $outputDir ".server.pid") -Value $serverProcess.Id -Encoding ASCII
   }
 
-  Write-Host "PASS: Phase 3 ordering-style popup preview generated." -ForegroundColor Green
+  Write-Host "PASS: Phase 3 popup preview generated." -ForegroundColor Green
   Write-Host "Preview URL: $url"
   Write-Host "Images: local assets served over localhost"
-  Write-Host "No file:// origin errors; no public R2 DNS dependency"
   Start-Process $url
 } finally {
   Pop-Location
