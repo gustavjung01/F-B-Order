@@ -103,7 +103,7 @@ const variantPayload = variants.map((row, sortOrder) => {
     imageKey: row.imageKey || null,
     imageObjectKey: row.image?.objectKey || null,
     status: row.status,
-    isOrderable: fixedPrice && dealerPrice !== null && Boolean(row.isOrderable !== false),
+    isOrderable: fixedPrice && dealerPrice !== null,
     sortOrder,
   };
 });
