@@ -44,6 +44,44 @@ $labelMap = @{
   flavor_or_type = "Loại"
 }
 
+$valueMap = @{
+  "dau" = "Dâu"
+  "dao" = "Đào"
+  "oi" = "Ổi"
+  "viet quoc" = "Việt quất"
+  "chanh day" = "Chanh dây"
+  "vai" = "Vải"
+  "kiwi" = "Kiwi"
+  "phuc bon tu" = "Phúc bồn tử"
+  "xoai" = "Xoài"
+  "nho" = "Nho"
+  "dau tam" = "Dâu tằm"
+  "khom" = "Khóm"
+  "mang cau" = "Mãng cầu"
+  "trang" = "Trắng"
+  "den" = "Đen"
+  "hoang kim" = "Hoàng kim"
+  "duong den" = "Đường đen"
+  "cafe" = "Cà phê"
+  "olong" = "Ô long"
+  "socola" = "Sô-cô-la"
+  "mon" = "Môn"
+  "trung" = "Trứng"
+  "dua" = "Dừa"
+  "lai" = "Lài"
+  "hong" = "Hồng trà"
+  "gao" = "Gạo"
+  "nau" = "Nâu"
+  "khac" = "Khác"
+}
+
+function Format-OptionValue {
+  param([string]$Value)
+  $normalized = ($Value -replace '-', ' ' -replace '\s+', ' ').Trim().ToLowerInvariant()
+  if ($valueMap.ContainsKey($normalized)) { return $valueMap[$normalized] }
+  return $Value
+}
+
 $cards = New-Object System.Collections.ArrayList
 foreach ($parent in $parents) {
   $parentVariants = @($variantsByParent[$parent.parent_key])
@@ -58,14 +96,24 @@ foreach ($parent in $parents) {
       $parsed = $variant.options_json | ConvertFrom-Json
       foreach ($property in $parsed.PSObject.Properties) {
         $label = if ($labelMap.ContainsKey($property.Name)) { $labelMap[$property.Name] } else { $property.Name }
-        $value = [string]$property.Value
+        $value = Format-OptionValue -Value ([string]$property.Value)
         $rawOptions[$label] = $value
-        if (-not $optionValues.ContainsKey($label)) {
-          $optionValues[$label] = New-Object System.Collections.ArrayList
-        }
-        if (-not $optionValues[$label].Contains($value)) {
-          [void]$optionValues[$label].Add($value)
-        }
+      }
+    }
+
+    if ($parent.parent_key -eq "sot-gold" -and $rawOptions.Count -eq 0) {
+      $rawOptions["Vị"] = if ($variant.raw_name -match "matcha") { "Matcha" } elseif ($variant.raw_name -match "môn|mon") { "Môn" } else { "Sô-cô-la" }
+    }
+    if ($parent.parent_key -eq "thai" -and $rawOptions.Count -eq 0) {
+      $rawOptions["Loại"] = if ($variant.raw_name -match "nhãn|nhan") { "Nhãn" } else { "Đào" }
+    }
+
+    foreach ($entry in $rawOptions.GetEnumerator()) {
+      if (-not $optionValues.ContainsKey($entry.Key)) {
+        $optionValues[$entry.Key] = New-Object System.Collections.ArrayList
+      }
+      if (-not $optionValues[$entry.Key].Contains($entry.Value)) {
+        [void]$optionValues[$entry.Key].Add($entry.Value)
       }
     }
 
@@ -102,10 +150,11 @@ foreach ($parent in $parents) {
   $coverKey = $parent.cover_image_key
   $coverPath = Join-Path $outputDir "assets\$coverKey.webp"
   $coverAvailable = $coverKey -and (Test-Path -LiteralPath $coverPath)
+  $displayName = if ($parent.parent_key -eq "sot-gold") { "Sốt Gold" } elseif ($parent.parent_key -eq "thai") { "Trái cây lon Thái" } else { $parent.name }
 
   [void]$cards.Add([ordered]@{
     productKey = $parent.parent_key
-    name = $parent.name
+    name = $displayName
     brand = $parent.brand
     category = if ($parentVariants.Count) { $parentVariants[0].source_group } else { "Chưa phân nhóm" }
     priceFrom = $priceFrom
@@ -120,7 +169,7 @@ foreach ($parent in $parents) {
     duplicateSkus = @()
     autoIssues = [ordered]@{
       missingImage = $hasMissingImage
-      wrongName = ($parent.name -match '\s{2,}')
+      wrongName = ($displayName -match '\s{2,}')
       wrongOption = ($variantRows.Count -gt 1 -and $optionGroups.Count -eq 0)
       duplicateSku = $false
       wrongPrice = $hasWrongPrice
