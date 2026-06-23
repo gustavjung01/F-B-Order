@@ -10,7 +10,7 @@
   <main class="page">
     <header class="top">
       <h1>Preview catalog Hưng Phát v2</h1>
-      <p class="sub">275 card · xem bằng popup liên tục, không chuyển trang · chỉ đánh dấu lỗi cần sửa.</p>
+      <p class="sub">275 card · bấm card mở popup chọn phân loại và số lượng · không chuyển trang.</p>
       <div id="stats" class="stats"></div>
       <div class="controls">
         <input id="q" class="ctl" placeholder="Tìm tên, SKU, brand..." />
@@ -40,20 +40,44 @@
     <button class="back" aria-label="Đóng"></button>
     <section class="box" role="dialog" aria-modal="true">
       <header class="head">
-        <button id="prevTop" class="x">‹</button>
-        <strong id="headName"></strong>
-        <button id="close" class="x">×</button>
+        <button id="prevTop" class="x" aria-label="Sản phẩm trước">‹</button>
+        <div class="head-title">
+          <strong id="headName"></strong>
+          <span id="count" class="count"></span>
+        </div>
+        <button id="nextTop" class="x" aria-label="Sản phẩm sau">›</button>
+        <button id="close" class="x" aria-label="Đóng">×</button>
       </header>
+
       <div class="content">
         <div id="left" class="left"></div>
-        <div id="right" class="right"></div>
+        <div class="right">
+          <section class="order-section">
+            <div class="section-title">
+              <div>
+                <p class="eyebrow">Chọn phân loại</p>
+                <h3>Vị / size / màu / loại và số lượng</h3>
+              </div>
+              <button id="addRow" class="secondary">+ Thêm phân loại</button>
+            </div>
+            <div id="orderRows" class="order-rows"></div>
+          </section>
+
+          <details class="audit" id="auditPanel">
+            <summary>Kiểm tra dữ liệu card</summary>
+            <div id="auditContent"></div>
+          </details>
+        </div>
       </div>
-      <footer class="foot">
-        <button id="prev" class="nav">← Trước</button>
-        <span id="count" class="count"></span>
-        <button id="next" class="nav">Sau →</button>
-        <button id="done" class="done">Đánh dấu đã duyệt</button>
+
+      <footer class="foot order-foot">
+        <div>
+          <div id="orderSummary" class="order-summary">0 phân loại · 0 sản phẩm</div>
+          <div id="orderTotal" class="order-total">0 đ</div>
+        </div>
+        <button id="addCart" class="add-cart">Thêm vào giỏ</button>
       </footer>
+      <div id="toast" class="toast" hidden></div>
     </section>
   </div>
 
