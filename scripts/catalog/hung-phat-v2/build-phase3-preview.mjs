@@ -77,8 +77,9 @@ const templatePath = path.join(scriptDir, "phase3-preview.template.html");
 const cssPath = path.join(scriptDir, "phase3-preview.css");
 const mobileCssPath = path.join(scriptDir, "phase3-mobile.css");
 const jsPath = path.join(scriptDir, "phase3-preview.js");
+const filterOrderPath = path.join(scriptDir, "phase3-filter-order.js");
 
-for (const required of [productsPath, versionPath, templatePath, cssPath, mobileCssPath, jsPath]) {
+for (const required of [productsPath, versionPath, templatePath, cssPath, mobileCssPath, jsPath, filterOrderPath]) {
   assert(fs.existsSync(required), `Missing required file: ${required}`);
 }
 assert(fs.existsSync(sourceImages), `Local image source does not exist: ${sourceImages}`);
@@ -180,6 +181,7 @@ fs.writeFileSync(outputPath, html, "utf8");
 fs.copyFileSync(cssPath, path.join(outputDir, "preview.css"));
 fs.copyFileSync(mobileCssPath, path.join(outputDir, "mobile.css"));
 fs.copyFileSync(jsPath, path.join(outputDir, "preview.js"));
+fs.copyFileSync(filterOrderPath, path.join(outputDir, "filter-order.js"));
 
 console.log(JSON.stringify({
   phase: 3,
