@@ -5,6 +5,7 @@ import helmet from "helmet";
 import { createAdminCustomersRouter } from "./modules/admin/admin-customers.routes";
 import { anonymousIdentity, resolveRequestIdentity } from "./modules/auth/auth.identity";
 import { createAuthRouter } from "./modules/auth/auth.routes";
+import { createCatalogV2Router } from "./modules/catalog-v2/catalog-v2.routes";
 import { createCartRouter } from "./modules/catalog/cart.routes";
 import { createCatalogRouter } from "./modules/catalog/catalog.routes";
 import { createAdminOrdersRouter } from "./modules/orders/admin-orders.routes";
@@ -43,7 +44,7 @@ export function createApp(config: AppConfig) {
   app.get("/health", (_req, res) => res.json(healthPayload()));
   app.get("/api/health", (_req, res) => res.json(healthPayload()));
   app.get("/api/version", (_req, res) => {
-    res.json({ name: "Bếp Sỉ F&B API", service: config.serviceName, version: "frontend-cutover-v6" });
+    res.json({ name: "Bếp Sỉ F&B API", service: config.serviceName, version: "catalog-v2-backend" });
   });
 
   if (clerkEnabled) {
@@ -55,10 +56,14 @@ export function createApp(config: AppConfig) {
     );
   }
 
-  app.use(
-    "/api/catalog",
-    createCatalogRouter(clerkEnabled ? resolveRequestIdentity : async () => anonymousIdentity),
-  );
+  const identityResolver = clerkEnabled ? resolveRequestIdentity : async () => anonymousIdentity;
+
+  // Phase 5 contract. List = 275 sellable variant cards; detail groups siblings by parent product.
+  app.use("/catalog", createCatalogV2Router(identityResolver));
+  app.use("/api/catalog-v2", createCatalogV2Router(identityResolver));
+
+  // Legacy catalog remains available during the controlled frontend cutover.
+  app.use("/api/catalog", createCatalogRouter(identityResolver));
 
   if (clerkEnabled) {
     app.use("/api/auth", createAuthRouter(resolveRequestIdentity));
