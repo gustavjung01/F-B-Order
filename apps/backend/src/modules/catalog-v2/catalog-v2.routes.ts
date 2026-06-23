@@ -38,6 +38,14 @@ const OPTION_VALUE_LABELS: Record<string, string> = {
   khac: "Khác",
 };
 
+const OPTION_GROUP_LABELS: Record<string, string> = {
+  flavor: "Vị",
+  flavor_or_type: "Vị / loại",
+  type: "Loại",
+  color: "Màu",
+  size: "Dung tích / khối lượng",
+};
+
 type IdentityResolver = (req: Request) => Promise<RequestIdentity>;
 
 type VariantRow = CatalogV2PriceRow & {
@@ -52,6 +60,7 @@ type VariantRow = CatalogV2PriceRow & {
   option_groups: unknown;
   cover_image_key: string | null;
   cover_image_object_key: string | null;
+  product_sort_order: number;
   variant_key: string;
   sku: string;
   variant_name: string;
@@ -97,12 +106,15 @@ function displayOptions(value: unknown): Record<string, unknown> {
   );
 }
 
-function optionText(options: Record<string, unknown>, key: string): string | null {
-  const value = options[key];
-  return typeof value === "string" && value.trim() ? value.trim() : null;
+function optionText(options: Record<string, unknown>, ...keys: string[]): string | null {
+  for (const key of keys) {
+    const value = options[key];
+    if (typeof value === "string" && value.trim()) return value.trim();
+  }
+  return null;
 }
 
-function displayOptionGroups(value: unknown): Array<{ name: string; values: unknown[] }> {
+function displayOptionGroups(value: unknown): Array<{ name: string; key: string; values: unknown[] }> {
   if (!Array.isArray(value)) return [];
   return value
     .filter((group): group is { name: string; values: unknown[] } => (
@@ -112,7 +124,8 @@ function displayOptionGroups(value: unknown): Array<{ name: string; values: unkn
       Array.isArray((group as { values?: unknown }).values)
     ))
     .map((group) => ({
-      name: group.name,
+      key: group.name,
+      name: OPTION_GROUP_LABELS[group.name] || group.name,
       values: group.values.map(displayOptionValue),
     }));
 }
@@ -120,7 +133,7 @@ function displayOptionGroups(value: unknown): Array<{ name: string; values: unkn
 function toVariantCard(row: VariantRow, identity: RequestIdentity) {
   const pricing = evaluateCatalogV2Pricing(identity, row);
   const options = displayOptions(row.options);
-  const sizeLabel = optionText(options, "size");
+  const sizeLabel = optionText(options, "size", "weight", "volume", "capacity");
   const packageLabel = optionText(options, "package");
   const sellUnit = optionText(options, "sell_unit");
   const specificationLabel = [sizeLabel, packageLabel, sellUnit ? `ĐVT: ${sellUnit}` : null]
@@ -162,6 +175,19 @@ function toVariantCard(row: VariantRow, identity: RequestIdentity) {
   };
 }
 
+function toParentCard(row: VariantRow, identity: RequestIdentity) {
+  const representative = toVariantCard(row, identity);
+  return {
+    ...representative,
+    name: row.product_name,
+    image: {
+      key: row.cover_image_key || row.image_key,
+      objectKey: row.cover_image_object_key || row.image_object_key,
+      url: assetUrl(row.cover_image_object_key || row.image_object_key),
+    },
+  };
+}
+
 async function resolveIdentity(
   req: Request,
   res: Response,
@@ -190,6 +216,7 @@ function variantSelect(priceGroupParameter: number) {
       product.option_groups,
       product.cover_image_key,
       product.cover_image_object_key,
+      product.sort_order AS product_sort_order,
       variant.variant_key,
       variant.sku,
       variant.name AS variant_name,
@@ -231,6 +258,7 @@ export function createCatalogV2Router(
 
     const q = readText(req.query.q);
     const industry = readText(req.query.industry);
+    const brand = readText(req.query.brand);
     const subcategory = readText(req.query.subcategory);
     const limit = readLimit(req.query.limit);
     const priceGroupId = identity.kind === "customer" ? identity.priceGroupId : null;
@@ -247,6 +275,10 @@ export function createCatalogV2Router(
     if (industry && industry !== "all") {
       values.push(industry);
       clauses.push(`product.industry_key = $${values.length}`);
+    }
+    if (brand && brand !== "all") {
+      values.push(brand);
+      clauses.push(`product.brand = $${values.length}`);
     }
     if (subcategory && subcategory !== "all") {
       values.push(subcategory);
@@ -266,17 +298,28 @@ export function createCatalogV2Router(
 
     try {
       const result = await getDb().query<VariantRow>(
-        `${variantSelect(1)}
-         WHERE ${clauses.join(" AND ")}
-         ORDER BY product.sort_order, variant.sort_order, variant.sku
+        `SELECT *
+         FROM (
+           SELECT base.*,
+             ROW_NUMBER() OVER (
+               PARTITION BY base.product_id
+               ORDER BY base.sort_order, base.sku
+             ) AS product_rank
+           FROM (
+             ${variantSelect(1)}
+             WHERE ${clauses.join(" AND ")}
+           ) base
+         ) ranked
+         WHERE product_rank = 1
+         ORDER BY product_sort_order, sort_order, sku
          LIMIT $${values.length}`,
         values,
       );
 
       res.json({
-        products: result.rows.map((row) => toVariantCard(row, identity)),
+        products: result.rows.map((row) => toParentCard(row, identity)),
         total: result.rows.length,
-        cardModel: "variant",
+        cardModel: "parent",
       });
     } catch (error) {
       console.error("catalog v2 products failed", error);
