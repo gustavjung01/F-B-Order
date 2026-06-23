@@ -6,6 +6,7 @@ import type {
   CatalogV2DetailResponse,
   CatalogV2VariantCard,
 } from "@/data/catalog-v2/product-model";
+import { fetchCatalogV2Detail } from "@/lib/catalog-v2-client";
 import {
   getCatalogV2OrderLabel,
   getCatalogV2PriceHeading,
@@ -68,12 +69,7 @@ export function ProductDetailClient({ slug }: ProductDetailClientProps) {
       try {
         setLoading(true);
         setError("");
-        const response = await fetch(`/api/catalog-v2/products/${encodeURIComponent(slug)}`, {
-          cache: "no-store",
-        });
-        if (response.status === 404) throw new Error("Không tìm thấy biến thể sản phẩm");
-        if (!response.ok) throw new Error("Backend catalog v2 đang không khả dụng");
-        const data = (await response.json()) as CatalogV2DetailResponse;
+        const data = await fetchCatalogV2Detail(slug);
         if (!activeRequest) return;
         setDetail(data);
         setSelectedVariantId(data.selectedVariantId || slug);
