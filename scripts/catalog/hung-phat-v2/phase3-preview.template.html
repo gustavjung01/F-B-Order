@@ -14,7 +14,7 @@
       <div id="stats" class="stats"></div>
       <div class="controls">
         <input id="q" class="ctl" placeholder="Tìm tên, SKU, brand..." />
-        <select id="cat" class="ctl"><option value="all">Tất cả nhóm</option></select>
+        <select id="cat" class="ctl"><option value="all">Tất cả ngành hàng</option></select>
         <select id="issue" class="ctl">
           <option value="all">Tất cả card</option>
           <option value="has">Chỉ card có lỗi</option>
@@ -39,6 +39,7 @@
   <div id="modal" class="modal" hidden>
     <button class="back" aria-label="Đóng"></button>
     <section class="box" role="dialog" aria-modal="true">
+      <div class="sheet-grabber" aria-hidden="true"><span></span></div>
       <header class="head">
         <button id="prevTop" class="x" aria-label="Sản phẩm trước">‹</button>
         <div class="head-title">
