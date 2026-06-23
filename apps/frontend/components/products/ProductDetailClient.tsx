@@ -2,18 +2,12 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import { CatalogVariantSelector } from "@/components/catalog/CatalogVariantSelector";
 import type {
   CatalogV2DetailResponse,
   CatalogV2VariantCard,
 } from "@/data/catalog-v2/product-model";
 import { fetchCatalogV2Detail } from "@/lib/catalog-v2-client";
-import {
-  getCatalogV2OrderLabel,
-  getCatalogV2PriceHeading,
-  getCatalogV2PriceLabel,
-  getCatalogV2PriceNote,
-} from "@/lib/catalog-v2-display";
-import { addCartItem } from "@/lib/cartStorage";
 
 type ProductDetailClientProps = {
   slug: string;
@@ -44,23 +38,11 @@ function productEmoji(industryKey: string) {
   return "📦";
 }
 
-function addErrorMessage(status: number, code?: string) {
-  if (status === 401 || code === "AUTH_REQUIRED") return "Bạn cần đăng nhập trước khi thêm giỏ.";
-  if (code === "CUSTOMER_PROFILE_REQUIRED") return "Bạn cần tạo hồ sơ quán trước khi đặt hàng.";
-  if (code === "CUSTOMER_NOT_APPROVED") return "Hồ sơ quán chưa được duyệt.";
-  if (code === "MARKET_PRICE") return "Sản phẩm thời giá chưa thể thêm trực tiếp.";
-  if (code === "SHOP_PRICE_UNAVAILABLE") return "Sản phẩm chưa thiết lập giá quán.";
-  return "Không thêm được sản phẩm vào giỏ.";
-}
-
 export function ProductDetailClient({ slug }: ProductDetailClientProps) {
   const [detail, setDetail] = useState<CatalogV2DetailResponse | null>(null);
   const [selectedVariantId, setSelectedVariantId] = useState(slug);
-  const [quantity, setQuantity] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [adding, setAdding] = useState(false);
-  const [message, setMessage] = useState("");
 
   useEffect(() => {
     let activeRequest = true;
@@ -93,65 +75,20 @@ export function ProductDetailClient({ slug }: ProductDetailClientProps) {
     [detail, selectedVariantId],
   );
 
-  function selectOption(groupName: string, value: string) {
-    if (!detail || !selectedVariant) return;
-    const nextOptions = { ...selectedVariant.options, [groupName]: value };
-    const exactMatch = detail.variants.find((variant) => (
-      detail.optionGroups.every((group) => variant.options[group.name] === nextOptions[group.name])
-    ));
-    const fallback = detail.variants.find((variant) => variant.options[groupName] === value);
-    const nextVariant = exactMatch || fallback;
-    if (nextVariant) {
-      setSelectedVariantId(nextVariant.variant_id);
-      setMessage("");
-      window.history.replaceState(null, "", `/products/${nextVariant.variant_id}`);
-    }
-  }
-
-  function optionAvailable(groupName: string, value: string) {
-    if (!detail || !selectedVariant) return false;
-    return detail.variants.some((variant) => {
-      if (variant.options[groupName] !== value) return false;
-      return detail.optionGroups.every((group) => (
-        group.name === groupName ||
-        selectedVariant.options[group.name] === undefined ||
-        variant.options[group.name] === selectedVariant.options[group.name]
-      ));
-    });
-  }
-
-  async function handleAddToCart() {
-    if (!selectedVariant?.isOrderable || adding) return;
-    setAdding(true);
-    setMessage("");
-    try {
-      const response = await fetch("/api/cart-v2/items", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({
-          variant_id: selectedVariant.variant_id,
-          quantity,
-        }),
-      });
-      const data = (await response.json().catch(() => ({}))) as { error?: string };
-      if (!response.ok) {
-        setMessage(addErrorMessage(response.status, data.error));
-        return;
-      }
-      addCartItem({ variantId: selectedVariant.variant_id, quantity });
-      setMessage("Đã thêm đúng phân loại vào giỏ.");
-    } catch {
-      setMessage("Không kết nối được backend giỏ hàng.");
-    } finally {
-      setAdding(false);
-    }
-  }
-
   if (loading) return <ProductState>Đang tải phân loại sản phẩm...</ProductState>;
   if (error) return <ProductState>{error}</ProductState>;
   if (!detail || !selectedVariant) return <ProductState>Không có dữ liệu sản phẩm</ProductState>;
 
-  const priceNote = getCatalogV2PriceNote(selectedVariant);
+  const specificationRows = [
+    selectedVariant.sizeLabel ? { label: "Dung tích / khối lượng", value: selectedVariant.sizeLabel } : null,
+    selectedVariant.packageLabel ? { label: "Quy cách đóng gói", value: selectedVariant.packageLabel } : null,
+    selectedVariant.sellUnit ? { label: "Đơn vị bán", value: selectedVariant.sellUnit } : null,
+  ].filter((item): item is { label: string; value: string } => Boolean(item));
+
+  function handlePrimaryVariantChange(variant: CatalogV2VariantCard) {
+    setSelectedVariantId(variant.variant_id);
+    window.history.replaceState(null, "", `/products/${variant.variant_id}`);
+  }
 
   return (
     <div className="space-y-6">
@@ -173,57 +110,24 @@ export function ProductDetailClient({ slug }: ProductDetailClientProps) {
             {detail.product.brand ? <span className="rounded-full bg-[#eefbf6] px-3 py-1.5 text-[12px] font-black text-[#08775f] ring-1 ring-[#b9eadb]">{detail.product.brand}</span> : null}
           </div>
 
-          <h2 className="mt-4 text-[30px] font-black leading-tight tracking-tight text-[#0b1220] md:text-5xl">{selectedVariant.name}</h2>
-          <p className="mt-3 text-sm font-black text-slate-500">SKU: {selectedVariant.sku}</p>
+          <h2 className="mt-4 text-[30px] font-black leading-tight tracking-tight text-[#0b1220] md:text-5xl">{detail.product.name}</h2>
+          <p className="mt-3 text-sm font-black text-slate-500">Đang chọn SKU: {selectedVariant.sku}</p>
 
-          <div className="mt-5 grid gap-3 sm:grid-cols-3">
-            <InfoRow label="Dung tích / khối lượng" value={selectedVariant.sizeLabel || "Chưa có trong bảng nguồn"} />
-            <InfoRow label="Quy cách đóng gói" value={selectedVariant.packageLabel || "Đang cập nhật"} />
-            <InfoRow label="Đơn vị bán" value={selectedVariant.sellUnit || "Đang cập nhật"} />
-          </div>
-
-          {detail.optionGroups.map((group) => (
-            <div key={group.name} className="mt-6">
-              <h3 className="text-sm font-black text-[#0b1220]">{group.name}</h3>
-              <div className="mt-3 flex flex-wrap gap-2">
-                {group.values.map((value) => {
-                  const selected = selectedVariant.options[group.name] === value;
-                  const available = optionAvailable(group.name, value);
-                  return (
-                    <button
-                      key={value}
-                      type="button"
-                      disabled={!available}
-                      onClick={() => selectOption(group.name, value)}
-                      className={`rounded-[14px] px-4 py-2.5 text-sm font-black ring-1 ${selected ? "bg-[#ff5a00] text-white ring-[#ff5a00]" : available ? "bg-white text-[#0b1220] ring-[#e7dccd]" : "bg-slate-100 text-slate-300 ring-slate-200"}`}
-                    >
-                      {value}
-                    </button>
-                  );
-                })}
-              </div>
+          {specificationRows.length > 0 ? (
+            <div className={`mt-5 grid gap-3 ${specificationRows.length >= 3 ? "sm:grid-cols-3" : specificationRows.length === 2 ? "sm:grid-cols-2" : ""}`}>
+              {specificationRows.map((item) => <InfoRow key={item.label} label={item.label} value={item.value} />)}
             </div>
-          ))}
+          ) : (
+            <p className="mt-5 rounded-[18px] bg-amber-50 px-4 py-3 text-sm font-black text-amber-800 ring-1 ring-amber-100">
+              Dung tích hoặc khối lượng chưa được xác minh từ nguồn hàng.
+            </p>
+          )}
 
-          <div className="mt-6 rounded-[24px] bg-[#fff3ea] p-5 ring-1 ring-[#ffd0b3]">
-            <p className="text-sm font-black uppercase tracking-[0.16em] text-[#ff5a00]">{getCatalogV2PriceHeading(selectedVariant)}</p>
-            <p className="mt-2 text-3xl font-black text-[#ff5a00]">{getCatalogV2PriceLabel(selectedVariant)}</p>
-            {priceNote ? <p className="mt-2 text-sm font-semibold leading-6 text-slate-600">{priceNote}</p> : null}
-            {!selectedVariant.isOrderable ? <p className="mt-2 text-sm font-semibold leading-6 text-slate-600">{getCatalogV2OrderLabel(selectedVariant)}</p> : null}
-          </div>
-
-          {message ? <p className={`mt-4 rounded-[18px] p-4 text-sm font-black ${message.startsWith("Đã thêm") ? "bg-[#e9fbf2] text-[#08775f]" : "bg-red-50 text-red-700"}`}>{message}</p> : null}
-
-          <div className="mt-6 flex gap-3">
-            <div className="grid h-12 w-32 grid-cols-3 overflow-hidden rounded-[16px] border border-[#eee7dc] bg-[#fbfaf7] text-[16px] font-black text-[#0b1220]">
-              <button type="button" onClick={() => setQuantity((current) => Math.max(1, current - 1))} className="bg-white active:bg-[#fff3ea]">−</button>
-              <span className="grid place-items-center border-x border-[#eee7dc]">{quantity}</span>
-              <button type="button" onClick={() => setQuantity((current) => current + 1)} className="bg-white active:bg-[#fff3ea]">+</button>
-            </div>
-            <button type="button" onClick={() => void handleAddToCart()} disabled={!selectedVariant.isOrderable || adding} className="flex h-12 flex-1 items-center justify-center rounded-[18px] bg-[#ff5a00] px-6 text-[15px] font-black text-white shadow-[0_14px_26px_rgba(255,90,0,0.2)] disabled:cursor-not-allowed disabled:bg-slate-300 disabled:shadow-none">
-              {adding ? "Đang thêm..." : getCatalogV2OrderLabel(selectedVariant)}
-            </button>
-          </div>
+          <CatalogVariantSelector
+            detail={detail}
+            initialVariantId={selectedVariantId}
+            onPrimaryVariantChange={handlePrimaryVariantChange}
+          />
         </div>
       </section>
     </div>
