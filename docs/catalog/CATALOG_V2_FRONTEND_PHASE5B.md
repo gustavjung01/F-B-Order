@@ -35,8 +35,48 @@ Selecting a value such as flavor, size or color switches to a real member of `va
 - `sku`
 - `price` / `priceLabel`
 - `image`
+- `sizeLabel`
+- `packageLabel`
+- `sellUnit`
+- `specificationLabel`
 
 The frontend never reconstructs an SKU from option text.
+
+## Specifications
+
+The supplement file `data/catalog/hung-phat/v2/product-variants.csv` is joined by SKU during import.
+
+The API exposes the available commercial specification fields:
+
+- `sizeLabel`: volume, weight or physical size when the source contains it.
+- `packageLabel`: carton/package configuration.
+- `sellUnit`: selling unit.
+- `specificationLabel`: combined display string.
+
+Missing net weight or volume is displayed as unavailable source data. It must not be inferred from the image or product name.
+
+## Pricing
+
+For fixed-price variants, the catalog source `price` is treated as the dealer price.
+
+When no explicit retail price is configured:
+
+```text
+estimated retail price = dealer price × 1.15
+```
+
+The API marks this with:
+
+```json
+{
+  "pricing": {
+    "estimated": true,
+    "estimateMarkupPercent": 15
+  }
+}
+```
+
+The customer UI labels the value `Giá lẻ dự kiến` and explains that it is calculated from dealer price plus 15%. Market-price variants remain `Thời giá` and are not estimated.
 
 ## Cart
 
