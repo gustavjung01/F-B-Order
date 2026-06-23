@@ -5,6 +5,38 @@ import { anonymousIdentity, type RequestIdentity } from "../auth/auth.identity";
 import { evaluateCatalogV2Pricing, type CatalogV2PriceRow } from "./catalog-v2.pricing";
 
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+const DEFAULT_CATALOG_ASSET_BASE_URL = "https://cdn.bepsi.click";
+
+const OPTION_VALUE_LABELS: Record<string, string> = {
+  dau: "Dâu",
+  dao: "Đào",
+  oi: "Ổi",
+  "viet quoc": "Việt quất",
+  "chanh day": "Chanh dây",
+  vai: "Vải",
+  kiwi: "Kiwi",
+  "phuc bon tu": "Phúc bồn tử",
+  xoai: "Xoài",
+  nho: "Nho",
+  "dau tam": "Dâu tằm",
+  khom: "Khóm",
+  "mang cau": "Mãng cầu",
+  trang: "Trắng",
+  den: "Đen",
+  "duong den": "Đường đen",
+  "hoang kim": "Hoàng kim",
+  cafe: "Cà phê",
+  olong: "Ô long",
+  socola: "Sô-cô-la",
+  mon: "Môn",
+  trung: "Trứng",
+  dua: "Dừa",
+  lai: "Lài",
+  hong: "Hồng trà",
+  gao: "Gạo",
+  nau: "Nâu",
+  khac: "Khác",
+};
 
 type IdentityResolver = (req: Request) => Promise<RequestIdentity>;
 
@@ -41,8 +73,43 @@ function readLimit(value: unknown): number {
 
 function assetUrl(objectKey: string | null): string | null {
   if (!objectKey) return null;
-  const base = (process.env.R2_PUBLIC_BASE_URL || process.env.CATALOG_ASSET_BASE_URL || "").trim();
-  return base ? `${base.replace(/\/+$/, "")}/${objectKey.replace(/^\/+/, "")}` : null;
+  const base = (
+    process.env.R2_PUBLIC_BASE_URL ||
+    process.env.CATALOG_ASSET_BASE_URL ||
+    DEFAULT_CATALOG_ASSET_BASE_URL
+  ).trim();
+  return `${base.replace(/\/+$/, "")}/${objectKey.replace(/^\/+/, "")}`;
+}
+
+function displayOptionValue(value: unknown): unknown {
+  if (typeof value !== "string") return value;
+  const normalized = value.replace(/-/g, " ").trim().toLowerCase();
+  return OPTION_VALUE_LABELS[normalized] || value;
+}
+
+function displayOptions(value: unknown): Record<string, unknown> {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return {};
+  return Object.fromEntries(
+    Object.entries(value as Record<string, unknown>).map(([key, optionValue]) => [
+      key,
+      displayOptionValue(optionValue),
+    ]),
+  );
+}
+
+function displayOptionGroups(value: unknown): Array<{ name: string; values: unknown[] }> {
+  if (!Array.isArray(value)) return [];
+  return value
+    .filter((group): group is { name: string; values: unknown[] } => (
+      Boolean(group) &&
+      typeof group === "object" &&
+      typeof (group as { name?: unknown }).name === "string" &&
+      Array.isArray((group as { values?: unknown }).values)
+    ))
+    .map((group) => ({
+      name: group.name,
+      values: group.values.map(displayOptionValue),
+    }));
 }
 
 function toVariantCard(row: VariantRow, identity: RequestIdentity) {
@@ -63,7 +130,7 @@ function toVariantCard(row: VariantRow, identity: RequestIdentity) {
     industry: row.industry,
     industryKey: row.industry_key,
     subcategory: row.subcategory,
-    options: row.options && typeof row.options === "object" ? row.options : {},
+    options: displayOptions(row.options),
     priceMode: row.price_mode,
     price: pricing.amount,
     priceLabel: pricing.label,
@@ -253,7 +320,7 @@ export function createCatalogV2Router(
             url: assetUrl(selected.cover_image_object_key),
           },
         },
-        optionGroups: Array.isArray(selected.option_groups) ? selected.option_groups : [],
+        optionGroups: displayOptionGroups(selected.option_groups),
         variants: variantsResult.rows.map((row) => toVariantCard(row, identity)),
         selectedVariantId,
       });
