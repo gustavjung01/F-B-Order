@@ -4,6 +4,7 @@
   const storageKey = `catalog-review:${payload.catalogVersion}`;
   const saved = loadState();
   const orderState = new Map();
+  const activeRowState = new Map();
   let filtered = [...all];
   let currentKey = null;
   let toastTimer = null;
@@ -77,12 +78,53 @@
   function bindImageFallbacks(root) {
     root.querySelectorAll("img").forEach((image) => {
       image.addEventListener("error", () => {
+        const fallbackSource = image.dataset.fallbackSrc;
+        if (fallbackSource && image.dataset.fallbackUsed !== "1") {
+          image.dataset.fallbackUsed = "1";
+          image.src = fallbackSource;
+          return;
+        }
         const fallback = document.createElement("div");
         fallback.className = "miss";
         fallback.innerHTML = "<b>!</b>Ảnh không tải được";
         image.replaceWith(fallback);
-      }, { once: true });
+      });
     });
+  }
+
+  function variantVisual(product, variant) {
+    const hasVariantImage = Boolean(
+      variant &&
+      variant.imageKey &&
+      variant.imageStatus !== "MISSING",
+    );
+
+    if (hasVariantImage) {
+      return {
+        url: `./assets/${variant.imageKey}.webp`,
+        fallbackUrl: product.imageUrl || "",
+        status: "Ảnh biến thể",
+      };
+    }
+
+    if (product.imageUrl) {
+      return {
+        url: product.imageUrl,
+        fallbackUrl: "",
+        status: variant ? "Ảnh cha (biến thể thiếu ảnh)" : "Ảnh sản phẩm cha",
+      };
+    }
+
+    return { url: "", fallbackUrl: "", status: "Thiếu ảnh" };
+  }
+
+  function variantImageHtml(product, variant) {
+    const visual = variantVisual(product, variant);
+    if (!visual.url) return '<div class="miss"><b>!</b>Thiếu ảnh</div>';
+    const fallbackAttribute = visual.fallbackUrl
+      ? ` data-fallback-src="${escapeHtml(visual.fallbackUrl)}"`
+      : "";
+    return `<img src="${escapeHtml(visual.url)}"${fallbackAttribute} alt="${escapeHtml(variant?.name || product.name)}" loading="eager">`;
   }
 
   function fillCategories() {
@@ -165,7 +207,7 @@
         .map((group) => `<span class="chip">${escapeHtml(group.name)}: ${escapeHtml(group.values.join(" / "))}</span>`)
         .join("");
 
-      return `<article class="card"><button data-key="${escapeHtml(product.productKey)}"><div class="img">${imageHtml(product, "card")}</div><div class="body"><div class="brand">${escapeHtml(product.brand || "—")}</div><div class="name">${escapeHtml(product.name)}</div><div class="meta">${escapeHtml(product.category)} · ${escapeHtml(product.variants[0]?.sku || "Không SKU")}</div><div class="price">${money(product.priceFrom)}</div><div class="chips">${options || '<span class="chip">Không option</span>'}</div><div class="badges">${badges.join("")}</div></div></button></article>`;
+      return `<article class="card"><button data-key="${escapeHtml(product.productKey)}"><div class="img">${imageHtml(product, "card")}</div><div class="body"><div class="brand">${escapeHtml(product.brand || "—")}</div><div class="name">${escapeHtml(product.name)}</div><div class="meta">${escapeHtml(product.category)} · ${product.variantCount || product.variants.length} phân loại</div><div class="price">Từ ${money(product.priceFrom)}</div><div class="chips">${options || '<span class="chip">Không option</span>'}</div><div class="badges">${badges.join("")}</div></div></button></article>`;
     }).join("");
 
     bindImageFallbacks(grid);
@@ -176,8 +218,9 @@
 
   function defaultSelections(product) {
     const result = {};
+    const firstVariant = product.variants[0];
     for (const group of product.optionGroups) {
-      result[group.name] = group.values[0] ?? "";
+      result[group.name] = firstVariant?.options?.[group.name] ?? group.values[0] ?? "";
     }
     return result;
   }
@@ -189,15 +232,45 @@
     return orderState.get(product.productKey);
   }
 
+  function activeRowIndex(product) {
+    const rows = ensureOrderRows(product);
+    const stored = activeRowState.get(product.productKey) ?? 0;
+    return Math.max(0, Math.min(stored, rows.length - 1));
+  }
+
+  function setActiveRow(product, index) {
+    const rows = ensureOrderRows(product);
+    activeRowState.set(product.productKey, Math.max(0, Math.min(index, rows.length - 1)));
+  }
+
   function matchVariant(product, row) {
     if (!product.variants.length) return null;
     if (!product.optionGroups.length) return product.variants[0];
 
-    const selectedValues = Object.values(row.selections).filter(Boolean);
-    return product.variants.find((variant) => {
-      const variantValues = Object.values(variant.options || {}).map(String);
-      return selectedValues.every((value) => variantValues.includes(String(value)));
-    }) || product.variants[0];
+    const selections = Object.entries(row.selections)
+      .filter(([, value]) => value !== "" && value != null);
+
+    return product.variants.find((variant) =>
+      selections.every(([label, value]) =>
+        String(variant.options?.[label] ?? "") === String(value),
+      ),
+    ) || null;
+  }
+
+  function reconcileSelections(product, row, changedGroupName) {
+    if (matchVariant(product, row)) return;
+
+    const selectedValue = row.selections[changedGroupName];
+    const compatibleVariant = product.variants.find((variant) =>
+      String(variant.options?.[changedGroupName] ?? "") === String(selectedValue),
+    );
+
+    if (!compatibleVariant) return;
+    for (const group of product.optionGroups) {
+      if (compatibleVariant.options?.[group.name] != null) {
+        row.selections[group.name] = compatibleVariant.options[group.name];
+      }
+    }
   }
 
   function openModal(productKey) {
@@ -226,26 +299,66 @@
     byId("headName").textContent = product.name;
     byId("count").textContent = `${filteredIndex + 1}/${filtered.length}`;
 
-    byId("left").innerHTML = `<div class="hero">${imageHtml(product, "detail")}</div><div class="product-meta"><div class="brand">${escapeHtml(product.brand || "—")}</div><h2>${escapeHtml(product.name)}</h2><div class="price">${money(product.priceFrom)}</div><div class="chips"><span class="chip">${escapeHtml(product.category)}</span><span class="chip">Ảnh: ${escapeHtml(product.imageStatus)}</span><span class="chip">SKU: ${escapeHtml(product.variants[0]?.sku || "—")}</span></div><p class="local-note">Ảnh preview dùng file local, không phụ thuộc DNS public của R2.</p></div>`;
-    bindImageFallbacks(byId("left"));
+    byId("left").innerHTML = `<div id="activeVariantHero" class="hero"></div><div class="product-meta"><div class="brand">${escapeHtml(product.brand || "—")}</div><h2>${escapeHtml(product.name)}</h2><p id="activeVariantName" class="variant-name"></p><div id="activeVariantPrice" class="price"></div><div class="chips"><span class="chip">${escapeHtml(product.category)}</span><span id="activeVariantImageStatus" class="chip"></span><span id="activeVariantSku" class="chip"></span></div><p class="local-note">Chọn vị/size/loại nào thì ảnh, SKU và giá đổi theo đúng biến thể đó.</p></div>`;
 
     renderOrderRows(product);
     renderAudit(product);
   }
 
+  function updateActiveVariantPreview(product) {
+    const rows = ensureOrderRows(product);
+    const index = activeRowIndex(product);
+    const variant = matchVariant(product, rows[index]);
+    const visual = variantVisual(product, variant);
+    const hero = byId("activeVariantHero");
+
+    hero.innerHTML = variantImageHtml(product, variant);
+    bindImageFallbacks(hero);
+
+    byId("activeVariantName").textContent = variant?.name || "Không có biến thể cho tổ hợp đã chọn";
+    byId("activeVariantPrice").textContent = variant ? money(variant.price) : "Không có giá";
+    byId("activeVariantSku").textContent = `SKU: ${variant?.sku || "Không có"}`;
+    byId("activeVariantImageStatus").textContent = `Ảnh: ${visual.status}`;
+
+    document.querySelectorAll("[data-order-row]").forEach((rowElement) => {
+      rowElement.classList.toggle(
+        "active",
+        Number(rowElement.dataset.orderRow) === index,
+      );
+    });
+  }
+
   function renderOrderRows(product) {
     const rows = ensureOrderRows(product);
+    const activeIndex = activeRowIndex(product);
     const container = byId("orderRows");
 
     container.innerHTML = rows.map((row, rowIndex) => {
       const variant = matchVariant(product, row);
       const fields = product.optionGroups.map((group, groupIndex) => {
-        const options = group.values.map((value) => `<option value="${escapeHtml(value)}" ${row.selections[group.name] === value ? "selected" : ""}>${escapeHtml(value)}</option>`).join("");
+        const options = group.values
+          .map((value) => `<option value="${escapeHtml(value)}" ${row.selections[group.name] === value ? "selected" : ""}>${escapeHtml(value)}</option>`)
+          .join("");
         return `<div class="field"><label>${escapeHtml(group.name)}</label><select data-row="${rowIndex}" data-group="${groupIndex}">${options}</select></div>`;
       }).join("");
 
-      return `<div class="order-row">${fields || '<div class="field"><label>Phân loại</label><select disabled><option>Mặc định</option></select></div>'}<div class="variant-info">${escapeHtml(variant?.sku || "Không tìm thấy SKU")}<br>${money(variant?.price ?? product.priceFrom)}</div><div class="qty"><button data-minus="${rowIndex}" type="button">−</button><span>${row.quantity}</span><button data-plus="${rowIndex}" type="button">+</button></div><button class="remove" data-remove="${rowIndex}" type="button" ${rows.length === 1 ? "disabled" : ""}>×</button></div>`;
+      const imageTag = variant?.imageStatus !== "MISSING"
+        ? "Có ảnh riêng"
+        : "Dùng ảnh cha";
+      const activeTag = rowIndex === activeIndex
+        ? '<span class="active-variant-tag">Ảnh đang xem</span>'
+        : "";
+
+      return `<div class="order-row ${rowIndex === activeIndex ? "active" : ""}" data-order-row="${rowIndex}">${fields || '<div class="field"><label>Phân loại</label><select disabled><option>Mặc định</option></select></div>'}<div class="variant-info">${activeTag}<b>${escapeHtml(variant?.sku || "Không có SKU")}</b><br>${variant ? money(variant.price) : "Tổ hợp không tồn tại"}<br><small>${imageTag}</small></div><div class="qty"><button data-minus="${rowIndex}" type="button">−</button><span>${row.quantity}</span><button data-plus="${rowIndex}" type="button">+</button></div><button class="remove" data-remove="${rowIndex}" type="button" ${rows.length === 1 ? "disabled" : ""}>×</button></div>`;
     }).join("");
+
+    container.querySelectorAll("[data-order-row]").forEach((rowElement) => {
+      rowElement.addEventListener("click", (event) => {
+        if (event.target.closest(".remove")) return;
+        setActiveRow(product, Number(rowElement.dataset.orderRow));
+        updateActiveVariantPreview(product);
+      });
+    });
 
     container.querySelectorAll("select[data-row]").forEach((select) => {
       select.addEventListener("change", (event) => {
@@ -253,6 +366,8 @@
         const groupIndex = Number(event.target.dataset.group);
         const group = product.optionGroups[groupIndex];
         rows[rowIndex].selections[group.name] = event.target.value;
+        reconcileSelections(product, rows[rowIndex], group.name);
+        setActiveRow(product, rowIndex);
         renderOrderRows(product);
       });
     });
@@ -261,6 +376,7 @@
       button.addEventListener("click", () => {
         const index = Number(button.dataset.minus);
         rows[index].quantity = Math.max(1, rows[index].quantity - 1);
+        setActiveRow(product, index);
         renderOrderRows(product);
       });
     });
@@ -269,6 +385,7 @@
       button.addEventListener("click", () => {
         const index = Number(button.dataset.plus);
         rows[index].quantity += 1;
+        setActiveRow(product, index);
         renderOrderRows(product);
       });
     });
@@ -277,11 +394,13 @@
       button.addEventListener("click", () => {
         const index = Number(button.dataset.remove);
         if (rows.length > 1) rows.splice(index, 1);
+        setActiveRow(product, Math.min(activeRowIndex(product), rows.length - 1));
         renderOrderRows(product);
       });
     });
 
     updateOrderSummary(product);
+    updateActiveVariantPreview(product);
   }
 
   function updateOrderSummary(product) {
@@ -295,7 +414,7 @@
       if (!variant) continue;
       validRows += 1;
       quantity += row.quantity;
-      total += Number(variant.price || product.priceFrom || 0) * row.quantity;
+      total += Number(variant.price || 0) * row.quantity;
     }
 
     byId("orderSummary").textContent = `${validRows} phân loại · ${quantity} sản phẩm`;
@@ -337,16 +456,20 @@
   function addOrderRow() {
     const product = currentProduct();
     if (!product) return;
-    ensureOrderRows(product).push({ selections: defaultSelections(product), quantity: 1 });
+    const rows = ensureOrderRows(product);
+    rows.push({ selections: defaultSelections(product), quantity: 1 });
+    setActiveRow(product, rows.length - 1);
     renderOrderRows(product);
   }
 
   function simulateAddToCart() {
     const product = currentProduct();
     if (!product) return;
-    const rows = ensureOrderRows(product);
-    const quantity = rows.reduce((sum, row) => sum + row.quantity, 0);
-    showToast(`Preview: đã mô phỏng thêm ${quantity} sản phẩm. Chưa ghi vào giỏ thật.`);
+    const validRows = ensureOrderRows(product)
+      .map((row) => ({ row, variant: matchVariant(product, row) }))
+      .filter(({ variant }) => Boolean(variant));
+    const quantity = validRows.reduce((sum, item) => sum + item.row.quantity, 0);
+    showToast(`Preview: đã mô phỏng thêm ${validRows.length} phân loại / ${quantity} sản phẩm. Chưa ghi vào giỏ thật.`);
   }
 
   function showToast(message) {
