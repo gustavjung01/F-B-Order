@@ -1,0 +1,43 @@
+product_key,sku,parent_key,variant_key,options_json,source_row
+duongden-black-2-lit-bgkq-0052,BGKQ-0052,duong-den-black,duong-den-black--2lit,"{""size"": ""2lit""}",59
+duong-den-monita-bgkq-0054,BGKQ-0054,duong-monita,duong-monita--den,"{""type"": ""den""}",61
+duong-nau-monita-bgkq-0055,BGKQ-0055,duong-monita,duong-monita--nau,"{""type"": ""nau""}",62
+tc-duong-den-duoxian-1kg-bgkq-0063,BGKQ-0063,tran-chau-douxian,tran-chau-douxian--duong-den-1kg,"{""size"": ""1kg"", ""type"": ""duong-den""}",71
+tc-duong-den-duoxian-2kg-bgkq-0064,BGKQ-0064,tran-chau-douxian,tran-chau-douxian--duong-den-2kg,"{""size"": ""2kg"", ""type"": ""duong-den""}",72
+tc-duong-den-duoxian-3kg-bgkq-0065,BGKQ-0065,tran-chau-douxian,tran-chau-douxian--duong-den-3kg,"{""size"": ""3kg"", ""type"": ""duong-den""}",73
+tc-hoang-kim-duoxian-1kg-bgkq-0066,BGKQ-0066,tran-chau-douxian,tran-chau-douxian--hoang-kim-1kg,"{""size"": ""1kg"", ""type"": ""hoang-kim""}",74
+tc-hoang-kim-duoxian-3kg-bgkq-0067,BGKQ-0067,tran-chau-douxian,tran-chau-douxian--hoang-kim-3kg,"{""size"": ""3kg"", ""type"": ""hoang-kim""}",75
+tc-cafe-gia-uy-mini-bgkq-0068,BGKQ-0068,tran-chau-gia-uy,tran-chau-gia-uy--cafe-mini,"{""type"": ""cafe-mini""}",76
+tc-duong-den-gia-uy-bgkq-0069,BGKQ-0069,tran-chau-gia-uy,tran-chau-gia-uy--duong-den,"{""type"": ""duong-den""}",77
+tc-trang-gia-uy-bgkq-0070,BGKQ-0070,tran-chau-gia-uy,tran-chau-gia-uy--trang,"{""type"": ""trang""}",78
+tc-cafe-gia-uy-bgkq-0071,BGKQ-0071,tran-chau-gia-uy,tran-chau-gia-uy--cafe,"{""type"": ""cafe""}",79
+tc-minh-hanh-1-kg-kunhan-bgkq-0072,BGKQ-0072,tran-chau-kuhan,tran-chau-kuhan--minh-hanh-1kg,"{""size"": ""1kg"", ""type"": ""minh-hanh""}",80
+tc-dd-kuhan-2kg-bgkq-0073,BGKQ-0073,tran-chau-kuhan,tran-chau-kuhan--duong-den-2kg,"{""size"": ""2kg"", ""type"": ""duong-den""}",81
+tc-dd-kuhan-3kg-bgkq-0074,BGKQ-0074,tran-chau-kuhan,tran-chau-kuhan--duong-den-3kg,"{""size"": ""3kg"", ""type"": ""duong-den""}",82
+3q-bibi-trang-bgkq-0075,BGKQ-0075,3q-bibi,3q-bibi--trang,"{""color"": ""trang""}",84
+3q-bibi-den-bgkq-0076,BGKQ-0076,3q-bibi,3q-bibi--den,"{""color"": ""den""}",85
+3q-sea-trang-bgkq-0077,BGKQ-0077,3q-sea,3q-sea--trang,"{""color"": ""trang""}",86
+3q-sea-den-bgkq-0078,BGKQ-0078,3q-sea,3q-sea--den,"{""color"": ""den""}",87
+3q-ok-trang-bgkq-0080,BGKQ-0080,3q-ok,3q-ok--trang,"{""type"": ""trang""}",89
+3q-ok-olong-bgkq-0081,BGKQ-0081,3q-ok,3q-ok--olong,"{""type"": ""olong""}",90
+sot-gold-matcha-bgkq-0088,BGKQ-0088,sot-gold,sot-gold--bgkq-0088,{},98
+sot-gold-so-bgkq-0089,BGKQ-0089,sot-gold,sot-gold--bgkq-0089,{},99
+sot-gold-mon-bgkq-0090,BGKQ-0090,sot-gold,sot-gold--bgkq-0090,{},100
+dao-lon-thai-bgkq-0093,BGKQ-0093,thai,thai--bgkq-0093,{},104
+nhan-thai-bgkq-0097,BGKQ-0097,thai,thai--bgkq-0097,{},108
+flan-mota-bgkq-0108,BGKQ-0108,flan-mota,flan-mota--khac,"{""flavor"": ""khac""}",121
+flan-mota-so-bgkq-0109,BGKQ-0109,flan-mota,flan-mota--socola,"{""flavor"": ""socola""}",122
+flan-mole-trung-bgkq-0110,BGKQ-0110,flan-mole,flan-mole--trung,"{""flavor"": ""trung""}",123
+flan-mole-so-bgkq-0111,BGKQ-0111,flan-mole,flan-mole--so,"{""flavor"": ""so""}",124
+flan-mole-mon-bgkq-0112,BGKQ-0112,flan-mole,flan-mole--mon,"{""flavor"": ""mon""}",125
+flan-mole-dau-bgkq-0113,BGKQ-0113,flan-mole,flan-mole--dau,"{""flavor"": ""dau""}",126
+plan-mole-dua-bgkq-0114,BGKQ-0114,flan-mole,flan-mole--dua,"{""flavor"": ""dua""}",127
+bot-sua-frima-bgkq-0123,BGKQ-0123,bot-sua-frima,bot-sua-frima--bao,"{""packing"": ""bao""}",137
+bot-sua-frima-1kg-bgkq-0124,BGKQ-0124,bot-sua-frima,bot-sua-frima--1kg,"{""packing"": ""1kg""}",138
+sua-dac-larose-nap-dut-bgkq-0132,BGKQ-0132,sua-dac-larose,sua-dac-larose--nap-dut,"{""lid"": ""nap-dut""}",147
+sua-dac-larose-thuong-bgkq-0133,BGKQ-0133,sua-dac-larose,sua-dac-larose--thuong,"{""lid"": ""thuong""}",148
+bot-mon-king-bgkq-0139,BGKQ-0139,bot-king,bot-king--mon,"{""flavor"": ""mon""}",155
+bot-so-king-bgkq-0140,BGKQ-0140,bot-king,bot-king--socola,"{""flavor"": ""socola""}",156
+bot-so-gtp-bgkq-0141,BGKQ-0141,bot-gtp,bot-gtp--socola,"{""flavor"": ""socola""}",157
+bot-mon-gtp-bgkq-0143,BGKQ-0143,bot-gtp,bot-gtp--mon,"{""flavor"": ""mon""}",159
+tra-lai-loc-phat-bgkq-0148,BGKQ-0148,tra-loc-phat,tra-loc-phat--lai,"{""type"": ""lai""}",165
