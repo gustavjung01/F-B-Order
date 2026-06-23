@@ -10,13 +10,23 @@ param(
 $ErrorActionPreference = "Stop"
 Set-StrictMode -Version Latest
 
+$pricePreflight = Join-Path $PSScriptRoot "phase4-price-preflight.mjs"
 $prepareScript = Join-Path $PSScriptRoot "prepare-phase4-r2.mjs"
 $uploadScript = Join-Path $PSScriptRoot "phase4-upload-r2.ps1"
 
-foreach ($required in @($NormalizedDir, $SourceImages, $prepareScript, $uploadScript)) {
+foreach ($required in @($NormalizedDir, $SourceImages, $pricePreflight, $prepareScript, $uploadScript)) {
   if (-not (Test-Path -LiteralPath $required)) {
     throw "Required Phase 4 path does not exist: $required"
   }
+}
+
+& node $pricePreflight `
+  "--normalized-dir=$NormalizedDir" `
+  "--output-dir=$R2ReadyRoot"
+
+if ($LASTEXITCODE -ne 0) {
+  $priceReport = Join-Path $R2ReadyRoot "price-pending.csv"
+  throw "Phase 4 blocked: missing or zero prices exist. Fill the prices in the source catalog first. Report: $priceReport"
 }
 
 & node $prepareScript `
