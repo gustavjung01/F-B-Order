@@ -14,38 +14,28 @@ export function getCatalogV2PriceLabel(variant: CatalogV2VariantCard) {
 }
 
 export function getCatalogV2PriceHeading(variant: CatalogV2VariantCard) {
-  if (variant.pricing.estimated) return "Giá lẻ dự kiến";
-  if (variant.pricing.source === "price_group") return "Giá theo nhóm quán";
-  if (variant.pricing.source === "shop") return "Giá đại lý";
-  if (variant.priceMode === "market") return "Giá";
-  return "Giá bán";
+  return variant.priceMode === "market" ? "Giá" : "Giá đại lý";
 }
 
 export function getCatalogV2PriceNote(variant: CatalogV2VariantCard) {
-  if (variant.pricing.estimated && variant.pricing.estimateMarkupPercent !== null) {
-    return `Tạm tính bằng giá đại lý + ${variant.pricing.estimateMarkupPercent}%`;
-  }
-  if (variant.pricing.reason === "SHOP_APPROVAL_REQUIRED") {
-    return "Duyệt hồ sơ quán để mở giá đại lý và đặt hàng";
-  }
+  void variant;
   return null;
 }
 
 export function getCatalogV2OrderLabel(variant: CatalogV2VariantCard) {
   if (variant.priceMode === "market") return "Liên hệ báo giá";
-  if (variant.pricing.reason === "RETAIL_PRICE_UNAVAILABLE") return "Chưa có giá lẻ";
-  if (variant.pricing.reason === "SHOP_PRICE_UNAVAILABLE") return "Chưa có giá quán";
+  if (variant.pricing.reason === "DEALER_PRICE_UNAVAILABLE") return "Chưa có giá đại lý";
   if (variant.pricing.reason === "SHOP_APPROVAL_REQUIRED") return "Đăng ký quán để đặt";
   return variant.isOrderable ? "Thêm vào giỏ" : "Chưa thể đặt";
 }
 
 export function getCatalogV2OptionSummary(variant: CatalogV2VariantCard) {
   const values = Object.entries(variant.options)
-    .filter(([key, value]) => !["package", "sell_unit"].includes(key) && Boolean(value))
+    .filter(([key, value]) => !["package", "sell_unit", "size", "weight", "volume", "capacity"].includes(key) && Boolean(value))
     .map(([, value]) => value);
-  return values.length > 0 ? values.join(" · ") : "Mặc định";
+  return values.length > 0 ? values.join(" · ") : "Chọn trong chi tiết";
 }
 
 export function getCatalogV2SpecificationLabel(variant: CatalogV2VariantCard) {
-  return variant.specificationLabel || "Đang cập nhật";
+  return variant.specificationLabel || "Quy cách đang được xác minh";
 }
