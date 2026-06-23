@@ -84,8 +84,3 @@ export function loadCatalogV2Supplement(repoRoot) {
 
   return bySku;
 }
-
-export function estimateRetailPrice(dealerPrice) {
-  const amount = positiveMoney(dealerPrice);
-  return amount === null ? null : Math.round(amount * 1.15);
-}
