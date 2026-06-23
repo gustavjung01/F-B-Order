@@ -66,7 +66,8 @@ const productPayload = products.map((row, sortOrder) => ({
 }));
 
 let dealerPriceCount = 0;
-let specificationCount = 0;
+let packageInfoCount = 0;
+let exactSizeCount = 0;
 const variantPayload = variants.map((row, sortOrder) => {
   const supplement = supplementBySku.get(row.sku);
   const mergedOptions = {
@@ -77,12 +78,16 @@ const variantPayload = variants.map((row, sortOrder) => {
   const dealerPrice = fixedPrice
     ? positiveMoney(row.shopPrice) ?? supplement.dealerPrice
     : null;
-  const hasSpecification = Boolean(
+  const hasPackageInfo = Boolean(
     mergedOptions.size || mergedOptions.package || mergedOptions.sell_unit,
+  );
+  const hasExactSize = Boolean(
+    mergedOptions.size || mergedOptions.weight || mergedOptions.volume || mergedOptions.capacity,
   );
 
   if (dealerPrice !== null) dealerPriceCount += 1;
-  if (hasSpecification) specificationCount += 1;
+  if (hasPackageInfo) packageInfoCount += 1;
+  if (hasExactSize) exactSizeCount += 1;
 
   return {
     parentKey: row.parentKey,
@@ -102,7 +107,7 @@ const variantPayload = variants.map((row, sortOrder) => {
   };
 });
 
-assert(specificationCount === 275, `Expected specification info for 275 variants, found ${specificationCount}.`);
+assert(packageInfoCount === 275, `Expected package information for 275 variants, found ${packageInfoCount}.`);
 assert(dealerPriceCount === 272, `Expected 272 dealer prices, found ${dealerPriceCount}.`);
 
 const connectionString = process.env.DATABASE_URL || process.env.BEPSI_DATABASE_URL;
@@ -172,10 +177,11 @@ try {
     (SELECT COUNT(*) FROM catalog_variants WHERE catalog_version='hung-phat-v2' AND price_mode='market' AND is_active)::int AS market,
     (SELECT COUNT(*) FROM catalog_variants WHERE catalog_version='hung-phat-v2' AND image_object_key IS NOT NULL AND is_active)::int AS images,
     (SELECT COUNT(*) FROM catalog_variants WHERE catalog_version='hung-phat-v2' AND shop_price IS NOT NULL AND is_active)::int AS dealer_prices,
-    (SELECT COUNT(*) FROM catalog_variants WHERE catalog_version='hung-phat-v2' AND (options ? 'size' OR options ? 'package' OR options ? 'sell_unit') AND is_active)::int AS specifications`);
+    (SELECT COUNT(*) FROM catalog_variants WHERE catalog_version='hung-phat-v2' AND (options ? 'size' OR options ? 'package' OR options ? 'sell_unit') AND is_active)::int AS package_info,
+    (SELECT COUNT(*) FROM catalog_variants WHERE catalog_version='hung-phat-v2' AND (options ? 'size' OR options ? 'weight' OR options ? 'volume' OR options ? 'capacity') AND is_active)::int AS exact_sizes`);
   const counts = result.rows[0];
   assert(counts.products === 188 && counts.variants === 275 && counts.market === 3 && counts.images === 269, `DB count mismatch: ${JSON.stringify(counts)}`);
-  assert(counts.dealer_prices === 272 && counts.specifications === 275, `Commercial data mismatch: ${JSON.stringify(counts)}`);
+  assert(counts.dealer_prices === 272 && counts.package_info === 275, `Commercial data mismatch: ${JSON.stringify(counts)}`);
   if (apply) await client.query("COMMIT"); else await client.query("ROLLBACK");
   console.log(JSON.stringify({
     phase: 5,
@@ -186,7 +192,9 @@ try {
     marketPriceVariants: counts.market,
     images: counts.images,
     dealerPrices: counts.dealer_prices,
-    variantsWithSpecifications: counts.specifications,
+    variantsWithPackageInfo: counts.package_info,
+    variantsWithExactSize: counts.exact_sizes,
+    variantsMissingExactSize: counts.variants - counts.exact_sizes,
   }, null, 2));
 } catch (error) {
   await client.query("ROLLBACK").catch(() => undefined);
