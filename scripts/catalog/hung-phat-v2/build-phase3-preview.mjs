@@ -20,10 +20,6 @@ function readJson(filePath) {
   return JSON.parse(fs.readFileSync(filePath, "utf8"));
 }
 
-function normalizeBaseUrl(value) {
-  return String(value || "").trim().replace(/\/+$/, "");
-}
-
 function safeJson(value) {
   return JSON.stringify(value)
     .replace(/</g, "\\u003c")
@@ -66,13 +62,14 @@ function hasOptionIssue(product) {
   });
 }
 
-const publicBaseUrl = normalizeBaseUrl(
-  getArg("public-base-url", process.env.R2_PUBLIC_BASE_URL || "https://img.bepsi.click"),
-);
 const outputPath = path.resolve(
   repoRoot,
   getArg("output", "artifacts/catalog/hung-phat-v2-preview/index.html"),
 );
+const sourceImages = path.resolve(getArg(
+  "source-images",
+  "F:/1_A_Disk_D/khuong-binh/bep-si/image/bepsi-link-mapper/bepsi_link_mapper/catalog-v2/preview/assets",
+));
 const manifestDir = path.join(repoRoot, "data/catalog/hung-phat/v2/manifests");
 const productsPath = path.join(manifestDir, "products.json");
 const versionPath = path.join(manifestDir, "catalog-version.json");
@@ -80,12 +77,10 @@ const templatePath = path.join(scriptDir, "phase3-preview.template.html");
 const cssPath = path.join(scriptDir, "phase3-preview.css");
 const jsPath = path.join(scriptDir, "phase3-preview.js");
 
-assert(fs.existsSync(productsPath), `Missing manifest: ${productsPath}`);
-assert(fs.existsSync(versionPath), `Missing manifest: ${versionPath}`);
-assert(fs.existsSync(templatePath), `Missing template: ${templatePath}`);
-assert(fs.existsSync(cssPath), `Missing stylesheet: ${cssPath}`);
-assert(fs.existsSync(jsPath), `Missing script: ${jsPath}`);
-assert(publicBaseUrl, "Public base URL cannot be empty.");
+for (const required of [productsPath, versionPath, templatePath, cssPath, jsPath]) {
+  assert(fs.existsSync(required), `Missing required file: ${required}`);
+}
+assert(fs.existsSync(sourceImages), `Local image source does not exist: ${sourceImages}`);
 
 const products = readJson(productsPath);
 const version = readJson(versionPath);
@@ -100,6 +95,12 @@ for (const product of products) {
   }
 }
 
+const outputDir = path.dirname(outputPath);
+const assetDir = path.join(outputDir, "assets");
+fs.rmSync(outputDir, { recursive: true, force: true });
+fs.mkdirSync(assetDir, { recursive: true });
+
+let copiedImageCount = 0;
 const previewProducts = products.map((product, index) => {
   const variants = Array.isArray(product.variants) ? product.variants : [];
   const variantPrices = variants
@@ -112,7 +113,14 @@ const previewProducts = products.map((product, index) => {
       .filter((sku) => sku && (skuCounts.get(sku) || 0) > 1),
   );
 
-  const imageAvailable = product?.image?.status === "available" && Boolean(product?.image?.objectKey);
+  const manifestImageAvailable = product?.image?.status === "available" && Boolean(product?.image?.objectKey);
+  const localImagePath = path.join(sourceImages, `${product.imageKey}.webp`);
+  const localImageAvailable = manifestImageAvailable && fs.existsSync(localImagePath);
+  if (localImageAvailable) {
+    fs.copyFileSync(localImagePath, path.join(assetDir, `${product.imageKey}.webp`));
+    copiedImageCount += 1;
+  }
+
   const priceFrom = Number(product.priceFrom);
   const priceIssue =
     !Number.isFinite(priceFrom) ||
@@ -130,15 +138,15 @@ const previewProducts = products.map((product, index) => {
     priceFrom,
     status: product.status || "draft",
     imageKey: product.imageKey || "",
-    imageStatus: imageAvailable ? "available" : "missing",
+    imageStatus: localImageAvailable ? "available" : "missing",
     imageQualityStatus: product?.image?.qualityStatus || "UNKNOWN",
-    imageObjectKey: imageAvailable ? product.image.objectKey : "",
-    imageUrl: imageAvailable ? `${publicBaseUrl}/${product.image.objectKey}` : "",
+    imageObjectKey: manifestImageAvailable ? product.image.objectKey : "",
+    imageUrl: localImageAvailable ? `./assets/${product.imageKey}.webp` : "",
     optionGroups: Array.isArray(product.optionGroups) ? product.optionGroups : [],
     variants,
     duplicateSkus,
     autoIssues: {
-      missingImage: !imageAvailable,
+      missingImage: !localImageAvailable,
       wrongName: hasSuspiciousName(product.name),
       wrongOption: hasOptionIssue(product),
       duplicateSku: duplicateSkus.length > 0,
@@ -146,6 +154,8 @@ const previewProducts = products.map((product, index) => {
     },
   };
 });
+
+assert(copiedImageCount === 269, `Expected 269 local preview images, copied ${copiedImageCount}.`);
 
 const issueKeys = ["missingImage", "wrongName", "wrongOption", "duplicateSku", "wrongPrice"];
 const issueCounts = Object.fromEntries(
@@ -155,18 +165,16 @@ const issueCounts = Object.fromEntries(
 const payload = {
   catalogVersion: version.catalogVersion || "hung-phat-v2",
   generatedAt: new Date().toISOString(),
-  publicBaseUrl,
   expectedCardCount: 275,
+  localImageMode: true,
   products: previewProducts,
   issueCounts,
 };
 
 const template = fs.readFileSync(templatePath, "utf8");
-assert(template.includes("__CATALOG_PAYLOAD__"), "Preview template is missing __CATALOG_PAYLOAD__ placeholder.");
+assert(template.includes("__CATALOG_PAYLOAD__"), "Preview template is missing payload placeholder.");
 const html = template.replace("__CATALOG_PAYLOAD__", safeJson(payload));
 
-const outputDir = path.dirname(outputPath);
-fs.mkdirSync(outputDir, { recursive: true });
 fs.writeFileSync(outputPath, html, "utf8");
 fs.copyFileSync(cssPath, path.join(outputDir, "preview.css"));
 fs.copyFileSync(jsPath, path.join(outputDir, "preview.js"));
@@ -176,11 +184,13 @@ console.log(JSON.stringify({
   status: "PASS",
   catalogVersion: payload.catalogVersion,
   cardCount: previewProducts.length,
+  copiedImageCount,
   missingImageCount: issueCounts.missingImage,
   duplicateSkuCardCount: issueCounts.duplicateSku,
   invalidPriceCardCount: issueCounts.wrongPrice,
   suspiciousNameCardCount: issueCounts.wrongName,
   optionIssueCardCount: issueCounts.wrongOption,
   output: outputPath,
-  behavior: "popup-only-no-route-change",
+  behavior: "popup-ordering-no-route-change",
+  imageMode: "local-assets",
 }, null, 2));
