@@ -1,20 +1,21 @@
 "use client";
 
 import { useState } from "react";
+import { CatalogFilters } from "@/components/catalog/CatalogFilters";
 import { useCatalogBrowser } from "@/components/catalog/useCatalogBrowser";
 import { MobilePageShell } from "@/components/mobile/MobilePageShell";
 import { ProductQuickView } from "@/components/mobile/ProductQuickView";
 import type { AppNavKey } from "@/components/navigation/app-navigation";
 import type { CatalogV2VariantCard } from "@/data/catalog-v2/product-model";
 import {
-  getCatalogV2OptionSummary,
   getCatalogV2OrderLabel,
+  getCatalogV2PriceHeading,
   getCatalogV2PriceLabel,
+  getCatalogV2SpecificationLabel,
 } from "@/lib/catalog-v2-display";
 
 function categoryEmoji(id: string) {
   const value = id.toLowerCase();
-  if (value === "all") return "▦";
   if (value.includes("tra") || value.includes("pha-che")) return "🧋";
   if (value.includes("topping")) return "🧊";
   if (value.includes("bot")) return "🥛";
@@ -33,11 +34,13 @@ function ProductCard({ product, onOpen }: { product: CatalogV2VariantCard; onOpe
             {product.name}
           </button>
           <p className="mt-2 text-[13px] font-black text-slate-500">{product.industry}</p>
-          <div className="mt-2 space-y-1 text-[13px] font-semibold text-slate-500">
-            <p>SKU: <span className="font-black text-[#0b1220]">{product.sku}</span></p>
-            <p>Phân loại: <span className="font-black text-[#0b1220]">{getCatalogV2OptionSummary(product)}</span></p>
+          <div className="mt-2 rounded-[14px] bg-[#fbfaf7] p-2.5 text-[12px] font-semibold text-slate-500 ring-1 ring-[#eee7dc]">
+            <p className="font-black text-[#0b1220]">{getCatalogV2SpecificationLabel(product)}</p>
           </div>
-          <p className="mt-3 inline-flex rounded-full bg-[#fff3ea] px-3 py-2 text-[13px] font-black text-[#ff5a00] ring-1 ring-[#ffd0b3]">{getCatalogV2PriceLabel(product)}</p>
+          <div className="mt-3">
+            <p className="text-[10px] font-black uppercase tracking-[0.12em] text-[#ff5a00]">{getCatalogV2PriceHeading(product)}</p>
+            <p className="mt-1 inline-flex rounded-full bg-[#fff3ea] px-3 py-2 text-[13px] font-black text-[#ff5a00] ring-1 ring-[#ffd0b3]">{getCatalogV2PriceLabel(product)}</p>
+          </div>
         </div>
 
         <button type="button" onClick={onOpen} className="grid h-[112px] w-[116px] shrink-0 place-items-center overflow-hidden rounded-[25px] bg-gradient-to-br from-[#fffaf3] via-[#fff3e6] to-[#ede7dd] text-[62px] ring-1 ring-white/80">
@@ -65,9 +68,13 @@ export function ProductHome({ active = "home" }: { active?: AppNavKey }) {
   const [selectedProduct, setSelectedProduct] = useState<CatalogV2VariantCard | null>(null);
   const {
     products,
-    tabs,
-    selectedCategory,
-    setSelectedCategory,
+    industries,
+    brands,
+    selectedIndustry,
+    setSelectedIndustry,
+    selectedBrand,
+    setSelectedBrand,
+    resetFilters,
     searchText,
     setSearchText,
     loading,
@@ -75,7 +82,7 @@ export function ProductHome({ active = "home" }: { active?: AppNavKey }) {
     total,
   } = useCatalogBrowser();
 
-  const subtitle = loading ? "Đang tải catalog" : `${total} card biến thể`;
+  const subtitle = loading ? "Đang tải catalog" : `${total} sản phẩm`;
 
   return (
     <MobilePageShell active={active} title="Bếp Sỉ F&B" subtitle={subtitle}>
@@ -90,30 +97,33 @@ export function ProductHome({ active = "home" }: { active?: AppNavKey }) {
               Nguyên liệu F&B cho quán
             </h2>
           </div>
-          <input value={searchText} onChange={(event) => setSearchText(event.target.value)} placeholder="Tìm tên hoặc SKU..." className="absolute bottom-4 left-4 right-4 h-12 rounded-[18px] border border-white/80 bg-white/95 px-4 text-[15px] font-bold shadow-sm outline-none placeholder:text-slate-400 focus:border-[#ff5a00] focus:bg-white" />
+          <input value={searchText} onChange={(event) => setSearchText(event.target.value)} placeholder="Tìm tên, thương hiệu hoặc SKU..." className="absolute bottom-4 left-4 right-4 h-12 rounded-[18px] border border-white/80 bg-white/95 px-4 text-[15px] font-bold shadow-sm outline-none placeholder:text-slate-400 focus:border-[#ff5a00] focus:bg-white" />
         </div>
       </div>
 
-      <div className="-mx-4 mt-4 overflow-hidden border-y border-[#eee7dc] bg-[#f7f3eb]/95">
-        <div className="flex touch-pan-x gap-2 overflow-x-auto overscroll-x-contain px-4 py-3 [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          {tabs.map((tab) => {
-            const selected = tab.id === selectedCategory;
-            return (
-              <button key={tab.id} type="button" aria-pressed={selected} onClick={() => setSelectedCategory(tab.id)} className={`inline-flex shrink-0 items-center gap-1.5 rounded-[14px] px-3.5 py-2.5 text-[13px] font-black shadow-sm ring-1 ${selected ? "bg-[#ff5a00] text-white ring-[#ff5a00]" : "bg-white text-slate-600 ring-[#eee7dc]"}`}>
-                <span className="text-[16px] leading-none">{categoryEmoji(tab.id)}</span>
-                <span className="leading-none">{tab.name}</span>
-                <span className="rounded-full bg-white/60 px-1.5 py-0.5 text-[11px] leading-none">{tab.productCount}</span>
-              </button>
-            );
-          })}
-        </div>
+      <div className="mt-4">
+        <CatalogFilters
+          industries={industries}
+          brands={brands}
+          selectedIndustry={selectedIndustry}
+          selectedBrand={selectedBrand}
+          onIndustryChange={setSelectedIndustry}
+          onBrandChange={setSelectedBrand}
+          onReset={resetFilters}
+          resultCount={total}
+        />
       </div>
 
-      <div className="mt-4 space-y-3">
+      <div className="mt-4 flex items-center justify-between">
+        <h2 className="text-xl font-black text-[#0b1220]">{loading ? "Đang tải" : `${total} sản phẩm`}</h2>
+        <span className="text-xs font-black text-slate-500">Một card / sản phẩm</span>
+      </div>
+
+      <div className="mt-3 space-y-3">
         {loading ? <ProductListState>Đang tải sản phẩm...</ProductListState> : null}
         {!loading && error ? <ProductListState>{error}</ProductListState> : null}
         {!loading && !error && products.length === 0 ? <ProductListState>Không có sản phẩm phù hợp</ProductListState> : null}
-        {!loading && !error ? products.map((product) => <ProductCard key={product.variant_id} product={product} onOpen={() => setSelectedProduct(product)} />) : null}
+        {!loading && !error ? products.map((product) => <ProductCard key={product.product_id} product={product} onOpen={() => setSelectedProduct(product)} />) : null}
       </div>
 
       {selectedProduct ? <ProductQuickView product={selectedProduct} onClose={() => setSelectedProduct(null)} /> : null}
