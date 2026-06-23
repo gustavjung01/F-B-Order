@@ -5,42 +5,25 @@ import { useCatalogBrowser } from "@/components/catalog/useCatalogBrowser";
 import { MobilePageShell } from "@/components/mobile/MobilePageShell";
 import { ProductQuickView } from "@/components/mobile/ProductQuickView";
 import type { AppNavKey } from "@/components/navigation/app-navigation";
-import type { PublicProduct } from "@/data/catalog/product-model";
+import type { CatalogV2VariantCard } from "@/data/catalog-v2/product-model";
 import {
-  getProductDisplayPackage,
-  getProductDisplayUnit,
-  getProductOrderMessage,
-  getProductPriceLabel,
-} from "@/lib/catalog-display";
+  getCatalogV2OptionSummary,
+  getCatalogV2OrderLabel,
+  getCatalogV2PriceLabel,
+} from "@/lib/catalog-v2-display";
 
-const categoryEmoji: Record<string, string> = {
-  all: "▦",
-  "tra-sua-pha-che": "🧋",
-  "mi-cay-han-quoc": "🍜",
-  "thuc-pham-dong-lanh": "❄️",
-  "combo-cong-thuc": "📦",
-  topping: "🧊",
-};
-
-const categoryTones: Record<string, string> = {
-  all: "bg-[#fff3ea] text-[#ff5a00] ring-[#ffd0b3]",
-  "tra-sua-pha-che": "bg-[#eefbf6] text-[#08775f] ring-[#b9eadb]",
-  "mi-cay-han-quoc": "bg-[#fff0ef] text-[#dc2626] ring-[#ffc9c3]",
-  "thuc-pham-dong-lanh": "bg-[#eef6ff] text-[#2563eb] ring-[#c7ddff]",
-  "combo-cong-thuc": "bg-[#f4efff] text-[#7c3aed] ring-[#dccbff]",
-};
-
-function getTabTone(id: string) {
-  return categoryTones[id] || "bg-[#fff3ea] text-[#ff5a00] ring-[#ffd0b3]";
+function categoryEmoji(id: string) {
+  const value = id.toLowerCase();
+  if (value === "all") return "▦";
+  if (value.includes("tra") || value.includes("pha-che")) return "🧋";
+  if (value.includes("topping")) return "🧊";
+  if (value.includes("bot")) return "🥛";
+  if (value.includes("syrup") || value.includes("mut")) return "🍓";
+  if (value.includes("dung-cu")) return "🥄";
+  return "📦";
 }
 
-function getProductEmoji(product: PublicProduct) {
-  return categoryEmoji[product.categoryId] || categoryEmoji[product.subcategoryId || ""] || "📦";
-}
-
-function ProductCard({ product, onOpen }: { product: PublicProduct; onOpen: () => void }) {
-  const isBundle = product.productType === "bundle";
-
+function ProductCard({ product, onOpen }: { product: CatalogV2VariantCard; onOpen: () => void }) {
   return (
     <article className="overflow-hidden rounded-[28px] border border-white/80 bg-white p-4 shadow-[0_16px_34px_rgba(15,23,42,0.095)] ring-1 ring-[#efe7dc]">
       <div className="flex gap-3">
@@ -49,34 +32,25 @@ function ProductCard({ product, onOpen }: { product: PublicProduct; onOpen: () =
           <button type="button" onClick={onOpen} className="block text-left text-[20px] font-black leading-tight tracking-tight text-[#0b1220] active:text-[#ff5a00]">
             {product.name}
           </button>
-          <p className="mt-2 text-[13px] font-black text-slate-500">{product.categoryName}</p>
-
-          {isBundle ? (
-            <p className="mt-2 inline-flex rounded-full bg-[#f4efff] px-3 py-1.5 text-[12px] font-black text-[#7c3aed] ring-1 ring-[#dccbff]">
-              Combo gợi ý{product.bundleItemCount > 0 ? ` · ${product.bundleItemCount} sản phẩm` : ""}
-            </p>
-          ) : (
-            <div className="mt-2 space-y-1 text-[13px] font-semibold text-slate-500">
-              <p>Quy cách: <span className="font-black text-[#0b1220]">{getProductDisplayPackage(product)}</span></p>
-              <p>Đơn vị: <span className="font-black text-[#0b1220]">{getProductDisplayUnit(product)}</span></p>
-            </div>
-          )}
-
-          {product.shortDescription ? <p className="mt-2 line-clamp-2 text-[12px] font-semibold leading-snug text-slate-400">{product.shortDescription}</p> : null}
-          <p className="mt-3 inline-flex rounded-full bg-[#fff3ea] px-3 py-2 text-[13px] font-black text-[#ff5a00] ring-1 ring-[#ffd0b3]">{getProductPriceLabel(product)}</p>
+          <p className="mt-2 text-[13px] font-black text-slate-500">{product.industry}</p>
+          <div className="mt-2 space-y-1 text-[13px] font-semibold text-slate-500">
+            <p>SKU: <span className="font-black text-[#0b1220]">{product.sku}</span></p>
+            <p>Phân loại: <span className="font-black text-[#0b1220]">{getCatalogV2OptionSummary(product)}</span></p>
+          </div>
+          <p className="mt-3 inline-flex rounded-full bg-[#fff3ea] px-3 py-2 text-[13px] font-black text-[#ff5a00] ring-1 ring-[#ffd0b3]">{getCatalogV2PriceLabel(product)}</p>
         </div>
 
         <button type="button" onClick={onOpen} className="grid h-[112px] w-[116px] shrink-0 place-items-center overflow-hidden rounded-[25px] bg-gradient-to-br from-[#fffaf3] via-[#fff3e6] to-[#ede7dd] text-[62px] ring-1 ring-white/80">
-          {product.imageUrl ? <img src={product.imageUrl} alt={product.name} className="h-full w-full object-cover" /> : getProductEmoji(product)}
+          {product.image.url ? <img src={product.image.url} alt={product.name} className="h-full w-full object-contain" /> : categoryEmoji(product.industryKey)}
         </button>
       </div>
 
       <div className="mt-4 flex items-center gap-3">
         <button type="button" onClick={onOpen} className="flex h-11 flex-1 items-center justify-center rounded-[16px] bg-[#fbfaf7] px-4 text-[15px] font-black text-[#0b1220] ring-1 ring-[#eee7dc]">
-          Xem
+          Chọn phân loại
         </button>
         <span className={`flex h-11 min-w-[128px] items-center justify-center rounded-[16px] px-4 text-center text-[12px] font-black ${product.isOrderable ? "bg-[#0b1220] text-white" : "bg-slate-200 text-slate-600"}`}>
-          {getProductOrderMessage(product)}
+          {getCatalogV2OrderLabel(product)}
         </span>
       </div>
     </article>
@@ -88,7 +62,7 @@ function ProductListState({ children }: { children: string }) {
 }
 
 export function ProductHome({ active = "home" }: { active?: AppNavKey }) {
-  const [selectedProduct, setSelectedProduct] = useState<PublicProduct | null>(null);
+  const [selectedProduct, setSelectedProduct] = useState<CatalogV2VariantCard | null>(null);
   const {
     products,
     tabs,
@@ -98,9 +72,10 @@ export function ProductHome({ active = "home" }: { active?: AppNavKey }) {
     setSearchText,
     loading,
     error,
+    total,
   } = useCatalogBrowser();
 
-  const subtitle = loading ? "Đang tải catalog" : "Catalog sản phẩm Bếp Sỉ";
+  const subtitle = loading ? "Đang tải catalog" : `${total} card biến thể`;
 
   return (
     <MobilePageShell active={active} title="Bếp Sỉ F&B" subtitle={subtitle}>
@@ -115,7 +90,7 @@ export function ProductHome({ active = "home" }: { active?: AppNavKey }) {
               Nguyên liệu F&B cho quán
             </h2>
           </div>
-          <input value={searchText} onChange={(event) => setSearchText(event.target.value)} placeholder="Tìm trà, bột sữa, topping..." className="absolute bottom-4 left-4 right-4 h-12 rounded-[18px] border border-white/80 bg-white/95 px-4 text-[15px] font-bold shadow-sm outline-none placeholder:text-slate-400 focus:border-[#ff5a00] focus:bg-white" />
+          <input value={searchText} onChange={(event) => setSearchText(event.target.value)} placeholder="Tìm tên hoặc SKU..." className="absolute bottom-4 left-4 right-4 h-12 rounded-[18px] border border-white/80 bg-white/95 px-4 text-[15px] font-bold shadow-sm outline-none placeholder:text-slate-400 focus:border-[#ff5a00] focus:bg-white" />
         </div>
       </div>
 
@@ -123,10 +98,9 @@ export function ProductHome({ active = "home" }: { active?: AppNavKey }) {
         <div className="flex touch-pan-x gap-2 overflow-x-auto overscroll-x-contain px-4 py-3 [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {tabs.map((tab) => {
             const selected = tab.id === selectedCategory;
-            const empty = tab.id !== "all" && tab.productCount === 0;
             return (
-              <button key={tab.id} type="button" aria-pressed={selected} onClick={() => setSelectedCategory(tab.id)} className={`inline-flex shrink-0 items-center gap-1.5 rounded-[14px] px-3.5 py-2.5 text-[13px] font-black shadow-sm ring-1 ${selected ? "bg-[#ff5a00] text-white ring-[#ff5a00]" : empty ? "bg-white text-slate-400 ring-[#eee7dc]" : getTabTone(tab.id)}`}>
-                <span className="text-[16px] leading-none">{categoryEmoji[tab.id] || "▦"}</span>
+              <button key={tab.id} type="button" aria-pressed={selected} onClick={() => setSelectedCategory(tab.id)} className={`inline-flex shrink-0 items-center gap-1.5 rounded-[14px] px-3.5 py-2.5 text-[13px] font-black shadow-sm ring-1 ${selected ? "bg-[#ff5a00] text-white ring-[#ff5a00]" : "bg-white text-slate-600 ring-[#eee7dc]"}`}>
+                <span className="text-[16px] leading-none">{categoryEmoji(tab.id)}</span>
                 <span className="leading-none">{tab.name}</span>
                 <span className="rounded-full bg-white/60 px-1.5 py-0.5 text-[11px] leading-none">{tab.productCount}</span>
               </button>
@@ -138,8 +112,8 @@ export function ProductHome({ active = "home" }: { active?: AppNavKey }) {
       <div className="mt-4 space-y-3">
         {loading ? <ProductListState>Đang tải sản phẩm...</ProductListState> : null}
         {!loading && error ? <ProductListState>{error}</ProductListState> : null}
-        {!loading && !error && products.length === 0 ? <ProductListState>Nhóm này đang cập nhật dữ liệu sản phẩm</ProductListState> : null}
-        {!loading && !error ? products.map((product) => <ProductCard key={product.id} product={product} onOpen={() => setSelectedProduct(product)} />) : null}
+        {!loading && !error && products.length === 0 ? <ProductListState>Không có sản phẩm phù hợp</ProductListState> : null}
+        {!loading && !error ? products.map((product) => <ProductCard key={product.variant_id} product={product} onOpen={() => setSelectedProduct(product)} />) : null}
       </div>
 
       {selectedProduct ? <ProductQuickView product={selectedProduct} onClose={() => setSelectedProduct(null)} /> : null}
