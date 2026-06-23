@@ -8,7 +8,9 @@ import type {
 } from "@/data/catalog-v2/product-model";
 import {
   getCatalogV2OrderLabel,
+  getCatalogV2PriceHeading,
   getCatalogV2PriceLabel,
+  getCatalogV2PriceNote,
 } from "@/lib/catalog-v2-display";
 import { addCartItem } from "@/lib/cartStorage";
 
@@ -20,6 +22,15 @@ function ProductState({ children }: { children: string }) {
   return (
     <div className="rounded-[28px] border border-dashed border-[#e7dccd] bg-white/75 px-6 py-10 text-center text-[16px] font-black text-slate-500 shadow-sm">
       {children}
+    </div>
+  );
+}
+
+function InfoRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-[18px] bg-[#fbfaf7] px-4 py-3 ring-1 ring-[#eee7dc]">
+      <p className="text-[11px] font-black uppercase tracking-[0.12em] text-slate-400">{label}</p>
+      <p className="mt-1 text-sm font-black text-[#0b1220]">{value}</p>
     </div>
   );
 }
@@ -144,6 +155,8 @@ export function ProductDetailClient({ slug }: ProductDetailClientProps) {
   if (error) return <ProductState>{error}</ProductState>;
   if (!detail || !selectedVariant) return <ProductState>Không có dữ liệu sản phẩm</ProductState>;
 
+  const priceNote = getCatalogV2PriceNote(selectedVariant);
+
   return (
     <div className="space-y-6">
       <Link href="/products" className="inline-flex rounded-full bg-white px-4 py-2 text-sm font-black text-[#ff5a00] ring-1 ring-[#ffd0b3]">
@@ -166,6 +179,12 @@ export function ProductDetailClient({ slug }: ProductDetailClientProps) {
 
           <h2 className="mt-4 text-[30px] font-black leading-tight tracking-tight text-[#0b1220] md:text-5xl">{selectedVariant.name}</h2>
           <p className="mt-3 text-sm font-black text-slate-500">SKU: {selectedVariant.sku}</p>
+
+          <div className="mt-5 grid gap-3 sm:grid-cols-3">
+            <InfoRow label="Dung tích / khối lượng" value={selectedVariant.sizeLabel || "Chưa có trong bảng nguồn"} />
+            <InfoRow label="Quy cách đóng gói" value={selectedVariant.packageLabel || "Đang cập nhật"} />
+            <InfoRow label="Đơn vị bán" value={selectedVariant.sellUnit || "Đang cập nhật"} />
+          </div>
 
           {detail.optionGroups.map((group) => (
             <div key={group.name} className="mt-6">
@@ -191,8 +210,9 @@ export function ProductDetailClient({ slug }: ProductDetailClientProps) {
           ))}
 
           <div className="mt-6 rounded-[24px] bg-[#fff3ea] p-5 ring-1 ring-[#ffd0b3]">
-            <p className="text-sm font-black uppercase tracking-[0.16em] text-[#ff5a00]">Giá phân loại đang chọn</p>
+            <p className="text-sm font-black uppercase tracking-[0.16em] text-[#ff5a00]">{getCatalogV2PriceHeading(selectedVariant)}</p>
             <p className="mt-2 text-3xl font-black text-[#ff5a00]">{getCatalogV2PriceLabel(selectedVariant)}</p>
+            {priceNote ? <p className="mt-2 text-sm font-semibold leading-6 text-slate-600">{priceNote}</p> : null}
             {!selectedVariant.isOrderable ? <p className="mt-2 text-sm font-semibold leading-6 text-slate-600">{getCatalogV2OrderLabel(selectedVariant)}</p> : null}
           </div>
 
