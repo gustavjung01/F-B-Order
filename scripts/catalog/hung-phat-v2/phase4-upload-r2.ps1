@@ -44,6 +44,23 @@ function Get-DuplicatesCaseInsensitive {
   )
 }
 
+function Read-JsonArray {
+  param([string]$Path)
+
+  $parsed = Get-Content -LiteralPath $Path -Raw -Encoding UTF8 | ConvertFrom-Json
+  $items = New-Object System.Collections.ArrayList
+
+  if ($parsed -is [System.Array]) {
+    foreach ($item in $parsed) {
+      [void]$items.Add($item)
+    }
+  } elseif ($null -ne $parsed) {
+    [void]$items.Add($parsed)
+  }
+
+  return $items
+}
+
 function Write-Utf8Json {
   param([string]$Path, [object]$Value, [int]$Depth = 20)
   $json = $Value | ConvertTo-Json -Depth $Depth
@@ -72,8 +89,6 @@ foreach ($requiredPath in @(
   Assert-True (Test-Path -LiteralPath $requiredPath) "Required Phase 4 path does not exist: $requiredPath"
 }
 
-# Always force command output into arrays. Windows PowerShell unwraps zero/one-item
-# results, which makes .Count unsafe under StrictMode.
 $localProductFiles = @(Get-RelativeFileNames -Root $ProductsDir -Filter "*.webp")
 $localManifestFiles = @(Get-RelativeFileNames -Root $ManifestsDir -Filter "*.json")
 
@@ -86,8 +101,8 @@ Assert-Equal $productFileDuplicates.Count 0 "duplicate local product filename co
 Assert-Equal $manifestFileDuplicates.Count 0 "duplicate local manifest filename count"
 
 $catalogVersion = Get-Content -LiteralPath $CatalogVersionManifest -Raw -Encoding UTF8 | ConvertFrom-Json
-$productsManifest = @(Get-Content -LiteralPath $ProductsManifest -Raw -Encoding UTF8 | ConvertFrom-Json)
-$productImagesManifest = @(Get-Content -LiteralPath $ProductImagesManifest -Raw -Encoding UTF8 | ConvertFrom-Json)
+$productsManifest = Read-JsonArray -Path $ProductsManifest
+$productImagesManifest = Read-JsonArray -Path $ProductImagesManifest
 
 $parentCardCount = if ($null -ne $catalogVersion.parentCardCount) {
   [int]$catalogVersion.parentCardCount
