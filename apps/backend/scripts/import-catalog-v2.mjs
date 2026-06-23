@@ -3,10 +3,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import dotenv from "dotenv";
 import pg from "pg";
-import {
-  estimateRetailPrice,
-  loadCatalogV2Supplement,
-} from "./catalog-v2-supplement.mjs";
+import { loadCatalogV2Supplement } from "./catalog-v2-supplement.mjs";
 
 const { Pool } = pg;
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -68,7 +65,7 @@ const productPayload = products.map((row, sortOrder) => ({
   sortOrder,
 }));
 
-let estimatedRetailPriceCount = 0;
+let dealerPriceCount = 0;
 let specificationCount = 0;
 const variantPayload = variants.map((row, sortOrder) => {
   const supplement = supplementBySku.get(row.sku);
@@ -80,14 +77,11 @@ const variantPayload = variants.map((row, sortOrder) => {
   const dealerPrice = fixedPrice
     ? positiveMoney(row.shopPrice) ?? supplement.dealerPrice
     : null;
-  const configuredRetailPrice = fixedPrice ? positiveMoney(row.retailPrice) : null;
-  const retailPrice = configuredRetailPrice ?? estimateRetailPrice(dealerPrice);
-  const estimatedRetailPrice = configuredRetailPrice === null && retailPrice !== null;
   const hasSpecification = Boolean(
     mergedOptions.size || mergedOptions.package || mergedOptions.sell_unit,
   );
 
-  if (estimatedRetailPrice) estimatedRetailPriceCount += 1;
+  if (dealerPrice !== null) dealerPriceCount += 1;
   if (hasSpecification) specificationCount += 1;
 
   return {
@@ -98,7 +92,7 @@ const variantPayload = variants.map((row, sortOrder) => {
     options: mergedOptions,
     priceMode: row.priceMode,
     priceLabel: row.priceLabel || null,
-    retailPrice,
+    retailPrice: null,
     shopPrice: dealerPrice,
     imageKey: row.imageKey || null,
     imageObjectKey: row.image?.objectKey || null,
@@ -109,7 +103,7 @@ const variantPayload = variants.map((row, sortOrder) => {
 });
 
 assert(specificationCount === 275, `Expected specification info for 275 variants, found ${specificationCount}.`);
-assert(estimatedRetailPriceCount === 272, `Expected 272 estimated retail prices, found ${estimatedRetailPriceCount}.`);
+assert(dealerPriceCount === 272, `Expected 272 dealer prices, found ${dealerPriceCount}.`);
 
 const connectionString = process.env.DATABASE_URL || process.env.BEPSI_DATABASE_URL;
 assert(connectionString, "DATABASE_URL or BEPSI_DATABASE_URL is not configured.");
@@ -177,21 +171,21 @@ try {
     (SELECT COUNT(*) FROM catalog_variants WHERE catalog_version='hung-phat-v2' AND is_active AND is_public AND status IN ('active','market_price'))::int AS variants,
     (SELECT COUNT(*) FROM catalog_variants WHERE catalog_version='hung-phat-v2' AND price_mode='market' AND is_active)::int AS market,
     (SELECT COUNT(*) FROM catalog_variants WHERE catalog_version='hung-phat-v2' AND image_object_key IS NOT NULL AND is_active)::int AS images,
-    (SELECT COUNT(*) FROM catalog_variants WHERE catalog_version='hung-phat-v2' AND retail_price IS NOT NULL AND is_active)::int AS retail_prices,
+    (SELECT COUNT(*) FROM catalog_variants WHERE catalog_version='hung-phat-v2' AND shop_price IS NOT NULL AND is_active)::int AS dealer_prices,
     (SELECT COUNT(*) FROM catalog_variants WHERE catalog_version='hung-phat-v2' AND (options ? 'size' OR options ? 'package' OR options ? 'sell_unit') AND is_active)::int AS specifications`);
   const counts = result.rows[0];
   assert(counts.products === 188 && counts.variants === 275 && counts.market === 3 && counts.images === 269, `DB count mismatch: ${JSON.stringify(counts)}`);
-  assert(counts.retail_prices === 272 && counts.specifications === 275, `Commercial data mismatch: ${JSON.stringify(counts)}`);
+  assert(counts.dealer_prices === 272 && counts.specifications === 275, `Commercial data mismatch: ${JSON.stringify(counts)}`);
   if (apply) await client.query("COMMIT"); else await client.query("ROLLBACK");
   console.log(JSON.stringify({
     phase: 5,
     status: apply ? "IMPORT_PASS" : "DRY_RUN_PASS",
     applied: apply,
     parentProducts: counts.products,
-    variantCards: counts.variants,
+    variants: counts.variants,
     marketPriceVariants: counts.market,
     images: counts.images,
-    estimatedRetailPrices: counts.retail_prices,
+    dealerPrices: counts.dealer_prices,
     variantsWithSpecifications: counts.specifications,
   }, null, 2));
 } catch (error) {
