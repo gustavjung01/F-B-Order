@@ -50,7 +50,9 @@ function toVariantCard(row: VariantRow, identity: RequestIdentity) {
 
   return {
     id: row.variant_id,
+    variant_id: row.variant_id,
     variantId: row.variant_id,
+    product_id: row.product_id,
     productId: row.product_id,
     productKey: row.product_key,
     variantKey: row.variant_key,
@@ -63,6 +65,8 @@ function toVariantCard(row: VariantRow, identity: RequestIdentity) {
     subcategory: row.subcategory,
     options: row.options && typeof row.options === "object" ? row.options : {},
     priceMode: row.price_mode,
+    price: pricing.amount,
+    priceLabel: pricing.label,
     pricing,
     image: {
       key: row.image_key,
