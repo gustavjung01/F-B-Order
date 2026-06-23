@@ -46,6 +46,8 @@ function assetUrl(objectKey: string | null): string | null {
 }
 
 function toVariantCard(row: VariantRow, identity: RequestIdentity) {
+  const pricing = evaluateCatalogV2Pricing(identity, row);
+
   return {
     id: row.variant_id,
     variantId: row.variant_id,
@@ -61,7 +63,7 @@ function toVariantCard(row: VariantRow, identity: RequestIdentity) {
     subcategory: row.subcategory,
     options: row.options && typeof row.options === "object" ? row.options : {},
     priceMode: row.price_mode,
-    pricing: evaluateCatalogV2Pricing(identity, row),
+    pricing,
     image: {
       key: row.image_key,
       objectKey: row.image_object_key,
@@ -69,7 +71,7 @@ function toVariantCard(row: VariantRow, identity: RequestIdentity) {
     },
     isActive: row.is_active,
     isPublic: row.is_public,
-    isOrderable: evaluateCatalogV2Pricing(identity, row).canOrder,
+    isOrderable: pricing.canOrder,
   };
 }
 
@@ -184,19 +186,9 @@ export function createCatalogV2Router(
         values,
       );
 
-      const countValues = values.slice(1, -1);
-      const countClauses = clauses;
-      const countResult = await getDb().query<{ total: string }>(
-        `SELECT COUNT(*)::text AS total
-         FROM catalog_variants variant
-         JOIN catalog_products product ON product.id = variant.product_id
-         WHERE ${countClauses.join(" AND ")}`,
-        countValues,
-      );
-
       res.json({
         products: result.rows.map((row) => toVariantCard(row, identity)),
-        total: Number(countResult.rows[0]?.total ?? 0),
+        total: result.rows.length,
         cardModel: "variant",
       });
     } catch (error) {
