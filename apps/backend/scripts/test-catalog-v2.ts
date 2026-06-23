@@ -3,7 +3,8 @@ import type { AddressInfo } from "node:net";
 import { createApp } from "../src/app";
 import { getDb } from "../src/db/pool";
 
-type VariantCard = {
+type CatalogCard = {
+  productId: string;
   variantId: string;
   sku: string;
   priceMode: "fixed" | "market";
@@ -14,8 +15,8 @@ type VariantCard = {
   sellUnit: string | null;
   specificationLabel: string | null;
   pricing: {
-    estimated: boolean;
-    estimateMarkupPercent: number | null;
+    source: "dealer" | "market" | null;
+    reason: string | null;
   };
 };
 
@@ -24,6 +25,7 @@ async function main() {
   const counts = await db.query<{
     products: number;
     variants: number;
+    dealer_prices: number;
     retail_prices: number;
     specifications: number;
   }>(`
@@ -38,6 +40,10 @@ async function main() {
       (SELECT COUNT(*) FROM catalog_variants
        WHERE catalog_version = 'hung-phat-v2'
          AND is_active = true
+         AND shop_price IS NOT NULL)::int AS dealer_prices,
+      (SELECT COUNT(*) FROM catalog_variants
+       WHERE catalog_version = 'hung-phat-v2'
+         AND is_active = true
          AND retail_price IS NOT NULL)::int AS retail_prices,
       (SELECT COUNT(*) FROM catalog_variants
        WHERE catalog_version = 'hung-phat-v2'
@@ -47,7 +53,8 @@ async function main() {
 
   assert.equal(counts.rows[0]?.products, 188);
   assert.equal(counts.rows[0]?.variants, 275);
-  assert.equal(counts.rows[0]?.retail_prices, 272);
+  assert.equal(counts.rows[0]?.dealer_prices, 272);
+  assert.equal(counts.rows[0]?.retail_prices, 0);
   assert.equal(counts.rows[0]?.specifications, 275);
 
   const app = createApp({
@@ -66,41 +73,44 @@ async function main() {
     const listBody = await listResponse.json() as {
       total: number;
       cardModel: string;
-      products: VariantCard[];
+      products: CatalogCard[];
     };
-    assert.equal(listBody.total, 275);
-    assert.equal(listBody.products.length, 275);
-    assert.equal(listBody.cardModel, "variant");
+    assert.equal(listBody.total, 188);
+    assert.equal(listBody.products.length, 188);
+    assert.equal(listBody.cardModel, "parent");
+    assert.equal(new Set(listBody.products.map((item) => item.productId)).size, 188);
     assert.ok(listBody.products.every((item) => item.variantId && item.sku));
     assert.ok(listBody.products.every((item) => item.specificationLabel));
 
-    const fixedVariants = listBody.products.filter((item) => item.priceMode === "fixed");
-    const marketVariants = listBody.products.filter((item) => item.priceMode === "market");
-    assert.equal(fixedVariants.length, 272);
-    assert.equal(marketVariants.length, 3);
-    assert.ok(fixedVariants.every((item) => item.price !== null));
-    assert.ok(fixedVariants.every((item) => item.pricing.estimated));
-    assert.ok(fixedVariants.every((item) => item.pricing.estimateMarkupPercent === 15));
-    assert.ok(marketVariants.every((item) => item.price === null && item.priceLabel === "Thời giá"));
+    const fixedCards = listBody.products.filter((item) => item.priceMode === "fixed");
+    const marketCards = listBody.products.filter((item) => item.priceMode === "market");
+    assert.ok(fixedCards.length > 0);
+    assert.ok(fixedCards.every((item) => item.price !== null));
+    assert.ok(fixedCards.every((item) => item.pricing.source === "dealer"));
+    assert.ok(marketCards.every((item) => item.price === null && item.priceLabel === "Thời giá"));
 
     const selectedVariantId = listBody.products[0].variantId;
     const detailResponse = await fetch(`${baseUrl}/catalog/products/${selectedVariantId}`);
     assert.equal(detailResponse.status, 200);
     const detailBody = await detailResponse.json() as {
       product: { id: string; productKey: string };
-      optionGroups: unknown[];
-      variants: VariantCard[];
+      optionGroups: Array<{ key: string; name: string; values: string[] }>;
+      variants: CatalogCard[];
       selectedVariantId: string;
     };
 
     assert.ok(detailBody.product.id);
     assert.ok(detailBody.product.productKey);
     assert.ok(Array.isArray(detailBody.optionGroups));
+    assert.ok(detailBody.optionGroups.every((group) => group.key && group.name && Array.isArray(group.values)));
     assert.ok(detailBody.variants.length >= 1);
     assert.equal(detailBody.selectedVariantId, selectedVariantId);
     assert.ok(detailBody.variants.some((variant) => variant.variantId === selectedVariantId));
 
-    console.log("Catalog v2 API contract passed: 188 parents / 275 variants / 272 retail estimates / 275 specifications.");
+    const brand = listBody.products.find((item) => item.productId)?.productId;
+    assert.ok(brand);
+
+    console.log("Catalog v2 API contract passed: 188 parent cards / 275 variants / 272 dealer prices / 275 specifications.");
   } finally {
     await new Promise<void>((resolve, reject) => {
       server.close((error) => error ? reject(error) : resolve());
