@@ -75,12 +75,18 @@ export function useCatalogBrowser() {
     };
   }, [selectedIndustry, selectedBrand, searchText]);
 
-  const industrySource = selectedBrand === "all"
-    ? allProducts
-    : allProducts.filter((product) => product.brand === selectedBrand);
-  const brandSource = selectedIndustry === "all"
-    ? allProducts
-    : allProducts.filter((product) => product.industryKey === selectedIndustry);
+  const industrySource = useMemo(
+    () => selectedBrand === "all"
+      ? allProducts
+      : allProducts.filter((product) => product.brand === selectedBrand),
+    [allProducts, selectedBrand],
+  );
+  const brandSource = useMemo(
+    () => selectedIndustry === "all"
+      ? allProducts
+      : allProducts.filter((product) => product.industryKey === selectedIndustry),
+    [allProducts, selectedIndustry],
+  );
 
   const industries = useMemo(
     () => buildOptions(industrySource, (product) => product.industryKey, (product) => product.industry),
@@ -90,6 +96,18 @@ export function useCatalogBrowser() {
     () => buildOptions(brandSource, (product) => product.brand, (product) => product.brand),
     [brandSource],
   );
+
+  useEffect(() => {
+    if (selectedIndustry !== "all" && !industries.some((option) => option.id === selectedIndustry)) {
+      setSelectedIndustry("all");
+    }
+  }, [industries, selectedIndustry]);
+
+  useEffect(() => {
+    if (selectedBrand !== "all" && !brands.some((option) => option.id === selectedBrand)) {
+      setSelectedBrand("all");
+    }
+  }, [brands, selectedBrand]);
 
   function resetFilters() {
     setSelectedIndustry("all");
