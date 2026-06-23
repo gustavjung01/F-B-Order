@@ -77,10 +77,14 @@ const manifestDir = path.join(repoRoot, "data/catalog/hung-phat/v2/manifests");
 const productsPath = path.join(manifestDir, "products.json");
 const versionPath = path.join(manifestDir, "catalog-version.json");
 const templatePath = path.join(scriptDir, "phase3-preview.template.html");
+const cssPath = path.join(scriptDir, "phase3-preview.css");
+const jsPath = path.join(scriptDir, "phase3-preview.js");
 
 assert(fs.existsSync(productsPath), `Missing manifest: ${productsPath}`);
 assert(fs.existsSync(versionPath), `Missing manifest: ${versionPath}`);
 assert(fs.existsSync(templatePath), `Missing template: ${templatePath}`);
+assert(fs.existsSync(cssPath), `Missing stylesheet: ${cssPath}`);
+assert(fs.existsSync(jsPath), `Missing script: ${jsPath}`);
 assert(publicBaseUrl, "Public base URL cannot be empty.");
 
 const products = readJson(productsPath);
@@ -161,8 +165,11 @@ const template = fs.readFileSync(templatePath, "utf8");
 assert(template.includes("__CATALOG_PAYLOAD__"), "Preview template is missing __CATALOG_PAYLOAD__ placeholder.");
 const html = template.replace("__CATALOG_PAYLOAD__", safeJson(payload));
 
-fs.mkdirSync(path.dirname(outputPath), { recursive: true });
+const outputDir = path.dirname(outputPath);
+fs.mkdirSync(outputDir, { recursive: true });
 fs.writeFileSync(outputPath, html, "utf8");
+fs.copyFileSync(cssPath, path.join(outputDir, "preview.css"));
+fs.copyFileSync(jsPath, path.join(outputDir, "preview.js"));
 
 console.log(JSON.stringify({
   phase: 3,
