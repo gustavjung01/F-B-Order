@@ -3,6 +3,10 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import dotenv from "dotenv";
 import pg from "pg";
+import {
+  estimateRetailPrice,
+  loadCatalogV2Supplement,
+} from "./catalog-v2-supplement.mjs";
 
 const { Pool } = pg;
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -25,6 +29,10 @@ const slugify = (value) => String(value || "")
   .replace(/[^a-z0-9]+/g, "-")
   .replace(/^-+|-+$/g, "");
 const readJson = (filePath) => JSON.parse(fs.readFileSync(filePath, "utf8"));
+const positiveMoney = (value) => {
+  const amount = Number(value);
+  return Number.isFinite(amount) && amount > 0 ? Math.round(amount) : null;
+};
 
 const apply = process.argv.includes("--apply");
 const manifestsDir = path.resolve(arg("manifests-dir", "F:/1_A_Disk_D/khuong-binh/bep-si/image/bepsi-link-mapper/bepsi_link_mapper/catalog-v2/r2-ready/manifests"));
@@ -32,6 +40,8 @@ const products = readJson(path.join(manifestsDir, "products.json"));
 const variants = readJson(path.join(manifestsDir, "product-variants.json"));
 const images = readJson(path.join(manifestsDir, "product-images.json"));
 const version = readJson(path.join(manifestsDir, "catalog-version.json"));
+const supplementBySku = loadCatalogV2Supplement(repoRoot);
+
 assert(Array.isArray(products) && products.length === 188, `Expected 188 products, found ${products.length}.`);
 assert(Array.isArray(variants) && variants.length === 275, `Expected 275 variants, found ${variants.length}.`);
 assert(Array.isArray(images) && images.length === 269, `Expected 269 images, found ${images.length}.`);
@@ -39,8 +49,10 @@ assert(version.parentCardCount === 188 && version.variantCount === 275, "Invalid
 assert(new Set(products.map((row) => row.productKey)).size === 188, "Duplicate productKey.");
 assert(new Set(variants.map((row) => row.variantKey)).size === 275, "Duplicate variantKey.");
 assert(new Set(variants.map((row) => row.sku)).size === 275, "Duplicate SKU.");
+assert(supplementBySku.size === 275, `Expected 275 supplement rows, found ${supplementBySku.size}.`);
 const productKeys = new Set(products.map((row) => row.productKey));
 assert(variants.every((row) => productKeys.has(row.parentKey)), "Orphan variant found.");
+assert(variants.every((row) => supplementBySku.has(row.sku)), "Variant supplement is incomplete.");
 
 const productPayload = products.map((row, sortOrder) => ({
   productKey: row.productKey,
@@ -55,22 +67,49 @@ const productPayload = products.map((row, sortOrder) => ({
   coverImageObjectKey: row.image?.objectKey || null,
   sortOrder,
 }));
-const variantPayload = variants.map((row, sortOrder) => ({
-  parentKey: row.parentKey,
-  variantKey: row.variantKey,
-  sku: row.sku,
-  name: row.name,
-  options: row.options || {},
-  priceMode: row.priceMode,
-  priceLabel: row.priceLabel || null,
-  retailPrice: row.retailPrice || null,
-  shopPrice: row.shopPrice || null,
-  imageKey: row.imageKey || null,
-  imageObjectKey: row.image?.objectKey || null,
-  status: row.status,
-  isOrderable: Boolean(row.isOrderable),
-  sortOrder,
-}));
+
+let estimatedRetailPriceCount = 0;
+let specificationCount = 0;
+const variantPayload = variants.map((row, sortOrder) => {
+  const supplement = supplementBySku.get(row.sku);
+  const mergedOptions = {
+    ...supplement.options,
+    ...(row.options || {}),
+  };
+  const fixedPrice = row.priceMode === "fixed";
+  const dealerPrice = fixedPrice
+    ? positiveMoney(row.shopPrice) ?? supplement.dealerPrice
+    : null;
+  const configuredRetailPrice = fixedPrice ? positiveMoney(row.retailPrice) : null;
+  const retailPrice = configuredRetailPrice ?? estimateRetailPrice(dealerPrice);
+  const estimatedRetailPrice = configuredRetailPrice === null && retailPrice !== null;
+  const hasSpecification = Boolean(
+    mergedOptions.size || mergedOptions.package || mergedOptions.sell_unit,
+  );
+
+  if (estimatedRetailPrice) estimatedRetailPriceCount += 1;
+  if (hasSpecification) specificationCount += 1;
+
+  return {
+    parentKey: row.parentKey,
+    variantKey: row.variantKey,
+    sku: row.sku,
+    name: row.name,
+    options: mergedOptions,
+    priceMode: row.priceMode,
+    priceLabel: row.priceLabel || null,
+    retailPrice,
+    shopPrice: dealerPrice,
+    imageKey: row.imageKey || null,
+    imageObjectKey: row.image?.objectKey || null,
+    status: row.status,
+    isOrderable: fixedPrice && dealerPrice !== null && Boolean(row.isOrderable !== false),
+    sortOrder,
+  };
+});
+
+assert(specificationCount === 275, `Expected specification info for 275 variants, found ${specificationCount}.`);
+assert(estimatedRetailPriceCount === 272, `Expected 272 estimated retail prices, found ${estimatedRetailPriceCount}.`);
 
 const connectionString = process.env.DATABASE_URL || process.env.BEPSI_DATABASE_URL;
 assert(connectionString, "DATABASE_URL or BEPSI_DATABASE_URL is not configured.");
@@ -137,11 +176,24 @@ try {
     (SELECT COUNT(*) FROM catalog_products WHERE catalog_version='hung-phat-v2' AND status='active')::int AS products,
     (SELECT COUNT(*) FROM catalog_variants WHERE catalog_version='hung-phat-v2' AND is_active AND is_public AND status IN ('active','market_price'))::int AS variants,
     (SELECT COUNT(*) FROM catalog_variants WHERE catalog_version='hung-phat-v2' AND price_mode='market' AND is_active)::int AS market,
-    (SELECT COUNT(*) FROM catalog_variants WHERE catalog_version='hung-phat-v2' AND image_object_key IS NOT NULL AND is_active)::int AS images`);
+    (SELECT COUNT(*) FROM catalog_variants WHERE catalog_version='hung-phat-v2' AND image_object_key IS NOT NULL AND is_active)::int AS images,
+    (SELECT COUNT(*) FROM catalog_variants WHERE catalog_version='hung-phat-v2' AND retail_price IS NOT NULL AND is_active)::int AS retail_prices,
+    (SELECT COUNT(*) FROM catalog_variants WHERE catalog_version='hung-phat-v2' AND (options ? 'size' OR options ? 'package' OR options ? 'sell_unit') AND is_active)::int AS specifications`);
   const counts = result.rows[0];
   assert(counts.products === 188 && counts.variants === 275 && counts.market === 3 && counts.images === 269, `DB count mismatch: ${JSON.stringify(counts)}`);
+  assert(counts.retail_prices === 272 && counts.specifications === 275, `Commercial data mismatch: ${JSON.stringify(counts)}`);
   if (apply) await client.query("COMMIT"); else await client.query("ROLLBACK");
-  console.log(JSON.stringify({ phase: 5, status: apply ? "IMPORT_PASS" : "DRY_RUN_PASS", applied: apply, parentProducts: counts.products, variantCards: counts.variants, marketPriceVariants: counts.market, images: counts.images }, null, 2));
+  console.log(JSON.stringify({
+    phase: 5,
+    status: apply ? "IMPORT_PASS" : "DRY_RUN_PASS",
+    applied: apply,
+    parentProducts: counts.products,
+    variantCards: counts.variants,
+    marketPriceVariants: counts.market,
+    images: counts.images,
+    estimatedRetailPrices: counts.retail_prices,
+    variantsWithSpecifications: counts.specifications,
+  }, null, 2));
 } catch (error) {
   await client.query("ROLLBACK").catch(() => undefined);
   throw error;
