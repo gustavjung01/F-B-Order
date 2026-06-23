@@ -46,6 +46,9 @@ const OPTION_GROUP_LABELS: Record<string, string> = {
   size: "Dung tích / khối lượng",
 };
 
+const OPTION_GROUP_ORDER = ["size", "flavor", "flavor_or_type", "type", "color"];
+const NON_SELECTABLE_OPTION_KEYS = new Set(["package", "sell_unit"]);
+
 type IdentityResolver = (req: Request) => Promise<RequestIdentity>;
 
 type VariantRow = CatalogV2PriceRow & {
@@ -90,20 +93,63 @@ function assetUrl(objectKey: string | null): string | null {
   return `${base.replace(/\/+$/, "")}/${objectKey.replace(/^\/+/, "")}`;
 }
 
+function normalizeKey(value: string) {
+  return value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/đ/g, "d")
+    .replace(/[^a-z0-9]+/g, "_")
+    .replace(/^_+|_+$/g, "");
+}
+
+function canonicalOptionKey(value: string) {
+  const key = normalizeKey(value);
+  const aliases: Record<string, string> = {
+    vi: "flavor",
+    huong_vi: "flavor",
+    flavor: "flavor",
+    flavour: "flavor",
+    vi_loai: "flavor_or_type",
+    flavor_or_type: "flavor_or_type",
+    loai: "type",
+    type: "type",
+    mau: "color",
+    color: "color",
+    size: "size",
+    dung_tich: "size",
+    khoi_luong: "size",
+    trong_luong: "size",
+    volume: "size",
+    weight: "size",
+    capacity: "size",
+    package: "package",
+    quy_cach: "package",
+    quy_cach_dong_goi: "package",
+    sell_unit: "sell_unit",
+    don_vi_ban: "sell_unit",
+    dvt: "sell_unit",
+  };
+  return aliases[key] || key;
+}
+
 function displayOptionValue(value: unknown): unknown {
   if (typeof value !== "string") return value;
   const normalized = value.replace(/-/g, " ").trim().toLowerCase();
-  return OPTION_VALUE_LABELS[normalized] || value;
+  return OPTION_VALUE_LABELS[normalized] || value.trim();
 }
 
 function displayOptions(value: unknown): Record<string, unknown> {
   if (!value || typeof value !== "object" || Array.isArray(value)) return {};
-  return Object.fromEntries(
-    Object.entries(value as Record<string, unknown>).map(([key, optionValue]) => [
-      key,
-      displayOptionValue(optionValue),
-    ]),
-  );
+  const result: Record<string, unknown> = {};
+  for (const [rawKey, rawValue] of Object.entries(value as Record<string, unknown>)) {
+    const key = canonicalOptionKey(rawKey);
+    const nextValue = displayOptionValue(rawValue);
+    const currentValue = result[key];
+    const shouldReplace = currentValue === undefined || currentValue === null || currentValue === "Khác";
+    if (shouldReplace) result[key] = nextValue;
+  }
+  return result;
 }
 
 function optionText(options: Record<string, unknown>, ...keys: string[]): string | null {
@@ -114,26 +160,50 @@ function optionText(options: Record<string, unknown>, ...keys: string[]): string
   return null;
 }
 
-function displayOptionGroups(value: unknown): Array<{ name: string; key: string; values: unknown[] }> {
+function declaredOptionOrder(value: unknown): string[] {
   if (!Array.isArray(value)) return [];
   return value
-    .filter((group): group is { name: string; values: unknown[] } => (
-      Boolean(group) &&
-      typeof group === "object" &&
-      typeof (group as { name?: unknown }).name === "string" &&
-      Array.isArray((group as { values?: unknown }).values)
-    ))
-    .map((group) => ({
-      key: group.name,
-      name: OPTION_GROUP_LABELS[group.name] || group.name,
-      values: group.values.map(displayOptionValue),
-    }));
+    .map((group) => {
+      if (!group || typeof group !== "object") return null;
+      const name = (group as { name?: unknown }).name;
+      return typeof name === "string" ? canonicalOptionKey(name) : null;
+    })
+    .filter((key): key is string => Boolean(key));
+}
+
+function deriveOptionGroups(rows: VariantRow[], declaredGroups: unknown) {
+  const valuesByKey = new Map<string, string[]>();
+  for (const row of rows) {
+    const options = displayOptions(row.options);
+    for (const [key, value] of Object.entries(options)) {
+      if (NON_SELECTABLE_OPTION_KEYS.has(key) || typeof value !== "string" || !value.trim()) continue;
+      const values = valuesByKey.get(key) || [];
+      if (!values.includes(value)) values.push(value);
+      valuesByKey.set(key, values);
+    }
+  }
+
+  const selectableKeys = [...valuesByKey.entries()]
+    .filter(([, values]) => values.length > 1)
+    .map(([key]) => key);
+  const declared = declaredOptionOrder(declaredGroups).filter((key) => selectableKeys.includes(key));
+  const ordered = [...new Set([
+    ...declared,
+    ...OPTION_GROUP_ORDER.filter((key) => selectableKeys.includes(key)),
+    ...selectableKeys.sort((left, right) => left.localeCompare(right, "vi")),
+  ])];
+
+  return ordered.map((key) => ({
+    key,
+    name: OPTION_GROUP_LABELS[key] || key,
+    values: valuesByKey.get(key) || [],
+  }));
 }
 
 function toVariantCard(row: VariantRow, identity: RequestIdentity) {
   const pricing = evaluateCatalogV2Pricing(identity, row);
   const options = displayOptions(row.options);
-  const sizeLabel = optionText(options, "size", "weight", "volume", "capacity");
+  const sizeLabel = optionText(options, "size");
   const packageLabel = optionText(options, "package");
   const sellUnit = optionText(options, "sell_unit");
   const specificationLabel = [sizeLabel, packageLabel, sellUnit ? `ĐVT: ${sellUnit}` : null]
@@ -379,7 +449,7 @@ export function createCatalogV2Router(
             url: assetUrl(selected.cover_image_object_key),
           },
         },
-        optionGroups: displayOptionGroups(selected.option_groups),
+        optionGroups: deriveOptionGroups(variantsResult.rows, selected.option_groups),
         variants: variantsResult.rows.map((row) => toVariantCard(row, identity)),
         selectedVariantId,
       });
