@@ -7,6 +7,7 @@ import type {
   CatalogV2VariantCard,
 } from "@/data/catalog-v2/product-model";
 import {
+  getCatalogV2OrderLabel,
   getCatalogV2PriceHeading,
   getCatalogV2PriceLabel,
 } from "@/lib/catalog-v2-display";
@@ -100,6 +101,7 @@ export function CatalogVariantSelector({
   );
   const totalQuantity = validRows.reduce((total, item) => total + item.row.quantity, 0);
   const uniqueVariantCount = new Set(validRows.map((item) => item.variant.variant_id)).size;
+  const firstBlockedVariant = validRows.find((item) => !item.variant.isOrderable)?.variant || null;
 
   function updateOption(rowId: number, groupIndex: number, groupKey: string, value: string) {
     const currentRowIndex = rows.findIndex((row) => row.id === rowId);
@@ -149,7 +151,7 @@ export function CatalogVariantSelector({
   }
 
   async function addAllToCart() {
-    if (adding) return;
+    if (adding || firstBlockedVariant) return;
     if (validRows.length !== rows.length) {
       setMessage("Còn dòng chưa chọn đủ phân loại.");
       return;
@@ -165,14 +167,6 @@ export function CatalogVariantSelector({
     }
 
     const items = [...grouped.values()];
-    const blocked = items.find((item) => !item.variant.isOrderable);
-    if (blocked) {
-      setMessage(blocked.variant.priceMode === "market"
-        ? "Có phân loại đang để Thời giá, chưa thể thêm trực tiếp."
-        : "Đăng ký và chờ duyệt hồ sơ quán trước khi đặt hàng.");
-      return;
-    }
-
     setAdding(true);
     setMessage("");
     try {
@@ -271,6 +265,12 @@ export function CatalogVariantSelector({
         </button>
       ) : null}
 
+      {firstBlockedVariant && !message ? (
+        <p className="rounded-[16px] bg-amber-50 p-3 text-sm font-black text-amber-800 ring-1 ring-amber-100">
+          {firstBlockedVariant.priceMode === "market" ? "Sản phẩm đang để Thời giá." : "Đăng ký và chờ duyệt hồ sơ quán để đặt hàng."}
+        </p>
+      ) : null}
+
       {message ? (
         <p className={`rounded-[16px] p-3 text-sm font-black ${message.startsWith("Đã thêm") ? "bg-[#e9fbf2] text-[#08775f]" : "bg-red-50 text-red-700"}`}>
           {message}
@@ -280,12 +280,14 @@ export function CatalogVariantSelector({
       <button
         type="button"
         onClick={() => void addAllToCart()}
-        disabled={adding || validRows.length === 0}
+        disabled={adding || validRows.length === 0 || Boolean(firstBlockedVariant)}
         className="h-[52px] w-full rounded-[18px] bg-[#ff5a00] px-5 py-3.5 text-sm font-black text-white shadow-[0_14px_26px_rgba(255,90,0,0.22)] disabled:cursor-not-allowed disabled:bg-slate-300 disabled:shadow-none"
       >
         {adding
           ? "Đang thêm..."
-          : `Thêm ${uniqueVariantCount || 0} phân loại · ${totalQuantity || 0} sản phẩm vào giỏ`}
+          : firstBlockedVariant
+            ? getCatalogV2OrderLabel(firstBlockedVariant)
+            : `Thêm ${uniqueVariantCount || 0} phân loại · ${totalQuantity || 0} sản phẩm vào giỏ`}
       </button>
     </div>
   );
