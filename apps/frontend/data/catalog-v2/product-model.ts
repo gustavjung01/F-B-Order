@@ -6,6 +6,8 @@ export type CatalogV2Pricing = {
   source: "price_group" | "shop" | "retail" | "market" | null;
   canOrder: boolean;
   reason: string | null;
+  estimated: boolean;
+  estimateMarkupPercent: number | null;
 };
 
 export type CatalogV2Image = {
@@ -30,6 +32,10 @@ export type CatalogV2VariantCard = {
   industryKey: string;
   subcategory: string | null;
   options: Record<string, string>;
+  sizeLabel: string | null;
+  packageLabel: string | null;
+  sellUnit: string | null;
+  specificationLabel: string | null;
   priceMode: "fixed" | "market";
   price: number | null;
   priceLabel: string | null;
