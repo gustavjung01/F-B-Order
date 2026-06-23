@@ -66,11 +66,10 @@ CREATE TABLE IF NOT EXISTS catalog_variant_prices (
 
 ALTER TABLE cart_items ADD COLUMN IF NOT EXISTS variant_id UUID REFERENCES catalog_variants(id);
 ALTER TABLE order_items ADD COLUMN IF NOT EXISTS variant_id UUID REFERENCES catalog_variants(id);
-ALTER TABLE cart_items ALTER COLUMN product_id DROP NOT NULL;
 
 ALTER TABLE cart_items DROP CONSTRAINT IF EXISTS cart_items_product_or_variant_check;
 ALTER TABLE cart_items ADD CONSTRAINT cart_items_product_or_variant_check
-  CHECK ((product_id IS NOT NULL) <> (variant_id IS NOT NULL));
+  CHECK (product_id IS NOT NULL OR variant_id IS NOT NULL);
 
 CREATE UNIQUE INDEX IF NOT EXISTS cart_items_cart_variant_unique
   ON cart_items(cart_id, variant_id)
