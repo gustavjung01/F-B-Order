@@ -1,7 +1,6 @@
 import type { RequestIdentity } from "../auth/auth.identity";
 
 export const CATALOG_V2_CURRENCY = "VND" as const;
-export const CATALOG_V2_RETAIL_MARKUP_PERCENT = 15 as const;
 
 export type CatalogV2PriceRow = {
   price_mode: "fixed" | "market";
@@ -28,13 +27,6 @@ function isApprovedCustomer(identity: RequestIdentity): boolean {
   );
 }
 
-function isEstimatedRetailPrice(row: CatalogV2PriceRow): boolean {
-  const retailPrice = positiveMoney(row.retail_price);
-  const dealerPrice = positiveMoney(row.shop_price);
-  if (retailPrice === null || dealerPrice === null) return false;
-  return retailPrice === Math.round(dealerPrice * (1 + CATALOG_V2_RETAIL_MARKUP_PERCENT / 100));
-}
-
 export function evaluateCatalogV2Pricing(identity: RequestIdentity, row: CatalogV2PriceRow) {
   const baseOrderable =
     row.is_orderable &&
@@ -51,49 +43,31 @@ export function evaluateCatalogV2Pricing(identity: RequestIdentity, row: Catalog
       source: "market" as const,
       canOrder: false,
       reason: "MARKET_PRICE",
-      estimated: false,
-      estimateMarkupPercent: null,
     };
   }
 
   const approved = isApprovedCustomer(identity);
-  const candidates: Array<{
-    source: "price_group" | "shop" | "retail";
-    value: unknown;
-  }> = approved
-    ? [
-        { source: "price_group", value: row.price_group_price },
-        { source: "shop", value: row.shop_price },
-        { source: "retail", value: row.retail_price },
-      ]
-    : [{ source: "retail", value: row.retail_price }];
+  const dealerPrice = positiveMoney(row.shop_price);
 
-  for (const candidate of candidates) {
-    const amount = positiveMoney(candidate.value);
-    if (amount === null) continue;
-    const estimated = candidate.source === "retail" && isEstimatedRetailPrice(row);
+  if (dealerPrice !== null) {
     return {
       visibility: "visible" as const,
       label: null,
-      amount,
+      amount: dealerPrice,
       currency: CATALOG_V2_CURRENCY,
-      source: candidate.source,
+      source: "dealer" as const,
       canOrder: approved && baseOrderable,
       reason: approved ? null : "SHOP_APPROVAL_REQUIRED",
-      estimated,
-      estimateMarkupPercent: estimated ? CATALOG_V2_RETAIL_MARKUP_PERCENT : null,
     };
   }
 
   return {
     visibility: "label" as const,
-    label: approved ? "Chưa thiết lập giá quán" : "Chưa thiết lập giá lẻ",
+    label: "Chưa có giá đại lý",
     amount: null,
     currency: CATALOG_V2_CURRENCY,
     source: null,
     canOrder: false,
-    reason: approved ? "SHOP_PRICE_UNAVAILABLE" : "RETAIL_PRICE_UNAVAILABLE",
-    estimated: false,
-    estimateMarkupPercent: null,
+    reason: "DEALER_PRICE_UNAVAILABLE",
   };
 }
