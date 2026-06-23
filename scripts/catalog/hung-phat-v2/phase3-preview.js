@@ -3,8 +3,10 @@
   const all = payload.products;
   const storageKey = `catalog-review:${payload.catalogVersion}`;
   const saved = loadState();
+  const orderState = new Map();
   let filtered = [...all];
   let currentKey = null;
+  let toastTimer = null;
 
   const labels = {
     missingImage: "Thiếu ảnh",
@@ -13,6 +15,7 @@
     duplicateSku: "SKU trùng",
     wrongPrice: "Giá sai",
   };
+
   const byId = (id) => document.getElementById(id);
 
   function loadState() {
@@ -48,7 +51,11 @@
 
   function money(value) {
     return Number.isFinite(Number(value))
-      ? new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND", maximumFractionDigits: 0 }).format(Number(value))
+      ? new Intl.NumberFormat("vi-VN", {
+          style: "currency",
+          currency: "VND",
+          maximumFractionDigits: 0,
+        }).format(Number(value))
       : "Giá lỗi";
   }
 
@@ -167,6 +174,32 @@
     });
   }
 
+  function defaultSelections(product) {
+    const result = {};
+    for (const group of product.optionGroups) {
+      result[group.name] = group.values[0] ?? "";
+    }
+    return result;
+  }
+
+  function ensureOrderRows(product) {
+    if (!orderState.has(product.productKey)) {
+      orderState.set(product.productKey, [{ selections: defaultSelections(product), quantity: 1 }]);
+    }
+    return orderState.get(product.productKey);
+  }
+
+  function matchVariant(product, row) {
+    if (!product.variants.length) return null;
+    if (!product.optionGroups.length) return product.variants[0];
+
+    const selectedValues = Object.values(row.selections).filter(Boolean);
+    return product.variants.find((variant) => {
+      const variantValues = Object.values(variant.options || {}).map(String);
+      return selectedValues.every((value) => variantValues.includes(String(value)));
+    }) || product.variants[0];
+  }
+
   function openModal(productKey) {
     currentKey = productKey;
     byId("modal").hidden = false;
@@ -189,29 +222,97 @@
     const product = currentProduct();
     if (!product) return closeModal();
 
-    const review = reviewFor(product.productKey);
     const filteredIndex = filtered.findIndex((item) => item.productKey === product.productKey);
     byId("headName").textContent = product.name;
     byId("count").textContent = `${filteredIndex + 1}/${filtered.length}`;
-    byId("done").textContent = review.reviewed ? "✓ Đã duyệt" : "Đánh dấu đã duyệt";
-    byId("done").classList.toggle("on", review.reviewed);
 
-    byId("left").innerHTML = `<div class="hero">${imageHtml(product, "detail")}</div><div class="brand" style="margin-top:14px">${escapeHtml(product.brand || "—")}</div><h2>${escapeHtml(product.name)}</h2><div class="price">${money(product.priceFrom)}</div><div class="chips"><span class="chip">${escapeHtml(product.category)}</span><span class="chip">Ảnh: ${escapeHtml(product.imageStatus)}</span><span class="chip">Chất lượng: ${escapeHtml(product.imageQualityStatus)}</span></div>`;
+    byId("left").innerHTML = `<div class="hero">${imageHtml(product, "detail")}</div><div class="product-meta"><div class="brand">${escapeHtml(product.brand || "—")}</div><h2>${escapeHtml(product.name)}</h2><div class="price">${money(product.priceFrom)}</div><div class="chips"><span class="chip">${escapeHtml(product.category)}</span><span class="chip">Ảnh: ${escapeHtml(product.imageStatus)}</span><span class="chip">SKU: ${escapeHtml(product.variants[0]?.sku || "—")}</span></div><p class="local-note">Ảnh preview dùng file local, không phụ thuộc DNS public của R2.</p></div>`;
+    bindImageFallbacks(byId("left"));
 
-    const optionRows = product.optionGroups.length
-      ? product.optionGroups.map((group) => `<div class="row"><div class="label">${escapeHtml(group.name)}</div><div class="chips">${group.values.map((value) => `<span class="chip">${escapeHtml(value)}</span>`).join("")}</div></div>`).join("")
-      : '<div class="meta">Không có option.</div>';
+    renderOrderRows(product);
+    renderAudit(product);
+  }
 
-    const variantRows = product.variants.map((variant) => `<tr><td><b>${escapeHtml(variant.sku)}</b></td><td>${escapeHtml(Object.entries(variant.options || {}).map(([key, value]) => `${key}: ${value}`).join(" · ") || "—")}</td><td>${money(variant.price)}</td><td>${escapeHtml(variant.imageKey || "—")}</td></tr>`).join("");
+  function renderOrderRows(product) {
+    const rows = ensureOrderRows(product);
+    const container = byId("orderRows");
 
-    const issueChecks = Object.entries(labels).map(([key, label]) => {
+    container.innerHTML = rows.map((row, rowIndex) => {
+      const variant = matchVariant(product, row);
+      const fields = product.optionGroups.map((group, groupIndex) => {
+        const options = group.values.map((value) => `<option value="${escapeHtml(value)}" ${row.selections[group.name] === value ? "selected" : ""}>${escapeHtml(value)}</option>`).join("");
+        return `<div class="field"><label>${escapeHtml(group.name)}</label><select data-row="${rowIndex}" data-group="${groupIndex}">${options}</select></div>`;
+      }).join("");
+
+      return `<div class="order-row">${fields || '<div class="field"><label>Phân loại</label><select disabled><option>Mặc định</option></select></div>'}<div class="variant-info">${escapeHtml(variant?.sku || "Không tìm thấy SKU")}<br>${money(variant?.price ?? product.priceFrom)}</div><div class="qty"><button data-minus="${rowIndex}" type="button">−</button><span>${row.quantity}</span><button data-plus="${rowIndex}" type="button">+</button></div><button class="remove" data-remove="${rowIndex}" type="button" ${rows.length === 1 ? "disabled" : ""}>×</button></div>`;
+    }).join("");
+
+    container.querySelectorAll("select[data-row]").forEach((select) => {
+      select.addEventListener("change", (event) => {
+        const rowIndex = Number(event.target.dataset.row);
+        const groupIndex = Number(event.target.dataset.group);
+        const group = product.optionGroups[groupIndex];
+        rows[rowIndex].selections[group.name] = event.target.value;
+        renderOrderRows(product);
+      });
+    });
+
+    container.querySelectorAll("[data-minus]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const index = Number(button.dataset.minus);
+        rows[index].quantity = Math.max(1, rows[index].quantity - 1);
+        renderOrderRows(product);
+      });
+    });
+
+    container.querySelectorAll("[data-plus]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const index = Number(button.dataset.plus);
+        rows[index].quantity += 1;
+        renderOrderRows(product);
+      });
+    });
+
+    container.querySelectorAll("[data-remove]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const index = Number(button.dataset.remove);
+        if (rows.length > 1) rows.splice(index, 1);
+        renderOrderRows(product);
+      });
+    });
+
+    updateOrderSummary(product);
+  }
+
+  function updateOrderSummary(product) {
+    const rows = ensureOrderRows(product);
+    let quantity = 0;
+    let total = 0;
+    let validRows = 0;
+
+    for (const row of rows) {
+      const variant = matchVariant(product, row);
+      if (!variant) continue;
+      validRows += 1;
+      quantity += row.quantity;
+      total += Number(variant.price || product.priceFrom || 0) * row.quantity;
+    }
+
+    byId("orderSummary").textContent = `${validRows} phân loại · ${quantity} sản phẩm`;
+    byId("orderTotal").textContent = money(total);
+    byId("addCart").textContent = `Thêm ${validRows} phân loại – ${quantity} sản phẩm vào giỏ`;
+    byId("addCart").disabled = validRows === 0 || quantity === 0;
+  }
+
+  function renderAudit(product) {
+    const review = reviewFor(product.productKey);
+    const checks = Object.entries(labels).map(([key, label]) => {
       const checked = review.issues[key] || product.autoIssues[key];
       return `<label class="check"><input type="checkbox" data-issue="${key}" ${checked ? "checked" : ""}><span>${label}${product.autoIssues[key] ? " · tự phát hiện" : ""}</span></label>`;
     }).join("");
 
-    byId("right").innerHTML = `<div class="section"><h3>Nhóm / vị / size / màu / loại</h3>${optionRows}</div><div class="section"><h3>SKU tương ứng</h3><div style="overflow:auto"><table><thead><tr><th>SKU</th><th>Option</th><th>Giá</th><th>Ảnh</th></tr></thead><tbody>${variantRows}</tbody></table></div></div><div class="section"><h3>Chỉ đánh dấu lỗi cần sửa</h3><div class="checks">${issueChecks}</div><textarea id="notes" placeholder="Tên đúng, option đúng hoặc giá đúng...">${escapeHtml(review.notes)}</textarea></div>`;
+    byId("auditContent").innerHTML = `<div class="audit-grid">${checks}</div><textarea id="notes" placeholder="Tên đúng, option đúng hoặc giá đúng...">${escapeHtml(review.notes)}</textarea><div class="review-actions"><button id="reviewDone" class="review-done ${review.reviewed ? "on" : ""}" type="button">${review.reviewed ? "✓ Đã duyệt" : "Đánh dấu đã duyệt"}</button></div>`;
 
-    bindImageFallbacks(byId("left"));
     document.querySelectorAll("[data-issue]").forEach((input) => {
       input.addEventListener("change", (event) => {
         review.issues[event.target.dataset.issue] = event.target.checked;
@@ -219,10 +320,43 @@
         renderStats();
       });
     });
+
     byId("notes").addEventListener("input", (event) => {
       review.notes = event.target.value;
       saveState();
     });
+
+    byId("reviewDone").addEventListener("click", () => {
+      review.reviewed = !review.reviewed;
+      saveState();
+      renderAudit(product);
+      renderStats();
+    });
+  }
+
+  function addOrderRow() {
+    const product = currentProduct();
+    if (!product) return;
+    ensureOrderRows(product).push({ selections: defaultSelections(product), quantity: 1 });
+    renderOrderRows(product);
+  }
+
+  function simulateAddToCart() {
+    const product = currentProduct();
+    if (!product) return;
+    const rows = ensureOrderRows(product);
+    const quantity = rows.reduce((sum, row) => sum + row.quantity, 0);
+    showToast(`Preview: đã mô phỏng thêm ${quantity} sản phẩm. Chưa ghi vào giỏ thật.`);
+  }
+
+  function showToast(message) {
+    const toast = byId("toast");
+    toast.textContent = message;
+    toast.hidden = false;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => {
+      toast.hidden = true;
+    }, 2200);
   }
 
   function move(delta) {
@@ -230,16 +364,6 @@
     const index = Math.max(0, filtered.findIndex((product) => product.productKey === currentKey));
     currentKey = filtered[(index + delta + filtered.length) % filtered.length].productKey;
     renderModal();
-  }
-
-  function toggleReviewed() {
-    const product = currentProduct();
-    if (!product) return;
-    const review = reviewFor(product.productKey);
-    review.reviewed = !review.reviewed;
-    saveState();
-    renderModal();
-    renderStats();
   }
 
   function csvValue(value) {
@@ -278,16 +402,18 @@
 
   fillCategories();
   applyFilters();
+
   ["q", "cat", "issue", "review"].forEach((id) => {
     byId(id).addEventListener(id === "q" ? "input" : "change", applyFilters);
   });
   byId("export").addEventListener("click", exportCsv);
   byId("close").addEventListener("click", closeModal);
   document.querySelector(".back").addEventListener("click", closeModal);
-  byId("prev").addEventListener("click", () => move(-1));
   byId("prevTop").addEventListener("click", () => move(-1));
-  byId("next").addEventListener("click", () => move(1));
-  byId("done").addEventListener("click", toggleReviewed);
+  byId("nextTop").addEventListener("click", () => move(1));
+  byId("addRow").addEventListener("click", addOrderRow);
+  byId("addCart").addEventListener("click", simulateAddToCart);
+
   window.addEventListener("keydown", (event) => {
     if (byId("modal").hidden) return;
     if (event.key === "Escape") closeModal();
