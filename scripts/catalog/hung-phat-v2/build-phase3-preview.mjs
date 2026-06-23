@@ -75,9 +75,10 @@ const productsPath = path.join(manifestDir, "products.json");
 const versionPath = path.join(manifestDir, "catalog-version.json");
 const templatePath = path.join(scriptDir, "phase3-preview.template.html");
 const cssPath = path.join(scriptDir, "phase3-preview.css");
+const mobileCssPath = path.join(scriptDir, "phase3-mobile.css");
 const jsPath = path.join(scriptDir, "phase3-preview.js");
 
-for (const required of [productsPath, versionPath, templatePath, cssPath, jsPath]) {
+for (const required of [productsPath, versionPath, templatePath, cssPath, mobileCssPath, jsPath]) {
   assert(fs.existsSync(required), `Missing required file: ${required}`);
 }
 assert(fs.existsSync(sourceImages), `Local image source does not exist: ${sourceImages}`);
@@ -177,6 +178,7 @@ const html = template.replace("__CATALOG_PAYLOAD__", safeJson(payload));
 
 fs.writeFileSync(outputPath, html, "utf8");
 fs.copyFileSync(cssPath, path.join(outputDir, "preview.css"));
+fs.copyFileSync(mobileCssPath, path.join(outputDir, "mobile.css"));
 fs.copyFileSync(jsPath, path.join(outputDir, "preview.js"));
 
 console.log(JSON.stringify({
