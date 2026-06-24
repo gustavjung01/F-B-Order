@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import { loadCatalogV2CommercialOptions } from "./catalog-v2-commercial-supplement.mjs";
 
 function parseCsv(raw) {
   const rows = [];
@@ -68,6 +69,7 @@ export function loadCatalogV2Supplement(repoRoot) {
   }
 
   const rows = parseCsv(fs.readFileSync(filePath, "utf8"));
+  const commercialOptions = loadCatalogV2CommercialOptions();
   const bySku = new Map();
 
   for (const row of rows) {
@@ -77,9 +79,16 @@ export function loadCatalogV2Supplement(repoRoot) {
 
     bySku.set(sku, {
       sku,
-      options: parseOptions(row.options_json),
+      options: {
+        ...parseOptions(row.options_json),
+        ...(commercialOptions.get(sku) || {}),
+      },
       dealerPrice: positiveMoney(row.price),
     });
+  }
+
+  for (const sku of commercialOptions.keys()) {
+    if (!bySku.has(sku)) throw new Error(`Commercial supplement references unknown SKU: ${sku}`);
   }
 
   return bySku;
