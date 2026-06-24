@@ -11,7 +11,7 @@
   ],
   "scripts": {
     "dev": "pnpm -r --parallel dev",
-    "build": "pnpm run build:frontend",
+    "build": "pnpm catalog:map:v2 && pnpm catalog:preview:parent:v2 && pnpm typecheck && pnpm run build:frontend",
     "build:all": "pnpm -r build",
     "build:frontend": "pnpm --filter @fb-order/frontend build",
     "build:backend": "pnpm --filter @fb-order/backend build",
