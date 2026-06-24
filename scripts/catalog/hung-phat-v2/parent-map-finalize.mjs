@@ -1,8 +1,23 @@
 import { assert, clean, parseJson, unique } from "./parent-map-io.mjs";
 
 export function finalizeParentMap(state) {
-  const { products, variants: sourceVariants, parentByKey, members, productByKey, variantBySku, variantByProduct } = state;
+  const {
+    products,
+    variants: sourceVariants,
+    parentByKey,
+    members,
+    productByKey,
+    variantBySku,
+    variantByProduct,
+    resolvedImages,
+  } = state;
   const sourceOrder = new Map(products.map((row, index) => [row.product_key, index]));
+  const resolvedImageIds = unique((resolvedImages?.imageIds || []).map(clean).filter(Boolean));
+  const productImageIds = new Set(products.map((row) => clean(row.image_key)));
+  assert(resolvedImages?.catalogVersion === "hung-phat-v2", "Resolved image manifest has the wrong catalog version.");
+  assert(resolvedImageIds.length === 6, `Expected 6 resolved images, found ${resolvedImageIds.length}.`);
+  assert(resolvedImageIds.every((imageId) => productImageIds.has(imageId)), "Resolved image manifest references an unknown image id.");
+  const resolvedImageIdSet = new Set(resolvedImageIds);
   const membersByParent = new Map();
   for (const member of members) {
     const source = variantBySku.get(member.sku);
@@ -56,6 +71,8 @@ export function finalizeParentMap(state) {
     const source = variantByProduct.get(product.product_key);
     const member = memberByProduct.get(product.product_key);
     const price = Number(product.price_from);
+    const sourceMissingImage = String(product.status).includes("missing_image");
+    const imageWasResolved = resolvedImageIdSet.has(clean(product.image_key));
     assert(source, `Product ${product.product_key} has no variant.`);
     return {
       product_key: product.product_key,
@@ -68,7 +85,7 @@ export function finalizeParentMap(state) {
       raw_name: product.name,
       price_khtt_nghin: Number.isFinite(price) ? String(price / 1000) : "",
       image_key: product.image_key,
-      image_status: String(product.status).includes("missing_image") ? "MISSING" : "MAPPED",
+      image_status: sourceMissingImage && !imageWasResolved ? "MISSING" : "MAPPED",
     };
   });
 
@@ -77,5 +94,12 @@ export function finalizeParentMap(state) {
   assert(unique(variants.map((row) => row.variant_key)).length === sourceVariants.length, "Duplicate final variant_key.");
   const parentKeys = new Set(parents.map((row) => row.parent_key));
   assert(variants.every((row) => parentKeys.has(row.parent_key)), "Orphan final variant.");
-  return { parents, variants, explicitParents, singletonParents, grouped };
+  return {
+    parents,
+    variants,
+    explicitParents,
+    singletonParents,
+    grouped,
+    resolvedImageCount: resolvedImageIds.length,
+  };
 }

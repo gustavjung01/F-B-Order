@@ -101,6 +101,13 @@ export function ProductQuickView({ product, onClose }: { product: CatalogV2Varia
           <h2 className="mt-2 text-[28px] font-black leading-tight tracking-tight text-[#0b1220]">{detail?.product.name || product.name}</h2>
           <p className="mt-2 text-sm font-bold text-slate-500">Đang chọn SKU: {selectedVariant.sku}</p>
 
+          {selectedVariant.shortDescription ? (
+            <div className="mt-4 rounded-[20px] bg-white p-4 text-sm font-bold leading-relaxed text-slate-600 ring-1 ring-[#eee7dc]">
+              <p className="text-[11px] font-black uppercase tracking-[0.12em] text-slate-400">Mô tả ngắn</p>
+              <p className="mt-2">{selectedVariant.shortDescription}</p>
+            </div>
+          ) : null}
+
           {specificationRows.length > 0 ? (
             <div className={`mt-4 grid gap-2 ${specificationRows.length > 1 ? "grid-cols-2" : ""}`}>
               {specificationRows.map((item) => <SpecItem key={item.label} label={item.label} value={item.value} />)}

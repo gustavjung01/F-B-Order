@@ -1,7 +1,7 @@
 import { assert, parseJson, unique } from "./parent-map-io.mjs";
 
 export function applyParentFixes(input) {
-  const { products, variants, parents, members: sourceMembers, fixes } = input;
+  const { products, variants, parents, members: sourceMembers, fixes, resolvedImages } = input;
   assert(products.length === 275, `Expected 275 source products, found ${products.length}.`);
   assert(variants.length === 275, `Expected 275 source variants, found ${variants.length}.`);
   assert(unique(products.map((row) => row.product_key)).length === products.length, "Duplicate source product_key.");
@@ -60,5 +60,5 @@ export function applyParentFixes(input) {
 
   assert(unique(members.map((row) => row.sku)).length === members.length, "A SKU belongs to multiple parents.");
   assert(unique(members.map((row) => row.product_key)).length === members.length, "A product belongs to multiple parents.");
-  return { products, variants, parentByKey, members, productByKey, variantBySku, variantByProduct };
+  return { products, variants, parentByKey, members, productByKey, variantBySku, variantByProduct, resolvedImages };
 }

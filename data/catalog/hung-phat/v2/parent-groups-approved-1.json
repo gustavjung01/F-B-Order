@@ -1,0 +1,37 @@
+[
+  {
+    "parentKey": "sua-tuoi",
+    "name": "Sữa tươi",
+    "brand": "",
+    "coverImageKey": "bgkq-0129",
+    "optionGroups": ["type"],
+    "members": [
+      { "sku": "BGKQ-0129", "variantKey": "sua-tuoi--tatte", "options": { "type": "Tatte" } },
+      { "sku": "BGKQ-0130", "variantKey": "sua-tuoi--blan", "options": { "type": "Blan" } }
+    ]
+  },
+  {
+    "parentKey": "tra-cozy",
+    "name": "Trà Cozy",
+    "brand": "Cozy",
+    "coverImageKey": "bgkq-0165",
+    "optionGroups": ["type"],
+    "members": [
+      { "sku": "BGKQ-0165", "variantKey": "tra-cozy--lipton", "options": { "type": "Lipton" } },
+      { "sku": "BGKQ-0166", "variantKey": "tra-cozy--hoa-tan", "options": { "type": "Hòa tan" } },
+      { "sku": "BGKQ-0167", "variantKey": "tra-cozy--tui-loc", "options": { "type": "Túi lọc" } }
+    ]
+  },
+  {
+    "parentKey": "bot-matcha",
+    "name": "Bột matcha",
+    "brand": "",
+    "coverImageKey": "bgkq-0186",
+    "optionGroups": ["type"],
+    "members": [
+      { "sku": "BGKQ-0186", "variantKey": "bot-matcha--dai-loan", "options": { "type": "Đài Loan" } },
+      { "sku": "BGKQ-0187", "variantKey": "bot-matcha--cozy", "options": { "type": "Cozy" } },
+      { "sku": "BGKQ-0188", "variantKey": "bot-matcha--seoul", "options": { "type": "Seoul" } }
+    ]
+  }
+]

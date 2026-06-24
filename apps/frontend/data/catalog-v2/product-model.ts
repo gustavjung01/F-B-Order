@@ -34,6 +34,8 @@ export type CatalogV2VariantCard = {
   packageLabel: string | null;
   sellUnit: string | null;
   specificationLabel: string | null;
+  shortDescription?: string | null;
+  commercialDataConfidence?: "high" | "medium" | null;
   priceMode: "fixed" | "market";
   price: number | null;
   priceLabel: string | null;

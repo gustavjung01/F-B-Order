@@ -73,6 +73,11 @@ export function DesktopHome({ active = "home" }: { active?: AppNavKey }) {
     loading,
     error,
     total,
+    shownCount,
+    hasMore,
+    showMore,
+    pageSize,
+    isBrandFilterHidden,
   } = useCatalogBrowser();
 
   return (
@@ -103,6 +108,7 @@ export function DesktopHome({ active = "home" }: { active?: AppNavKey }) {
           onBrandChange={setSelectedBrand}
           onReset={resetFilters}
           resultCount={total}
+          hideBrandFilter={isBrandFilterHidden}
         />
       </section>
 
@@ -116,9 +122,23 @@ export function DesktopHome({ active = "home" }: { active?: AppNavKey }) {
         {!loading && error ? <ProductGridState>{error}</ProductGridState> : null}
         {!loading && !error && products.length === 0 ? <ProductGridState>Không có sản phẩm phù hợp</ProductGridState> : null}
         {!loading && !error && products.length > 0 ? (
-          <div className="grid grid-cols-4 gap-5">
-            {products.map((product) => <DesktopProductCard key={product.product_id} product={product} />)}
-          </div>
+          <>
+            <div className="grid grid-cols-4 gap-5">
+              {products.map((product) => <DesktopProductCard key={product.product_id} product={product} />)}
+            </div>
+            <div className="mt-8 flex flex-col items-center gap-3">
+              <p className="text-sm font-black text-slate-500">Đang hiển thị {shownCount}/{total} sản phẩm</p>
+              {hasMore ? (
+                <button
+                  type="button"
+                  onClick={showMore}
+                  className="rounded-2xl bg-[#ff5a00] px-8 py-4 text-base font-black text-white shadow-lg shadow-orange-200 transition hover:-translate-y-0.5 hover:bg-[#e95000]"
+                >
+                  Xem thêm {Math.min(pageSize, total - shownCount)} sản phẩm
+                </button>
+              ) : null}
+            </div>
+          </>
         ) : null}
       </section>
     </main>

@@ -27,12 +27,25 @@ export function writeJson(name, value) {
   fs.writeFileSync(path.join(outputDir, name), `${JSON.stringify(value, null, 2)}\n`, "utf8");
 }
 
+// Source-of-truth files consumed by every catalog parent-map build.
 export function loadInputs() {
+  const fixes = JSON.parse(fs.readFileSync(path.join(dataDir, "parent-map-fixes.json"), "utf8"));
+  const reviewedGroups = [
+    ...JSON.parse(fs.readFileSync(path.join(dataDir, "parent-groups-approved-1.json"), "utf8")),
+    ...JSON.parse(fs.readFileSync(path.join(dataDir, "parent-groups-approved-2.json"), "utf8")),
+    ...JSON.parse(fs.readFileSync(path.join(dataDir, "parent-groups-approved-3.json"), "utf8")),
+    ...JSON.parse(fs.readFileSync(path.join(dataDir, "parent-groups-approved-4.json"), "utf8")),
+    ...JSON.parse(fs.readFileSync(path.join(dataDir, "parent-groups-approved-5.json"), "utf8")),
+  ];
   return {
     products: readCsv(path.join(dataDir, "products.csv")),
     variants: readCsv(path.join(dataDir, "product-variants.csv")),
     parents: readCsv(path.join(dataDir, "parent-definitions.csv")),
     members: [1, 2, 3].flatMap((part) => readCsv(path.join(dataDir, `parent-group-members-${part}.csv`))),
-    fixes: JSON.parse(fs.readFileSync(path.join(dataDir, "parent-map-fixes.json"), "utf8")),
+    fixes: {
+      ...fixes,
+      groups: [...(fixes.groups || []), ...reviewedGroups],
+    },
+    resolvedImages: JSON.parse(fs.readFileSync(path.join(dataDir, "resolved-images.json"), "utf8")),
   };
 }

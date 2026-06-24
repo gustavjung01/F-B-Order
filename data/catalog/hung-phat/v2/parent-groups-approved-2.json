@@ -1,0 +1,25 @@
+[
+  {
+    "parentKey": "dau-hu-pho-mai",
+    "name": "Đậu hũ phô mai",
+    "brand": "",
+    "coverImageKey": "bgkq-0234",
+    "optionGroups": ["type"],
+    "members": [
+      { "sku": "BGKQ-0234", "variantKey": "dau-hu-pho-mai--lc", "options": { "type": "LC" } },
+      { "sku": "BGKQ-0235", "variantKey": "dau-hu-pho-mai--ngon", "options": { "type": "Ngon" } }
+    ]
+  },
+  {
+    "parentKey": "xuc-xich",
+    "name": "Xúc xích",
+    "brand": "",
+    "coverImageKey": "bgkq-0242",
+    "optionGroups": ["type"],
+    "members": [
+      { "sku": "BGKQ-0242", "variantKey": "xuc-xich--yummy", "options": { "type": "Yummy" } },
+      { "sku": "BGKQ-0243", "variantKey": "xuc-xich--tokyo", "options": { "type": "Tokyo" } },
+      { "sku": "BGKQ-0244", "variantKey": "xuc-xich--vuon-bia", "options": { "type": "Vườn Bia" } }
+    ]
+  }
+]

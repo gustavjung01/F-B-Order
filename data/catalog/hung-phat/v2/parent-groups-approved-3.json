@@ -1,0 +1,46 @@
+[
+  {
+    "parentKey": "thanh-cua",
+    "name": "Thanh cua",
+    "brand": "",
+    "coverImageKey": "bgkq-0252",
+    "optionGroups": ["type"],
+    "members": [
+      { "sku": "BGKQ-0252", "variantKey": "thanh-cua--dai-1kg", "options": { "type": "Dài 1 kg" } },
+      { "sku": "BGKQ-0253", "variantKey": "thanh-cua--lichuan", "options": { "type": "Lichuan" } }
+    ]
+  },
+  {
+    "parentKey": "com-hong",
+    "name": "Cốm hồng",
+    "brand": "",
+    "coverImageKey": "bgkq-0254",
+    "optionGroups": ["type"],
+    "members": [
+      { "sku": "BGKQ-0254", "variantKey": "com-hong--ongon", "options": { "type": "Ongon" } },
+      { "sku": "BGKQ-0255", "variantKey": "com-hong--thien-nhien", "options": { "type": "Thiên Nhiên" } }
+    ]
+  },
+  {
+    "parentKey": "sot-banh-gao",
+    "name": "Sốt bánh gạo",
+    "brand": "",
+    "coverImageKey": "bgkq-0263",
+    "optionGroups": ["type"],
+    "members": [
+      { "sku": "BGKQ-0263", "variantKey": "sot-banh-gao--saijang", "options": { "type": "Saijang" } },
+      { "sku": "BGKQ-0264", "variantKey": "sot-banh-gao--ky", "options": { "type": "Kỳ" } }
+    ]
+  },
+  {
+    "parentKey": "hanh-phi",
+    "name": "Hành phi",
+    "brand": "",
+    "coverImageKey": "bgkq-0265",
+    "optionGroups": ["type"],
+    "members": [
+      { "sku": "BGKQ-0265", "variantKey": "hanh-phi--anh-tu", "options": { "type": "Anh Tú" } },
+      { "sku": "BGKQ-0266", "variantKey": "hanh-phi--thuong", "options": { "type": "Thường" } }
+    ]
+  }
+]
