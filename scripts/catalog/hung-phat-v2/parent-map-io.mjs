@@ -35,6 +35,7 @@ export function loadInputs() {
     ...JSON.parse(fs.readFileSync(path.join(dataDir, "parent-groups-approved-2.json"), "utf8")),
     ...JSON.parse(fs.readFileSync(path.join(dataDir, "parent-groups-approved-3.json"), "utf8")),
     ...JSON.parse(fs.readFileSync(path.join(dataDir, "parent-groups-approved-4.json"), "utf8")),
+    ...JSON.parse(fs.readFileSync(path.join(dataDir, "parent-groups-approved-5.json"), "utf8")),
   ];
   return {
     products: readCsv(path.join(dataDir, "products.csv")),
