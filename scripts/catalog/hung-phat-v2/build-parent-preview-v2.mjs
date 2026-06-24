@@ -47,13 +47,15 @@ if (imageMode === "local") {
   copiedImageCount = copiedKeys.size;
 }
 
+const imageUrlFor = (imageKey, imageStatus) => {
+  if (!imageKey || imageStatus === "MISSING") return "";
+  if (imageMode === "local") return `./assets/${imageKey}.webp`;
+  return `${assetBaseUrl}/catalog/hung-phat/v2/products/${imageKey}.webp`;
+};
 for (const card of cards) {
-  if (card.imageStatus === "missing") {
-    card.imageUrl = "";
-  } else if (imageMode === "local") {
-    card.imageUrl = `./assets/${card.imageKey}.webp`;
-  } else {
-    card.imageUrl = `${assetBaseUrl}/catalog/hung-phat/v2/products/${card.imageKey}.webp`;
+  card.imageUrl = imageUrlFor(card.imageKey, card.imageStatus === "missing" ? "MISSING" : "MAPPED");
+  for (const variant of card.variants) {
+    variant.imageUrl = imageUrlFor(variant.imageKey, variant.imageStatus);
   }
 }
 
@@ -69,12 +71,16 @@ const payload = {
 const safeJson = JSON.stringify(payload).replace(/</g, "\\u003c");
 const template = fs.readFileSync(path.join(scriptDir, "phase3-preview.template.html"), "utf8");
 fs.writeFileSync(path.join(outputDir, "index.html"), template.replace("__CATALOG_PAYLOAD__", safeJson), "utf8");
-for (const [source, target] of [
-  ["phase3-preview.css", "preview.css"],
-  ["phase3-mobile.css", "mobile.css"],
-  ["phase3-preview.js", "preview.js"],
-  ["phase3-filter-order.js", "filter-order.js"],
-]) fs.copyFileSync(path.join(scriptDir, source), path.join(outputDir, target));
+
+fs.copyFileSync(path.join(scriptDir, "phase3-preview.css"), path.join(outputDir, "preview.css"));
+fs.copyFileSync(path.join(scriptDir, "phase3-mobile.css"), path.join(outputDir, "mobile.css"));
+fs.copyFileSync(path.join(scriptDir, "phase3-filter-order.js"), path.join(outputDir, "filter-order.js"));
+const previewScript = fs.readFileSync(path.join(scriptDir, "phase3-preview.js"), "utf8")
+  .replace(
+    "url: `./assets/${variant.imageKey}.webp`,",
+    "url: variant.imageUrl || `./assets/${variant.imageKey}.webp`,",
+  );
+fs.writeFileSync(path.join(outputDir, "preview.js"), previewScript, "utf8");
 
 console.log(JSON.stringify({
   status: "PASS",
