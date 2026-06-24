@@ -27,6 +27,7 @@ export function writeJson(name, value) {
   fs.writeFileSync(path.join(outputDir, name), `${JSON.stringify(value, null, 2)}\n`, "utf8");
 }
 
+// Source-of-truth files consumed by every catalog parent-map build.
 export function loadInputs() {
   return {
     products: readCsv(path.join(dataDir, "products.csv")),
