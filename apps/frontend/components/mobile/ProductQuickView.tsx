@@ -42,9 +42,9 @@ export function ProductQuickView({ product, onClose }: { product: CatalogV2Varia
         if (!active) return;
         setDetail(data);
         setSelectedVariantId(data.selectedVariantId || product.variant_id);
-      } catch (error) {
+      } catch {
         if (!active) return;
-        setMessage(error instanceof Error ? error.message : "Không tải được thông tin sản phẩm");
+        setMessage("Không tải được thông tin sản phẩm");
       } finally {
         if (active) setLoading(false);
       }
