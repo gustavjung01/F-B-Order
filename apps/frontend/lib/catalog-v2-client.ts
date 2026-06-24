@@ -1,3 +1,4 @@
+import { enrichCatalogV2Variant } from "@/data/catalog-v2/commercial-supplements";
 import type {
   CatalogV2DetailResponse,
   CatalogV2ListResponse,
@@ -46,12 +47,20 @@ async function requestJson<T>(url: string): Promise<T> {
   return request;
 }
 
-export function fetchCatalogV2List(url: string) {
-  return requestJson<CatalogV2ListResponse>(url);
+export async function fetchCatalogV2List(url: string) {
+  const response = await requestJson<CatalogV2ListResponse>(url);
+  return {
+    ...response,
+    products: response.products.map(enrichCatalogV2Variant),
+  };
 }
 
-export function fetchCatalogV2Detail(variantId: string) {
-  return requestJson<CatalogV2DetailResponse>(
+export async function fetchCatalogV2Detail(variantId: string) {
+  const response = await requestJson<CatalogV2DetailResponse>(
     `/api/catalog-v2/products/${encodeURIComponent(variantId)}`,
   );
+  return {
+    ...response,
+    variants: response.variants.map(enrichCatalogV2Variant),
+  };
 }
