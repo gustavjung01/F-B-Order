@@ -9,11 +9,29 @@ export function formatCatalogV2Money(value: number, currency = "VND") {
 }
 
 export function getCatalogV2PriceLabel(variant: CatalogV2VariantCard) {
+  const minPrice = variant.priceMin;
+  const maxPrice = variant.priceMax;
+
+  if (minPrice !== null && minPrice !== undefined && maxPrice !== null && maxPrice !== undefined) {
+    const minLabel = formatCatalogV2Money(minPrice, variant.pricing.currency);
+    if (minPrice === maxPrice) return minLabel;
+    return `${minLabel} – ${formatCatalogV2Money(maxPrice, variant.pricing.currency)}`;
+  }
+
   if (variant.price !== null) return formatCatalogV2Money(variant.price, variant.pricing.currency);
   return variant.priceLabel || variant.pricing.label || "Chưa có giá";
 }
 
 export function getCatalogV2PriceHeading(variant: CatalogV2VariantCard) {
+  if (
+    variant.priceMin !== null &&
+    variant.priceMin !== undefined &&
+    variant.priceMax !== null &&
+    variant.priceMax !== undefined &&
+    variant.priceMin !== variant.priceMax
+  ) {
+    return "Khoảng giá đại lý";
+  }
   return variant.priceMode === "market" ? "Giá" : "Giá đại lý";
 }
 
