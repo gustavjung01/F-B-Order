@@ -12,6 +12,7 @@ type CatalogFiltersProps = {
   onBrandChange: (value: string) => void;
   onReset: () => void;
   resultCount: number;
+  hideBrandFilter?: boolean;
 };
 
 function FilterFields({
@@ -21,9 +22,10 @@ function FilterFields({
   selectedBrand,
   onIndustryChange,
   onBrandChange,
+  hideBrandFilter = false,
 }: Omit<CatalogFiltersProps, "onReset" | "resultCount">) {
   return (
-    <div className="grid gap-3 md:grid-cols-2">
+    <div className={`grid gap-3 ${hideBrandFilter ? "" : "md:grid-cols-2"}`}>
       <label className="grid gap-1.5">
         <span className="text-xs font-black uppercase tracking-[0.12em] text-slate-500">Ngành hàng</span>
         <select
@@ -40,30 +42,39 @@ function FilterFields({
         </select>
       </label>
 
-      <label className="grid gap-1.5">
-        <span className="text-xs font-black uppercase tracking-[0.12em] text-slate-500">Thương hiệu</span>
-        <select
-          value={selectedBrand}
-          onChange={(event) => onBrandChange(event.target.value)}
-          className="h-12 rounded-[16px] border border-[#e7dccd] bg-white px-4 text-sm font-black text-[#0b1220] outline-none focus:border-[#ff5a00]"
-        >
-          <option value="all">Tất cả thương hiệu</option>
-          {brands.map((option) => (
-            <option key={option.id} value={option.id}>
-              {option.name} ({option.productCount})
-            </option>
-          ))}
-        </select>
-      </label>
+      {!hideBrandFilter ? (
+        <label className="grid gap-1.5">
+          <span className="text-xs font-black uppercase tracking-[0.12em] text-slate-500">Thương hiệu</span>
+          <select
+            value={selectedBrand}
+            onChange={(event) => onBrandChange(event.target.value)}
+            className="h-12 rounded-[16px] border border-[#e7dccd] bg-white px-4 text-sm font-black text-[#0b1220] outline-none focus:border-[#ff5a00]"
+          >
+            <option value="all">Tất cả thương hiệu</option>
+            {brands.map((option) => (
+              <option key={option.id} value={option.id}>
+                {option.name} ({option.productCount})
+              </option>
+            ))}
+          </select>
+        </label>
+      ) : null}
     </div>
   );
 }
 
 export function CatalogFilters(props: CatalogFiltersProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const hasFilter = props.selectedIndustry !== "all" || props.selectedBrand !== "all";
+  const hideBrandFilter = props.hideBrandFilter ?? false;
+  const hasFilter = props.selectedIndustry !== "all" || (!hideBrandFilter && props.selectedBrand !== "all");
   const selectedIndustryName = props.industries.find((item) => item.id === props.selectedIndustry)?.name;
-  const selectedBrandName = props.brands.find((item) => item.id === props.selectedBrand)?.name;
+  const selectedBrandName = hideBrandFilter
+    ? undefined
+    : props.brands.find((item) => item.id === props.selectedBrand)?.name;
+  const filterDescription = hideBrandFilter
+    ? "Đông Lạnh chỉ lọc theo ngành hàng"
+    : "Chọn theo ngành hàng và thương hiệu";
+  const mobileFilterLabel = hideBrandFilter ? "Bộ lọc: Đông Lạnh" : "Bộ lọc: Ngành hàng · Thương hiệu";
 
   return (
     <>
@@ -71,7 +82,7 @@ export function CatalogFilters(props: CatalogFiltersProps) {
         <div className="mb-4 flex items-center justify-between">
           <div>
             <p className="text-sm font-black uppercase tracking-[0.14em] text-[#ff5a00]">Bộ lọc sản phẩm</p>
-            <p className="mt-1 text-sm font-bold text-slate-500">Chọn theo ngành hàng và thương hiệu</p>
+            <p className="mt-1 text-sm font-bold text-slate-500">{filterDescription}</p>
           </div>
           {hasFilter ? (
             <button type="button" onClick={props.onReset} className="rounded-full bg-[#fff3ea] px-4 py-2 text-sm font-black text-[#ff5a00]">
@@ -79,7 +90,7 @@ export function CatalogFilters(props: CatalogFiltersProps) {
             </button>
           ) : null}
         </div>
-        <FilterFields {...props} />
+        <FilterFields {...props} hideBrandFilter={hideBrandFilter} />
       </div>
 
       <div className="md:hidden">
@@ -88,7 +99,7 @@ export function CatalogFilters(props: CatalogFiltersProps) {
           onClick={() => setMobileOpen(true)}
           className="flex h-12 w-full items-center justify-between rounded-[16px] bg-white px-4 text-sm font-black text-[#0b1220] shadow-sm ring-1 ring-[#eee7dc]"
         >
-          <span>Bộ lọc: Ngành hàng · Thương hiệu</span>
+          <span>{mobileFilterLabel}</span>
           <span className="rounded-full bg-[#fff3ea] px-2.5 py-1 text-xs text-[#ff5a00]">{props.resultCount}</span>
         </button>
       </div>
@@ -116,12 +127,12 @@ export function CatalogFilters(props: CatalogFiltersProps) {
             <div className="mb-5 flex items-center justify-between">
               <div>
                 <h2 className="text-xl font-black text-[#0b1220]">Bộ lọc sản phẩm</h2>
-                <p className="mt-1 text-sm font-bold text-slate-500">Ngành hàng và thương hiệu</p>
+                <p className="mt-1 text-sm font-bold text-slate-500">{filterDescription}</p>
               </div>
               <button type="button" onClick={() => setMobileOpen(false)} className="grid h-10 w-10 place-items-center rounded-full bg-white text-lg font-black ring-1 ring-[#eee7dc]">×</button>
             </div>
 
-            <FilterFields {...props} />
+            <FilterFields {...props} hideBrandFilter={hideBrandFilter} />
 
             <div className="mt-5 grid grid-cols-2 gap-3">
               <button type="button" onClick={props.onReset} className="h-12 rounded-[16px] bg-white text-sm font-black text-slate-700 ring-1 ring-[#e7dccd]">
