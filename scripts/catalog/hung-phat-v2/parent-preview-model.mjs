@@ -61,6 +61,8 @@ export function buildPreviewCards(parents, variants) {
     assert(rows.length === 1 || optionGroups.length > 0, `Parent ${parent.parent_key} has variants without options.`);
     assert(unique(signatures).length === signatures.length, `Parent ${parent.parent_key} has duplicate option signatures.`);
     const validPrices = rows.map((row) => row.price).filter((value) => value > 0);
+    const coverVariant = rows.find((row) => row.imageKey === parent.cover_image_key);
+    const coverMissing = !parent.cover_image_key || coverVariant?.imageStatus === "MISSING";
     return {
       index,
       productKey: parent.parent_key,
@@ -71,8 +73,8 @@ export function buildPreviewCards(parents, variants) {
       priceFrom: validPrices.length ? Math.min(...validPrices) : 0,
       status: "draft",
       imageKey: parent.cover_image_key,
-      imageStatus: rows.some((row) => row.imageStatus === "MISSING") ? "missing" : "available",
-      imageQualityStatus: "LOCAL_PREVIEW",
+      imageStatus: coverMissing ? "missing" : "available",
+      imageQualityStatus: "R2_OR_LOCAL_PREVIEW",
       optionGroups,
       variants: rows,
       variantCount: rows.length,
