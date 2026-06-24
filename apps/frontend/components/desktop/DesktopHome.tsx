@@ -35,7 +35,7 @@ function DesktopProductCard({ product }: { product: CatalogV2VariantCard }) {
       <Link href={detailHref} className="mt-2 block min-h-14 text-xl font-black leading-tight text-[#0b1220] hover:text-[#ff5a00]">{product.name}</Link>
       <p className="mt-2 text-sm font-black text-slate-500">{product.industry}</p>
       <div className="mt-3 rounded-[16px] bg-[#fbfaf7] p-3 text-sm font-semibold text-slate-500 ring-1 ring-[#eee7dc]">
-        <p className="text-[11px] font-black uppercase tracking-[0.12em] text-slate-400">Quy cách đại diện</p>
+        <p className="text-[11px] font-black uppercase tracking-[0.12em] text-slate-400">Quy cách nổi bật</p>
         <p className="mt-1 font-black text-[#0b1220]">{getCatalogV2SpecificationLabel(product)}</p>
       </div>
       <div className="mt-4">
@@ -91,7 +91,7 @@ export function DesktopHome({ active = "home" }: { active?: AppNavKey }) {
             <input
               value={searchText}
               onChange={(event) => setSearchText(event.target.value)}
-              placeholder="Tìm tên sản phẩm, thương hiệu hoặc SKU..."
+              placeholder="Tìm tên sản phẩm, thương hiệu hoặc mã sản phẩm..."
               className="h-14 w-full rounded-[20px] border border-white/80 bg-white/95 px-5 text-base font-bold shadow-lg outline-none placeholder:text-slate-400 focus:border-[#ff5a00]"
             />
           </div>
@@ -115,7 +115,7 @@ export function DesktopHome({ active = "home" }: { active?: AppNavKey }) {
       <section className="mx-auto max-w-7xl px-8 pb-14">
         <div className="mb-6 flex items-center justify-between">
           <h2 className="text-4xl font-black">{loading ? "Đang tải sản phẩm" : `${total} sản phẩm`}</h2>
-          <span className="rounded-full bg-white px-4 py-2 text-sm font-black text-slate-500 ring-1 ring-[#eee7dc]">Một card = một sản phẩm cha</span>
+          <span className="rounded-full bg-white px-4 py-2 text-sm font-black text-slate-500 ring-1 ring-[#eee7dc]">Chọn quy cách phù hợp trong từng sản phẩm</span>
         </div>
 
         {loading ? <ProductGridState>Đang tải sản phẩm...</ProductGridState> : null}
