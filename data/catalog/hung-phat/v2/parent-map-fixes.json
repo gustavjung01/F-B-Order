@@ -1,4 +1,14 @@
 {
   "version": 1,
-  "notes": "Correct parent grouping for catalog variants"
+  "ungroupProductKeys": [
+    "dao-lon-thai-bgkq-0093",
+    "nhan-thai-bgkq-0097"
+  ],
+  "memberFixes": {
+    "BGKQ-0037": {
+      "parentKey": "sinh-to-mama-gold",
+      "variantKey": "sinh-to-mama-gold--vai",
+      "options": { "flavor": "vai" }
+    }
+  }
 }
