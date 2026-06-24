@@ -71,6 +71,9 @@ type VariantRow = CatalogV2PriceRow & {
   image_key: string | null;
   image_object_key: string | null;
   sort_order: number;
+  parent_variant_count?: number;
+  parent_min_price?: string | null;
+  parent_max_price?: string | null;
 };
 
 function readText(value: unknown): string | null {
@@ -81,6 +84,11 @@ function readLimit(value: unknown): number {
   const parsed = Number.parseInt(String(value ?? ""), 10);
   if (!Number.isFinite(parsed)) return 300;
   return Math.min(Math.max(parsed, 1), 500);
+}
+
+function readPrice(value: unknown): number | null {
+  const amount = Number(value);
+  return Number.isFinite(amount) && amount > 0 ? Math.round(amount * 100) / 100 : null;
 }
 
 function assetUrl(objectKey: string | null): string | null {
@@ -250,6 +258,9 @@ function toParentCard(row: VariantRow, identity: RequestIdentity) {
   return {
     ...representative,
     name: row.product_name,
+    variantCount: Math.max(Number(row.parent_variant_count) || 1, 1),
+    priceMin: readPrice(row.parent_min_price),
+    priceMax: readPrice(row.parent_max_price),
     image: {
       key: row.cover_image_key || row.image_key,
       objectKey: row.cover_image_object_key || row.image_object_key,
@@ -374,7 +385,32 @@ export function createCatalogV2Router(
              ROW_NUMBER() OVER (
                PARTITION BY base.product_id
                ORDER BY base.sort_order, base.sku
-             ) AS product_rank
+             ) AS product_rank,
+             (SELECT COUNT(*)
+              FROM catalog_variants sibling
+              WHERE sibling.product_id = base.product_id
+                AND sibling.catalog_version = 'hung-phat-v2'
+                AND sibling.is_active = true
+                AND sibling.is_public = true
+                AND sibling.status IN ('active', 'market_price'))::int AS parent_variant_count,
+             (SELECT MIN(sibling.shop_price)::text
+              FROM catalog_variants sibling
+              WHERE sibling.product_id = base.product_id
+                AND sibling.catalog_version = 'hung-phat-v2'
+                AND sibling.is_active = true
+                AND sibling.is_public = true
+                AND sibling.status IN ('active', 'market_price')
+                AND sibling.price_mode = 'fixed'
+                AND sibling.shop_price IS NOT NULL) AS parent_min_price,
+             (SELECT MAX(sibling.shop_price)::text
+              FROM catalog_variants sibling
+              WHERE sibling.product_id = base.product_id
+                AND sibling.catalog_version = 'hung-phat-v2'
+                AND sibling.is_active = true
+                AND sibling.is_public = true
+                AND sibling.status IN ('active', 'market_price')
+                AND sibling.price_mode = 'fixed'
+                AND sibling.shop_price IS NOT NULL) AS parent_max_price
            FROM (
              ${variantSelect(1)}
              WHERE ${clauses.join(" AND ")}
