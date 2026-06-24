@@ -80,6 +80,11 @@ export function ProductHome({ active = "home" }: { active?: AppNavKey }) {
     loading,
     error,
     total,
+    shownCount,
+    hasMore,
+    showMore,
+    pageSize,
+    isBrandFilterHidden,
   } = useCatalogBrowser();
 
   const subtitle = loading ? "Đang tải catalog" : `${total} sản phẩm`;
@@ -111,6 +116,7 @@ export function ProductHome({ active = "home" }: { active?: AppNavKey }) {
           onBrandChange={setSelectedBrand}
           onReset={resetFilters}
           resultCount={total}
+          hideBrandFilter={isBrandFilterHidden}
         />
       </div>
 
@@ -125,6 +131,21 @@ export function ProductHome({ active = "home" }: { active?: AppNavKey }) {
         {!loading && !error && products.length === 0 ? <ProductListState>Không có sản phẩm phù hợp</ProductListState> : null}
         {!loading && !error ? products.map((product) => <ProductCard key={product.product_id} product={product} onOpen={() => setSelectedProduct(product)} />) : null}
       </div>
+
+      {!loading && !error && products.length > 0 ? (
+        <div className="mt-5 flex flex-col items-center gap-3">
+          <p className="text-xs font-black text-slate-500">Đang hiển thị {shownCount}/{total} sản phẩm</p>
+          {hasMore ? (
+            <button
+              type="button"
+              onClick={showMore}
+              className="h-12 w-full rounded-[18px] bg-[#ff5a00] px-5 text-[15px] font-black text-white shadow-lg shadow-orange-200 active:scale-[0.99]"
+            >
+              Xem thêm {Math.min(pageSize, total - shownCount)} sản phẩm
+            </button>
+          ) : null}
+        </div>
+      ) : null}
 
       {selectedProduct ? <ProductQuickView product={selectedProduct} onClose={() => setSelectedProduct(null)} /> : null}
     </MobilePageShell>
