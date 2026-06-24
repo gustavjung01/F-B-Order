@@ -11,7 +11,7 @@
   ],
   "scripts": {
     "dev": "pnpm -r --parallel dev",
-    "build": "pnpm run build:frontend",
+    "build": "node --check scripts/catalog/hung-phat-v2/prepare-phase4-r2-v2.mjs && node --check apps/backend/scripts/import-catalog-v2.mjs && pnpm catalog:manifest:v2 && pnpm typecheck && pnpm run build:frontend",
     "build:all": "pnpm -r build",
     "build:frontend": "pnpm --filter @fb-order/frontend build",
     "build:backend": "pnpm --filter @fb-order/backend build",
