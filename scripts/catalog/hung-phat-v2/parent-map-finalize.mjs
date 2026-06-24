@@ -2,6 +2,7 @@ import { assert, clean, parseJson, unique } from "./parent-map-io.mjs";
 
 export function finalizeParentMap(state) {
   const { products, variants: sourceVariants, parentByKey, members, productByKey, variantBySku, variantByProduct } = state;
+  const sourceOrder = new Map(products.map((row, index) => [row.product_key, index]));
   const membersByParent = new Map();
   for (const member of members) {
     const source = variantBySku.get(member.sku);
@@ -44,7 +45,12 @@ export function finalizeParentMap(state) {
     confidence: "source",
     option_groups_json: "[]",
   }));
-  const parents = [...explicitParents, ...singletonParents];
+  const parentPosition = (parent) => {
+    const rows = membersByParent.get(parent.parent_key);
+    if (!rows?.length) return sourceOrder.get(parent.parent_key) ?? Number.MAX_SAFE_INTEGER;
+    return Math.min(...rows.map((row) => sourceOrder.get(row.product_key) ?? Number.MAX_SAFE_INTEGER));
+  };
+  const parents = [...explicitParents, ...singletonParents].sort((left, right) => parentPosition(left) - parentPosition(right));
   const memberByProduct = new Map(members.map((row) => [row.product_key, row]));
   const variants = products.map((product, index) => {
     const source = variantByProduct.get(product.product_key);
