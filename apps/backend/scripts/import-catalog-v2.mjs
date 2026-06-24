@@ -32,21 +32,34 @@ const positiveMoney = (value) => {
 };
 
 const apply = process.argv.includes("--apply");
-const manifestsDir = path.resolve(arg("manifests-dir", "F:/1_A_Disk_D/khuong-binh/bep-si/image/bepsi-link-mapper/bepsi_link_mapper/catalog-v2/r2-ready/manifests"));
+const allowRemote = process.argv.includes("--allow-remote");
+const manifestsDir = path.resolve(arg(
+  "manifests-dir",
+  path.join(repoRoot, "data/catalog/hung-phat/v2/generated/manifests"),
+));
 const products = readJson(path.join(manifestsDir, "products.json"));
 const variants = readJson(path.join(manifestsDir, "product-variants.json"));
 const images = readJson(path.join(manifestsDir, "product-images.json"));
 const version = readJson(path.join(manifestsDir, "catalog-version.json"));
 const supplementBySku = loadCatalogV2Supplement(repoRoot);
 
-assert(Array.isArray(products) && products.length === 188, `Expected 188 products, found ${products.length}.`);
-assert(Array.isArray(variants) && variants.length === 275, `Expected 275 variants, found ${variants.length}.`);
-assert(Array.isArray(images) && images.length === 269, `Expected 269 images, found ${images.length}.`);
-assert(version.parentCardCount === 188 && version.variantCount === 275, "Invalid catalog-version counts.");
-assert(new Set(products.map((row) => row.productKey)).size === 188, "Duplicate productKey.");
-assert(new Set(variants.map((row) => row.variantKey)).size === 275, "Duplicate variantKey.");
-assert(new Set(variants.map((row) => row.sku)).size === 275, "Duplicate SKU.");
-assert(supplementBySku.size === 275, `Expected 275 supplement rows, found ${supplementBySku.size}.`);
+const expectedProducts = Number(version.parentCardCount);
+const expectedVariants = Number(version.variantCount);
+const expectedImages = Number(version.mappedImageCount);
+const expectedMarketPrices = Number(version.marketPriceCount);
+const expectedDealerPrices = expectedVariants - expectedMarketPrices;
+
+assert(version.catalogVersion === "hung-phat-v2", `Unexpected catalog version: ${version.catalogVersion}`);
+assert(Number.isInteger(expectedProducts) && expectedProducts > 0, "Invalid parentCardCount in catalog-version.");
+assert(Number.isInteger(expectedVariants) && expectedVariants > 0, "Invalid variantCount in catalog-version.");
+assert(Number.isInteger(expectedImages) && expectedImages >= 0, "Invalid mappedImageCount in catalog-version.");
+assert(Array.isArray(products) && products.length === expectedProducts, `Expected ${expectedProducts} products, found ${products.length}.`);
+assert(Array.isArray(variants) && variants.length === expectedVariants, `Expected ${expectedVariants} variants, found ${variants.length}.`);
+assert(Array.isArray(images) && images.length === expectedImages, `Expected ${expectedImages} images, found ${images.length}.`);
+assert(new Set(products.map((row) => row.productKey)).size === expectedProducts, "Duplicate productKey.");
+assert(new Set(variants.map((row) => row.variantKey)).size === expectedVariants, "Duplicate variantKey.");
+assert(new Set(variants.map((row) => row.sku)).size === expectedVariants, "Duplicate SKU.");
+assert(supplementBySku.size === expectedVariants, `Expected ${expectedVariants} supplement rows, found ${supplementBySku.size}.`);
 const productKeys = new Set(products.map((row) => row.productKey));
 assert(variants.every((row) => productKeys.has(row.parentKey)), "Orphan variant found.");
 assert(variants.every((row) => supplementBySku.has(row.sku)), "Variant supplement is incomplete.");
@@ -107,14 +120,18 @@ const variantPayload = variants.map((row, sortOrder) => {
   };
 });
 
-assert(packageInfoCount === 275, `Expected package information for 275 variants, found ${packageInfoCount}.`);
-assert(dealerPriceCount === 272, `Expected 272 dealer prices, found ${dealerPriceCount}.`);
+assert(packageInfoCount === expectedVariants, `Expected package information for ${expectedVariants} variants, found ${packageInfoCount}.`);
+assert(dealerPriceCount === expectedDealerPrices, `Expected ${expectedDealerPrices} dealer prices, found ${dealerPriceCount}.`);
 
 const connectionString = process.env.DATABASE_URL || process.env.BEPSI_DATABASE_URL;
 assert(connectionString, "DATABASE_URL or BEPSI_DATABASE_URL is not configured.");
+const localConnection = connectionString.includes("localhost")
+  || connectionString.includes("127.0.0.1")
+  || connectionString.includes("[::1]");
+assert(localConnection || allowRemote, "Refusing to access a non-local database. Pass --allow-remote only for an explicitly approved deployment.");
 const pool = new Pool({
   connectionString,
-  ssl: connectionString.includes("localhost") || connectionString.includes("127.0.0.1") ? false : { rejectUnauthorized: false },
+  ssl: localConnection ? false : { rejectUnauthorized: false },
   max: 1,
 });
 const client = await pool.connect();
@@ -180,8 +197,17 @@ try {
     (SELECT COUNT(*) FROM catalog_variants WHERE catalog_version='hung-phat-v2' AND (options ? 'size' OR options ? 'package' OR options ? 'sell_unit') AND is_active)::int AS package_info,
     (SELECT COUNT(*) FROM catalog_variants WHERE catalog_version='hung-phat-v2' AND (options ? 'size' OR options ? 'weight' OR options ? 'volume' OR options ? 'capacity') AND is_active)::int AS exact_sizes`);
   const counts = result.rows[0];
-  assert(counts.products === 188 && counts.variants === 275 && counts.market === 3 && counts.images === 269, `DB count mismatch: ${JSON.stringify(counts)}`);
-  assert(counts.dealer_prices === 272 && counts.package_info === 275, `Commercial data mismatch: ${JSON.stringify(counts)}`);
+  assert(
+    counts.products === expectedProducts
+      && counts.variants === expectedVariants
+      && counts.market === expectedMarketPrices
+      && counts.images === expectedImages,
+    `DB count mismatch: ${JSON.stringify(counts)}`,
+  );
+  assert(
+    counts.dealer_prices === expectedDealerPrices && counts.package_info === expectedVariants,
+    `Commercial data mismatch: ${JSON.stringify(counts)}`,
+  );
   if (apply) await client.query("COMMIT"); else await client.query("ROLLBACK");
   console.log(JSON.stringify({
     phase: 5,
