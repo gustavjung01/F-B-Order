@@ -50,8 +50,8 @@ function ProductCard({ product, onOpen }: { product: CatalogV2VariantCard; onOpe
       </div>
 
       <div className="mt-2.5">
-        <p className="inline-flex max-w-full rounded-full bg-[#fff3ea] px-2.5 py-1.5 text-[12px] font-black text-[#ff5a00] ring-1 ring-[#ffd0b3]">
-          <span className="truncate">{getCatalogV2PriceLabel(product)}</span>
+        <p className="flex w-full items-center justify-center rounded-[13px] bg-[#fff3ea] px-2 py-1.5 text-center text-[11px] font-black leading-tight text-[#ff5a00] ring-1 ring-[#ffd0b3]">
+          {getCatalogV2PriceLabel(product)}
         </p>
       </div>
 
