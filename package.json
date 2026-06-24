@@ -25,7 +25,9 @@
     "db:seed:test": "pnpm --filter @fb-order/backend db:seed:test",
     "catalog:audit": "pnpm --filter @fb-order/backend catalog:audit",
     "catalog:import": "pnpm --filter @fb-order/backend catalog:import",
-    "catalog:preview:v2": "node scripts/catalog/hung-phat-v2/build-phase3-preview.mjs"
+    "catalog:map:v2": "node scripts/catalog/hung-phat-v2/build-parent-map.mjs",
+    "catalog:preview:v2": "node scripts/catalog/hung-phat-v2/build-phase3-preview.mjs",
+    "catalog:preview:parent:v2": "node scripts/catalog/hung-phat-v2/build-parent-map.mjs && node scripts/catalog/hung-phat-v2/build-parent-preview-v2.mjs"
   },
   "devDependencies": {
     "typescript": "^5.5.4"
