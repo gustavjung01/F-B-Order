@@ -35,6 +35,9 @@ jobs:
       - name: Validate catalog v2 image and parent shape
         run: pnpm catalog:audit:content:v2
 
+      - name: Audit customer copy
+        run: pnpm frontend:audit:copy
+
       - name: Typecheck
         run: pnpm typecheck
 
