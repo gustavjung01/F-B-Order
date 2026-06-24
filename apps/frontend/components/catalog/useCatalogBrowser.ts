@@ -24,6 +24,10 @@ function isFrozenIndustry(value: string) {
   return normalized === "dong-lanh" || normalized === "thuc-pham-dong-lanh";
 }
 
+function isFrozenProduct(product: CatalogV2VariantCard) {
+  return isFrozenIndustry(product.industryKey) || isFrozenIndustry(product.industry);
+}
+
 function buildProductsUrl(industryKey: string, brand: string, q: string) {
   const params = new URLSearchParams();
   if (industryKey !== "all") params.set("industry", industryKey);
@@ -102,12 +106,12 @@ export function useCatalogBrowser() {
   const industrySource = useMemo(
     () => selectedBrand === "all" || isBrandFilterHidden
       ? allProducts
-      : allProducts.filter((product) => product.brand === selectedBrand),
+      : allProducts.filter((product) => product.brand === selectedBrand || isFrozenProduct(product)),
     [allProducts, isBrandFilterHidden, selectedBrand],
   );
   const brandSource = useMemo(
     () => selectedIndustry === "all"
-      ? allProducts
+      ? allProducts.filter((product) => !isFrozenProduct(product))
       : isBrandFilterHidden
         ? []
         : allProducts.filter((product) => product.industryKey === selectedIndustry),
@@ -118,9 +122,7 @@ export function useCatalogBrowser() {
     () => buildOptions(
       industrySource,
       (product) => product.industryKey,
-      (product) => isFrozenIndustry(product.industryKey) || isFrozenIndustry(product.industry)
-        ? "Đông Lạnh"
-        : product.industry,
+      (product) => isFrozenProduct(product) ? "Đông Lạnh" : product.industry,
     ),
     [industrySource],
   );
