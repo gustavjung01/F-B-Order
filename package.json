@@ -28,8 +28,7 @@
     "catalog:import": "pnpm --filter @fb-order/backend catalog:import",
     "catalog:map:v2": "node scripts/catalog/hung-phat-v2/build-parent-map.mjs",
     "catalog:manifest:v2": "pnpm catalog:map:v2 && node scripts/catalog/hung-phat-v2/prepare-phase4-r2-v2.mjs",
-    "catalog:db:dry-run:v2": "pnpm --filter @fb-order/backend catalog:v2:dry-run",
-    "catalog:db:apply:local:v2": "pnpm --filter @fb-order/backend catalog:v2:apply",
+    "catalog:db:audit:heroku:v2": "pnpm --filter @fb-order/backend catalog:v2:dry-run",
     "test:catalog-api:v2": "pnpm --filter @fb-order/backend test:catalog-v2",
     "catalog:preview:v2": "node scripts/catalog/hung-phat-v2/build-phase3-preview.mjs",
     "catalog:preview:parent:v2": "node scripts/catalog/hung-phat-v2/build-parent-map.mjs && node scripts/catalog/hung-phat-v2/build-parent-preview-v2.mjs"
