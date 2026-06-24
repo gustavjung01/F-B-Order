@@ -20,6 +20,9 @@ function clean(value) {
 function unique(values) {
   return [...new Set(values)];
 }
+function readJson(filePath) {
+  return JSON.parse(fs.readFileSync(filePath, "utf8"));
+}
 function writeJson(filePath, value) {
   fs.writeFileSync(filePath, `${JSON.stringify(value, null, 2)}\n`, "utf8");
 }
@@ -50,20 +53,33 @@ function parseVnd(value) {
   return amount > 0 ? amount : null;
 }
 
-const normalizedDir = path.resolve(getArg("normalized-dir", "F:/1_A_Disk_D/khuong-binh/bep-si/image/bepsi-link-mapper/bepsi_link_mapper/catalog-v2/normalized-v2"));
-const sourceImages = path.resolve(getArg("source-images", "F:/1_A_Disk_D/khuong-binh/bep-si/image/bepsi-link-mapper/bepsi_link_mapper/catalog-v2/preview/assets"));
-const r2ReadyRoot = path.resolve(getArg("r2-ready-root", "F:/1_A_Disk_D/khuong-binh/bep-si/image/bepsi-link-mapper/bepsi_link_mapper/catalog-v2/r2-ready"));
+const copyImages = process.argv.includes("--copy-images");
+const generatedRoot = path.resolve(getArg("generated-root", path.join(repoRoot, "data/catalog/hung-phat/v2/generated")));
+const normalizedDir = path.resolve(getArg("normalized-dir", generatedRoot));
+const manifestsDir = path.resolve(getArg("manifests-dir", path.join(generatedRoot, "manifests")));
+const productsDir = path.resolve(getArg("products-dir", path.join(generatedRoot, "products")));
+const sourceImages = path.resolve(getArg(
+  "source-images",
+  "F:/1_A_Disk_D/khuong-binh/bep-si/image/bepsi-link-mapper/bepsi_link_mapper/catalog-v2/preview/assets",
+));
 const policyPath = path.resolve(getArg("policy", path.join(repoRoot, "data/catalog/hung-phat/v2/price-policies.csv")));
+const summaryPath = path.join(normalizedDir, "catalog-summary.json");
 
-for (const required of [normalizedDir, sourceImages, policyPath]) {
+for (const required of [normalizedDir, policyPath, summaryPath]) {
   assert(fs.existsSync(required), `Missing required path: ${required}`);
 }
+if (copyImages) assert(fs.existsSync(sourceImages), `Missing local image source: ${sourceImages}`);
 
 const parents = readCsv(path.join(normalizedDir, "product-parents.csv"));
 const sourceVariants = readCsv(path.join(normalizedDir, "product-variants.csv"));
 const policies = readCsv(policyPath);
-assert(parents.length === 188, `Expected 188 parents, found ${parents.length}.`);
-assert(sourceVariants.length === 275, `Expected 275 variants, found ${sourceVariants.length}.`);
+const summary = readJson(summaryPath);
+const expectedParentCount = Number(summary.parentCardCount);
+const expectedVariantCount = Number(summary.variantCount);
+
+assert(summary.status === "PASS", `Parent-map summary is not PASS: ${summary.status}`);
+assert(parents.length === expectedParentCount, `Expected ${expectedParentCount} parents, found ${parents.length}.`);
+assert(sourceVariants.length === expectedVariantCount, `Expected ${expectedVariantCount} variants, found ${sourceVariants.length}.`);
 
 const policyBySku = new Map();
 for (const policy of policies) {
@@ -76,25 +92,30 @@ for (const policy of policies) {
 const parentKeys = parents.map((row) => row.parent_key);
 const variantKeys = sourceVariants.map((row) => row.variant_key);
 const skus = sourceVariants.map((row) => row.sku);
-assert(unique(parentKeys).length === 188, "Duplicate parent_key found.");
-assert(unique(variantKeys).length === 275, "Duplicate variant_key found.");
-assert(unique(skus).length === 275, "Duplicate SKU found.");
+assert(unique(parentKeys).length === expectedParentCount, "Duplicate parent_key found.");
+assert(unique(variantKeys).length === expectedVariantCount, "Duplicate variant_key found.");
+assert(unique(skus).length === expectedVariantCount, "Duplicate SKU found.");
 const parentKeySet = new Set(parentKeys);
 assert(sourceVariants.every((row) => parentKeySet.has(row.parent_key)), "Orphan variant found.");
 
-const productsDir = path.join(r2ReadyRoot, "products");
-const manifestsDir = path.join(r2ReadyRoot, "manifests");
-fs.rmSync(productsDir, { recursive: true, force: true });
 fs.rmSync(manifestsDir, { recursive: true, force: true });
-fs.mkdirSync(productsDir, { recursive: true });
 fs.mkdirSync(manifestsDir, { recursive: true });
+if (copyImages) {
+  fs.rmSync(productsDir, { recursive: true, force: true });
+  fs.mkdirSync(productsDir, { recursive: true });
+}
 
-const imageKeys = unique(sourceVariants.filter((row) => row.image_status !== "MISSING").map((row) => row.image_key));
-assert(imageKeys.length === 269, `Expected 269 image keys, found ${imageKeys.length}.`);
-for (const imageKey of imageKeys) {
-  const source = path.join(sourceImages, `${imageKey}.webp`);
-  assert(fs.existsSync(source), `Missing mapped image: ${source}`);
-  fs.copyFileSync(source, path.join(productsDir, `${imageKey}.webp`));
+const imageKeys = unique(
+  sourceVariants
+    .filter((row) => row.image_status !== "MISSING" && clean(row.image_key))
+    .map((row) => row.image_key),
+);
+if (copyImages) {
+  for (const imageKey of imageKeys) {
+    const source = path.join(sourceImages, `${imageKey}.webp`);
+    assert(fs.existsSync(source), `Missing mapped local image: ${source}`);
+    fs.copyFileSync(source, path.join(productsDir, `${imageKey}.webp`));
+  }
 }
 const imageSet = new Set(imageKeys);
 
@@ -124,7 +145,7 @@ for (const source of sourceVariants) {
   const rawOptions = source.options_json ? JSON.parse(source.options_json) : {};
   const options = Object.fromEntries(Object.entries(rawOptions).map(([key, value]) => [optionLabels[key] || key, value]));
   const imageAvailable = imageSet.has(source.image_key);
-  if (!imageAvailable) missingImageKeys.push(source.image_key);
+  if (!imageAvailable && clean(source.image_key)) missingImageKeys.push(source.image_key);
   const objectKey = imageAvailable ? `catalog/hung-phat/v2/products/${source.image_key}.webp` : null;
 
   const variant = {
@@ -139,7 +160,7 @@ for (const source of sourceVariants) {
     retailPrice,
     priceStatus: priceMode === "market" ? "market" : "ready",
     retailPriceStatus: retailPrice ? "ready" : "not_set",
-    imageKey: source.image_key,
+    imageKey: source.image_key || null,
     image: { status: imageAvailable ? "available" : "missing", objectKey },
     status: priceMode === "market" ? "market_price" : "active",
     isOrderable: priceMode === "fixed",
@@ -149,14 +170,22 @@ for (const source of sourceVariants) {
   variantsByParent.get(source.parent_key).push(variant);
 
   if (imageAvailable) {
-    imagesManifest.push({ imageKey: source.image_key, variantKey: source.variant_key, sku: source.sku, objectKey, role: "variant", mappingStatus: "exact" });
+    imagesManifest.push({
+      imageKey: source.image_key,
+      variantKey: source.variant_key,
+      sku: source.sku,
+      objectKey,
+      role: "variant",
+      mappingStatus: "exact",
+    });
   }
 }
 
-assert(variantsManifest.length === 275, "Variant manifest count must be 275.");
-assert(imagesManifest.length === 269, "Image manifest count must be 269.");
-assert(unique(imagesManifest.map((row) => row.objectKey)).length === 269, "Duplicate image objectKey found.");
-assert(unique(missingImageKeys).length === 6, `Expected 6 missing images, found ${unique(missingImageKeys).length}.`);
+const mappedImageCount = imagesManifest.length;
+const missingImageCount = unique(missingImageKeys).length;
+assert(variantsManifest.length === expectedVariantCount, `Variant manifest count must be ${expectedVariantCount}.`);
+assert(unique(imagesManifest.map((row) => row.objectKey)).length === mappedImageCount, "Duplicate image objectKey found.");
+assert(missingImageCount === Number(summary.missingImageCount), `Expected ${summary.missingImageCount} missing images, found ${missingImageCount}.`);
 assert(marketPriceSkus.length === 3, `Expected 3 market-price SKUs, found ${marketPriceSkus.length}.`);
 
 const productsManifest = parents.map((parent) => {
@@ -174,7 +203,9 @@ const productsManifest = parents.map((parent) => {
   const marketCount = variants.filter((row) => row.priceMode === "market").length;
   const priceMode = marketCount === variants.length ? "market" : marketCount > 0 ? "mixed" : "fixed";
   const preferredCover = parent.cover_image_key;
-  const coverImageKey = imageSet.has(preferredCover) ? preferredCover : variants.find((row) => row.image.status === "available")?.imageKey || null;
+  const coverImageKey = imageSet.has(preferredCover)
+    ? preferredCover
+    : variants.find((row) => row.image.status === "available")?.imageKey || null;
 
   return {
     productKey: parent.parent_key,
@@ -190,8 +221,13 @@ const productsManifest = parents.map((parent) => {
     retailPricingStatus: "deferred",
     status: priceMode === "market" ? "market_price" : "active",
     imageKey: coverImageKey,
-    image: { status: coverImageKey ? "available" : "missing", objectKey: coverImageKey ? `catalog/hung-phat/v2/products/${coverImageKey}.webp` : null },
-    optionGroups: [...optionValues.entries()].filter(([, values]) => values.length > 1).map(([name, values]) => ({ name, values })),
+    image: {
+      status: coverImageKey ? "available" : "missing",
+      objectKey: coverImageKey ? `catalog/hung-phat/v2/products/${coverImageKey}.webp` : null,
+    },
+    optionGroups: [...optionValues.entries()]
+      .filter(([, values]) => values.length > 1)
+      .map(([name, values]) => ({ name, values })),
     variantKeys: variants.map((row) => row.variantKey),
   };
 });
@@ -211,12 +247,12 @@ const categoriesManifest = industryOrder.map((name, index) => {
 const catalogVersionManifest = {
   catalogVersion: "hung-phat-v2",
   status: "staging",
-  sourceRows: 276,
-  excludedRows: 1,
-  parentCardCount: 188,
-  variantCount: 275,
-  mappedImageCount: 269,
-  missingImageCount: 6,
+  sourceRows: Number(summary.sourceProductCount),
+  excludedRows: 0,
+  parentCardCount: productsManifest.length,
+  variantCount: variantsManifest.length,
+  mappedImageCount,
+  missingImageCount,
   marketPriceCount: marketPriceSkus.length,
   marketPriceSkus: marketPriceSkus.sort(),
   invalidPriceCount: 0,
@@ -231,6 +267,7 @@ const catalogVersionManifest = {
     manifests: "catalog/hung-phat/v2/manifests/",
   },
   missingImageKeys: unique(missingImageKeys).sort(),
+  imagesCopiedLocally: copyImages,
   legacyPrefixesModified: false,
 };
 
@@ -242,15 +279,16 @@ writeJson(path.join(manifestsDir, "catalog-version.json"), catalogVersionManifes
 
 console.log(JSON.stringify({
   phase: 4,
-  status: "R2_READY_PASS",
-  parentCardCount: 188,
-  variantCount: 275,
-  localImageCount: 269,
+  status: copyImages ? "R2_READY_PASS" : "MANIFEST_PASS",
+  parentCardCount: productsManifest.length,
+  variantCount: variantsManifest.length,
+  mappedImageCount,
+  missingImageCount,
+  copiedImageCount: copyImages ? imageKeys.length : 0,
   manifestCount: 5,
   marketPriceCount: marketPriceSkus.length,
   marketPriceSkus: marketPriceSkus.sort(),
-  missingImageCount: 6,
   invalidPriceCount: 0,
-  productsDir,
   manifestsDir,
+  productsDir: copyImages ? productsDir : null,
 }, null, 2));
