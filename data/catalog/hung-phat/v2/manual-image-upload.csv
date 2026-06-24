@@ -1,7 +1,7 @@
 sku,current_name,approved_name,image_key,replacement_file,status,note
-BGKQ-0015,Sinh Tố Berrino Dâu,Sinh tố Berrino Dâu,bgkq-0015,bgkq-0015.webp,UPLOAD_REQUIRED,Thiếu ảnh trong catalog hiện tại
-BGKQ-0068,Tc Cafe Gia Uy mini,Trân châu cà phê Gia Uy mini,bgkq-0068,bgkq-0068.webp,UPLOAD_REQUIRED,Thiếu ảnh trong catalog hiện tại
-BGKQ-0108,Flan mota,Flan Mota,bgkq-0108,bgkq-0108.webp,UPLOAD_REQUIRED,Thiếu ảnh trong catalog hiện tại
-BGKQ-0109,Flan mota sô,Flan Mota Sô-cô-la,bgkq-0109,bgkq-0109.webp,UPLOAD_REQUIRED,Thiếu ảnh trong catalog hiện tại
-BGKQ-0120,BỘT MILKFOAM ERDOLI,Bột milk foam Erdoli,bgkq-0120,bgkq-0120.webp,UPLOAD_REQUIRED,Thiếu ảnh trong catalog hiện tại
-BGKQ-0276,Ruốc,Ruốc,bgkq-0276,bgkq-0276.webp,UPLOAD_REQUIRED,Thiếu ảnh trong catalog hiện tại
+BGKQ-0015,Sinh Tố Berrino Dâu,Sinh tố Berrino Dâu,bgkq-0015,bgkq-0015.webp,VERIFIED,Ảnh đã có trong bộ sản phẩm
+BGKQ-0068,Tc Cafe Gia Uy mini,Trân châu cà phê Gia Uy mini,bgkq-0068,bgkq-0068.webp,VERIFIED,Ảnh đã có trong bộ sản phẩm
+BGKQ-0108,Flan mota,Flan Mota,bgkq-0108,bgkq-0108.webp,VERIFIED,Ảnh đã có trong bộ sản phẩm
+BGKQ-0109,Flan mota sô,Flan Mota Sô-cô-la,bgkq-0109,bgkq-0109.webp,VERIFIED,Ảnh đã có trong bộ sản phẩm
+BGKQ-0120,BỘT MILKFOAM ERDOLI,Bột milk foam Erdoli,bgkq-0120,bgkq-0120.webp,VERIFIED,Ảnh đã có trong bộ sản phẩm
+BGKQ-0276,Ruốc,Ruốc,bgkq-0276,bgkq-0276.webp,VERIFIED,Ảnh đã có trong bộ sản phẩm
