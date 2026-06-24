@@ -207,6 +207,18 @@ try {
         status = 'active', sort_order = EXCLUDED.sort_order, updated_at = now()
     `, [JSON.stringify(productPayload).replaceAll("productKey", "product_key").replaceAll("industryKey", "industry_key").replaceAll("sourceGroup", "source_group").replaceAll("optionGroups", "option_groups").replaceAll("coverImageKey", "cover_image_key").replaceAll("coverImageObjectKey", "cover_image_object_key").replaceAll("sortOrder", "sort_order")]);
 
+    // SKU is the stable identity. Parent remapping can change variant_key,
+    // so move current keys aside inside the same transaction before upserting.
+    const rekeyResult = await client.query(`
+      UPDATE catalog_variants
+      SET variant_key = '__catalog_v2_rekey__' || id::text
+      WHERE catalog_version = 'hung-phat-v2'
+        AND sku = ANY($1::text[])
+    `, [variants.map((row) => row.sku)]);
+    assert(
+      rekeyResult.rowCount === expectedVariants,
+      `Expected to rekey ${expectedVariants} existing variants, found ${rekeyResult.rowCount}.`,
+    );
     await client.query(`
       INSERT INTO catalog_variants (
         product_id, catalog_version, variant_key, sku, name, options, price_mode,
@@ -223,8 +235,8 @@ try {
         sort_order integer
       )
       JOIN catalog_products product ON product.product_key = x.parent_key
-      ON CONFLICT (variant_key) DO UPDATE SET
-        product_id = EXCLUDED.product_id, sku = EXCLUDED.sku, name = EXCLUDED.name,
+      ON CONFLICT (sku) DO UPDATE SET
+        product_id = EXCLUDED.product_id, variant_key = EXCLUDED.variant_key, name = EXCLUDED.name,
         options = EXCLUDED.options, price_mode = EXCLUDED.price_mode,
         price_label = EXCLUDED.price_label, retail_price = EXCLUDED.retail_price,
         shop_price = EXCLUDED.shop_price, image_key = EXCLUDED.image_key,
