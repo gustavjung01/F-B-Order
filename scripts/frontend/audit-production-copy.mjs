@@ -4,16 +4,27 @@ import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 const files = [
-  "apps/frontend/components/mobile/ProductHome.tsx",
-  "apps/frontend/components/desktop/DesktopHome.tsx",
-  "apps/frontend/components/mobile/ProductQuickView.tsx",
   "apps/frontend/app/cart/page.tsx",
-  "apps/frontend/app/register/page.tsx",
-  "apps/frontend/components/account/RegisterShopForm.tsx",
-  "apps/frontend/components/auth/AccountGate.tsx",
-  "apps/frontend/components/auth/AccountAction.tsx",
   "apps/frontend/app/promotions/page.tsx",
   "apps/frontend/app/recipes/page.tsx",
+  "apps/frontend/app/register/page.tsx",
+  "apps/frontend/components/account/RegisterShopForm.tsx",
+  "apps/frontend/components/auth/AccountAction.tsx",
+  "apps/frontend/components/auth/AccountGate.tsx",
+  "apps/frontend/components/catalog/CatalogFilters.tsx",
+  "apps/frontend/components/catalog/CatalogVariantSelector.tsx",
+  "apps/frontend/components/desktop/DesktopHeader.tsx",
+  "apps/frontend/components/desktop/DesktopHome.tsx",
+  "apps/frontend/components/mobile/AppHeader.tsx",
+  "apps/frontend/components/mobile/BottomNav.tsx",
+  "apps/frontend/components/mobile/MobilePageShell.tsx",
+  "apps/frontend/components/mobile/ProductHome.tsx",
+  "apps/frontend/components/mobile/ProductQuickView.tsx",
+  "apps/frontend/components/navigation/app-navigation.ts",
+  "apps/frontend/components/recipes/RecipeComingSoon.tsx",
+  "apps/frontend/components/recipes/RecipeListClient.tsx",
+  "apps/frontend/components/responsive/ResponsiveCatalogHome.tsx",
+  "apps/frontend/components/responsive/ResponsivePageShell.tsx",
 ];
 
 const forbidden = [
@@ -29,11 +40,21 @@ const forbidden = [
   "popup Clerk",
   "cho admin duyet",
   "Tính năng đang được phát triển",
+  "Công thức đang được phát triển",
+  "Chưa có công thức active",
+  "Không kết nối được backend",
+  "Backend chưa",
+  "Sắp ra mắt",
 ];
 
 const hits = [];
 for (const relativePath of files) {
-  const content = fs.readFileSync(path.join(root, relativePath), "utf8");
+  const absolutePath = path.join(root, relativePath);
+  if (!fs.existsSync(absolutePath)) {
+    hits.push(`${relativePath}: missing audit target`);
+    continue;
+  }
+  const content = fs.readFileSync(absolutePath, "utf8");
   for (const phrase of forbidden) {
     if (content.includes(phrase)) hits.push(`${relativePath}: ${phrase}`);
   }
