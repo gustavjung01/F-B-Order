@@ -35,5 +35,6 @@ export function loadInputs() {
     parents: readCsv(path.join(dataDir, "parent-definitions.csv")),
     members: [1, 2, 3].flatMap((part) => readCsv(path.join(dataDir, `parent-group-members-${part}.csv`))),
     fixes: JSON.parse(fs.readFileSync(path.join(dataDir, "parent-map-fixes.json"), "utf8")),
+    resolvedImages: JSON.parse(fs.readFileSync(path.join(dataDir, "resolved-images.json"), "utf8")),
   };
 }
