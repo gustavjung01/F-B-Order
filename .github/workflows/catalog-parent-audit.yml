@@ -1,0 +1,35 @@
+name: Catalog Parent Audit
+
+on:
+  pull_request:
+    branches: [feature/catalog-hung-phat-v2-data]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.34.4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: node --check scripts/catalog/hung-phat-v2/parent-map-io.mjs
+      - run: node --check scripts/catalog/hung-phat-v2/parent-map-apply.mjs
+      - run: node --check scripts/catalog/hung-phat-v2/parent-map-finalize.mjs
+      - run: node --check scripts/catalog/hung-phat-v2/build-parent-map.mjs
+      - run: node --check scripts/catalog/hung-phat-v2/parent-preview-model.mjs
+      - run: node --check scripts/catalog/hung-phat-v2/build-parent-preview-v2.mjs
+      - run: pnpm catalog:map:v2
+      - run: node -e "const s=require('./data/catalog/hung-phat/v2/generated/catalog-summary.json'); if(s.parentCardCount!==182||s.variantCount!==275||s.explicitParentCount!==39||s.singletonParentCount!==143||s.groupedProductCount!==132) process.exit(1); console.log(s)"
+      - run: pnpm catalog:preview:parent:v2
+      - run: pnpm typecheck
+      - run: pnpm build:all
