@@ -1,0 +1,14 @@
+[
+  {
+    "parentKey": "banh-trang",
+    "name": "Bánh tráng",
+    "brand": "",
+    "coverImageKey": "bgkq-0269",
+    "optionGroups": ["type"],
+    "members": [
+      { "sku": "BGKQ-0269", "variantKey": "banh-trang--nuong-trang-vang", "options": { "type": "Nướng trắng + vàng" } },
+      { "sku": "BGKQ-0270", "variantKey": "banh-trang--cuon-do", "options": { "type": "Cuốn đỏ" } },
+      { "sku": "BGKQ-0271", "variantKey": "banh-trang--cat", "options": { "type": "Cắt" } }
+    ]
+  }
+]
