@@ -76,11 +76,11 @@ function RecipeCard({ recipe, index, approved }: { recipe: ApiRecipe; index: num
       ) : (
         <>
           <div className="mt-4 rounded-[18px] bg-[#fbfaf7] p-4 ring-1 ring-[#eee7dc]">
-            <p className="text-[13px] font-bold leading-6 text-slate-600">{recipe.lockReason || "Công thức chi tiết và định lượng sẽ mở sau khi hồ sơ quán được duyệt."}</p>
+            <p className="text-[13px] font-bold leading-6 text-slate-600">{recipe.lockReason || "Định lượng chi tiết sẽ mở sau khi hồ sơ quán được duyệt."}</p>
           </div>
           <div className="mt-4 grid gap-2 sm:grid-cols-2">
             <Link href={href} className="flex h-11 items-center justify-center rounded-[16px] bg-[#fbfaf7] px-5 text-[15px] font-black text-[#0b1220] ring-1 ring-[#eee7dc]">Xem giới thiệu</Link>
-            <AccountAction href="/register" signedOutLabel="Mở công thức" className="flex h-11 items-center justify-center rounded-[16px] bg-[#0b1220] px-5 text-[15px] font-black text-white shadow-[0_12px_22px_rgba(15,23,42,0.18)]">Mở công thức</AccountAction>
+            <AccountAction href="/register" signedOutLabel="Đăng nhập để mở" className="flex h-11 items-center justify-center rounded-[16px] bg-[#0b1220] px-5 text-[15px] font-black text-white shadow-[0_12px_22px_rgba(15,23,42,0.18)]">Mở công thức</AccountAction>
           </div>
         </>
       )}
@@ -104,14 +104,14 @@ export function RecipeListClient() {
         setLoading(true);
         setError("");
         const response = await fetch("/api/recipes?limit=80", { cache: "no-store" });
-        if (!response.ok) throw new Error("Không tải được công thức");
+        if (!response.ok) throw new Error("RECIPE_REQUEST_FAILED");
         const data = (await response.json()) as RecipesResponse;
         if (!activeRequest) return;
         setApproved(Boolean(data.approved));
         setRecipes(Array.isArray(data.recipes) ? data.recipes : []);
-      } catch (loadError) {
+      } catch {
         if (!activeRequest) return;
-        setError(loadError instanceof Error ? loadError.message : "Không tải được công thức");
+        setError("Không tải được công thức. Vui lòng thử lại sau.");
         setRecipes([]);
       } finally {
         if (activeRequest) setLoading(false);
@@ -125,23 +125,23 @@ export function RecipeListClient() {
   }, []);
 
   const subtitle = useMemo(() => {
-    if (!RECIPES_PUBLIC_ENABLED) return "Tính năng đang được phát triển";
+    if (!RECIPES_PUBLIC_ENABLED) return "Nội dung đang được cập nhật";
     if (loading) return "Đang tải công thức";
     if (approved) return "Công thức chi tiết đã mở";
-    return "Xem giới thiệu trước, duyệt hồ sơ để mở định lượng";
+    return "Đăng ký khách hàng để xem định lượng chi tiết";
   }, [approved, loading]);
 
   if (!RECIPES_PUBLIC_ENABLED) {
     return (
       <div className="space-y-4">
         <section className="overflow-hidden rounded-[26px] bg-white shadow-[0_14px_30px_rgba(15,23,42,0.085)] ring-1 ring-white/80">
-          <img src="/home/home-cong-thuc.png" alt="Công thức" className="block h-auto w-full object-contain" draggable={false} />
+          <img src="/home/home-cong-thuc.png" alt="Công thức pha chế" className="block h-auto w-full object-contain" draggable={false} />
         </section>
         <div className="rounded-[28px] border border-dashed border-[#dccbff] bg-white/80 px-6 py-12 text-center shadow-sm">
-          <p className="text-sm font-black uppercase tracking-[0.16em] text-[#7c3aed]">Sắp ra mắt</p>
-          <h2 className="mt-3 text-2xl font-black text-[#0b1220]">Công thức đang được phát triển</h2>
+          <p className="text-sm font-black uppercase tracking-[0.16em] text-[#7c3aed]">Nội dung pha chế</p>
+          <h2 className="mt-3 text-2xl font-black text-[#0b1220]">Công thức đang được cập nhật</h2>
           <p className="mx-auto mt-3 max-w-2xl text-sm font-semibold leading-7 text-slate-500">
-            Khu vực này sẽ dành riêng cho hướng dẫn chế biến, định lượng và nội dung hỗ trợ khách hàng. Sản phẩm và combo không được hiển thị tại đây.
+            Hướng dẫn pha chế và định lượng dành cho khách hàng sẽ được cập nhật tại đây.
           </p>
         </div>
       </div>
@@ -151,7 +151,7 @@ export function RecipeListClient() {
   return (
     <div className="space-y-4">
       <section className="overflow-hidden rounded-[26px] bg-white shadow-[0_14px_30px_rgba(15,23,42,0.085)] ring-1 ring-white/80">
-        <img src="/home/home-cong-thuc.png" alt="Công thức" className="block h-auto w-full object-contain" draggable={false} />
+        <img src="/home/home-cong-thuc.png" alt="Công thức pha chế" className="block h-auto w-full object-contain" draggable={false} />
       </section>
 
       <div className="rounded-[24px] bg-white/80 p-4 text-[14px] font-bold leading-6 text-slate-600 ring-1 ring-white/80">
@@ -160,7 +160,7 @@ export function RecipeListClient() {
 
       {loading ? <RecipeListState>Đang tải công thức...</RecipeListState> : null}
       {!loading && error ? <RecipeListState>{error}</RecipeListState> : null}
-      {!loading && !error && recipes.length === 0 ? <RecipeListState>Chưa có công thức active</RecipeListState> : null}
+      {!loading && !error && recipes.length === 0 ? <RecipeListState>Chưa có công thức phù hợp</RecipeListState> : null}
       {!loading && !error && recipes.length > 0 ? (
         <div className="grid gap-3 md:grid-cols-3">
           {recipes.map((recipe, index) => <RecipeCard key={recipe.id || recipe.slug} recipe={recipe} index={index} approved={approved} />)}
