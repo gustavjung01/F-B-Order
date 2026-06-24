@@ -1,0 +1,28 @@
+{
+  "status": "PASS_WITH_MANUAL_REVIEW",
+  "sourceVariantCount": 275,
+  "previousParentCardCount": 188,
+  "explicitParentCount": 39,
+  "groupedVariantCount": 132,
+  "singletonParentCount": 143,
+  "derivedParentCardCount": 182,
+  "calculation": "39 + (275 - 132) = 182",
+  "confirmedCorrections": [
+    "split BGKQ-0093 and BGKQ-0097",
+    "fix BGKQ-0037 flavor to vai",
+    "group BGKQ-0088 through BGKQ-0091 as sot-gold",
+    "group BGKQ-0012 and BGKQ-0014 as siro-douxian-2l",
+    "group BGKQ-0145 through BGKQ-0147 as tra-king",
+    "group BGKQ-0154 through BGKQ-0156 as tra-hoang-gia",
+    "group BGKQ-0228 and BGKQ-0229 as ca-hanh"
+  ],
+  "manualReviewCandidates": [
+    "BGKQ-0166/BGKQ-0167",
+    "BGKQ-0193/BGKQ-0195",
+    "BGKQ-0265/BGKQ-0266",
+    "BGKQ-0218/BGKQ-0219",
+    "bao-ly/cuon-ep",
+    "tra-thai xanh/do source row"
+  ],
+  "productionChanged": false
+}

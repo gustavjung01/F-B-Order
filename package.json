@@ -17,6 +17,7 @@
     "build:backend": "pnpm --filter @fb-order/backend build",
     "lint": "pnpm -r lint",
     "typecheck": "pnpm -r typecheck",
+    "test:catalog-parent": "pnpm catalog:map:v2 && pnpm catalog:preview:parent:v2 && pnpm typecheck && pnpm run build:frontend",
     "test:auth-pricing": "pnpm --filter @fb-order/backend test:auth-pricing",
     "db:migrate": "pnpm --filter @fb-order/backend db:migrate",
     "db:migrate:baseline": "pnpm --filter @fb-order/backend db:migrate:baseline",
@@ -25,7 +26,9 @@
     "db:seed:test": "pnpm --filter @fb-order/backend db:seed:test",
     "catalog:audit": "pnpm --filter @fb-order/backend catalog:audit",
     "catalog:import": "pnpm --filter @fb-order/backend catalog:import",
-    "catalog:preview:v2": "node scripts/catalog/hung-phat-v2/build-phase3-preview.mjs"
+    "catalog:map:v2": "node scripts/catalog/hung-phat-v2/build-parent-map.mjs",
+    "catalog:preview:v2": "node scripts/catalog/hung-phat-v2/build-phase3-preview.mjs",
+    "catalog:preview:parent:v2": "node scripts/catalog/hung-phat-v2/build-parent-map.mjs && node scripts/catalog/hung-phat-v2/build-parent-preview-v2.mjs"
   },
   "devDependencies": {
     "typescript": "^5.5.4"
