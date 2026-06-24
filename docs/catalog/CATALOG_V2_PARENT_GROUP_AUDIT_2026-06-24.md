@@ -21,7 +21,16 @@ Các nhóm đã được duyệt để gom theo phân loại:
 15. Bột milk foam
 16. Trà đen số 9
 
-Mười sáu nhóm này làm số card cha giảm từ 182 xuống 159 nhưng vẫn giữ đủ 275 SKU, giá và lựa chọn phân loại riêng.
+Sáu nhóm mới được duyệt dùng các lựa chọn sau:
+
+- Ice Hot: `Lùn`, `On Top`
+- Thạch Douxian: `Hũ`, `Các loại`
+- Topping Hùng Chương: `Jelly`, `Thủy tinh`
+- Đào lon: `Rhodes`, `Thái`, `Contree`
+- Bột milk foam: `Luave`, `Erdoli`, `Muối biển`
+- Trà đen số 9: `Douxian`, `Bóng`, `Luave`
+
+Mười sáu nhóm làm số card cha giảm từ 182 xuống 159 nhưng vẫn giữ đủ 275 SKU, giá và lựa chọn phân loại riêng.
 
 Cấu hình áp dụng nằm trong:
 
