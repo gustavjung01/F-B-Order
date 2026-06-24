@@ -1,0 +1,71 @@
+[
+  {
+    "parentKey": "ice-hot",
+    "name": "Ice Hot",
+    "brand": "",
+    "coverImageKey": "bgkq-0193",
+    "optionGroups": ["type"],
+    "members": [
+      { "sku": "BGKQ-0193", "variantKey": "ice-hot--lun", "options": { "type": "Lùn" } },
+      { "sku": "BGKQ-0195", "variantKey": "ice-hot--on-top", "options": { "type": "On Top" } }
+    ]
+  },
+  {
+    "parentKey": "thach-douxian",
+    "name": "Thạch Douxian",
+    "brand": "Douxian",
+    "coverImageKey": "bgkq-0082",
+    "optionGroups": ["type"],
+    "members": [
+      { "sku": "BGKQ-0082", "variantKey": "thach-douxian--hu", "options": { "type": "Hũ" } },
+      { "sku": "BGKQ-0083", "variantKey": "thach-douxian--cac-loai", "options": { "type": "Các loại" } }
+    ]
+  },
+  {
+    "parentKey": "topping-hung-chuong",
+    "name": "Topping Hùng Chương",
+    "brand": "Hùng Chương",
+    "coverImageKey": "bgkq-0084",
+    "optionGroups": ["type"],
+    "members": [
+      { "sku": "BGKQ-0084", "variantKey": "topping-hung-chuong--jelly", "options": { "type": "Jelly" } },
+      { "sku": "BGKQ-0085", "variantKey": "topping-hung-chuong--thuy-tinh", "options": { "type": "Thủy tinh" } }
+    ]
+  },
+  {
+    "parentKey": "dao-lon",
+    "name": "Đào lon",
+    "brand": "",
+    "coverImageKey": "bgkq-0092",
+    "optionGroups": ["type"],
+    "members": [
+      { "sku": "BGKQ-0092", "variantKey": "dao-lon--rhodes", "options": { "type": "Rhodes" } },
+      { "sku": "BGKQ-0093", "variantKey": "dao-lon--thai", "options": { "type": "Thái" } },
+      { "sku": "BGKQ-0094", "variantKey": "dao-lon--contree", "options": { "type": "Contree" } }
+    ]
+  },
+  {
+    "parentKey": "bot-milkfoam",
+    "name": "Bột milk foam",
+    "brand": "",
+    "coverImageKey": "bgkq-0118",
+    "optionGroups": ["type"],
+    "members": [
+      { "sku": "BGKQ-0118", "variantKey": "bot-milkfoam--luave", "options": { "type": "Luave" } },
+      { "sku": "BGKQ-0120", "variantKey": "bot-milkfoam--erdoli", "options": { "type": "Erdoli" } },
+      { "sku": "BGKQ-0121", "variantKey": "bot-milkfoam--muoi-bien", "options": { "type": "Muối biển" } }
+    ]
+  },
+  {
+    "parentKey": "tra-den-so-9",
+    "name": "Trà đen số 9",
+    "brand": "",
+    "coverImageKey": "bgkq-0151",
+    "optionGroups": ["type"],
+    "members": [
+      { "sku": "BGKQ-0151", "variantKey": "tra-den-so-9--douxian", "options": { "type": "Douxian" } },
+      { "sku": "BGKQ-0152", "variantKey": "tra-den-so-9--bong", "options": { "type": "Bóng" } },
+      { "sku": "BGKQ-0153", "variantKey": "tra-den-so-9--luave", "options": { "type": "Luave" } }
+    ]
+  }
+]
