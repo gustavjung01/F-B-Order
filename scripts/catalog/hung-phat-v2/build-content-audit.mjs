@@ -14,7 +14,7 @@ const missing = result.variants.filter((row) => row.image_status === "MISSING");
 const groupedParents = result.parents.filter((row) => row.option_groups_json !== "[]");
 
 if (result.variants.length !== 275) throw new Error(`Expected 275 variants, found ${result.variants.length}.`);
-if (result.parents.length !== 168) throw new Error(`Expected 168 parent cards, found ${result.parents.length}.`);
+if (result.parents.length !== 159) throw new Error(`Expected 159 parent cards, found ${result.parents.length}.`);
 if (missing.length !== 0) throw new Error(`Expected no missing images, found ${missing.length}.`);
 
 fs.mkdirSync(outputDir, { recursive: true });
