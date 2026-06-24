@@ -80,10 +80,13 @@ export function RegisterShopForm() {
           note: form.note,
         }),
       });
-      if (!response.ok) throw new Error("Không thể gửi hồ sơ lúc này. Vui lòng kiểm tra thông tin và thử lại.");
+      if (!response.ok) {
+        setError("Không thể gửi hồ sơ lúc này. Vui lòng kiểm tra thông tin và thử lại.");
+        return;
+      }
       setMessage("Đã gửi hồ sơ. Chúng tôi sẽ kiểm tra và phản hồi sớm.");
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Không thể gửi hồ sơ lúc này. Vui lòng thử lại sau.");
+    } catch {
+      setError("Không thể gửi hồ sơ lúc này. Vui lòng thử lại sau.");
     } finally {
       setLoading(false);
     }
