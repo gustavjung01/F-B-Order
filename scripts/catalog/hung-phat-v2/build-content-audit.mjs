@@ -18,15 +18,40 @@ const assetBaseUrl = (
     || "https://cdn.bepsi.click"
 ).replace(/\/+$/, "");
 
+const assert = (condition, message) => { if (!condition) throw new Error(message); };
 const audit = JSON.parse(fs.readFileSync(path.join(dataDir, "catalog-content-audit.json"), "utf8"));
-const result = finalizeParentMap(applyParentFixes(loadInputs()));
-const sourceProducts = loadInputs().products;
+const inputs = loadInputs();
+const result = finalizeParentMap(applyParentFixes(inputs));
+const sourceProducts = inputs.products;
 const sourceByKey = new Map(sourceProducts.map((row) => [row.product_key, row]));
 const parentByKey = new Map(result.parents.map((row) => [row.parent_key, row]));
 const nameFixes = new Map(Object.entries(audit.nameFixes || {}));
 const missingBySku = new Map((audit.missingImages || []).map((row) => [row.sku, row]));
 const manualBySku = new Map((audit.manualIdentityReview || []).map((row) => [row.sku, row]));
 const parentReviewByKey = new Map((audit.parentReview || []).map((row) => [row.parentKey, row]));
+const skuSet = new Set(result.variants.map((row) => row.sku));
+const parentKeySet = new Set(result.parents.map((row) => row.parent_key));
+const sourceMissingSkus = new Set(
+  result.variants.filter((row) => row.image_status === "MISSING").map((row) => row.sku),
+);
+
+assert(audit.catalogVersion === "hung-phat-v2", `Unexpected audit catalog version: ${audit.catalogVersion}`);
+assert(result.variants.length === 275, `Content audit must cover 275 variants, found ${result.variants.length}.`);
+assert(result.parents.length === 182, `Content audit expected 182 parents, found ${result.parents.length}.`);
+assert(missingBySku.size === 6, `Expected 6 configured missing images, found ${missingBySku.size}.`);
+assert(manualBySku.size === 34, `Expected 34 manual identity reviews, found ${manualBySku.size}.`);
+assert(parentReviewByKey.size === 10, `Expected 10 parent reviews, found ${parentReviewByKey.size}.`);
+for (const sku of [...nameFixes.keys(), ...missingBySku.keys(), ...manualBySku.keys()]) {
+  assert(skuSet.has(sku), `Audit references unknown SKU ${sku}.`);
+}
+for (const parentKey of parentReviewByKey.keys()) {
+  assert(parentKeySet.has(parentKey), `Audit references unknown parent ${parentKey}.`);
+}
+assert(
+  sourceMissingSkus.size === missingBySku.size
+    && [...sourceMissingSkus].every((sku) => missingBySku.has(sku)),
+  `Configured missing-image list does not match source: ${[...sourceMissingSkus].join(", ")}`,
+);
 
 const clean = (value) => String(value ?? "").replace(/\s+/g, " ").trim();
 const csvCell = (value) => {
