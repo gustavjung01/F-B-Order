@@ -22,3 +22,7 @@ playwright-report/
 test-results/
 
 .vercel-env-audit
+
+# Generated catalog review preview
+artifacts/catalog/hung-phat-v2-preview/
+data/catalog/hung-phat/v2/generated/

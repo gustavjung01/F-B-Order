@@ -1,0 +1,28 @@
+{
+    "catalogVersion":  "hung-phat-v2",
+    "status":  "staging",
+    "sourceRows":  276,
+    "excludedRows":  1,
+    "cardCount":  275,
+    "variantCount":  275,
+    "mappedImageCount":  269,
+    "missingImageCount":  6,
+    "duplicateProductKey":  0,
+    "duplicateSku":  0,
+    "r2Prefixes":  {
+                       "products":  "catalog/hung-phat/v2/products/",
+                       "manifests":  "catalog/hung-phat/v2/manifests/"
+                   },
+    "missingImageKeys":  [
+                             "bgkq-0015",
+                             "bgkq-0068",
+                             "bgkq-0108",
+                             "bgkq-0109",
+                             "bgkq-0120",
+                             "bgkq-0276"
+                         ],
+    "excludedLocalImageKeys":  [
+                                   "bgkq-0039"
+                               ],
+    "phase2MappingStatus":  "PASS"
+}

@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Preview catalog Hưng Phát v2</title>
+  <link rel="stylesheet" href="./preview.css" />
+  <link rel="stylesheet" href="./mobile.css" />
+</head>
+<body>
+  <main class="page">
+    <header class="top">
+      <h1>Preview catalog Hưng Phát v2</h1>
+      <p class="sub">Một card = một sản phẩm cha · vị/size/màu/loại nằm trong popup · không chuyển trang.</p>
+      <div id="stats" class="stats"></div>
+      <div class="controls">
+        <input id="q" class="ctl" placeholder="Tìm tên, SKU, brand..." />
+        <select id="cat" class="ctl"><option value="all">Tất cả ngành hàng</option></select>
+        <select id="issue" class="ctl">
+          <option value="all">Tất cả card</option>
+          <option value="has">Chỉ card có lỗi</option>
+          <option value="missingImage">Thiếu ảnh</option>
+          <option value="wrongName">Tên sai</option>
+          <option value="wrongOption">Option sai</option>
+          <option value="duplicateSku">SKU trùng</option>
+          <option value="wrongPrice">Giá sai</option>
+        </select>
+        <select id="review" class="ctl">
+          <option value="all">Tất cả trạng thái</option>
+          <option value="unreviewed">Chưa duyệt</option>
+          <option value="reviewed">Đã duyệt</option>
+          <option value="marked">Đã đánh dấu</option>
+        </select>
+        <button id="export" class="export">Xuất CSV lỗi</button>
+      </div>
+    </header>
+    <section id="grid" class="grid"></section>
+  </main>
+
+  <div id="modal" class="modal" hidden>
+    <button class="back" aria-label="Đóng"></button>
+    <section class="box" role="dialog" aria-modal="true">
+      <div class="sheet-grabber" aria-hidden="true"><span></span></div>
+      <header class="head">
+        <button id="prevTop" class="x" aria-label="Sản phẩm trước">‹</button>
+        <div class="head-title">
+          <strong id="headName"></strong>
+          <span id="count" class="count"></span>
+        </div>
+        <button id="nextTop" class="x" aria-label="Sản phẩm sau">›</button>
+        <button id="close" class="x" aria-label="Đóng">×</button>
+      </header>
+
+      <div class="content">
+        <div id="left" class="left"></div>
+        <div class="right">
+          <section class="order-section">
+            <div class="section-title">
+              <div>
+                <p class="eyebrow">Chọn phân loại</p>
+                <h3>Vị / size / màu / loại và số lượng</h3>
+              </div>
+              <button id="addRow" class="secondary">+ Thêm phân loại</button>
+            </div>
+            <div id="orderRows" class="order-rows"></div>
+          </section>
+
+          <details class="audit" id="auditPanel">
+            <summary>Kiểm tra dữ liệu card</summary>
+            <div id="auditContent"></div>
+          </details>
+        </div>
+      </div>
+
+      <footer class="foot order-foot">
+        <div>
+          <div id="orderSummary" class="order-summary">0 phân loại · 0 sản phẩm</div>
+          <div id="orderTotal" class="order-total">0 đ</div>
+        </div>
+        <button id="addCart" class="add-cart">Thêm vào giỏ</button>
+      </footer>
+      <div id="toast" class="toast" hidden></div>
+    </section>
+  </div>
+
+  <script id="data" type="application/json">__CATALOG_PAYLOAD__</script>
+  <script src="./preview.js"></script>
+  <script src="./filter-order.js"></script>
+</body>
+</html>

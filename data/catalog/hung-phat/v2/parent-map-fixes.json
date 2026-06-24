@@ -1,0 +1,76 @@
+{
+  "version": 1,
+  "removeParentKeys": ["thai"],
+  "ungroupProductKeys": [
+    "dao-lon-thai-bgkq-0093",
+    "nhan-thai-bgkq-0097"
+  ],
+  "memberFixes": {
+    "BGKQ-0037": {
+      "parentKey": "sinh-to-mama-gold",
+      "variantKey": "sinh-to-mama-gold--vai",
+      "options": { "flavor": "vai" }
+    }
+  },
+  "groups": [
+    {
+      "parentKey": "sot-gold",
+      "name": "Sốt Gold",
+      "brand": "Gold",
+      "coverImageKey": "bgkq-0088",
+      "optionGroups": ["flavor"],
+      "members": [
+        { "sku": "BGKQ-0088", "variantKey": "sot-gold--matcha", "options": { "flavor": "matcha" } },
+        { "sku": "BGKQ-0089", "variantKey": "sot-gold--socola", "options": { "flavor": "socola" } },
+        { "sku": "BGKQ-0090", "variantKey": "sot-gold--mon", "options": { "flavor": "mon" } },
+        { "sku": "BGKQ-0091", "variantKey": "sot-gold--khac", "options": { "flavor": "khac" } }
+      ]
+    },
+    {
+      "parentKey": "siro-douxian-2l",
+      "name": "Siro Douxian 2L",
+      "brand": "Douxian",
+      "coverImageKey": "bgkq-0012",
+      "optionGroups": ["type"],
+      "members": [
+        { "sku": "BGKQ-0012", "variantKey": "siro-douxian-2l--tron", "options": { "type": "tron" } },
+        { "sku": "BGKQ-0014", "variantKey": "siro-douxian-2l--hoang-kim", "options": { "type": "hoang kim" } }
+      ]
+    },
+    {
+      "parentKey": "tra-king",
+      "name": "Trà King",
+      "brand": "King",
+      "coverImageKey": "bgkq-0145",
+      "optionGroups": ["type"],
+      "members": [
+        { "sku": "BGKQ-0145", "variantKey": "tra-king--hong", "options": { "type": "hong" } },
+        { "sku": "BGKQ-0146", "variantKey": "tra-king--lai", "options": { "type": "lai" } },
+        { "sku": "BGKQ-0147", "variantKey": "tra-king--olong", "options": { "type": "olong" } }
+      ]
+    },
+    {
+      "parentKey": "tra-hoang-gia",
+      "name": "Trà Hoàng Gia",
+      "brand": "Hoàng Gia",
+      "coverImageKey": "bgkq-0154",
+      "optionGroups": ["type"],
+      "members": [
+        { "sku": "BGKQ-0154", "variantKey": "tra-hoang-gia--den", "options": { "type": "den" } },
+        { "sku": "BGKQ-0155", "variantKey": "tra-hoang-gia--lai", "options": { "type": "lai" } },
+        { "sku": "BGKQ-0156", "variantKey": "tra-hoang-gia--olong-tam-500g", "options": { "type": "olong tam 500g" } }
+      ]
+    },
+    {
+      "parentKey": "ca-hanh",
+      "name": "Cá hành",
+      "brand": "",
+      "coverImageKey": "bgkq-0228",
+      "optionGroups": ["flavor"],
+      "members": [
+        { "sku": "BGKQ-0228", "variantKey": "ca-hanh--tieu", "options": { "flavor": "tieu" } },
+        { "sku": "BGKQ-0229", "variantKey": "ca-hanh--ot", "options": { "flavor": "ot" } }
+      ]
+    }
+  ]
+}

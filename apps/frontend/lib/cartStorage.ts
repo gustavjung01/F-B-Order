@@ -1,13 +1,13 @@
-export const CART_STORAGE_KEY = "bep_si_fb_cart_items_v2";
+export const CART_STORAGE_KEY = "bep_si_fb_cart_variant_items_v3";
 export const CART_UPDATED_EVENT = "bep-si-fb-cart-updated";
 
 export type CartItem = {
-  productId: string;
+  variantId: string;
   quantity: number;
 };
 
 export type AddCartItemInput = {
-  productId: string;
+  variantId: string;
   quantity?: number;
 };
 
@@ -23,11 +23,12 @@ function toPositiveInteger(value: unknown, fallback = 1) {
 
 function normalizeItem(value: unknown): CartItem | null {
   if (!value || typeof value !== "object") return null;
-  const item = value as Partial<CartItem>;
-  const productId = typeof item.productId === "string" ? item.productId.trim() : "";
-  if (!productId) return null;
+  const item = value as { variantId?: unknown; variant_id?: unknown; quantity?: unknown };
+  const rawVariantId = item.variantId ?? item.variant_id;
+  const variantId = typeof rawVariantId === "string" ? rawVariantId.trim().toLowerCase() : "";
+  if (!variantId) return null;
   return {
-    productId,
+    variantId,
     quantity: toPositiveInteger(item.quantity),
   };
 }
@@ -53,22 +54,26 @@ export function readCartItems(): CartItem[] {
 export function writeCartItems(items: CartItem[]) {
   if (!canUseStorage()) return;
   const normalized = items.map(normalizeItem).filter((item): item is CartItem => Boolean(item));
-  window.localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(normalized));
+  const payload = normalized.map((item) => ({
+    variant_id: item.variantId,
+    quantity: item.quantity,
+  }));
+  window.localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(payload));
   emitCartUpdated();
 }
 
 export function addCartItem(input: AddCartItemInput) {
   const nextItem = normalizeItem({
-    productId: input.productId,
+    variantId: input.variantId,
     quantity: input.quantity ?? 1,
   });
   if (!nextItem) return readCartItems();
 
   const items = readCartItems();
-  const existingIndex = items.findIndex((item) => item.productId === nextItem.productId);
+  const existingIndex = items.findIndex((item) => item.variantId === nextItem.variantId);
   if (existingIndex >= 0) {
     items[existingIndex] = {
-      productId: nextItem.productId,
+      variantId: nextItem.variantId,
       quantity: items[existingIndex].quantity + nextItem.quantity,
     };
   } else {
@@ -78,24 +83,24 @@ export function addCartItem(input: AddCartItemInput) {
   return items;
 }
 
-export function updateCartItemQuantity(productId: string, quantity: number) {
+export function updateCartItemQuantity(variantId: string, quantity: number) {
   const items = readCartItems();
   const safeQuantity = Math.floor(Number(quantity));
   if (!Number.isFinite(safeQuantity) || safeQuantity <= 0) {
-    const filtered = items.filter((item) => item.productId !== productId);
+    const filtered = items.filter((item) => item.variantId !== variantId);
     writeCartItems(filtered);
     return filtered;
   }
 
   const updated = items.map((item) => (
-    item.productId === productId ? { ...item, quantity: safeQuantity } : item
+    item.variantId === variantId ? { ...item, quantity: safeQuantity } : item
   ));
   writeCartItems(updated);
   return updated;
 }
 
-export function removeCartItem(productId: string) {
-  const items = readCartItems().filter((item) => item.productId !== productId);
+export function removeCartItem(variantId: string) {
+  const items = readCartItems().filter((item) => item.variantId !== variantId);
   writeCartItems(items);
   return items;
 }
@@ -109,5 +114,5 @@ export function getCartCount(items: CartItem[]) {
 }
 
 export function getCartItemKey(item: CartItem) {
-  return item.productId;
+  return item.variantId;
 }

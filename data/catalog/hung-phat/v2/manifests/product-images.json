@@ -1,0 +1,2423 @@
+[
+    {
+        "productKey":  "siro-torani-bgkq-0001",
+        "imageKey":  "bgkq-0001",
+        "sourceFilename":  "bgkq-0001-siro-torani-thung-12-chai.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0001.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "siro-thai-pixe-bgkq-0002",
+        "imageKey":  "bgkq-0002",
+        "sourceFilename":  "bgkq-0002-siro-thai-pixe-thung-12-chai.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0002.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "siro-thai-dingfong-bgkq-0003",
+        "imageKey":  "bgkq-0003",
+        "sourceFilename":  "bgkq-0003-siro-thai-dingfong-thung-12-chai.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0003.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "siro-gold-2l-bgkq-0004",
+        "imageKey":  "bgkq-0004",
+        "sourceFilename":  "bgkq-0004-siro-gold-2l-thung-4-binh.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0004.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "siro-gold-700ml-bgkq-0005",
+        "imageKey":  "bgkq-0005",
+        "sourceFilename":  "bgkq-0005-siro-gold-700ml-thung-12-chai.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0005.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "siro-gtp-bgkq-0006",
+        "imageKey":  "bgkq-0006",
+        "sourceFilename":  "bgkq-0006-siro-gtp-thung-6-binh.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0006.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "siro-gtp-dau-duong-den-bgkq-0007",
+        "imageKey":  "bgkq-0007",
+        "sourceFilename":  "bgkq-0007-siro-gtp-dau-duong-den-thung-6chai.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0007.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "siro-vina-bgkq-0008",
+        "imageKey":  "bgkq-0008",
+        "sourceFilename":  "bgkq-0008-siro-vina-thung-12-chai.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0008.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "siro-sam-dua-vina-bgkq-0009",
+        "imageKey":  "bgkq-0009",
+        "sourceFilename":  "bgkq-0009-siro-sam-dua-vina-thung-12-chai.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0009.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "siro-carisa-bgkq-0010",
+        "imageKey":  "bgkq-0010",
+        "sourceFilename":  "bgkq-0010-siro-carisa-thung-24-chai.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0010.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "siro-changthai-bgkq-0011",
+        "imageKey":  "bgkq-0011",
+        "sourceFilename":  "bgkq-0011-siro-changthai-thung-12-chai.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0011.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "siro-douxian-2l-tron-bgkq-0012",
+        "imageKey":  "bgkq-0012",
+        "sourceFilename":  "bgkq-0012-siro-douxian-2l-tron-thung-6-chai.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0012.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "siro-dd-hoang-kim-bgkq-0013",
+        "imageKey":  "bgkq-0013",
+        "sourceFilename":  "bgkq-0013-siro-dd-hoang-kim-thung-6chai.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0013.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "siro-douxian-2l-hoang-kim-bgkq-0014",
+        "imageKey":  "bgkq-0014",
+        "sourceFilename":  "bgkq-0014-siro-douxian-2l-hoang-kim-thung-6-chai.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0014.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "sinh-to-berrino-dao-bgkq-0016",
+        "imageKey":  "bgkq-0016",
+        "sourceFilename":  "bgkq-0016-sinh-to-berrino-dao-thung12-chai.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0016.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "sinh-to-berrino-oi-bgkq-0017",
+        "imageKey":  "bgkq-0017",
+        "sourceFilename":  "bgkq-0017-sinh-to-berrino-oi-thung12-chai.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0017.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "sinh-to-berrino-viet-quoc-bgkq-0018",
+        "imageKey":  "bgkq-0018",
+        "sourceFilename":  "bgkq-0018-sinh-to-berrino-viet-quoc-thung12-chai.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0018.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "sinh-to-berrino-chanh-day-bgkq-0019",
+        "imageKey":  "bgkq-0019",
+        "sourceFilename":  "bgkq-0019-sinh-to-berrino-chanh-day-thung12-chai.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0019.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "sinh-to-berrino-vai-bgkq-0020",
+        "imageKey":  "bgkq-0020",
+        "sourceFilename":  "bgkq-0020-sinh-to-berrino-vai-thung12-chai.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0020.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "sinh-to-berrino-kiwi-bgkq-0021",
+        "imageKey":  "bgkq-0021",
+        "sourceFilename":  "bgkq-0021-sinh-to-berrino-kiwi-thung12-chai.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0021.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "sinh-to-berrino-phuc-bon-tu-bgkq-0022",
+        "imageKey":  "bgkq-0022",
+        "sourceFilename":  "bgkq-0022-sinh-to-berrino-phuc-bon-tu-thung12-chai.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0022.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "sinh-to-berrino-xoai-bgkq-0023",
+        "imageKey":  "bgkq-0023",
+        "sourceFilename":  "bgkq-0023-sinh-to-berrino-xoai-thung12-chai.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0023.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "sinh-to-berrino-nho-bgkq-0024",
+        "imageKey":  "bgkq-0024",
+        "sourceFilename":  "bgkq-0024-sinh-to-berrino-nho-thung12-chai.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0024.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "sinh-to-berrino-dau-tam-bgkq-0025",
+        "imageKey":  "bgkq-0025",
+        "sourceFilename":  "bgkq-0025-sinh-to-berrino-dau-tam-thung-12-chai.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0025.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "sinh-to-berino-khom-bgkq-0026",
+        "imageKey":  "bgkq-0026",
+        "sourceFilename":  "bgkq-0026-sinh-to-berino-khom-thung-12-chai.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0026.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "sinh-to-gold-dau-bgkq-0027",
+        "imageKey":  "bgkq-0027",
+        "sourceFilename":  "bgkq-0027-sinh-to-gold-dau-thung12-chai.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0027.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "sinh-to-gold-dao-bgkq-0028",
+        "imageKey":  "bgkq-0028",
+        "sourceFilename":  "bgkq-0028-sinh-to-gold-dao-thung12-chai.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0028.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "sinh-to-gold-viet-quoc-bgkq-0029",
+        "imageKey":  "bgkq-0029",
+        "sourceFilename":  "bgkq-0029-sinh-to-gold-viet-quoc-thung12-chai.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0029.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "sinh-to-gold-chanh-day-bgkq-0030",
+        "imageKey":  "bgkq-0030",
+        "sourceFilename":  "bgkq-0030-sinh-to-gold-chanh-day-thung12-chai.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0030.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "sinh-to-gold-kiwi-bgkq-0031",
+        "imageKey":  "bgkq-0031",
+        "sourceFilename":  "bgkq-0031-sinh-to-gold-kiwi-thung12-chai.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0031.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "sinh-to-gold-phuc-bon-tu-bgkq-0032",
+        "imageKey":  "bgkq-0032",
+        "sourceFilename":  "bgkq-0032-sinh-to-gold-phuc-bon-tu-thung12-chai.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0032.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "sinh-to-gold-xoai-bgkq-0033",
+        "imageKey":  "bgkq-0033",
+        "sourceFilename":  "bgkq-0033-sinh-to-gold-xoai-thung12-chai.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0033.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "sinh-to-gold-oi-bgkq-0034",
+        "imageKey":  "bgkq-0034",
+        "sourceFilename":  "bgkq-0034-sinh-to-gold-oi-thung-12-chai.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0034.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "sinh-to-gold-dau-tam-bgkq-0035",
+        "imageKey":  "bgkq-0035",
+        "sourceFilename":  "bgkq-0035-sinh-to-gold-dau-tam-thung-12-chai.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0035.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "sinh-to-mang-cau-glod-bgkq-0036",
+        "imageKey":  "bgkq-0036",
+        "sourceFilename":  "bgkq-0036-sinh-to-mang-cau-glod-thung-12-chai.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0036.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "sinh-to-vai-glod-bgkq-0037",
+        "imageKey":  "bgkq-0037",
+        "sourceFilename":  "bgkq-0037-sinh-to-vai-glod-thung-12-chai.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0037.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "sinh-to-gol-nho-bgkq-0038",
+        "imageKey":  "bgkq-0038",
+        "sourceFilename":  "bgkq-0038-sinh-to-gol-nho-thung12-chai.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0038.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "sinh-to-vina-vai-bgkq-0040",
+        "imageKey":  "bgkq-0040",
+        "sourceFilename":  "bgkq-0040-sinh-to-vina-vai-thung-12-chai.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0040.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "sinh-to-vina-viet-quoc-bgkq-0041",
+        "imageKey":  "bgkq-0041",
+        "sourceFilename":  "bgkq-0041-sinh-to-vina-viet-quoc-thung-12-chai.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0041.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "sinh-to-vina-dau-bgkq-0042",
+        "imageKey":  "bgkq-0042",
+        "sourceFilename":  "bgkq-0042-sinh-to-vina-dau-thung-12-chai.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0042.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "sinh-to-vina-mang-cau-bgkq-0043",
+        "imageKey":  "bgkq-0043",
+        "sourceFilename":  "bgkq-0043-sinh-to-vina-mang-cau-thung-12-chai.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0043.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "sinh-to-vina-kiwi-bgkq-0044",
+        "imageKey":  "bgkq-0044",
+        "sourceFilename":  "bgkq-0044-sinh-to-vina-kiwi-thung-12-chai.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0044.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "sinh-to-vina-chanh-day-bgkq-0045",
+        "imageKey":  "bgkq-0045",
+        "sourceFilename":  "bgkq-0045-sinh-to-vina-chanh-day-thung-12-chai.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0045.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "sinh-to-vina-oi-bgkq-0046",
+        "imageKey":  "bgkq-0046",
+        "sourceFilename":  "bgkq-0046-sinh-to-vina-oi-thung-12-chai.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0046.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "sinh-to-vina-dao-bgkq-0047",
+        "imageKey":  "bgkq-0047",
+        "sourceFilename":  "bgkq-0047-sinh-to-vina-dao-thung-24-chai.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0047.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "sinh-to-vina-viet-quoc-bgkq-0048",
+        "imageKey":  "bgkq-0048",
+        "sourceFilename":  "bgkq-0048-sinh-to-vina-viet-quoc-thung-24-chai.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0048.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "sinh-to-vina-dau-bgkq-0049",
+        "imageKey":  "bgkq-0049",
+        "sourceFilename":  "bgkq-0049-sinh-to-vina-dau-thung-24-chai.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0049.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "sinh-to-vina-oi-bgkq-0050",
+        "imageKey":  "bgkq-0050",
+        "sourceFilename":  "bgkq-0050-sinh-to-vina-oi-thung-24-chai.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0050.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "duongden-black-1-lit-bgkq-0051",
+        "imageKey":  "bgkq-0051",
+        "sourceFilename":  "bgkq-0051-duongden-black-1-lit-thung-12-chai.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0051.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "duongden-black-2-lit-bgkq-0052",
+        "imageKey":  "bgkq-0052",
+        "sourceFilename":  "bgkq-0052-duongden-black-2-lit-thung-6-binh.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0052.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "duong-den-a-bgkq-0053",
+        "imageKey":  "bgkq-0053",
+        "sourceFilename":  "bgkq-0053-duong-den-a-thung-24-chai.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0053.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "duong-den-monita-bgkq-0054",
+        "imageKey":  "bgkq-0054",
+        "sourceFilename":  "bgkq-0054-duong-den-monita-bao-16kg.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0054.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "duong-nau-monita-bgkq-0055",
+        "imageKey":  "bgkq-0055",
+        "sourceFilename":  "bgkq-0055-duong-nau-monita-bao-16kg.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0055.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "duong-den-dai-loan-tui-bac-bgkq-0056",
+        "imageKey":  "bgkq-0056",
+        "sourceFilename":  "bgkq-0056-duong-den-dai-loan-tui-bac-thung-12kg.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0056.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "duong-den-mola-bgkq-0057",
+        "imageKey":  "bgkq-0057",
+        "sourceFilename":  "bgkq-0057-duong-den-mola-thung-12-chai.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0057.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "duong-den-euro-deli-bgkq-0058",
+        "imageKey":  "bgkq-0058",
+        "sourceFilename":  "bgkq-0058-duong-den-euro-deli-thung-6-binh.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0058.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "duong-den-douxian-bgkq-0059",
+        "imageKey":  "bgkq-0059",
+        "sourceFilename":  "bgkq-0059-duong-den-douxian-thung-6-binh.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0059.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "duong-den-falu-bgkq-0060",
+        "imageKey":  "bgkq-0060",
+        "sourceFilename":  "bgkq-0060-duong-den-falu-thung-6-binh.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0060.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "duong-nuoc-deasang-bgkq-0061",
+        "imageKey":  "bgkq-0061",
+        "sourceFilename":  "bgkq-0061-duong-nuoc-deasang-thung-25kg.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0061.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "siro-douxian-a-bgkq-0062",
+        "imageKey":  "bgkq-0062",
+        "sourceFilename":  "bgkq-0062-siro-douxian-a-thung-24-chai.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0062.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "tc-duong-den-duoxian-1kg-bgkq-0063",
+        "imageKey":  "bgkq-0063",
+        "sourceFilename":  "bgkq-0063-tc-duong-den-duoxian-1kg-thung-18-goi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0063.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "tc-duong-den-duoxian-2kg-bgkq-0064",
+        "imageKey":  "bgkq-0064",
+        "sourceFilename":  "bgkq-0064-tc-duong-den-duoxian-2kg-thung-10-goi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0064.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "tc-duong-den-duoxian-3kg-bgkq-0065",
+        "imageKey":  "bgkq-0065",
+        "sourceFilename":  "bgkq-0065-tc-duong-den-duoxian-3kg-thung-6-goi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0065.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "tc-hoang-kim-duoxian-1kg-bgkq-0066",
+        "imageKey":  "bgkq-0066",
+        "sourceFilename":  "bgkq-0066-tc-hoang-kim-duoxian-1kg-thung-18-goi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0066.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "tc-hoang-kim-duoxian-3kg-bgkq-0067",
+        "imageKey":  "bgkq-0067",
+        "sourceFilename":  "bgkq-0067-tc-hoang-kim-duoxian-3kg-thung-6-goi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0067.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "tc-duong-den-gia-uy-bgkq-0069",
+        "imageKey":  "bgkq-0069",
+        "sourceFilename":  "bgkq-0069-tc-duong-den-gia-uy-thung-10-goi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0069.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "tc-trang-gia-uy-bgkq-0070",
+        "imageKey":  "bgkq-0070",
+        "sourceFilename":  "bgkq-0070-tc-trang-gia-uy-thung-10-goi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0070.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "tc-cafe-gia-uy-bgkq-0071",
+        "imageKey":  "bgkq-0071",
+        "sourceFilename":  "bgkq-0071-tc-cafe-gia-uy-thung-10-goi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0071.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "tc-minh-hanh-1-kg-kunhan-bgkq-0072",
+        "imageKey":  "bgkq-0072",
+        "sourceFilename":  "bgkq-0072-tc-minh-hanh-1-kg-kunhan-thung-20-goi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0072.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "tc-dd-kuhan-2kg-bgkq-0073",
+        "imageKey":  "bgkq-0073",
+        "sourceFilename":  "bgkq-0073-tc-dd-kuhan-2kg-thung-10-hop.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0073.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "tc-dd-kuhan-3kg-bgkq-0074",
+        "imageKey":  "bgkq-0074",
+        "sourceFilename":  "bgkq-0074-tc-dd-kuhan-3kg-thung-20-goi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0074.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "3q-bibi-trang-bgkq-0075",
+        "imageKey":  "bgkq-0075",
+        "sourceFilename":  "bgkq-0075-3q-bibi-trang-thung-6-goi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0075.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "3q-bibi-den-bgkq-0076",
+        "imageKey":  "bgkq-0076",
+        "sourceFilename":  "bgkq-0076-3q-bibi-den-thung-6-goi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0076.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "3q-sea-trang-bgkq-0077",
+        "imageKey":  "bgkq-0077",
+        "sourceFilename":  "bgkq-0077-3q-sea-trang-thung-6-goi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0077.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "3q-sea-den-bgkq-0078",
+        "imageKey":  "bgkq-0078",
+        "sourceFilename":  "bgkq-0078-3q-sea-den-thung-6-goi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0078.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "3q-zion-trang-bgkq-0079",
+        "imageKey":  "bgkq-0079",
+        "sourceFilename":  "bgkq-0079-3q-zion-trang-thung-6-goi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0079.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "3q-ok-trang-bgkq-0080",
+        "imageKey":  "bgkq-0080",
+        "sourceFilename":  "bgkq-0080-3q-ok-trang-thung-6-goi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0080.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "3q-ok-olong-bgkq-0081",
+        "imageKey":  "bgkq-0081",
+        "sourceFilename":  "bgkq-0081-3q-ok-olong-thung-6-goi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0081.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "3q-douxian-hu-bgkq-0082",
+        "imageKey":  "bgkq-0082",
+        "sourceFilename":  "bgkq-0082-3q-douxian-hu-thung-6-hu.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0082.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "thach-douxian-cac-loai-bgkq-0083",
+        "imageKey":  "bgkq-0083",
+        "sourceFilename":  "bgkq-0083-thach-douxian-cac-loai-thung-6-hu.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0083.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "thach-hung-chuong-jelly-bgkq-0084",
+        "imageKey":  "bgkq-0084",
+        "sourceFilename":  "bgkq-0084-thach-hung-chuong-jelly-thung-6-hu.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0084.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "thuy-tinh-hung-chuong-bgkq-0085",
+        "imageKey":  "bgkq-0085",
+        "sourceFilename":  "bgkq-0085-thuy-tinh-hung-chuong-thung-4-hu.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0085.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "sot-socola-hershey-bgkq-0086",
+        "imageKey":  "bgkq-0086",
+        "sourceFilename":  "bgkq-0086-sot-socola-hershey-thung-12-chai.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0086.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "sot-douxian-cac-loai-bgkq-0087",
+        "imageKey":  "bgkq-0087",
+        "sourceFilename":  "bgkq-0087-sot-douxian-cac-loai-thung-12-chai.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0087.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "sot-gold-matcha-bgkq-0088",
+        "imageKey":  "bgkq-0088",
+        "sourceFilename":  "bgkq-0088-sot-gold-matcha-thung-12-chai.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0088.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "sot-gold-so-bgkq-0089",
+        "imageKey":  "bgkq-0089",
+        "sourceFilename":  "bgkq-0089-sot-gold-so-thung-12-chai.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0089.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "sot-gold-mon-bgkq-0090",
+        "imageKey":  "bgkq-0090",
+        "sourceFilename":  "bgkq-0090-sot-gold-mon-thung-12-chai.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0090.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "sot-gold-khac-bgkq-0091",
+        "imageKey":  "bgkq-0091",
+        "sourceFilename":  "bgkq-0091-sot-gold-khac-thung-12-chai.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0091.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "dao-lon-rhodes-giat-bgkq-0092",
+        "imageKey":  "bgkq-0092",
+        "sourceFilename":  "bgkq-0092-dao-lon-rhodes-giat-thung-12-lon.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0092.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "dao-lon-thai-bgkq-0093",
+        "imageKey":  "bgkq-0093",
+        "sourceFilename":  "bgkq-0093-dao-lon-thai-thung-12-lon.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0093.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "dao-contree-bgkq-0094",
+        "imageKey":  "bgkq-0094",
+        "sourceFilename":  "bgkq-0094-dao-contree-thung-12-lon.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0094.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "vai-lon-hoang-gia-bgkq-0095",
+        "imageKey":  "bgkq-0095",
+        "sourceFilename":  "bgkq-0095-vai-lon-hoang-gia-thung-12-lon.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0095.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "sen-nif-bgkq-0096",
+        "imageKey":  "bgkq-0096",
+        "sourceFilename":  "bgkq-0096-sen-nif-thung-12-lon.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0096.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "nhan-thai-bgkq-0097",
+        "imageKey":  "bgkq-0097",
+        "sourceFilename":  "bgkq-0097-nhan-thai-thung-24-lon.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0097.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "atiso-bgkq-0098",
+        "imageKey":  "bgkq-0098",
+        "sourceFilename":  "bgkq-0098-atiso-thung-12lon.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0098.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "nha-dam-bgkq-0099",
+        "imageKey":  "bgkq-0099",
+        "sourceFilename":  "bgkq-0099-nha-dam-thung-10-goi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0099.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "thot-not-bgkq-0100",
+        "imageKey":  "bgkq-0100",
+        "sourceFilename":  "bgkq-0100-thot-not-thung-10-goi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0100.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "da-me-tan-loc-bgkq-0101",
+        "imageKey":  "bgkq-0101",
+        "sourceFilename":  "bgkq-0101-da-me-tan-loc-thung-15-hu.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0101.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "nuoc-cot-dua-thai-1-lit-bgkq-0102",
+        "imageKey":  "bgkq-0102",
+        "sourceFilename":  "bgkq-0102-nuoc-cot-dua-thai-1-lit-thung-12-hop.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0102.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "rau-cau-soc-vang-bgkq-0103",
+        "imageKey":  "bgkq-0103",
+        "sourceFilename":  "bgkq-0103-rau-cau-soc-vang-thung-10-hop.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0103.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "rau-cau-thao-van-bgkq-0104",
+        "imageKey":  "bgkq-0104",
+        "sourceFilename":  "bgkq-0104-rau-cau-thao-van-thung-20-goi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0104.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "rau-cau-gion-agar-bgkq-0105",
+        "imageKey":  "bgkq-0105",
+        "sourceFilename":  "bgkq-0105-rau-cau-gion-agar-thung-20-hop.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0105.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "rau-cau-ca-deo-bgkq-0106",
+        "imageKey":  "bgkq-0106",
+        "sourceFilename":  "bgkq-0106-rau-cau-ca-deo-thung-10-hop.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0106.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "flan-douxian-bgkq-0107",
+        "imageKey":  "bgkq-0107",
+        "sourceFilename":  "bgkq-0107-flan-douxian-thung-12-goi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0107.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "flan-mole-trung-bgkq-0110",
+        "imageKey":  "bgkq-0110",
+        "sourceFilename":  "bgkq-0110-flan-mole-trung-thung-20-goi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0110.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "flan-mole-so-bgkq-0111",
+        "imageKey":  "bgkq-0111",
+        "sourceFilename":  "bgkq-0111-flan-mole-so-thung-20-goi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0111.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "flan-mole-mon-bgkq-0112",
+        "imageKey":  "bgkq-0112",
+        "sourceFilename":  "bgkq-0112-flan-mole-mon-thung-20-goi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0112.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "flan-mole-dau-bgkq-0113",
+        "imageKey":  "bgkq-0113",
+        "sourceFilename":  "bgkq-0113-flan-mole-dau-thung-20-goi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0113.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "plan-mole-dua-bgkq-0114",
+        "imageKey":  "bgkq-0114",
+        "sourceFilename":  "bgkq-0114-plan-mole-dua-thung-20-goi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0114.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "bot-sua-hp-bgkq-0115",
+        "imageKey":  "bgkq-0115",
+        "sourceFilename":  "bgkq-0115-bot-sua-hp.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0115.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "bot-sua-b-one-bgkq-0116",
+        "imageKey":  "bgkq-0116",
+        "sourceFilename":  "bgkq-0116-bot-sua-b-one-thung-12-goi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0116.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "bot-sua-mt35-bgkq-0117",
+        "imageKey":  "bgkq-0117",
+        "sourceFilename":  "bgkq-0117-bot-sua-mt35-thung-10-goi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0117.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "bot-milkfoarm-luave-bgkq-0118",
+        "imageKey":  "bgkq-0118",
+        "sourceFilename":  "bgkq-0118-bot-milkfoarm-luave-thung-20g.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0118.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "bot-frappe-luave-bgkq-0119",
+        "imageKey":  "bgkq-0119",
+        "sourceFilename":  "bgkq-0119-bot-frappe-luave-thung-10-goi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0119.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "bot-milkfoam-muoi-bien-bgkq-0121",
+        "imageKey":  "bgkq-0121",
+        "sourceFilename":  "bgkq-0121-bot-milkfoam-muoi-bien.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0121.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "bot-kem-trung-dai-loan-bgkq-0122",
+        "imageKey":  "bgkq-0122",
+        "sourceFilename":  "bgkq-0122-bot-kem-trung-dai-loan.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0122.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "bot-sua-frima-bgkq-0123",
+        "imageKey":  "bgkq-0123",
+        "sourceFilename":  "bgkq-0123-bot-sua-frima-bao.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0123.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "bot-sua-frima-1kg-bgkq-0124",
+        "imageKey":  "bgkq-0124",
+        "sourceFilename":  "bgkq-0124-bot-sua-frima-1kg-thung-12-goi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0124.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "bot-sua-thai-bgkq-0125",
+        "imageKey":  "bgkq-0125",
+        "sourceFilename":  "bgkq-0125-bot-sua-thai-bao.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0125.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "bot-sua-kievit-bgkq-0126",
+        "imageKey":  "bgkq-0126",
+        "sourceFilename":  "bgkq-0126-bot-sua-kievit-bao.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0126.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "bot-indo-mafac-bgkq-0127",
+        "imageKey":  "bgkq-0127",
+        "sourceFilename":  "bgkq-0127-bot-indo-mafac-thung-10-goi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0127.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "bot-mon-bkb-bgkq-0128",
+        "imageKey":  "bgkq-0128",
+        "sourceFilename":  "bgkq-0128-bot-mon-bkb-thung-10-goi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0128.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "sua-tuoi-tatte-bgkq-0129",
+        "imageKey":  "bgkq-0129",
+        "sourceFilename":  "bgkq-0129-sua-tuoi-tatte-thung-12-hop.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0129.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "sua-tuoi-blan-bgkq-0130",
+        "imageKey":  "bgkq-0130",
+        "sourceFilename":  "bgkq-0130-sua-tuoi-blan-thung-12-hop.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0130.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "sua-dac-nidoo-bgkq-0131",
+        "imageKey":  "bgkq-0131",
+        "sourceFilename":  "bgkq-0131-sua-dac-nidoo-thung-24-lon.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0131.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "sua-dac-larose-nap-dut-bgkq-0132",
+        "imageKey":  "bgkq-0132",
+        "sourceFilename":  "bgkq-0132-sua-dac-larose-nap-dut-thung-24-lon.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0132.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "sua-dac-larose-thuong-bgkq-0133",
+        "imageKey":  "bgkq-0133",
+        "sourceFilename":  "bgkq-0133-sua-dac-larose-thuong-thung-24-lon.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0133.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "sua-ella-bgkq-0134",
+        "imageKey":  "bgkq-0134",
+        "sourceFilename":  "bgkq-0134-sua-ella-thung-24-lon.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0134.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "bot-milo-bgkq-0135",
+        "imageKey":  "bgkq-0135",
+        "sourceFilename":  "bgkq-0135-bot-milo-thung-10-kg.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0135.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "bot-cacao-luave-bgkq-0136",
+        "imageKey":  "bgkq-0136",
+        "sourceFilename":  "bgkq-0136-bot-cacao-luave-thung-20-goi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0136.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "ca-cao-dance-bgkq-0137",
+        "imageKey":  "bgkq-0137",
+        "sourceFilename":  "bgkq-0137-ca-cao-dance.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0137.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "bot-cacao-maly-bgkq-0138",
+        "imageKey":  "bgkq-0138",
+        "sourceFilename":  "bgkq-0138-bot-cacao-maly-thung-20-goi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0138.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "bot-mon-king-bgkq-0139",
+        "imageKey":  "bgkq-0139",
+        "sourceFilename":  "bgkq-0139-bot-mon-king-thung-20-goi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0139.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "bot-so-king-bgkq-0140",
+        "imageKey":  "bgkq-0140",
+        "sourceFilename":  "bgkq-0140-bot-so-king-thung-20-goi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0140.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "bot-so-gtp-bgkq-0141",
+        "imageKey":  "bgkq-0141",
+        "sourceFilename":  "bgkq-0141-bot-so-gtp-thung-20-goi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0141.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "bot-so-bao-anh-bgkq-0142",
+        "imageKey":  "bgkq-0142",
+        "sourceFilename":  "bgkq-0142-bot-so-bao-anh.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0142.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "bot-mon-gtp-bgkq-0143",
+        "imageKey":  "bgkq-0143",
+        "sourceFilename":  "bgkq-0143-bot-mon-gtp-thung-20-goi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0143.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "hong-tra-gtp-1kg-bgkq-0144",
+        "imageKey":  "bgkq-0144",
+        "sourceFilename":  "bgkq-0144-hong-tra-gtp-1kg.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0144.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "hong-tra-king-bgkq-0145",
+        "imageKey":  "bgkq-0145",
+        "sourceFilename":  "bgkq-0145-hong-tra-king.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0145.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "tra-lai-king-bgkq-0146",
+        "imageKey":  "bgkq-0146",
+        "sourceFilename":  "bgkq-0146-tra-lai-king.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0146.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "tra-olong-kinh-bgkq-0147",
+        "imageKey":  "bgkq-0147",
+        "sourceFilename":  "bgkq-0147-tra-olong-kinh.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0147.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "tra-lai-loc-phat-bgkq-0148",
+        "imageKey":  "bgkq-0148",
+        "sourceFilename":  "bgkq-0148-tra-lai-loc-phat-thung-12-goi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0148.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "tra-den-loc-phat-bgkq-0149",
+        "imageKey":  "bgkq-0149",
+        "sourceFilename":  "bgkq-0149-tra-den-loc-phat-thung-12-goi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0149.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "tra-olong-loc-phat-bgkq-0150",
+        "imageKey":  "bgkq-0150",
+        "sourceFilename":  "bgkq-0150-tra-olong-loc-phat.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0150.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "tra-den-9-douxian-bgkq-0151",
+        "imageKey":  "bgkq-0151",
+        "sourceFilename":  "bgkq-0151-tra-den-9-douxian-thung-10-goi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0151.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "tra-den-ht-9-bong-bgkq-0152",
+        "imageKey":  "bgkq-0152",
+        "sourceFilename":  "bgkq-0152-tra-den-ht-9-bong-bao-5o-goi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0152.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "tra-den-ht-9-luave-bgkq-0153",
+        "imageKey":  "bgkq-0153",
+        "sourceFilename":  "bgkq-0153-tra-den-ht-9-luave-thung-20-goi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0153.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "tra-den-hoang-gia-bgkq-0154",
+        "imageKey":  "bgkq-0154",
+        "sourceFilename":  "bgkq-0154-tra-den-hoang-gia.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0154.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "tra-lai-hoang-gia-bgkq-0155",
+        "imageKey":  "bgkq-0155",
+        "sourceFilename":  "bgkq-0155-tra-lai-hoang-gia.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0155.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "tra-olong-tam-hg-500gr-bgkq-0156",
+        "imageKey":  "bgkq-0156",
+        "sourceFilename":  "bgkq-0156-tra-olong-tam-hg-500gr.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0156.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "tra-dua-sao-vang-bgkq-0157",
+        "imageKey":  "bgkq-0157",
+        "sourceFilename":  "bgkq-0157-tra-dua-sao-vang.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0157.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "hong-tra-tui-loc-tnb-bgkq-0158",
+        "imageKey":  "bgkq-0158",
+        "sourceFilename":  "bgkq-0158-hong-tra-tui-loc-tnb-thung-50-goi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0158.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "tra-dao-tui-loc-tnb-bgkq-0159",
+        "imageKey":  "bgkq-0159",
+        "sourceFilename":  "bgkq-0159-tra-dao-tui-loc-tnb-thung-30-goi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0159.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "tra-lai-tui-loc-tnb-bgkq-0160",
+        "imageKey":  "bgkq-0160",
+        "sourceFilename":  "bgkq-0160-tra-lai-tui-loc-tnb-thung-50-goi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0160.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "tra-den-phuc-long-bgkq-0161",
+        "imageKey":  "bgkq-0161",
+        "sourceFilename":  "bgkq-0161-tra-den-phuc-long-thung-20goi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0161.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "tra-sen-lai-phuc-long-bgkq-0162",
+        "imageKey":  "bgkq-0162",
+        "sourceFilename":  "bgkq-0162-tra-sen-lai-phuc-long-thung-20-hop.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0162.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "tra-olong-phuc-long-bgkq-0163",
+        "imageKey":  "bgkq-0163",
+        "sourceFilename":  "bgkq-0163-tra-olong-phuc-long-thung-20-hop.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0163.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "tra-sen-lai-thai-nguyen-bgkq-0164",
+        "imageKey":  "bgkq-0164",
+        "sourceFilename":  "bgkq-0164-tra-sen-lai-thai-nguyen-thung-25-goi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0164.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "lipton-cozy-bgkq-0165",
+        "imageKey":  "bgkq-0165",
+        "sourceFilename":  "bgkq-0165-lipton-cozy-thung-36-hop.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0165.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "tra-cozy-hoa-tan-bgkq-0166",
+        "imageKey":  "bgkq-0166",
+        "sourceFilename":  "bgkq-0166-tra-cozy-hoa-tan-thung-30-goi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0166.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "tra-cozy-tui-loc-bgkq-0167",
+        "imageKey":  "bgkq-0167",
+        "sourceFilename":  "bgkq-0167-tra-cozy-tui-loc-thung-36-hop.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0167.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "tra-thai-xanh-do-cty-bgkq-0168",
+        "imageKey":  "bgkq-0168",
+        "sourceFilename":  "bgkq-0168-tra-thai-xanh-do-cty-thung-12-goi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0168.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "tra-thai-xanh-thuong-bgkq-0169",
+        "imageKey":  "bgkq-0169",
+        "sourceFilename":  "bgkq-0169-tra-thai-xanh-thuong-thung-12-goi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0169.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "tra-gao-novia-bgkq-0170",
+        "imageKey":  "bgkq-0170",
+        "sourceFilename":  "bgkq-0170-tra-gao-novia-thung-20-goi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0170.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "tra-den-novia-bgkq-0171",
+        "imageKey":  "bgkq-0171",
+        "sourceFilename":  "bgkq-0171-tra-den-novia-thung-20-goi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0171.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "tra-lai-novia-bgkq-0172",
+        "imageKey":  "bgkq-0172",
+        "sourceFilename":  "bgkq-0172-tra-lai-novia-thung-20-goi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0172.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "hong-tra-co-gai-bgkq-0173",
+        "imageKey":  "bgkq-0173",
+        "sourceFilename":  "bgkq-0173-hong-tra-co-gai.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0173.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "tra-den-co-gai-bgkq-0174",
+        "imageKey":  "bgkq-0174",
+        "sourceFilename":  "bgkq-0174-tra-den-co-gai.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0174.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "tra-lai-co-gai-bgkq-0175",
+        "imageKey":  "bgkq-0175",
+        "sourceFilename":  "bgkq-0175-tra-lai-co-gai.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0175.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "tra-lai-nhu-y-bgkq-0176",
+        "imageKey":  "bgkq-0176",
+        "sourceFilename":  "bgkq-0176-tra-lai-nhu-y.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0176.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "tra-gao-rang-ona-bgkq-0177",
+        "imageKey":  "bgkq-0177",
+        "sourceFilename":  "bgkq-0177-tra-gao-rang-ona.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0177.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "tra-olong-tu-quy-bgkq-0178",
+        "imageKey":  "bgkq-0178",
+        "sourceFilename":  "bgkq-0178-tra-olong-tu-quy.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0178.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "tra-hp-bgkq-0179",
+        "imageKey":  "bgkq-0179",
+        "sourceFilename":  "bgkq-0179-tra-hp.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0179.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "mat-ong-euro-deli-bgkq-0180",
+        "imageKey":  "bgkq-0180",
+        "sourceFilename":  "bgkq-0180-mat-ong-euro-deli-thung-10-binh.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0180.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "la-rong-bien-bgkq-0181",
+        "imageKey":  "bgkq-0181",
+        "sourceFilename":  "bgkq-0181-la-rong-bien-goi-100-la.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0181.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "gas-kem-mosa-bgkq-0182",
+        "imageKey":  "bgkq-0182",
+        "sourceFilename":  "bgkq-0182-gas-kem-mosa-thung-36-hop.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0182.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "than-tre-bgkq-0183",
+        "imageKey":  "bgkq-0183",
+        "sourceFilename":  "bgkq-0183-than-tre-bich.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0183.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "galatin-thuong-bgkq-0184",
+        "imageKey":  "bgkq-0184",
+        "sourceFilename":  "bgkq-0184-galatin-thuong-le-30k-gram.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0184.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "hat-chia-bgkq-0185",
+        "imageKey":  "bgkq-0185",
+        "sourceFilename":  "bgkq-0185-hat-chia-thung-6-goi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0185.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "bot-matcha-dai-loan-bgkq-0186",
+        "imageKey":  "bgkq-0186",
+        "sourceFilename":  "bgkq-0186-bot-matcha-dai-loan-thung-10-goi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0186.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "bot-matcha-cozy-bgkq-0187",
+        "imageKey":  "bgkq-0187",
+        "sourceFilename":  "bgkq-0187-bot-matcha-cozy-goi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0187.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "bot-matcha-seoul-bgkq-0188",
+        "imageKey":  "bgkq-0188",
+        "sourceFilename":  "bgkq-0188-bot-matcha-seoul-goi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0188.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "bot-lac-pho-mai-bgkq-0189",
+        "imageKey":  "bgkq-0189",
+        "sourceFilename":  "bgkq-0189-bot-lac-pho-mai-goi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0189.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "bot-man-pho-mai-ong-gia-bgkq-0190",
+        "imageKey":  "bgkq-0190",
+        "sourceFilename":  "bgkq-0190-bot-man-pho-mai-ong-gia-goi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0190.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "suong-sao-trang-den-bgkq-0191",
+        "imageKey":  "bgkq-0191",
+        "sourceFilename":  "bgkq-0191-suong-sao-trang-den-thung-100-goi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0191.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "suong-sao-den-mota-bgkq-0192",
+        "imageKey":  "bgkq-0192",
+        "sourceFilename":  "bgkq-0192-suong-sao-den-mota-thung-100-goi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0192.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "ice-hot-lun-bgkq-0193",
+        "imageKey":  "bgkq-0193",
+        "sourceFilename":  "bgkq-0193-ice-hot-lun.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0193.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "rich-lun-bgkq-0194",
+        "imageKey":  "bgkq-0194",
+        "sourceFilename":  "bgkq-0194-rich-lun-thung-24.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0194.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "ice-hot-on-top-bgkq-0195",
+        "imageKey":  "bgkq-0195",
+        "sourceFilename":  "bgkq-0195-ice-hot-on-top-thung-12.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0195.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "pho-mai-bo-cuoi-bgkq-0196",
+        "imageKey":  "bgkq-0196",
+        "sourceFilename":  "bgkq-0196-pho-mai-bo-cuoi-thung-24-hop.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0196.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "pho-mai-khoi-2-5kg-mozela-bgkq-0197",
+        "imageKey":  "bgkq-0197",
+        "sourceFilename":  "bgkq-0197-pho-mai-khoi-2-5kg-mozela-cay.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0197.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "pho-mai-khoi-3-6-kg-mozela-bgkq-0198",
+        "imageKey":  "bgkq-0198",
+        "sourceFilename":  "bgkq-0198-pho-mai-khoi-3-6-kg-mozela-cay.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0198.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "giam-tao-bgkq-0199",
+        "imageKey":  "bgkq-0199",
+        "sourceFilename":  "bgkq-0199-giam-tao-thung-6-binh.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0199.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "tui-ga-ran-500gr-bgkq-0200",
+        "imageKey":  "bgkq-0200",
+        "sourceFilename":  "bgkq-0200-tui-ga-ran-500gr.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0200.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "cot-bi-dao-wonderfull-bgkq-0201",
+        "imageKey":  "bgkq-0201",
+        "sourceFilename":  "bgkq-0201-cot-bi-dao-wonderfull-thung-30-goi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0201.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "lau-kim-chi-bgkq-0202",
+        "imageKey":  "bgkq-0202",
+        "sourceFilename":  "bgkq-0202-lau-kim-chi-thung-10-loc.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0202.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "ong-hut-ts-trang-bgkq-0203",
+        "imageKey":  "bgkq-0203",
+        "sourceFilename":  "bgkq-0203-ong-hut-ts-trang-cay-10-bich.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0203.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "ong-hut-ts-trang-boc-mang-bgkq-0204",
+        "imageKey":  "bgkq-0204",
+        "sourceFilename":  "bgkq-0204-ong-hut-ts-trang-boc-mang-cay-10-bich.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0204.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "ong-hut-trang-phi-6-8-bgkq-0205",
+        "imageKey":  "bgkq-0205",
+        "sourceFilename":  "bgkq-0205-ong-hut-trang-phi-6-8-cay-10-bich.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0205.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "ong-hut-ts-den-phi-6-8-bgkq-0206",
+        "imageKey":  "bgkq-0206",
+        "sourceFilename":  "bgkq-0206-ong-hut-ts-den-phi-6-8-cay-10-bich.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0206.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "muong-ukp-bgkq-0207",
+        "imageKey":  "bgkq-0207",
+        "sourceFilename":  "bgkq-0207-muong-ukp-thung-5000-cai.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0207.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "muong-thuong-ngan-bgkq-0208",
+        "imageKey":  "bgkq-0208",
+        "sourceFilename":  "bgkq-0208-muong-thuong-ngan-thung-5000-cai.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0208.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "muong-dai-bgkq-0209",
+        "imageKey":  "bgkq-0209",
+        "sourceFilename":  "bgkq-0209-muong-dai-thung-2500-cai.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0209.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "nap-ngang-bgkq-0210",
+        "imageKey":  "bgkq-0210",
+        "sourceFilename":  "bgkq-0210-nap-ngang-thung-40-cay.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0210.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "nap-cau-vuong-bgkq-0211",
+        "imageKey":  "bgkq-0211",
+        "sourceFilename":  "bgkq-0211-nap-cau-vuong-thung-40-cay.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0211.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "bich-1ly-ngang-bgkq-0212",
+        "imageKey":  "bgkq-0212",
+        "sourceFilename":  "bgkq-0212-bich-1ly-ngang.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0212.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "bich-2ly-ngang-bgkq-0213",
+        "imageKey":  "bgkq-0213",
+        "sourceFilename":  "bgkq-0213-bich-2ly-ngang.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0213.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "bich-1ly-thuong-bgkq-0214",
+        "imageKey":  "bgkq-0214",
+        "sourceFilename":  "bgkq-0214-bich-1ly-thuong.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0214.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "bich-chu-t-bgkq-0215",
+        "imageKey":  "bgkq-0215",
+        "sourceFilename":  "bgkq-0215-bich-chu-t.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0215.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "bich-1lit-bgkq-0216",
+        "imageKey":  "bgkq-0216",
+        "sourceFilename":  "bgkq-0216-bich-1lit.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0216.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "cuon-ep-bgkq-0217",
+        "imageKey":  "bgkq-0217",
+        "sourceFilename":  "bgkq-0217-cuon-ep.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0217.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "mi-koreno-100-goi-bgkq-0218",
+        "imageKey":  "bgkq-0218",
+        "sourceFilename":  "bgkq-0218-mi-koreno-100-goi-thung-100-goi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0218.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "mi-lau-koreno-80-goi-bgkq-0219",
+        "imageKey":  "bgkq-0219",
+        "sourceFilename":  "bgkq-0219-mi-lau-koreno-80-goi-thung-80-goi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0219.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "mi-acecook-deli-bgkq-0220",
+        "imageKey":  "bgkq-0220",
+        "sourceFilename":  "bgkq-0220-mi-acecook-deli-thung-80-goi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0220.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "kim-chi-bgkq-0221",
+        "imageKey":  "bgkq-0221",
+        "sourceFilename":  "bgkq-0221-kim-chi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0221.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "bot-sup-bgkq-0222",
+        "imageKey":  "bgkq-0222",
+        "sourceFilename":  "bgkq-0222-bot-sup.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0222.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "bot-ot-bgkq-0223",
+        "imageKey":  "bgkq-0223",
+        "sourceFilename":  "bgkq-0223-bot-ot-thung-10-goi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0223.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "tinh-dau-ot-bgkq-0224",
+        "imageKey":  "bgkq-0224",
+        "sourceFilename":  "bgkq-0224-tinh-dau-ot.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0224.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "nam-bgkq-0225",
+        "imageKey":  "bgkq-0225",
+        "sourceFilename":  "bgkq-0225-nam.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0225.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "cai-tim-bgkq-0226",
+        "imageKey":  "bgkq-0226",
+        "sourceFilename":  "bgkq-0226-cai-tim.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0226.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "bong-cai-xanh-bgkq-0227",
+        "imageKey":  "bgkq-0227",
+        "sourceFilename":  "bgkq-0227-bong-cai-xanh.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0227.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "ca-hanh-tieu-bgkq-0228",
+        "imageKey":  "bgkq-0228",
+        "sourceFilename":  "bgkq-0228-ca-hanh-tieu.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0228.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "ca-hanh-ot-bgkq-0229",
+        "imageKey":  "bgkq-0229",
+        "sourceFilename":  "bgkq-0229-ca-hanh-ot.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0229.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "ca-vien-trang-beco-bgkq-0230",
+        "imageKey":  "bgkq-0230",
+        "sourceFilename":  "bgkq-0230-ca-vien-trang-beco.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0230.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "ca-sing-bgkq-0231",
+        "imageKey":  "bgkq-0231",
+        "sourceFilename":  "bgkq-0231-ca-sing.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0231.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "ca-cut-bgkq-0232",
+        "imageKey":  "bgkq-0232",
+        "sourceFilename":  "bgkq-0232-ca-cut.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0232.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "dau-hu-ca-bgkq-0233",
+        "imageKey":  "bgkq-0233",
+        "sourceFilename":  "bgkq-0233-dau-hu-ca.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0233.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "dau-hu-pho-mai-lc-bgkq-0234",
+        "imageKey":  "bgkq-0234",
+        "sourceFilename":  "bgkq-0234-dau-hu-pho-mai-lc.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0234.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "dau-hu-phomai-ngon-bgkq-0235",
+        "imageKey":  "bgkq-0235",
+        "sourceFilename":  "bgkq-0235-dau-hu-phomai-ngon.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0235.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "khoai-tay-2kg-bgkq-0236",
+        "imageKey":  "bgkq-0236",
+        "sourceFilename":  "bgkq-0236-khoai-tay-2kg.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0236.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "khoai-tay-1kg-bgkq-0237",
+        "imageKey":  "bgkq-0237",
+        "sourceFilename":  "bgkq-0237-khoai-tay-1kg.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0237.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "pho-mai-que-hop-bgkq-0238",
+        "imageKey":  "bgkq-0238",
+        "sourceFilename":  "bgkq-0238-pho-mai-que-hop.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0238.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "oc-nhoi-bgkq-0239",
+        "imageKey":  "bgkq-0239",
+        "sourceFilename":  "bgkq-0239-oc-nhoi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0239.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "bo-vien-bgkq-0240",
+        "imageKey":  "bgkq-0240",
+        "sourceFilename":  "bgkq-0240-bo-vien.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0240.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "bo-la-lot-bgkq-0241",
+        "imageKey":  "bgkq-0241",
+        "sourceFilename":  "bgkq-0241-bo-la-lot.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0241.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "xuc-xich-yummy-bgkq-0242",
+        "imageKey":  "bgkq-0242",
+        "sourceFilename":  "bgkq-0242-xuc-xich-yummy.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0242.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "xuc-xich-tokyo-bgkq-0243",
+        "imageKey":  "bgkq-0243",
+        "sourceFilename":  "bgkq-0243-xuc-xich-tokyo.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0243.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "xuc-xich-vuon-bia-bgkq-0244",
+        "imageKey":  "bgkq-0244",
+        "sourceFilename":  "bgkq-0244-xuc-xich-vuon-bia.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0244.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "doi-sun-bgkq-0245",
+        "imageKey":  "bgkq-0245",
+        "sourceFilename":  "bgkq-0245-doi-sun.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0245.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "vien-tha-lau-bgkq-0246",
+        "imageKey":  "bgkq-0246",
+        "sourceFilename":  "bgkq-0246-vien-tha-lau.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0246.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "banh-bao-trung-bgkq-0247",
+        "imageKey":  "bgkq-0247",
+        "sourceFilename":  "bgkq-0247-banh-bao-trung.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0247.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "cha-ca-hap-bgkq-0248",
+        "imageKey":  "bgkq-0248",
+        "sourceFilename":  "bgkq-0248-cha-ca-hap.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0248.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "cha-que-bgkq-0249",
+        "imageKey":  "bgkq-0249",
+        "sourceFilename":  "bgkq-0249-cha-que.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0249.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "cha-gio-bgkq-0250",
+        "imageKey":  "bgkq-0250",
+        "sourceFilename":  "bgkq-0250-cha-gio.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0250.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "cha-ca-han-quoc-bgkq-0251",
+        "imageKey":  "bgkq-0251",
+        "sourceFilename":  "bgkq-0251-cha-ca-han-quoc.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0251.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "thanh-cua-dai-1kg-bgkq-0252",
+        "imageKey":  "bgkq-0252",
+        "sourceFilename":  "bgkq-0252-thanh-cua-dai-1kg.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0252.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "thanh-cua-lichuan-bgkq-0253",
+        "imageKey":  "bgkq-0253",
+        "sourceFilename":  "bgkq-0253-thanh-cua-lichuan.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0253.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "com-hong-ongon-bgkq-0254",
+        "imageKey":  "bgkq-0254",
+        "sourceFilename":  "bgkq-0254-com-hong-ongon.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0254.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "com-hong-thien-nhien-bgkq-0255",
+        "imageKey":  "bgkq-0255",
+        "sourceFilename":  "bgkq-0255-com-hong-thien-nhien.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0255.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "hotdog-pho-mai-bgkq-0256",
+        "imageKey":  "bgkq-0256",
+        "sourceFilename":  "bgkq-0256-hotdog-pho-mai.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0256.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "tom-vien-bgkq-0257",
+        "imageKey":  "bgkq-0257",
+        "sourceFilename":  "bgkq-0257-tom-vien.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0257.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "tom-con-ongon-bgkq-0258",
+        "imageKey":  "bgkq-0258",
+        "sourceFilename":  "bgkq-0258-tom-con-ongon.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0258.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "chao-sa-bgkq-0259",
+        "imageKey":  "bgkq-0259",
+        "sourceFilename":  "bgkq-0259-chao-sa.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0259.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "tui-tien-hai-san-bgkq-0260",
+        "imageKey":  "bgkq-0260",
+        "sourceFilename":  "bgkq-0260-tui-tien-hai-san.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0260.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "banh-sua-tuoi-bgkq-0261",
+        "imageKey":  "bgkq-0261",
+        "sourceFilename":  "bgkq-0261-banh-sua-tuoi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0261.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "banh-gao-thoi-bgkq-0262",
+        "imageKey":  "bgkq-0262",
+        "sourceFilename":  "bgkq-0262-banh-gao-thoi.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0262.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "sot-banh-gao-saijang-bgkq-0263",
+        "imageKey":  "bgkq-0263",
+        "sourceFilename":  "bgkq-0263-sot-banh-gao-saijang.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0263.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "sot-banh-gao-ky-bgkq-0264",
+        "imageKey":  "bgkq-0264",
+        "sourceFilename":  "bgkq-0264-sot-banh-gao-ky.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0264.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "hanh-phi-anh-tu-bgkq-0265",
+        "imageKey":  "bgkq-0265",
+        "sourceFilename":  "bgkq-0265-hanh-phi-anh-tu.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0265.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "hanh-phi-thuong-bgkq-0266",
+        "imageKey":  "bgkq-0266",
+        "sourceFilename":  "bgkq-0266-hanh-phi-thuong.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0266.webp",
+        "role":  "card",
+        "qualityStatus":  "OK",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "kho-bo-bgkq-0267",
+        "imageKey":  "bgkq-0267",
+        "sourceFilename":  "bgkq-0267-kho-bo.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0267.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "kho-ga-bgkq-0268",
+        "imageKey":  "bgkq-0268",
+        "sourceFilename":  "bgkq-0268-kho-ga.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0268.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "banh-tran-nuong-trang-vang-bgkq-0269",
+        "imageKey":  "bgkq-0269",
+        "sourceFilename":  "bgkq-0269-banh-tran-nuong-trang-vang.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0269.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "banh-trang-cuon-do-bgkq-0270",
+        "imageKey":  "bgkq-0270",
+        "sourceFilename":  "bgkq-0270-banh-trang-cuon-do.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0270.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "banh-trang-cat-bgkq-0271",
+        "imageKey":  "bgkq-0271",
+        "sourceFilename":  "bgkq-0271-banh-trang-cat.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0271.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "nuoc-bo-1-lit-bgkq-0272",
+        "imageKey":  "bgkq-0272",
+        "sourceFilename":  "bgkq-0272-nuoc-bo-1-lit.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0272.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "nuoc-bo-bgkq-0273",
+        "imageKey":  "bgkq-0273",
+        "sourceFilename":  "bgkq-0273-nuoc-bo.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0273.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "bo-trang-vang-bgkq-0274",
+        "imageKey":  "bgkq-0274",
+        "sourceFilename":  "bgkq-0274-bo-trang-vang.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0274.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    },
+    {
+        "productKey":  "kho-muc-bgkq-0275",
+        "imageKey":  "bgkq-0275",
+        "sourceFilename":  "bgkq-0275-kho-muc.webp",
+        "objectKey":  "catalog/hung-phat/v2/products/bgkq-0275.webp",
+        "role":  "card",
+        "qualityStatus":  "LOW_RES",
+        "mappingStatus":  "exact"
+    }
+]

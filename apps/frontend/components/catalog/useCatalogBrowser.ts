@@ -1,76 +1,70 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import type { CategoryWithCount, PublicProduct } from "@/data/catalog/product-model";
+import type {
+  CatalogV2FilterOption,
+  CatalogV2VariantCard,
+} from "@/data/catalog-v2/product-model";
+import { fetchCatalogV2List } from "@/lib/catalog-v2-client";
 
-type CategoriesResponse = { categories: CategoryWithCount[] };
-type ProductsResponse = { products: PublicProduct[]; total: number };
-
-function buildProductsUrl(categoryId: string, q: string) {
+function buildProductsUrl(industryKey: string, brand: string, q: string) {
   const params = new URLSearchParams();
-  if (categoryId !== "all") params.set("categoryId", categoryId);
+  if (industryKey !== "all") params.set("industry", industryKey);
+  if (brand !== "all") params.set("brand", brand);
   if (q.trim()) params.set("q", q.trim());
-  params.set("limit", "80");
-  return `/api/catalog/products?${params.toString()}`;
+  params.set("limit", "500");
+  return `/api/catalog-v2/products?${params.toString()}`;
+}
+
+function buildOptions(
+  products: CatalogV2VariantCard[],
+  keySelector: (product: CatalogV2VariantCard) => string | null,
+  nameSelector: (product: CatalogV2VariantCard) => string | null,
+): CatalogV2FilterOption[] {
+  const counts = new Map<string, { name: string; count: number }>();
+  for (const product of products) {
+    const id = keySelector(product);
+    const name = nameSelector(product);
+    if (!id || !name) continue;
+    const current = counts.get(id);
+    counts.set(id, { name, count: (current?.count ?? 0) + 1 });
+  }
+  return [...counts.entries()]
+    .sort((left, right) => left[1].name.localeCompare(right[1].name, "vi"))
+    .map(([id, value]) => ({ id, name: value.name, productCount: value.count }));
 }
 
 export function useCatalogBrowser() {
-  const [products, setProducts] = useState<PublicProduct[]>([]);
-  const [categories, setCategories] = useState<CategoryWithCount[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [products, setProducts] = useState<CatalogV2VariantCard[]>([]);
+  const [allProducts, setAllProducts] = useState<CatalogV2VariantCard[]>([]);
+  const [selectedIndustry, setSelectedIndustry] = useState("all");
+  const [selectedBrand, setSelectedBrand] = useState("all");
   const [searchText, setSearchText] = useState("");
-  const [loadingProducts, setLoadingProducts] = useState(true);
-  const [loadingCategories, setLoadingCategories] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-
-  useEffect(() => {
-    let activeRequest = true;
-
-    async function loadCategories() {
-      try {
-        setLoadingCategories(true);
-        const response = await fetch("/api/catalog/categories", { cache: "no-store" });
-        if (!response.ok) throw new Error("Không tải được danh mục");
-        const data = (await response.json()) as CategoriesResponse;
-        if (!activeRequest) return;
-        setCategories(
-          Array.isArray(data.categories)
-            ? data.categories.filter((category) => category.parentId === null && category.id !== "all")
-            : [],
-        );
-      } catch (loadError) {
-        if (!activeRequest) return;
-        setError(loadError instanceof Error ? loadError.message : "Không tải được danh mục");
-        setCategories([]);
-      } finally {
-        if (activeRequest) setLoadingCategories(false);
-      }
-    }
-
-    loadCategories();
-    return () => {
-      activeRequest = false;
-    };
-  }, []);
 
   useEffect(() => {
     let activeRequest = true;
 
     async function loadProducts() {
       try {
-        setLoadingProducts(true);
+        setLoading(true);
         setError("");
-        const response = await fetch(buildProductsUrl(selectedCategory, searchText), { cache: "no-store" });
-        if (!response.ok) throw new Error("Không tải được sản phẩm");
-        const data = (await response.json()) as ProductsResponse;
+        const data = await fetchCatalogV2List(
+          buildProductsUrl(selectedIndustry, selectedBrand, searchText),
+        );
         if (!activeRequest) return;
-        setProducts(Array.isArray(data.products) ? data.products : []);
+        const nextProducts = Array.isArray(data.products) ? data.products : [];
+        setProducts(nextProducts);
+        if (selectedIndustry === "all" && selectedBrand === "all" && !searchText.trim()) {
+          setAllProducts(nextProducts);
+        }
       } catch (loadError) {
         if (!activeRequest) return;
         setError(loadError instanceof Error ? loadError.message : "Không tải được sản phẩm");
         setProducts([]);
       } finally {
-        if (activeRequest) setLoadingProducts(false);
+        if (activeRequest) setLoading(false);
       }
     }
 
@@ -79,29 +73,60 @@ export function useCatalogBrowser() {
       activeRequest = false;
       window.clearTimeout(timer);
     };
-  }, [selectedCategory, searchText]);
+  }, [selectedIndustry, selectedBrand, searchText]);
 
-  const loading = loadingCategories || loadingProducts;
-  const catalogTotal = useMemo(
-    () => categories.reduce((total, category) => total + category.productCount, 0),
-    [categories],
+  const industrySource = useMemo(
+    () => selectedBrand === "all"
+      ? allProducts
+      : allProducts.filter((product) => product.brand === selectedBrand),
+    [allProducts, selectedBrand],
   );
-  const tabs = useMemo(
-    () => [
-      { id: "all", name: "Tất cả", productCount: catalogTotal, parentId: null, sortOrder: 0 },
-      ...categories,
-    ],
-    [catalogTotal, categories],
+  const brandSource = useMemo(
+    () => selectedIndustry === "all"
+      ? allProducts
+      : allProducts.filter((product) => product.industryKey === selectedIndustry),
+    [allProducts, selectedIndustry],
   );
+
+  const industries = useMemo(
+    () => buildOptions(industrySource, (product) => product.industryKey, (product) => product.industry),
+    [industrySource],
+  );
+  const brands = useMemo(
+    () => buildOptions(brandSource, (product) => product.brand, (product) => product.brand),
+    [brandSource],
+  );
+
+  useEffect(() => {
+    if (selectedIndustry !== "all" && !industries.some((option) => option.id === selectedIndustry)) {
+      setSelectedIndustry("all");
+    }
+  }, [industries, selectedIndustry]);
+
+  useEffect(() => {
+    if (selectedBrand !== "all" && !brands.some((option) => option.id === selectedBrand)) {
+      setSelectedBrand("all");
+    }
+  }, [brands, selectedBrand]);
+
+  function resetFilters() {
+    setSelectedIndustry("all");
+    setSelectedBrand("all");
+  }
 
   return {
     products,
-    tabs,
-    selectedCategory,
-    setSelectedCategory,
+    industries,
+    brands,
+    selectedIndustry,
+    setSelectedIndustry,
+    selectedBrand,
+    setSelectedBrand,
+    resetFilters,
     searchText,
     setSearchText,
     loading,
     error,
+    total: products.length,
   };
 }

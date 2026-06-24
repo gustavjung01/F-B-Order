@@ -1,0 +1,276 @@
+﻿product_key,variant_key,sku,options_json,price,image_key
+siro-torani-bgkq-0001,siro-torani-bgkq-0001-default,BGKQ-0001,"{""package"": ""Thùng 12 chai""}",180000,bgkq-0001
+siro-thai-pixe-bgkq-0002,siro-thai-pixe-bgkq-0002-default,BGKQ-0002,"{""package"": ""Thùng 12 chai""}",62000,bgkq-0002
+siro-thai-dingfong-bgkq-0003,siro-thai-dingfong-bgkq-0003-default,BGKQ-0003,"{""package"": ""Thùng 12 chai""}",62000,bgkq-0003
+siro-gold-2l-bgkq-0004,siro-gold-2l-bgkq-0004-default,BGKQ-0004,"{""package"": ""Thùng 4 bình"", ""size"": ""2L""}",140000,bgkq-0004
+siro-gold-700ml-bgkq-0005,siro-gold-700ml-bgkq-0005-default,BGKQ-0005,"{""package"": ""Thùng 12 chai"", ""size"": ""700ML""}",53000,bgkq-0005
+siro-gtp-bgkq-0006,siro-gtp-bgkq-0006-default,BGKQ-0006,"{""flavor_or_type"": ""khac"", ""package"": ""Thùng 6 bình"", ""sell_unit"": ""Chai""}",140000,bgkq-0006
+siro-gtp-dau-duong-den-bgkq-0007,siro-gtp-dau-duong-den-bgkq-0007-default,BGKQ-0007,"{""flavor_or_type"": ""dau duong den"", ""package"": ""Thùng 6chai""}",146000,bgkq-0007
+siro-vina-bgkq-0008,siro-vina-bgkq-0008-default,BGKQ-0008,"{""flavor"": ""khac"", ""package"": ""Thùng 12 chai""}",40000,bgkq-0008
+siro-sam-dua-vina-bgkq-0009,siro-sam-dua-vina-bgkq-0009-default,BGKQ-0009,"{""flavor"": ""sam-dua"", ""package"": ""Thùng 12 chai""}",25000,bgkq-0009
+siro-carisa-bgkq-0010,siro-carisa-bgkq-0010-default,BGKQ-0010,"{""package"": ""Thùng 24 chai""}",30000,bgkq-0010
+siro-changthai-bgkq-0011,siro-changthai-bgkq-0011-default,BGKQ-0011,"{""package"": ""Thùng 12 chai""}",57000,bgkq-0011
+siro-douxian-2l-tron-bgkq-0012,siro-douxian-2l-tron-bgkq-0012-default,BGKQ-0012,"{""package"": ""Thùng 6 chai""}",126000,bgkq-0012
+siro-dd-hoang-kim-bgkq-0013,siro-dd-hoang-kim-bgkq-0013-default,BGKQ-0013,"{""package"": ""Thùng 6chai""}",126000,bgkq-0013
+siro-douxian-2l-hoang-kim-bgkq-0014,siro-douxian-2l-hoang-kim-bgkq-0014-default,BGKQ-0014,"{""package"": ""Thùng 6 chai""}",85000,bgkq-0014
+sinh-to-berrino-dau-bgkq-0015,sinh-to-berrino-dau-bgkq-0015-default,BGKQ-0015,"{""flavor"": ""dau"", ""package"": ""Thùng12 chai""}",89000,bgkq-0015
+sinh-to-berrino-dao-bgkq-0016,sinh-to-berrino-dao-bgkq-0016-default,BGKQ-0016,"{""flavor"": ""dao"", ""package"": ""Thùng12 chai""}",91000,bgkq-0016
+sinh-to-berrino-oi-bgkq-0017,sinh-to-berrino-oi-bgkq-0017-default,BGKQ-0017,"{""flavor"": ""oi"", ""package"": ""Thùng12 chai""}",111000,bgkq-0017
+sinh-to-berrino-viet-quoc-bgkq-0018,sinh-to-berrino-viet-quoc-bgkq-0018-default,BGKQ-0018,"{""flavor"": ""viet quoc"", ""package"": ""Thùng12 chai""}",123000,bgkq-0018
+sinh-to-berrino-chanh-day-bgkq-0019,sinh-to-berrino-chanh-day-bgkq-0019-default,BGKQ-0019,"{""flavor"": ""chanh day"", ""package"": ""Thùng12 chai""}",102000,bgkq-0019
+sinh-to-berrino-vai-bgkq-0020,sinh-to-berrino-vai-bgkq-0020-default,BGKQ-0020,"{""flavor"": ""vai"", ""package"": ""Thùng12 chai""}",115000,bgkq-0020
+sinh-to-berrino-kiwi-bgkq-0021,sinh-to-berrino-kiwi-bgkq-0021-default,BGKQ-0021,"{""flavor"": ""kiwi"", ""package"": ""Thùng12 chai""}",108000,bgkq-0021
+sinh-to-berrino-phuc-bon-tu-bgkq-0022,sinh-to-berrino-phuc-bon-tu-bgkq-0022-default,BGKQ-0022,"{""flavor"": ""phuc bon tu"", ""package"": ""Thùng12 chai""}",114000,bgkq-0022
+sinh-to-berrino-xoai-bgkq-0023,sinh-to-berrino-xoai-bgkq-0023-default,BGKQ-0023,"{""flavor"": ""xoai"", ""package"": ""Thùng12 chai""}",91000,bgkq-0023
+sinh-to-berrino-nho-bgkq-0024,sinh-to-berrino-nho-bgkq-0024-default,BGKQ-0024,"{""flavor"": ""nho"", ""package"": ""Thùng12 chai""}",108000,bgkq-0024
+sinh-to-berrino-dau-tam-bgkq-0025,sinh-to-berrino-dau-tam-bgkq-0025-default,BGKQ-0025,"{""flavor"": ""dau tam"", ""package"": ""Thùng 12 chai""}",103000,bgkq-0025
+sinh-to-berino-khom-bgkq-0026,sinh-to-berino-khom-bgkq-0026-default,BGKQ-0026,"{""flavor"": ""khom"", ""package"": ""Thung 12 chai""}",98000,bgkq-0026
+sinh-to-gold-dau-bgkq-0027,sinh-to-gold-dau-bgkq-0027-default,BGKQ-0027,"{""flavor"": ""dau"", ""package"": ""Thùng12 chai""}",90000,bgkq-0027
+sinh-to-gold-dao-bgkq-0028,sinh-to-gold-dao-bgkq-0028-default,BGKQ-0028,"{""flavor"": ""dao"", ""package"": ""Thùng12 chai""}",95000,bgkq-0028
+sinh-to-gold-viet-quoc-bgkq-0029,sinh-to-gold-viet-quoc-bgkq-0029-default,BGKQ-0029,"{""flavor"": ""viet quoc"", ""package"": ""Thùng12 chai""}",125000,bgkq-0029
+sinh-to-gold-chanh-day-bgkq-0030,sinh-to-gold-chanh-day-bgkq-0030-default,BGKQ-0030,"{""flavor"": ""chanh day"", ""package"": ""Thùng12 chai""}",105000,bgkq-0030
+sinh-to-gold-kiwi-bgkq-0031,sinh-to-gold-kiwi-bgkq-0031-default,BGKQ-0031,"{""flavor"": ""kiwi"", ""package"": ""Thùng12 chai""}",100000,bgkq-0031
+sinh-to-gold-phuc-bon-tu-bgkq-0032,sinh-to-gold-phuc-bon-tu-bgkq-0032-default,BGKQ-0032,"{""flavor"": ""phuc bon tu"", ""package"": ""Thùng12 chai""}",120000,bgkq-0032
+sinh-to-gold-xoai-bgkq-0033,sinh-to-gold-xoai-bgkq-0033-default,BGKQ-0033,"{""flavor"": ""xoai"", ""package"": ""Thùng12 chai""}",100000,bgkq-0033
+sinh-to-gold-oi-bgkq-0034,sinh-to-gold-oi-bgkq-0034-default,BGKQ-0034,"{""flavor"": ""oi"", ""package"": ""Thung 12 chai""}",105000,bgkq-0034
+sinh-to-gold-dau-tam-bgkq-0035,sinh-to-gold-dau-tam-bgkq-0035-default,BGKQ-0035,"{""flavor"": ""dau tam"", ""package"": ""Thung 12 chai""}",100000,bgkq-0035
+sinh-to-mang-cau-glod-bgkq-0036,sinh-to-mang-cau-glod-bgkq-0036-default,BGKQ-0036,"{""flavor"": ""mang cau"", ""package"": ""Thung 12 chai""}",117000,bgkq-0036
+sinh-to-vai-glod-bgkq-0037,sinh-to-vai-glod-bgkq-0037-default,BGKQ-0037,"{""flavor"": ""khac"", ""package"": ""Thung 12 chai""}",122000,bgkq-0037
+sinh-to-gol-nho-bgkq-0038,sinh-to-gol-nho-bgkq-0038-default,BGKQ-0038,"{""flavor"": ""nho"", ""package"": ""Thùng12 chai""}",103000,bgkq-0038
+sinh-to-vina-vai-bgkq-0040,sinh-to-vina-vai-bgkq-0040-default,BGKQ-0040,"{""flavor"": ""vai"", ""package"": ""THÙNG 12 CHAI"", ""size"": ""1L""}",76000,bgkq-0040
+sinh-to-vina-viet-quoc-bgkq-0041,sinh-to-vina-viet-quoc-bgkq-0041-default,BGKQ-0041,"{""flavor"": ""viet quoc"", ""package"": ""THÙNG 12 CHAI"", ""size"": ""1L""}",98000,bgkq-0041
+sinh-to-vina-dau-bgkq-0042,sinh-to-vina-dau-bgkq-0042-default,BGKQ-0042,"{""flavor"": ""dau"", ""package"": ""THÙNG 12 CHAI"", ""size"": ""1L""}",70000,bgkq-0042
+sinh-to-vina-mang-cau-bgkq-0043,sinh-to-vina-mang-cau-bgkq-0043-default,BGKQ-0043,"{""flavor"": ""mang cau"", ""package"": ""THÙNG 12 CHAI"", ""size"": ""1L""}",80000,bgkq-0043
+sinh-to-vina-kiwi-bgkq-0044,sinh-to-vina-kiwi-bgkq-0044-default,BGKQ-0044,"{""flavor"": ""kiwi"", ""package"": ""THÙNG 12 CHAI"", ""size"": ""1L""}",82000,bgkq-0044
+sinh-to-vina-chanh-day-bgkq-0045,sinh-to-vina-chanh-day-bgkq-0045-default,BGKQ-0045,"{""flavor"": ""chanh day"", ""package"": ""THÙNG 12 CHAI"", ""sell_unit"": ""CHIA"", ""size"": ""1L""}",72000,bgkq-0045
+sinh-to-vina-oi-bgkq-0046,sinh-to-vina-oi-bgkq-0046-default,BGKQ-0046,"{""flavor"": ""oi"", ""package"": ""THÙNG 12 CHAI"", ""size"": ""1L""}",70000,bgkq-0046
+sinh-to-vina-dao-bgkq-0047,sinh-to-vina-dao-bgkq-0047-default,BGKQ-0047,"{""flavor"": ""dao"", ""package"": ""THÙNG 24 CHAI"", ""size"": ""650g""}",45000,bgkq-0047
+sinh-to-vina-viet-quoc-bgkq-0048,sinh-to-vina-viet-quoc-bgkq-0048-default,BGKQ-0048,"{""flavor"": ""viet quoc"", ""package"": ""THÙNG 24 CHAI"", ""size"": ""650g""}",60000,bgkq-0048
+sinh-to-vina-dau-bgkq-0049,sinh-to-vina-dau-bgkq-0049-default,BGKQ-0049,"{""flavor"": ""dau"", ""package"": ""THÙNG 24 CHAI"", ""size"": ""650g""}",45000,bgkq-0049
+sinh-to-vina-oi-bgkq-0050,sinh-to-vina-oi-bgkq-0050-default,BGKQ-0050,"{""flavor"": ""oi"", ""package"": ""THÙNG 24 CHAI"", ""size"": ""650g""}",45000,bgkq-0050
+duongden-black-1-lit-bgkq-0051,duongden-black-1-lit-bgkq-0051-default,BGKQ-0051,"{""package"": ""THÙNG 12 CHAI"", ""sell_unit"": ""binh"", ""size"": ""1lit""}",76000,bgkq-0051
+duongden-black-2-lit-bgkq-0052,duongden-black-2-lit-bgkq-0052-default,BGKQ-0052,"{""package"": ""THÙNG 6 BÌNH"", ""sell_unit"": ""binh"", ""size"": ""2lit""}",142000,bgkq-0052
+duong-den-a-bgkq-0053,duong-den-a-bgkq-0053-default,BGKQ-0053,"{""package"": ""THÙNG 24 CHAI""}",27000,bgkq-0053
+duong-den-monita-bgkq-0054,duong-den-monita-bgkq-0054-default,BGKQ-0054,"{""package"": ""bao 16kg"", ""sell_unit"": ""bịch"", ""type"": ""den""}",62000,bgkq-0054
+duong-nau-monita-bgkq-0055,duong-nau-monita-bgkq-0055-default,BGKQ-0055,"{""package"": ""bao 16kg"", ""sell_unit"": ""bịch"", ""type"": ""nau""}",45000,bgkq-0055
+duong-den-dai-loan-tui-bac-bgkq-0056,duong-den-dai-loan-tui-bac-bgkq-0056-default,BGKQ-0056,"{""package"": ""Thùng 12kg"", ""sell_unit"": ""bịch""}",53000,bgkq-0056
+duong-den-mola-bgkq-0057,duong-den-mola-bgkq-0057-default,BGKQ-0057,"{""package"": ""thùng 12 chai""}",82000,bgkq-0057
+duong-den-euro-deli-bgkq-0058,duong-den-euro-deli-bgkq-0058-default,BGKQ-0058,"{""package"": ""Thùng 6 bình""}",280000,bgkq-0058
+duong-den-douxian-bgkq-0059,duong-den-douxian-bgkq-0059-default,BGKQ-0059,"{""package"": ""Thùng 6 bình""}",126000,bgkq-0059
+duong-den-falu-bgkq-0060,duong-den-falu-bgkq-0060-default,BGKQ-0060,"{""package"": ""THÙNG 6 BÌNH""}",193000,bgkq-0060
+duong-nuoc-deasang-bgkq-0061,duong-nuoc-deasang-bgkq-0061-default,BGKQ-0061,"{""package"": ""thung 25kg"", ""sell_unit"": ""thùng""}",545000,bgkq-0061
+siro-douxian-a-bgkq-0062,siro-douxian-a-bgkq-0062-default,BGKQ-0062,"{""package"": ""Thùng 24 chai""}",27000,bgkq-0062
+tc-duong-den-duoxian-1kg-bgkq-0063,tc-duong-den-duoxian-1kg-bgkq-0063-default,BGKQ-0063,"{""package"": ""Thùng 18 gói"", ""sell_unit"": ""bịch"", ""size"": ""1kg"", ""type"": ""duong-den""}",30000,bgkq-0063
+tc-duong-den-duoxian-2kg-bgkq-0064,tc-duong-den-duoxian-2kg-bgkq-0064-default,BGKQ-0064,"{""package"": ""Thùng 10 gói"", ""sell_unit"": ""bịch"", ""size"": ""2kg"", ""type"": ""duong-den""}",54000,bgkq-0064
+tc-duong-den-duoxian-3kg-bgkq-0065,tc-duong-den-duoxian-3kg-bgkq-0065-default,BGKQ-0065,"{""package"": ""Thùng 6 gói"", ""sell_unit"": ""bịch"", ""size"": ""3kg"", ""type"": ""duong-den""}",94000,bgkq-0065
+tc-hoang-kim-duoxian-1kg-bgkq-0066,tc-hoang-kim-duoxian-1kg-bgkq-0066-default,BGKQ-0066,"{""package"": ""Thùng 18 gói"", ""sell_unit"": ""bịch"", ""size"": ""1kg"", ""type"": ""hoang-kim""}",30000,bgkq-0066
+tc-hoang-kim-duoxian-3kg-bgkq-0067,tc-hoang-kim-duoxian-3kg-bgkq-0067-default,BGKQ-0067,"{""package"": ""Thùng 6 gói"", ""sell_unit"": ""bịch"", ""size"": ""3kg"", ""type"": ""hoang-kim""}",94000,bgkq-0067
+tc-cafe-gia-uy-mini-bgkq-0068,tc-cafe-gia-uy-mini-bgkq-0068-default,BGKQ-0068,"{""package"": ""Thùng 10 gói"", ""sell_unit"": ""bịch"", ""type"": ""cafe-mini""}",55000,bgkq-0068
+tc-duong-den-gia-uy-bgkq-0069,tc-duong-den-gia-uy-bgkq-0069-default,BGKQ-0069,"{""package"": ""Thùng 10 gói"", ""sell_unit"": ""bịch"", ""type"": ""duong-den""}",57000,bgkq-0069
+tc-trang-gia-uy-bgkq-0070,tc-trang-gia-uy-bgkq-0070-default,BGKQ-0070,"{""package"": ""Thùng 10 gói"", ""sell_unit"": ""bịch"", ""type"": ""trang""}",59000,bgkq-0070
+tc-cafe-gia-uy-bgkq-0071,tc-cafe-gia-uy-bgkq-0071-default,BGKQ-0071,"{""package"": ""Thùng 10 gói"", ""sell_unit"": ""bịch"", ""type"": ""cafe""}",55000,bgkq-0071
+tc-minh-hanh-1-kg-kunhan-bgkq-0072,tc-minh-hanh-1-kg-kunhan-bgkq-0072-default,BGKQ-0072,"{""package"": ""Thùng 20 gói"", ""sell_unit"": ""bịch"", ""size"": ""1kg"", ""type"": ""minh-hanh""}",25000,bgkq-0072
+tc-dd-kuhan-2kg-bgkq-0073,tc-dd-kuhan-2kg-bgkq-0073-default,BGKQ-0073,"{""package"": ""Thùng 10 hộp"", ""size"": ""2kg"", ""type"": ""duong-den""}",52000,bgkq-0073
+tc-dd-kuhan-3kg-bgkq-0074,tc-dd-kuhan-3kg-bgkq-0074-default,BGKQ-0074,"{""package"": ""Thùng 20 gói"", ""sell_unit"": ""HỘP"", ""size"": ""3kg"", ""type"": ""duong-den""}",78000,bgkq-0074
+3q-bibi-trang-bgkq-0075,3q-bibi-trang-bgkq-0075-default,BGKQ-0075,"{""color"": ""trang"", ""package"": ""Thùng 6 gói""}",50000,bgkq-0075
+3q-bibi-den-bgkq-0076,3q-bibi-den-bgkq-0076-default,BGKQ-0076,"{""color"": ""den"", ""package"": ""Thùng 6 gói""}",52000,bgkq-0076
+3q-sea-trang-bgkq-0077,3q-sea-trang-bgkq-0077-default,BGKQ-0077,"{""color"": ""trang"", ""package"": ""Thùng 6 gói"", ""sell_unit"": ""bịch""}",48000,bgkq-0077
+3q-sea-den-bgkq-0078,3q-sea-den-bgkq-0078-default,BGKQ-0078,"{""color"": ""den"", ""package"": ""Thùng 6 gói"", ""sell_unit"": ""bịch""}",50000,bgkq-0078
+3q-zion-trang-bgkq-0079,3q-zion-trang-bgkq-0079-default,BGKQ-0079,"{""package"": ""Thùng 6 gói"", ""sell_unit"": ""bịch""}",50000,bgkq-0079
+3q-ok-trang-bgkq-0080,3q-ok-trang-bgkq-0080-default,BGKQ-0080,"{""package"": ""Thùng 6 gói"", ""type"": ""trang""}",55000,bgkq-0080
+3q-ok-olong-bgkq-0081,3q-ok-olong-bgkq-0081-default,BGKQ-0081,"{""package"": ""thung 6 goi"", ""type"": ""olong""}",63000,bgkq-0081
+3q-douxian-hu-bgkq-0082,3q-douxian-hu-bgkq-0082-default,BGKQ-0082,"{""package"": ""Thùng 6 hủ""}",70000,bgkq-0082
+thach-douxian-cac-loai-bgkq-0083,thach-douxian-cac-loai-bgkq-0083-default,BGKQ-0083,"{""package"": ""Thùng 6 hủ""}",70000,bgkq-0083
+thach-hung-chuong-jelly-bgkq-0084,thach-hung-chuong-jelly-bgkq-0084-default,BGKQ-0084,"{""package"": ""Thùng 6 hủ""}",110000,bgkq-0084
+thuy-tinh-hung-chuong-bgkq-0085,thuy-tinh-hung-chuong-bgkq-0085-default,BGKQ-0085,"{""package"": ""Thùng 4 hủ""}",200000,bgkq-0085
+sot-socola-hershey-bgkq-0086,sot-socola-hershey-bgkq-0086-default,BGKQ-0086,"{""package"": ""Thùng 12 chai""}",155000,bgkq-0086
+sot-douxian-cac-loai-bgkq-0087,sot-douxian-cac-loai-bgkq-0087-default,BGKQ-0087,"{""package"": ""Thùng 12 chai""}",53000,bgkq-0087
+sot-gold-matcha-bgkq-0088,sot-gold-matcha-bgkq-0088-default,BGKQ-0088,"{""package"": ""Thùng 12 chai""}",74000,bgkq-0088
+sot-gold-so-bgkq-0089,sot-gold-so-bgkq-0089-default,BGKQ-0089,"{""package"": ""Thùng 12 chai""}",71000,bgkq-0089
+sot-gold-mon-bgkq-0090,sot-gold-mon-bgkq-0090-default,BGKQ-0090,"{""package"": ""Thùng 12 chai""}",66000,bgkq-0090
+sot-gold-khac-bgkq-0091,sot-gold-khac-bgkq-0091-default,BGKQ-0091,"{""package"": ""Thùng 12 chai""}",62000,bgkq-0091
+dao-lon-rhodes-giat-bgkq-0092,dao-lon-rhodes-giat-bgkq-0092-default,BGKQ-0092,"{""package"": ""Thùng 12 lon""}",62000,bgkq-0092
+dao-lon-thai-bgkq-0093,dao-lon-thai-bgkq-0093-default,BGKQ-0093,"{""package"": ""Thùng 12 lon""}",29000,bgkq-0093
+dao-contree-bgkq-0094,dao-contree-bgkq-0094-default,BGKQ-0094,"{""package"": ""Thùng 12 lon""}",32000,bgkq-0094
+vai-lon-hoang-gia-bgkq-0095,vai-lon-hoang-gia-bgkq-0095-default,BGKQ-0095,"{""package"": ""Thùng 12 lon""}",28000,bgkq-0095
+sen-nif-bgkq-0096,sen-nif-bgkq-0096-default,BGKQ-0096,"{""package"": ""Thùng 12 lon""}",55000,bgkq-0096
+nhan-thai-bgkq-0097,nhan-thai-bgkq-0097-default,BGKQ-0097,"{""package"": ""Thùng 24 lon""}",40000,bgkq-0097
+atiso-bgkq-0098,atiso-bgkq-0098-default,BGKQ-0098,"{""package"": ""Thùng 12lon""}",75000,bgkq-0098
+nha-dam-bgkq-0099,nha-dam-bgkq-0099-default,BGKQ-0099,"{""package"": ""Thùng 10 gói"", ""sell_unit"": ""bịch""}",29000,bgkq-0099
+thot-not-bgkq-0100,thot-not-bgkq-0100-default,BGKQ-0100,"{""package"": ""Thùng 10 gói"", ""sell_unit"": ""bịch""}",52000,bgkq-0100
+da-me-tan-loc-bgkq-0101,da-me-tan-loc-bgkq-0101-default,BGKQ-0101,"{""package"": ""THÙNG 15 HỦ""}",80000,bgkq-0101
+nuoc-cot-dua-thai-1-lit-bgkq-0102,nuoc-cot-dua-thai-1-lit-bgkq-0102-default,BGKQ-0102,"{""package"": ""Thung 12 hop"", ""sell_unit"": ""hộp""}",71000,bgkq-0102
+rau-cau-soc-vang-bgkq-0103,rau-cau-soc-vang-bgkq-0103-default,BGKQ-0103,"{""package"": ""Thùng 10 hộp""}",52000,bgkq-0103
+rau-cau-thao-van-bgkq-0104,rau-cau-thao-van-bgkq-0104-default,BGKQ-0104,"{""package"": ""Thùng 20 gói""}",230000,bgkq-0104
+rau-cau-gion-agar-bgkq-0105,rau-cau-gion-agar-bgkq-0105-default,BGKQ-0105,"{""package"": ""THÙNG 20 HỘP""}",110000,bgkq-0105
+rau-cau-ca-deo-bgkq-0106,rau-cau-ca-deo-bgkq-0106-default,BGKQ-0106,"{""package"": ""thung 10 hop"", ""sell_unit"": ""HỘP""}",60000,bgkq-0106
+flan-douxian-bgkq-0107,flan-douxian-bgkq-0107-default,BGKQ-0107,"{""package"": ""Thùng 12 gói""}",170000,bgkq-0107
+flan-mota-bgkq-0108,flan-mota-bgkq-0108-default,BGKQ-0108,"{""flavor"": ""khac"", ""package"": ""Thung 12 goi""}",145000,bgkq-0108
+flan-mota-so-bgkq-0109,flan-mota-so-bgkq-0109-default,BGKQ-0109,"{""flavor"": ""socola"", ""package"": ""Thung 12 goi""}",155000,bgkq-0109
+flan-mole-trung-bgkq-0110,flan-mole-trung-bgkq-0110-default,BGKQ-0110,"{""flavor"": ""trung"", ""package"": ""Thùng 20 gói""}",227000,bgkq-0110
+flan-mole-so-bgkq-0111,flan-mole-so-bgkq-0111-default,BGKQ-0111,"{""flavor"": ""so"", ""package"": ""Thùng 20 gói""}",257000,bgkq-0111
+flan-mole-mon-bgkq-0112,flan-mole-mon-bgkq-0112-default,BGKQ-0112,"{""flavor"": ""mon"", ""package"": ""Thùng 20 gói""}",207000,bgkq-0112
+flan-mole-dau-bgkq-0113,flan-mole-dau-bgkq-0113-default,BGKQ-0113,"{""flavor"": ""dau"", ""package"": ""Thùng 20 gói""}",198000,bgkq-0113
+plan-mole-dua-bgkq-0114,plan-mole-dua-bgkq-0114-default,BGKQ-0114,"{""flavor"": ""dua"", ""package"": ""Thùng 20 gói""}",198000,bgkq-0114
+bot-sua-hp-bgkq-0115,bot-sua-hp-bgkq-0115-default,BGKQ-0115,"{""sell_unit"": ""kg""}",75000,bgkq-0115
+bot-sua-b-one-bgkq-0116,bot-sua-b-one-bgkq-0116-default,BGKQ-0116,"{""package"": ""Thùng 12 gói""}",69000,bgkq-0116
+bot-sua-mt35-bgkq-0117,bot-sua-mt35-bgkq-0117-default,BGKQ-0117,"{""package"": ""Thùng 10 gói""}",118000,bgkq-0117
+bot-milkfoarm-luave-bgkq-0118,bot-milkfoarm-luave-bgkq-0118-default,BGKQ-0118,"{""package"": ""thùng 20g"", ""sell_unit"": ""gói""}",128000,bgkq-0118
+bot-frappe-luave-bgkq-0119,bot-frappe-luave-bgkq-0119-default,BGKQ-0119,"{""package"": ""Thùng 10 gói""}",138000,bgkq-0119
+bot-milkfoam-erdoli-bgkq-0120,bot-milkfoam-erdoli-bgkq-0120-default,BGKQ-0120,"{""sell_unit"": ""gói""}",275000,bgkq-0120
+bot-milkfoam-muoi-bien-bgkq-0121,bot-milkfoam-muoi-bien-bgkq-0121-default,BGKQ-0121,"{""sell_unit"": ""gói""}",92000,bgkq-0121
+bot-kem-trung-dai-loan-bgkq-0122,bot-kem-trung-dai-loan-bgkq-0122-default,BGKQ-0122,"{""sell_unit"": ""gói""}",155000,bgkq-0122
+bot-sua-frima-bgkq-0123,bot-sua-frima-bgkq-0123-default,BGKQ-0123,"{""package"": ""bao"", ""packing"": ""bao""}",2120000,bgkq-0123
+bot-sua-frima-1kg-bgkq-0124,bot-sua-frima-1kg-bgkq-0124-default,BGKQ-0124,"{""package"": ""Thùng 12 gói"", ""packing"": ""1kg""}",93000,bgkq-0124
+bot-sua-thai-bgkq-0125,bot-sua-thai-bgkq-0125-default,BGKQ-0125,"{""package"": ""bao""}",1540000,bgkq-0125
+bot-sua-kievit-bgkq-0126,bot-sua-kievit-bgkq-0126-default,BGKQ-0126,"{""package"": ""bao""}",1840000,bgkq-0126
+bot-indo-mafac-bgkq-0127,bot-indo-mafac-bgkq-0127-default,BGKQ-0127,"{""package"": ""Thùng 10 gói""}",75000,bgkq-0127
+bot-mon-bkb-bgkq-0128,bot-mon-bkb-bgkq-0128-default,BGKQ-0128,"{""package"": ""Thùng 10 gói""}",100000,bgkq-0128
+sua-tuoi-tatte-bgkq-0129,sua-tuoi-tatte-bgkq-0129-default,BGKQ-0129,"{""package"": ""Thùng 12 hộp""}",30000,bgkq-0129
+sua-tuoi-blan-bgkq-0130,sua-tuoi-blan-bgkq-0130-default,BGKQ-0130,"{""package"": ""Thùng 12 hộp""}",30000,bgkq-0130
+sua-dac-nidoo-bgkq-0131,sua-dac-nidoo-bgkq-0131-default,BGKQ-0131,"{""package"": ""Thùng 24 lon""}",42000,bgkq-0131
+sua-dac-larose-nap-dut-bgkq-0132,sua-dac-larose-nap-dut-bgkq-0132-default,BGKQ-0132,"{""lid"": ""nap-dut"", ""package"": ""Thung 24 lon""}",42000,bgkq-0132
+sua-dac-larose-thuong-bgkq-0133,sua-dac-larose-thuong-bgkq-0133-default,BGKQ-0133,"{""lid"": ""thuong"", ""package"": ""Thùng 24 lon""}",41000,bgkq-0133
+sua-ella-bgkq-0134,sua-ella-bgkq-0134-default,BGKQ-0134,"{""package"": ""THÙNG 24 LON""}",40000,bgkq-0134
+bot-milo-bgkq-0135,bot-milo-bgkq-0135-default,BGKQ-0135,"{""package"": ""thùng 10 kg""}",170000,bgkq-0135
+bot-cacao-luave-bgkq-0136,bot-cacao-luave-bgkq-0136-default,BGKQ-0136,"{""package"": ""Thùng 20 gói""}",155000,bgkq-0136
+ca-cao-dance-bgkq-0137,ca-cao-dance-bgkq-0137-default,BGKQ-0137,"{""sell_unit"": ""gói""}",145000,bgkq-0137
+bot-cacao-maly-bgkq-0138,bot-cacao-maly-bgkq-0138-default,BGKQ-0138,"{""package"": ""Thùng 20 gói""}",70000,bgkq-0138
+bot-mon-king-bgkq-0139,bot-mon-king-bgkq-0139-default,BGKQ-0139,"{""flavor"": ""mon"", ""package"": ""Thùng 20 gói""}",152000,bgkq-0139
+bot-so-king-bgkq-0140,bot-so-king-bgkq-0140-default,BGKQ-0140,"{""flavor"": ""socola"", ""package"": ""Thùng 20 gói""}",192000,bgkq-0140
+bot-so-gtp-bgkq-0141,bot-so-gtp-bgkq-0141-default,BGKQ-0141,"{""flavor"": ""socola"", ""package"": ""Thùng 20 gói""}",185000,bgkq-0141
+bot-so-bao-anh-bgkq-0142,bot-so-bao-anh-bgkq-0142-default,BGKQ-0142,"{""sell_unit"": ""gói""}",72000,bgkq-0142
+bot-mon-gtp-bgkq-0143,bot-mon-gtp-bgkq-0143-default,BGKQ-0143,"{""flavor"": ""mon"", ""package"": ""Thùng 20 gói""}",174000,bgkq-0143
+hong-tra-gtp-1kg-bgkq-0144,hong-tra-gtp-1kg-bgkq-0144-default,BGKQ-0144,"{""sell_unit"": ""gói""}",140000,bgkq-0144
+hong-tra-king-bgkq-0145,hong-tra-king-bgkq-0145-default,BGKQ-0145,"{""sell_unit"": ""gói""}",118000,bgkq-0145
+tra-lai-king-bgkq-0146,tra-lai-king-bgkq-0146-default,BGKQ-0146,"{""sell_unit"": ""gói""}",155000,bgkq-0146
+tra-olong-kinh-bgkq-0147,tra-olong-kinh-bgkq-0147-default,BGKQ-0147,"{""sell_unit"": ""goi""}",160000,bgkq-0147
+tra-lai-loc-phat-bgkq-0148,tra-lai-loc-phat-bgkq-0148-default,BGKQ-0148,"{""package"": ""Thùng 12 gói"", ""type"": ""lai""}",155000,bgkq-0148
+tra-den-loc-phat-bgkq-0149,tra-den-loc-phat-bgkq-0149-default,BGKQ-0149,"{""package"": ""Thùng 12 gói"", ""type"": ""den""}",155000,bgkq-0149
+tra-olong-loc-phat-bgkq-0150,tra-olong-loc-phat-bgkq-0150-default,BGKQ-0150,"{""sell_unit"": ""gói"", ""type"": ""olong""}",306000,bgkq-0150
+tra-den-9-douxian-bgkq-0151,tra-den-9-douxian-bgkq-0151-default,BGKQ-0151,"{""package"": ""Thùng 10 gói""}",43000,bgkq-0151
+tra-den-ht-9-bong-bgkq-0152,tra-den-ht-9-bong-bgkq-0152-default,BGKQ-0152,"{""package"": ""BAO 5O GÓI""}",45000,bgkq-0152
+tra-den-ht-9-luave-bgkq-0153,tra-den-ht-9-luave-bgkq-0153-default,BGKQ-0153,"{""package"": ""Thùng 20 gói""}",68000,bgkq-0153
+tra-den-hoang-gia-bgkq-0154,tra-den-hoang-gia-bgkq-0154-default,BGKQ-0154,"{""sell_unit"": ""gói""}",57000,bgkq-0154
+tra-lai-hoang-gia-bgkq-0155,tra-lai-hoang-gia-bgkq-0155-default,BGKQ-0155,"{""sell_unit"": ""gói""}",80000,bgkq-0155
+tra-olong-tam-hg-500gr-bgkq-0156,tra-olong-tam-hg-500gr-bgkq-0156-default,BGKQ-0156,"{""sell_unit"": ""gói""}",80000,bgkq-0156
+tra-dua-sao-vang-bgkq-0157,tra-dua-sao-vang-bgkq-0157-default,BGKQ-0157,"{""sell_unit"": ""gói""}",27000,bgkq-0157
+hong-tra-tui-loc-tnb-bgkq-0158,hong-tra-tui-loc-tnb-bgkq-0158-default,BGKQ-0158,"{""package"": ""Thùng 50 gói"", ""sell_unit"": ""hộp"", ""type"": ""hong""}",26000,bgkq-0158
+tra-dao-tui-loc-tnb-bgkq-0159,tra-dao-tui-loc-tnb-bgkq-0159-default,BGKQ-0159,"{""package"": ""Thùng 30 gói"", ""sell_unit"": ""hộp"", ""type"": ""dao""}",37000,bgkq-0159
+tra-lai-tui-loc-tnb-bgkq-0160,tra-lai-tui-loc-tnb-bgkq-0160-default,BGKQ-0160,"{""package"": ""Thùng 50 gói"", ""sell_unit"": ""hộp"", ""type"": ""lai""}",27000,bgkq-0160
+tra-den-phuc-long-bgkq-0161,tra-den-phuc-long-bgkq-0161-default,BGKQ-0161,"{""package"": ""Thung 20goi"", ""type"": ""den""}",107000,bgkq-0161
+tra-sen-lai-phuc-long-bgkq-0162,tra-sen-lai-phuc-long-bgkq-0162-default,BGKQ-0162,"{""package"": ""Thùng 20 hộp"", ""type"": ""sen-lai""}",38000,bgkq-0162
+tra-olong-phuc-long-bgkq-0163,tra-olong-phuc-long-bgkq-0163-default,BGKQ-0163,"{""package"": ""Thung 20 hop"", ""type"": ""olong""}",40000,bgkq-0163
+tra-sen-lai-thai-nguyen-bgkq-0164,tra-sen-lai-thai-nguyen-bgkq-0164-default,BGKQ-0164,"{""package"": ""Thùng 25 gói""}",40000,bgkq-0164
+lipton-cozy-bgkq-0165,lipton-cozy-bgkq-0165-default,BGKQ-0165,"{""package"": ""Thùng 36 hộp""}",79000,bgkq-0165
+tra-cozy-hoa-tan-bgkq-0166,tra-cozy-hoa-tan-bgkq-0166-default,BGKQ-0166,"{""package"": ""Thùng 30 gói"", ""sell_unit"": ""hộp""}",36000,bgkq-0166
+tra-cozy-tui-loc-bgkq-0167,tra-cozy-tui-loc-bgkq-0167-default,BGKQ-0167,"{""package"": ""Thùng 36 hộp""}",38000,bgkq-0167
+tra-thai-xanh-do-cty-bgkq-0168,tra-thai-xanh-do-cty-bgkq-0168-default,BGKQ-0168,"{""package"": ""Thùng 12 gói"", ""type"": ""xanh-do""}",70000,bgkq-0168
+tra-thai-xanh-thuong-bgkq-0169,tra-thai-xanh-thuong-bgkq-0169-default,BGKQ-0169,"{""package"": ""Thùng 12 gói"", ""type"": ""xanh""}",65000,bgkq-0169
+tra-gao-novia-bgkq-0170,tra-gao-novia-bgkq-0170-default,BGKQ-0170,"{""package"": ""Thùng 20 gói"", ""type"": ""gao""}",125000,bgkq-0170
+tra-den-novia-bgkq-0171,tra-den-novia-bgkq-0171-default,BGKQ-0171,"{""package"": ""Thùng 20 gói"", ""type"": ""den""}",82000,bgkq-0171
+tra-lai-novia-bgkq-0172,tra-lai-novia-bgkq-0172-default,BGKQ-0172,"{""package"": ""Thùng 20 gói"", ""type"": ""lai""}",80000,bgkq-0172
+hong-tra-co-gai-bgkq-0173,hong-tra-co-gai-bgkq-0173-default,BGKQ-0173,"{""sell_unit"": ""gói"", ""type"": ""hong""}",110000,bgkq-0173
+tra-den-co-gai-bgkq-0174,tra-den-co-gai-bgkq-0174-default,BGKQ-0174,"{""sell_unit"": ""gói"", ""type"": ""den""}",84000,bgkq-0174
+tra-lai-co-gai-bgkq-0175,tra-lai-co-gai-bgkq-0175-default,BGKQ-0175,"{""sell_unit"": ""gói"", ""type"": ""lai""}",84000,bgkq-0175
+tra-lai-nhu-y-bgkq-0176,tra-lai-nhu-y-bgkq-0176-default,BGKQ-0176,"{""sell_unit"": ""gói""}",80000,bgkq-0176
+tra-gao-rang-ona-bgkq-0177,tra-gao-rang-ona-bgkq-0177-default,BGKQ-0177,"{""sell_unit"": ""gói""}",127000,bgkq-0177
+tra-olong-tu-quy-bgkq-0178,tra-olong-tu-quy-bgkq-0178-default,BGKQ-0178,"{""sell_unit"": ""gói""}",153000,bgkq-0178
+tra-hp-bgkq-0179,tra-hp-bgkq-0179-default,BGKQ-0179,"{""sell_unit"": ""kg""}",150000,bgkq-0179
+mat-ong-euro-deli-bgkq-0180,mat-ong-euro-deli-bgkq-0180-default,BGKQ-0180,"{""package"": ""THÙNG 10 BÌNH""}",210000,bgkq-0180
+la-rong-bien-bgkq-0181,la-rong-bien-bgkq-0181-default,BGKQ-0181,"{""package"": ""gói 100 lá""}",285000,bgkq-0181
+gas-kem-mosa-bgkq-0182,gas-kem-mosa-bgkq-0182-default,BGKQ-0182,"{""package"": ""Thùng 36 hộp""}",82000,bgkq-0182
+than-tre-bgkq-0183,than-tre-bgkq-0183-default,BGKQ-0183,"{""package"": ""bich""}",102000,bgkq-0183
+galatin-thuong-bgkq-0184,galatin-thuong-bgkq-0184-default,BGKQ-0184,"{""package"": ""Lẽ 30k  gram"", ""sell_unit"": ""ky""}",290000,bgkq-0184
+hat-chia-bgkq-0185,hat-chia-bgkq-0185-default,BGKQ-0185,"{""package"": ""Thùng 6  gói"", ""sell_unit"": ""kg""}",110000,bgkq-0185
+bot-matcha-dai-loan-bgkq-0186,bot-matcha-dai-loan-bgkq-0186-default,BGKQ-0186,"{""package"": ""Thùng 10 gói""}",360000,bgkq-0186
+bot-matcha-cozy-bgkq-0187,bot-matcha-cozy-bgkq-0187-default,BGKQ-0187,"{""package"": ""goi"", ""sell_unit"": ""goi 200g""}",143000,bgkq-0187
+bot-matcha-seoul-bgkq-0188,bot-matcha-seoul-bgkq-0188-default,BGKQ-0188,"{""package"": ""goi"", ""sell_unit"": ""goi 200g""}",129000,bgkq-0188
+bot-lac-pho-mai-bgkq-0189,bot-lac-pho-mai-bgkq-0189-default,BGKQ-0189,"{""package"": ""goi"", ""sell_unit"": ""gói""}",180000,bgkq-0189
+bot-man-pho-mai-ong-gia-bgkq-0190,bot-man-pho-mai-ong-gia-bgkq-0190-default,BGKQ-0190,"{""package"": ""goi"", ""sell_unit"": ""gói""}",415000,bgkq-0190
+suong-sao-trang-den-bgkq-0191,suong-sao-trang-den-bgkq-0191-default,BGKQ-0191,"{""color"": ""trang-den"", ""package"": ""Thùng 100 gói""}",15500,bgkq-0191
+suong-sao-den-mota-bgkq-0192,suong-sao-den-mota-bgkq-0192-default,BGKQ-0192,"{""package"": ""Thùng 100 gói""}",13000,bgkq-0192
+ice-hot-lun-bgkq-0193,ice-hot-lun-bgkq-0193-default,BGKQ-0193,"{""sell_unit"": ""hộp""}",31000,bgkq-0193
+rich-lun-bgkq-0194,rich-lun-bgkq-0194-default,BGKQ-0194,"{""package"": ""Thùng 24"", ""sell_unit"": ""hộp""}",32000,bgkq-0194
+ice-hot-on-top-bgkq-0195,ice-hot-on-top-bgkq-0195-default,BGKQ-0195,"{""package"": ""Thùng 12"", ""sell_unit"": ""hộp""}",72000,bgkq-0195
+pho-mai-bo-cuoi-bgkq-0196,pho-mai-bo-cuoi-bgkq-0196-default,BGKQ-0196,"{""package"": ""Thùng 24 hộp""}",79000,bgkq-0196
+pho-mai-khoi-2-5kg-mozela-bgkq-0197,pho-mai-khoi-2-5kg-mozela-bgkq-0197-default,BGKQ-0197,"{""package"": ""cây"", ""sell_unit"": ""khối"", ""size"": ""2.5kg""}",430000,bgkq-0197
+pho-mai-khoi-3-6-kg-mozela-bgkq-0198,pho-mai-khoi-3-6-kg-mozela-bgkq-0198-default,BGKQ-0198,"{""package"": ""cây"", ""sell_unit"": ""khối"", ""size"": ""3.6kg""}",620000,bgkq-0198
+giam-tao-bgkq-0199,giam-tao-bgkq-0199-default,BGKQ-0199,"{""package"": ""Thùng 6 bình""}",75000,bgkq-0199
+tui-ga-ran-500gr-bgkq-0200,tui-ga-ran-500gr-bgkq-0200-default,BGKQ-0200,"{""sell_unit"": ""gói""}",23000,bgkq-0200
+cot-bi-dao-wonderfull-bgkq-0201,cot-bi-dao-wonderfull-bgkq-0201-default,BGKQ-0201,"{""package"": ""thùng 30 GÓI""}",45000,bgkq-0201
+lau-kim-chi-bgkq-0202,lau-kim-chi-bgkq-0202-default,BGKQ-0202,"{""package"": ""Thùng 10 lốc"", ""sell_unit"": ""bịch""}",102000,bgkq-0202
+ong-hut-ts-trang-bgkq-0203,ong-hut-ts-trang-bgkq-0203-default,BGKQ-0203,"{""color"": ""trang"", ""diameter"": ""khac"", ""package"": ""cay 10 bich"", ""sell_unit"": ""bịch"", ""type"": ""tra-sua""}",28000,bgkq-0203
+ong-hut-ts-trang-boc-mang-bgkq-0204,ong-hut-ts-trang-boc-mang-bgkq-0204-default,BGKQ-0204,"{""color"": ""trang"", ""diameter"": ""khac"", ""package"": ""cay 10 bich"", ""type"": ""boc-mang""}",30000,bgkq-0204
+ong-hut-trang-phi-6-8-bgkq-0205,ong-hut-trang-phi-6-8-bgkq-0205-default,BGKQ-0205,"{""color"": ""trang"", ""diameter"": ""6-8"", ""package"": ""cay 10 bich"", ""type"": ""thuong""}",28000,bgkq-0205
+ong-hut-ts-den-phi-6-8-bgkq-0206,ong-hut-ts-den-phi-6-8-bgkq-0206-default,BGKQ-0206,"{""color"": ""den"", ""diameter"": ""6-8"", ""package"": ""cay 10 bich"", ""type"": ""tra-sua""}",25000,bgkq-0206
+muong-ukp-bgkq-0207,muong-ukp-bgkq-0207-default,BGKQ-0207,"{""package"": ""Thùng 5000 cái"", ""sell_unit"": ""bich"", ""type"": ""ukp""}",6000,bgkq-0207
+muong-thuong-ngan-bgkq-0208,muong-thuong-ngan-bgkq-0208-default,BGKQ-0208,"{""package"": ""Thùng 5000 cái"", ""sell_unit"": ""bich"", ""type"": ""thuong ngan""}",6000,bgkq-0208
+muong-dai-bgkq-0209,muong-dai-bgkq-0209-default,BGKQ-0209,"{""package"": ""Thung 2500 cai"", ""sell_unit"": ""bich"", ""type"": ""dai""}",11000,bgkq-0209
+nap-ngang-bgkq-0210,nap-ngang-bgkq-0210-default,BGKQ-0210,"{""package"": ""Thùng 40 cây"", ""type"": ""ngang""}",7000,bgkq-0210
+nap-cau-vuong-bgkq-0211,nap-cau-vuong-bgkq-0211-default,BGKQ-0211,"{""package"": ""Thùng 40 cây"", ""type"": ""cau vuong""}",11000,bgkq-0211
+bich-1ly-ngang-bgkq-0212,bich-1ly-ngang-bgkq-0212-default,BGKQ-0212,"{""sell_unit"": ""kg"", ""type"": ""1ly ngang""}",53000,bgkq-0212
+bich-2ly-ngang-bgkq-0213,bich-2ly-ngang-bgkq-0213-default,BGKQ-0213,"{""sell_unit"": ""kg"", ""type"": ""2ly ngang""}",53000,bgkq-0213
+bich-1ly-thuong-bgkq-0214,bich-1ly-thuong-bgkq-0214-default,BGKQ-0214,"{""sell_unit"": ""kg"", ""type"": ""1ly thuong""}",50000,bgkq-0214
+bich-chu-t-bgkq-0215,bich-chu-t-bgkq-0215-default,BGKQ-0215,"{""sell_unit"": ""kg"", ""type"": ""chu t""}",58000,bgkq-0215
+bich-1lit-bgkq-0216,bich-1lit-bgkq-0216-default,BGKQ-0216,"{""sell_unit"": ""kg"", ""type"": ""1lit""}",58000,bgkq-0216
+cuon-ep-bgkq-0217,cuon-ep-bgkq-0217-default,BGKQ-0217,"{""sell_unit"": ""cuộn"", ""type"": ""ep""}",110000,bgkq-0217
+mi-koreno-100-goi-bgkq-0218,mi-koreno-100-goi-bgkq-0218-default,BGKQ-0218,"{""pack"": ""100-goi"", ""package"": ""Thùng 100 gói"", ""type"": ""thuong""}",680000,bgkq-0218
+mi-lau-koreno-80-goi-bgkq-0219,mi-lau-koreno-80-goi-bgkq-0219-default,BGKQ-0219,"{""pack"": ""80-goi"", ""package"": ""Thùng 80 gói"", ""type"": ""lau""}",460000,bgkq-0219
+mi-acecook-deli-bgkq-0220,mi-acecook-deli-bgkq-0220-default,BGKQ-0220,"{""package"": ""Thùng 80 gói""}",420000,bgkq-0220
+kim-chi-bgkq-0221,kim-chi-bgkq-0221-default,BGKQ-0221,"{""sell_unit"": ""kg""}",50000,bgkq-0221
+bot-sup-bgkq-0222,bot-sup-bgkq-0222-default,BGKQ-0222,"{""sell_unit"": ""kg""}",137000,bgkq-0222
+bot-ot-bgkq-0223,bot-ot-bgkq-0223-default,BGKQ-0223,"{""package"": ""Thùng 10 gói"", ""sell_unit"": ""bịch""}",130000,bgkq-0223
+tinh-dau-ot-bgkq-0224,tinh-dau-ot-bgkq-0224-default,BGKQ-0224,"{""sell_unit"": ""chai""}",155000,bgkq-0224
+nam-bgkq-0225,nam-bgkq-0225-default,BGKQ-0225,"{""sell_unit"": ""cây""}",0,bgkq-0225
+cai-tim-bgkq-0226,cai-tim-bgkq-0226-default,BGKQ-0226,"{""sell_unit"": ""kg""}",0,bgkq-0226
+bong-cai-xanh-bgkq-0227,bong-cai-xanh-bgkq-0227-default,BGKQ-0227,"{""sell_unit"": ""kg""}",0,bgkq-0227
+ca-hanh-tieu-bgkq-0228,ca-hanh-tieu-bgkq-0228-default,BGKQ-0228,"{""sell_unit"": ""kg""}",60000,bgkq-0228
+ca-hanh-ot-bgkq-0229,ca-hanh-ot-bgkq-0229-default,BGKQ-0229,"{""sell_unit"": ""bịch""}",31500,bgkq-0229
+ca-vien-trang-beco-bgkq-0230,ca-vien-trang-beco-bgkq-0230-default,BGKQ-0230,"{""sell_unit"": ""bịch""}",60000,bgkq-0230
+ca-sing-bgkq-0231,ca-sing-bgkq-0231-default,BGKQ-0231,"{""sell_unit"": ""bịch""}",62000,bgkq-0231
+ca-cut-bgkq-0232,ca-cut-bgkq-0232-default,BGKQ-0232,"{""sell_unit"": ""bịch""}",32000,bgkq-0232
+dau-hu-ca-bgkq-0233,dau-hu-ca-bgkq-0233-default,BGKQ-0233,"{""sell_unit"": ""bịch""}",100000,bgkq-0233
+dau-hu-pho-mai-lc-bgkq-0234,dau-hu-pho-mai-lc-bgkq-0234-default,BGKQ-0234,"{""sell_unit"": ""bịch""}",46000,bgkq-0234
+dau-hu-phomai-ngon-bgkq-0235,dau-hu-phomai-ngon-bgkq-0235-default,BGKQ-0235,"{""sell_unit"": ""bịch""}",48000,bgkq-0235
+khoai-tay-2kg-bgkq-0236,khoai-tay-2kg-bgkq-0236-default,BGKQ-0236,"{""sell_unit"": ""bịch"", ""size"": ""2kg""}",130000,bgkq-0236
+khoai-tay-1kg-bgkq-0237,khoai-tay-1kg-bgkq-0237-default,BGKQ-0237,"{""sell_unit"": ""bịch"", ""size"": ""1kg""}",60000,bgkq-0237
+pho-mai-que-hop-bgkq-0238,pho-mai-que-hop-bgkq-0238-default,BGKQ-0238,"{""sell_unit"": ""hộp""}",52000,bgkq-0238
+oc-nhoi-bgkq-0239,oc-nhoi-bgkq-0239-default,BGKQ-0239,"{""sell_unit"": ""bịch""}",33000,bgkq-0239
+bo-vien-bgkq-0240,bo-vien-bgkq-0240-default,BGKQ-0240,"{""sell_unit"": ""bịch""}",32500,bgkq-0240
+bo-la-lot-bgkq-0241,bo-la-lot-bgkq-0241-default,BGKQ-0241,"{""sell_unit"": ""bịch""}",43000,bgkq-0241
+xuc-xich-yummy-bgkq-0242,xuc-xich-yummy-bgkq-0242-default,BGKQ-0242,"{""sell_unit"": ""bịch""}",40000,bgkq-0242
+xuc-xich-tokyo-bgkq-0243,xuc-xich-tokyo-bgkq-0243-default,BGKQ-0243,"{""sell_unit"": ""bịch""}",38000,bgkq-0243
+xuc-xich-vuon-bia-bgkq-0244,xuc-xich-vuon-bia-bgkq-0244-default,BGKQ-0244,"{""sell_unit"": ""bịch""}",50000,bgkq-0244
+doi-sun-bgkq-0245,doi-sun-bgkq-0245-default,BGKQ-0245,"{""sell_unit"": ""bịch""}",39000,bgkq-0245
+vien-tha-lau-bgkq-0246,vien-tha-lau-bgkq-0246-default,BGKQ-0246,"{""sell_unit"": ""bịch""}",43000,bgkq-0246
+banh-bao-trung-bgkq-0247,banh-bao-trung-bgkq-0247-default,BGKQ-0247,"{""sell_unit"": ""bịch""}",45000,bgkq-0247
+cha-ca-hap-bgkq-0248,cha-ca-hap-bgkq-0248-default,BGKQ-0248,"{""sell_unit"": ""bịch""}",30000,bgkq-0248
+cha-que-bgkq-0249,cha-que-bgkq-0249-default,BGKQ-0249,"{""sell_unit"": ""bịch""}",30000,bgkq-0249
+cha-gio-bgkq-0250,cha-gio-bgkq-0250-default,BGKQ-0250,"{""sell_unit"": ""bịch""}",33000,bgkq-0250
+cha-ca-han-quoc-bgkq-0251,cha-ca-han-quoc-bgkq-0251-default,BGKQ-0251,"{""sell_unit"": ""bịch""}",37000,bgkq-0251
+thanh-cua-dai-1kg-bgkq-0252,thanh-cua-dai-1kg-bgkq-0252-default,BGKQ-0252,"{""sell_unit"": ""bịch""}",130000,bgkq-0252
+thanh-cua-lichuan-bgkq-0253,thanh-cua-lichuan-bgkq-0253-default,BGKQ-0253,"{""sell_unit"": ""bịch""}",75000,bgkq-0253
+com-hong-ongon-bgkq-0254,com-hong-ongon-bgkq-0254-default,BGKQ-0254,"{""sell_unit"": ""vỉ""}",52000,bgkq-0254
+com-hong-thien-nhien-bgkq-0255,com-hong-thien-nhien-bgkq-0255-default,BGKQ-0255,"{""sell_unit"": ""vỉ""}",37000,bgkq-0255
+hotdog-pho-mai-bgkq-0256,hotdog-pho-mai-bgkq-0256-default,BGKQ-0256,"{""sell_unit"": ""vỉ""}",38000,bgkq-0256
+tom-vien-bgkq-0257,tom-vien-bgkq-0257-default,BGKQ-0257,"{""sell_unit"": ""bịch""}",31500,bgkq-0257
+tom-con-ongon-bgkq-0258,tom-con-ongon-bgkq-0258-default,BGKQ-0258,"{""sell_unit"": ""bịch""}",42000,bgkq-0258
+chao-sa-bgkq-0259,chao-sa-bgkq-0259-default,BGKQ-0259,"{""sell_unit"": ""bịch""}",30000,bgkq-0259
+tui-tien-hai-san-bgkq-0260,tui-tien-hai-san-bgkq-0260-default,BGKQ-0260,"{""sell_unit"": ""vỉ""}",44000,bgkq-0260
+banh-sua-tuoi-bgkq-0261,banh-sua-tuoi-bgkq-0261-default,BGKQ-0261,"{""sell_unit"": ""hộp""}",28000,bgkq-0261
+banh-gao-thoi-bgkq-0262,banh-gao-thoi-bgkq-0262-default,BGKQ-0262,"{""sell_unit"": ""bịch""}",55000,bgkq-0262
+sot-banh-gao-saijang-bgkq-0263,sot-banh-gao-saijang-bgkq-0263-default,BGKQ-0263,"{""sell_unit"": ""túi""}",53000,bgkq-0263
+sot-banh-gao-ky-bgkq-0264,sot-banh-gao-ky-bgkq-0264-default,BGKQ-0264,"{""sell_unit"": ""ky""}",40000,bgkq-0264
+hanh-phi-anh-tu-bgkq-0265,hanh-phi-anh-tu-bgkq-0265-default,BGKQ-0265,"{""sell_unit"": ""kg""}",75000,bgkq-0265
+hanh-phi-thuong-bgkq-0266,hanh-phi-thuong-bgkq-0266-default,BGKQ-0266,"{""sell_unit"": ""kg""}",45000,bgkq-0266
+kho-bo-bgkq-0267,kho-bo-bgkq-0267-default,BGKQ-0267,"{""sell_unit"": ""kg""}",112000,bgkq-0267
+kho-ga-bgkq-0268,kho-ga-bgkq-0268-default,BGKQ-0268,"{""sell_unit"": ""kg""}",130000,bgkq-0268
+banh-tran-nuong-trang-vang-bgkq-0269,banh-tran-nuong-trang-vang-bgkq-0269-default,BGKQ-0269,"{""color"": ""trang-vang"", ""sell_unit"": ""kg""}",45000,bgkq-0269
+banh-trang-cuon-do-bgkq-0270,banh-trang-cuon-do-bgkq-0270-default,BGKQ-0270,"{""sell_unit"": ""kg""}",45000,bgkq-0270
+banh-trang-cat-bgkq-0271,banh-trang-cat-bgkq-0271-default,BGKQ-0271,"{""sell_unit"": ""5 kg""}",110000,bgkq-0271
+nuoc-bo-1-lit-bgkq-0272,nuoc-bo-1-lit-bgkq-0272-default,BGKQ-0272,"{""sell_unit"": ""chai"", ""size"": ""1L""}",37000,bgkq-0272
+nuoc-bo-bgkq-0273,nuoc-bo-bgkq-0273-default,BGKQ-0273,"{""sell_unit"": ""bình"", ""size"": ""khac""}",145000,bgkq-0273
+bo-trang-vang-bgkq-0274,bo-trang-vang-bgkq-0274-default,BGKQ-0274,"{""color"": ""trang-vang"", ""sell_unit"": ""bịch""}",35000,bgkq-0274
+kho-muc-bgkq-0275,kho-muc-bgkq-0275-default,BGKQ-0275,"{""sell_unit"": ""kg""}",225000,bgkq-0275
+ruoc-bgkq-0276,ruoc-bgkq-0276-default,BGKQ-0276,"{""sell_unit"": ""bịch""}",35000,bgkq-0276

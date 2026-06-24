@@ -5,6 +5,8 @@ import helmet from "helmet";
 import { createAdminCustomersRouter } from "./modules/admin/admin-customers.routes";
 import { anonymousIdentity, resolveRequestIdentity } from "./modules/auth/auth.identity";
 import { createAuthRouter } from "./modules/auth/auth.routes";
+import { createCatalogV2CartRouter } from "./modules/catalog-v2/catalog-v2-cart.routes";
+import { createCatalogV2Router } from "./modules/catalog-v2/catalog-v2.routes";
 import { createCartRouter } from "./modules/catalog/cart.routes";
 import { createCatalogRouter } from "./modules/catalog/catalog.routes";
 import { createAdminOrdersRouter } from "./modules/orders/admin-orders.routes";
@@ -43,7 +45,7 @@ export function createApp(config: AppConfig) {
   app.get("/health", (_req, res) => res.json(healthPayload()));
   app.get("/api/health", (_req, res) => res.json(healthPayload()));
   app.get("/api/version", (_req, res) => {
-    res.json({ name: "Bếp Sỉ F&B API", service: config.serviceName, version: "frontend-cutover-v6" });
+    res.json({ name: "Bếp Sỉ F&B API", service: config.serviceName, version: "catalog-v2-backend" });
   });
 
   if (clerkEnabled) {
@@ -55,12 +57,18 @@ export function createApp(config: AppConfig) {
     );
   }
 
-  app.use(
-    "/api/catalog",
-    createCatalogRouter(clerkEnabled ? resolveRequestIdentity : async () => anonymousIdentity),
-  );
+  const identityResolver = clerkEnabled ? resolveRequestIdentity : async () => anonymousIdentity;
+
+  // Catalog v2 contract: list = 188 parent-product cards; detail = sellable sibling variants.
+  app.use("/catalog", createCatalogV2Router(identityResolver));
+  app.use("/api/catalog-v2", createCatalogV2Router(identityResolver));
+
+  // Legacy catalog remains available during the controlled frontend cutover.
+  app.use("/api/catalog", createCatalogRouter(identityResolver));
 
   if (clerkEnabled) {
+    app.use("/catalog/cart", createCatalogV2CartRouter(resolveRequestIdentity));
+    app.use("/api/cart-v2", createCatalogV2CartRouter(resolveRequestIdentity));
     app.use("/api/auth", createAuthRouter(resolveRequestIdentity));
     app.use("/api/cart", createCartRouter(resolveRequestIdentity));
     app.use("/api/orders", createOrdersRouter(resolveRequestIdentity));
@@ -71,6 +79,8 @@ export function createApp(config: AppConfig) {
     const clerkUnavailable = (_req: express.Request, res: express.Response) => {
       res.status(503).json({ error: "CLERK_NOT_CONFIGURED" });
     };
+    app.use("/catalog/cart", clerkUnavailable);
+    app.use("/api/cart-v2", clerkUnavailable);
     app.use("/api/auth", clerkUnavailable);
     app.use("/api/cart", clerkUnavailable);
     app.use("/api/orders", clerkUnavailable);

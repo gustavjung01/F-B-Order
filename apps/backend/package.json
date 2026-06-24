@@ -9,6 +9,7 @@
     "typecheck": "tsc --noEmit",
     "test:auth-pricing": "tsx scripts/test-auth-pricing.ts",
     "test:catalog-contract": "tsx scripts/test-catalog-contract.ts",
+    "test:catalog-v2": "tsx scripts/test-catalog-v2.ts",
     "test:order-engine": "tsx scripts/test-order-engine.ts",
     "db:migrate": "node scripts/run-migrations.mjs",
     "db:migrate:baseline": "node scripts/run-migrations.mjs --baseline-existing",
@@ -17,7 +18,9 @@
     "db:verify:order-contract": "node scripts/verify-core-order-contract.mjs",
     "db:seed:test": "node scripts/run-sql.mjs db/seeds/001_seed_test.sql",
     "catalog:audit": "node scripts/audit-catalog-source.mjs",
-    "catalog:import": "node scripts/import-hung-phat-catalog.mjs"
+    "catalog:import": "node scripts/import-hung-phat-catalog.mjs",
+    "catalog:v2:dry-run": "node scripts/import-catalog-v2.mjs",
+    "catalog:v2:apply": "node scripts/import-catalog-v2.mjs --apply"
   },
   "dependencies": {
     "@clerk/express": "latest",

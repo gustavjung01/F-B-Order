@@ -1,0 +1,43 @@
+product_key,sku,parent_key,variant_key,options_json,source_row
+siro-gold-2l-bgkq-0004,BGKQ-0004,siro-mama-gold,siro-mama-gold--2l,"{""size"": ""2L""}",7
+siro-gold-700ml-bgkq-0005,BGKQ-0005,siro-mama-gold,siro-mama-gold--700ml,"{""size"": ""700ML""}",8
+siro-gtp-bgkq-0006,BGKQ-0006,siro-gtp,siro-gtp--khac,"{""flavor_or_type"": ""khac""}",9
+siro-gtp-dau-duong-den-bgkq-0007,BGKQ-0007,siro-gtp,siro-gtp--dau-duong-den,"{""flavor_or_type"": ""dau duong den""}",10
+siro-vina-bgkq-0008,BGKQ-0008,siro-vina,siro-vina--khac,"{""flavor"": ""khac""}",11
+siro-sam-dua-vina-bgkq-0009,BGKQ-0009,siro-vina,siro-vina--sam-dua,"{""flavor"": ""sam-dua""}",12
+sinh-to-berrino-dau-bgkq-0015,BGKQ-0015,sinh-to-berrino,sinh-to-berrino--dau,"{""flavor"": ""dau""}",19
+sinh-to-berrino-dao-bgkq-0016,BGKQ-0016,sinh-to-berrino,sinh-to-berrino--dao,"{""flavor"": ""dao""}",20
+sinh-to-berrino-oi-bgkq-0017,BGKQ-0017,sinh-to-berrino,sinh-to-berrino--oi,"{""flavor"": ""oi""}",21
+sinh-to-berrino-viet-quoc-bgkq-0018,BGKQ-0018,sinh-to-berrino,sinh-to-berrino--viet-quoc,"{""flavor"": ""viet quoc""}",22
+sinh-to-berrino-chanh-day-bgkq-0019,BGKQ-0019,sinh-to-berrino,sinh-to-berrino--chanh-day,"{""flavor"": ""chanh day""}",23
+sinh-to-berrino-vai-bgkq-0020,BGKQ-0020,sinh-to-berrino,sinh-to-berrino--vai,"{""flavor"": ""vai""}",24
+sinh-to-berrino-kiwi-bgkq-0021,BGKQ-0021,sinh-to-berrino,sinh-to-berrino--kiwi,"{""flavor"": ""kiwi""}",25
+sinh-to-berrino-phuc-bon-tu-bgkq-0022,BGKQ-0022,sinh-to-berrino,sinh-to-berrino--phuc-bon-tu,"{""flavor"": ""phuc bon tu""}",26
+sinh-to-berrino-xoai-bgkq-0023,BGKQ-0023,sinh-to-berrino,sinh-to-berrino--xoai,"{""flavor"": ""xoai""}",27
+sinh-to-berrino-nho-bgkq-0024,BGKQ-0024,sinh-to-berrino,sinh-to-berrino--nho,"{""flavor"": ""nho""}",28
+sinh-to-berrino-dau-tam-bgkq-0025,BGKQ-0025,sinh-to-berrino,sinh-to-berrino--dau-tam,"{""flavor"": ""dau tam""}",29
+sinh-to-berino-khom-bgkq-0026,BGKQ-0026,sinh-to-berrino,sinh-to-berrino--khom,"{""flavor"": ""khom""}",30
+sinh-to-gold-dau-bgkq-0027,BGKQ-0027,sinh-to-mama-gold,sinh-to-mama-gold--dau,"{""flavor"": ""dau""}",32
+sinh-to-gold-dao-bgkq-0028,BGKQ-0028,sinh-to-mama-gold,sinh-to-mama-gold--dao,"{""flavor"": ""dao""}",33
+sinh-to-gold-viet-quoc-bgkq-0029,BGKQ-0029,sinh-to-mama-gold,sinh-to-mama-gold--viet-quoc,"{""flavor"": ""viet quoc""}",34
+sinh-to-gold-chanh-day-bgkq-0030,BGKQ-0030,sinh-to-mama-gold,sinh-to-mama-gold--chanh-day,"{""flavor"": ""chanh day""}",35
+sinh-to-gold-kiwi-bgkq-0031,BGKQ-0031,sinh-to-mama-gold,sinh-to-mama-gold--kiwi,"{""flavor"": ""kiwi""}",36
+sinh-to-gold-phuc-bon-tu-bgkq-0032,BGKQ-0032,sinh-to-mama-gold,sinh-to-mama-gold--phuc-bon-tu,"{""flavor"": ""phuc bon tu""}",37
+sinh-to-gold-xoai-bgkq-0033,BGKQ-0033,sinh-to-mama-gold,sinh-to-mama-gold--xoai,"{""flavor"": ""xoai""}",38
+sinh-to-gold-oi-bgkq-0034,BGKQ-0034,sinh-to-mama-gold,sinh-to-mama-gold--oi,"{""flavor"": ""oi""}",39
+sinh-to-gold-dau-tam-bgkq-0035,BGKQ-0035,sinh-to-mama-gold,sinh-to-mama-gold--dau-tam,"{""flavor"": ""dau tam""}",40
+sinh-to-mang-cau-glod-bgkq-0036,BGKQ-0036,sinh-to-mama-gold,sinh-to-mama-gold--mang-cau,"{""flavor"": ""mang cau""}",41
+sinh-to-vai-glod-bgkq-0037,BGKQ-0037,sinh-to-mama-gold,sinh-to-mama-gold--khac,"{""flavor"": ""khac""}",42
+sinh-to-gol-nho-bgkq-0038,BGKQ-0038,sinh-to-mama-gold,sinh-to-mama-gold--nho,"{""flavor"": ""nho""}",43
+sinh-to-vina-vai-bgkq-0040,BGKQ-0040,sinh-to-vina,sinh-to-vina--1l-vai,"{""flavor"": ""vai"", ""size"": ""1L""}",45
+sinh-to-vina-viet-quoc-bgkq-0041,BGKQ-0041,sinh-to-vina,sinh-to-vina--1l-viet-quoc,"{""flavor"": ""viet quoc"", ""size"": ""1L""}",46
+sinh-to-vina-dau-bgkq-0042,BGKQ-0042,sinh-to-vina,sinh-to-vina--1l-dau,"{""flavor"": ""dau"", ""size"": ""1L""}",47
+sinh-to-vina-mang-cau-bgkq-0043,BGKQ-0043,sinh-to-vina,sinh-to-vina--1l-mang-cau,"{""flavor"": ""mang cau"", ""size"": ""1L""}",48
+sinh-to-vina-kiwi-bgkq-0044,BGKQ-0044,sinh-to-vina,sinh-to-vina--1l-kiwi,"{""flavor"": ""kiwi"", ""size"": ""1L""}",49
+sinh-to-vina-chanh-day-bgkq-0045,BGKQ-0045,sinh-to-vina,sinh-to-vina--1l-chanh-day,"{""flavor"": ""chanh day"", ""size"": ""1L""}",50
+sinh-to-vina-oi-bgkq-0046,BGKQ-0046,sinh-to-vina,sinh-to-vina--1l-oi,"{""flavor"": ""oi"", ""size"": ""1L""}",51
+sinh-to-vina-dao-bgkq-0047,BGKQ-0047,sinh-to-vina,sinh-to-vina--650g-dao,"{""flavor"": ""dao"", ""size"": ""650g""}",53
+sinh-to-vina-viet-quoc-bgkq-0048,BGKQ-0048,sinh-to-vina,sinh-to-vina--650g-viet-quoc,"{""flavor"": ""viet quoc"", ""size"": ""650g""}",54
+sinh-to-vina-dau-bgkq-0049,BGKQ-0049,sinh-to-vina,sinh-to-vina--650g-dau,"{""flavor"": ""dau"", ""size"": ""650g""}",55
+sinh-to-vina-oi-bgkq-0050,BGKQ-0050,sinh-to-vina,sinh-to-vina--650g-oi,"{""flavor"": ""oi"", ""size"": ""650g""}",56
+duongden-black-1-lit-bgkq-0051,BGKQ-0051,duong-den-black,duong-den-black--1lit,"{""size"": ""1lit""}",58

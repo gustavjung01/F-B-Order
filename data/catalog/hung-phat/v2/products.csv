@@ -1,0 +1,276 @@
+﻿product_key,name,brand,category,image_key,price_from,status
+siro-torani-bgkq-0001,Siro Torani,Torani,Siro,bgkq-0001,180000,draft
+siro-thai-pixe-bgkq-0002,Siro Thái PIXE,PIXE,Siro,bgkq-0002,62000,draft
+siro-thai-dingfong-bgkq-0003,Siro Thái DINGFONG,DINGFONG,Siro,bgkq-0003,62000,draft
+siro-gold-2l-bgkq-0004,Siro Gold 2l,Gold,Siro,bgkq-0004,140000,draft
+siro-gold-700ml-bgkq-0005,Siro Gold 700ml,Gold,Siro,bgkq-0005,53000,draft
+siro-gtp-bgkq-0006,Siro GTP,GTP,Siro,bgkq-0006,140000,draft
+siro-gtp-dau-duong-den-bgkq-0007,"Siro GTP dâu , duong den",GTP,Siro,bgkq-0007,146000,draft
+siro-vina-bgkq-0008,Siro Vina,Vina,Siro,bgkq-0008,40000,draft
+siro-sam-dua-vina-bgkq-0009,Siro Sâm Dứa Vina,Vina,Siro,bgkq-0009,25000,draft
+siro-carisa-bgkq-0010,Siro Carisa,Carisa,Siro,bgkq-0010,30000,draft
+siro-changthai-bgkq-0011,Siro Changthai,Changthai,Siro,bgkq-0011,57000,draft
+siro-douxian-2l-tron-bgkq-0012,Siro Douxian 2l tròn,Douxian,Siro,bgkq-0012,126000,draft
+siro-dd-hoang-kim-bgkq-0013,SIRO ĐĐ hoàng kim,,Siro,bgkq-0013,126000,draft
+siro-douxian-2l-hoang-kim-bgkq-0014,Siro Douxian 2l hoàng kim,Douxian,Siro,bgkq-0014,85000,draft
+sinh-to-berrino-dau-bgkq-0015,Sinh Tố Berrino Dâu,Berrino,Sinh Tố Berino,bgkq-0015,89000,draft_missing_image
+sinh-to-berrino-dao-bgkq-0016,Sinh Tố Berrino Đào,Berrino,Sinh Tố Berino,bgkq-0016,91000,draft
+sinh-to-berrino-oi-bgkq-0017,Sinh tố Berrino ổi,Berrino,Sinh Tố Berino,bgkq-0017,111000,draft
+sinh-to-berrino-viet-quoc-bgkq-0018,Sinh Tố Berrino Việt Quốc,Berrino,Sinh Tố Berino,bgkq-0018,123000,draft
+sinh-to-berrino-chanh-day-bgkq-0019,Sinh Tố Berrino Chanh Dây,Berrino,Sinh Tố Berino,bgkq-0019,102000,draft
+sinh-to-berrino-vai-bgkq-0020,Sinh Tố Berrino Vải,Berrino,Sinh Tố Berino,bgkq-0020,115000,draft
+sinh-to-berrino-kiwi-bgkq-0021,Sinh Tố Berrino  Kiwi,Berrino,Sinh Tố Berino,bgkq-0021,108000,draft
+sinh-to-berrino-phuc-bon-tu-bgkq-0022,Sinh Tố Berrino Phúc Bồn Tử,Berrino,Sinh Tố Berino,bgkq-0022,114000,draft
+sinh-to-berrino-xoai-bgkq-0023,Sinh Tố Berrino Xoài,Berrino,Sinh Tố Berino,bgkq-0023,91000,draft
+sinh-to-berrino-nho-bgkq-0024,Sinh Tố Berrino Nho,Berrino,Sinh Tố Berino,bgkq-0024,108000,draft
+sinh-to-berrino-dau-tam-bgkq-0025,Sinh Tố Berrino dâu tằm,Berrino,Sinh Tố Berino,bgkq-0025,103000,draft
+sinh-to-berino-khom-bgkq-0026,Sinh Tô berino khom,Berrino,Sinh Tố Berino,bgkq-0026,98000,draft
+sinh-to-gold-dau-bgkq-0027,Sinh Tố Gold Dâu,Gold,Sinh Tố Glod,bgkq-0027,90000,draft
+sinh-to-gold-dao-bgkq-0028,Sinh Tố Gold Đào,Gold,Sinh Tố Glod,bgkq-0028,95000,draft
+sinh-to-gold-viet-quoc-bgkq-0029,Sinh Tố Gold Việt Quốc,Gold,Sinh Tố Glod,bgkq-0029,125000,draft
+sinh-to-gold-chanh-day-bgkq-0030,Sinh Tố Gold Chanh Dây,Gold,Sinh Tố Glod,bgkq-0030,105000,draft
+sinh-to-gold-kiwi-bgkq-0031,Sinh Tố Gold  Kiwi,Gold,Sinh Tố Glod,bgkq-0031,100000,draft
+sinh-to-gold-phuc-bon-tu-bgkq-0032,Sinh Tố Gold Phúc Bồn Tử,Gold,Sinh Tố Glod,bgkq-0032,120000,draft
+sinh-to-gold-xoai-bgkq-0033,Sinh Tố Gold Xoài,Gold,Sinh Tố Glod,bgkq-0033,100000,draft
+sinh-to-gold-oi-bgkq-0034,Sinh Tố Gold ổi,Gold,Sinh Tố Glod,bgkq-0034,105000,draft
+sinh-to-gold-dau-tam-bgkq-0035,Sinh Tố Gold dâu tằm,Gold,Sinh Tố Glod,bgkq-0035,100000,draft
+sinh-to-mang-cau-glod-bgkq-0036,Sinh  To mang câu glod,Gold,Sinh Tố Glod,bgkq-0036,117000,draft
+sinh-to-vai-glod-bgkq-0037,Sinh  To vải glod,Gold,Sinh Tố Glod,bgkq-0037,122000,draft
+sinh-to-gol-nho-bgkq-0038,Sinh Tố Gol Nho,,Sinh Tố Glod,bgkq-0038,103000,draft
+sinh-to-vina-vai-bgkq-0040,SINH TỐ VINA VẢI,Vina,Sinh Tố Glod,bgkq-0040,76000,draft
+sinh-to-vina-viet-quoc-bgkq-0041,SINH TỐ VINA VIỆT QUỐC,Vina,Sinh Tố Glod,bgkq-0041,98000,draft
+sinh-to-vina-dau-bgkq-0042,SINH TỐ VINA DÂU,Vina,Sinh Tố Glod,bgkq-0042,70000,draft
+sinh-to-vina-mang-cau-bgkq-0043,SINH TỐ VINA MÃNG CẦU,Vina,Sinh Tố Glod,bgkq-0043,80000,draft
+sinh-to-vina-kiwi-bgkq-0044,SINH TỐ VINA KIWI,Vina,Sinh Tố Glod,bgkq-0044,82000,draft
+sinh-to-vina-chanh-day-bgkq-0045,SINH TỐ VINA CHANH DÂY,Vina,Sinh Tố Glod,bgkq-0045,72000,draft
+sinh-to-vina-oi-bgkq-0046,SINH TỐ VINA ỔI,Vina,Sinh Tố Glod,bgkq-0046,70000,draft
+sinh-to-vina-dao-bgkq-0047,SINH TỐ VINA ĐÀO,Vina,Sinh Tố Vina 650Gram,bgkq-0047,45000,draft
+sinh-to-vina-viet-quoc-bgkq-0048,SINH TỐ VINA VIỆT QUỐC,Vina,Sinh Tố Vina 650Gram,bgkq-0048,60000,draft
+sinh-to-vina-dau-bgkq-0049,SINH TỐ VINA DÂU,Vina,Sinh Tố Vina 650Gram,bgkq-0049,45000,draft
+sinh-to-vina-oi-bgkq-0050,SINH TỐ VINA ỔI,Vina,Sinh Tố Vina 650Gram,bgkq-0050,45000,draft
+duongden-black-1-lit-bgkq-0051,Đuongden black 1 lit,,Đường Đen,bgkq-0051,76000,draft
+duongden-black-2-lit-bgkq-0052,Đuongden black 2 lit,,Đường Đen,bgkq-0052,142000,draft
+duong-den-a-bgkq-0053,Đuong den A+,,Đường Đen,bgkq-0053,27000,draft
+duong-den-monita-bgkq-0054,Đường đen MONITA,,Đường Đen,bgkq-0054,62000,draft
+duong-nau-monita-bgkq-0055,Đường NÂU MONITA,,Đường Đen,bgkq-0055,45000,draft
+duong-den-dai-loan-tui-bac-bgkq-0056,Đường đen Đài Loan TÚI BẠC,,Đường Đen,bgkq-0056,53000,draft
+duong-den-mola-bgkq-0057,Đường đen mola,,Đường Đen,bgkq-0057,82000,draft
+duong-den-euro-deli-bgkq-0058,Đường đen Euro Deli,,Đường Đen,bgkq-0058,280000,draft
+duong-den-douxian-bgkq-0059,Đường đen Douxian,Douxian,Đường Đen,bgkq-0059,126000,draft
+duong-den-falu-bgkq-0060,Duong den falu,,Đường Đen,bgkq-0060,193000,draft
+duong-nuoc-deasang-bgkq-0061,Đường nuoc Deasang,,Đường Đen,bgkq-0061,545000,draft
+siro-douxian-a-bgkq-0062,Siro Douxian A+,Douxian,Đường Đen,bgkq-0062,27000,draft
+tc-duong-den-duoxian-1kg-bgkq-0063,TC đường đen Duoxian 1kg,,Trân Châu,bgkq-0063,30000,draft
+tc-duong-den-duoxian-2kg-bgkq-0064,TC đường đen Duoxian 2kg,,Trân Châu,bgkq-0064,54000,draft
+tc-duong-den-duoxian-3kg-bgkq-0065,TC đường đen Duoxian 3kg,,Trân Châu,bgkq-0065,94000,draft
+tc-hoang-kim-duoxian-1kg-bgkq-0066,TC hoàng kim Duoxian 1kg,,Trân Châu,bgkq-0066,30000,draft
+tc-hoang-kim-duoxian-3kg-bgkq-0067,TC hoàng kim Duoxian 3kg,,Trân Châu,bgkq-0067,94000,draft
+tc-cafe-gia-uy-mini-bgkq-0068,Tc Cafe Gia Uy mini,,Trân Châu,bgkq-0068,55000,draft_missing_image
+tc-duong-den-gia-uy-bgkq-0069,Tc đường đen Gia Uy,,Trân Châu,bgkq-0069,57000,draft
+tc-trang-gia-uy-bgkq-0070,Tc trắng Gia Uy,,Trân Châu,bgkq-0070,59000,draft
+tc-cafe-gia-uy-bgkq-0071,Tc Cafe Gia Uy,,Trân Châu,bgkq-0071,55000,draft
+tc-minh-hanh-1-kg-kunhan-bgkq-0072,TC MINH HANH 1 KG KUNHAN,,Trân Châu,bgkq-0072,25000,draft
+tc-dd-kuhan-2kg-bgkq-0073,TC đđ Kuhan 2kG,,Trân Châu,bgkq-0073,52000,draft
+tc-dd-kuhan-3kg-bgkq-0074,TC đđ kuhan 3KG,,Trân Châu,bgkq-0074,78000,draft
+3q-bibi-trang-bgkq-0075,3Q Bibi TRĂNG,Bibi,3Q Gion,bgkq-0075,50000,draft
+3q-bibi-den-bgkq-0076,3Q Bibi đen,Bibi,3Q Gion,bgkq-0076,52000,draft
+3q-sea-trang-bgkq-0077,3Q Sea Trắng,Sea,3Q Gion,bgkq-0077,48000,draft
+3q-sea-den-bgkq-0078,3Q sea đen,Sea,3Q Gion,bgkq-0078,50000,draft
+3q-zion-trang-bgkq-0079,3Q Zion trang,Zion,3Q Gion,bgkq-0079,50000,draft
+3q-ok-trang-bgkq-0080,3Q Ok trang,Ok,3Q Gion,bgkq-0080,55000,draft
+3q-ok-olong-bgkq-0081,3Q ok olong,Ok,3Q Gion,bgkq-0081,63000,draft
+3q-douxian-hu-bgkq-0082,3Q Douxian hủ,Douxian,3Q Gion,bgkq-0082,70000,draft
+thach-douxian-cac-loai-bgkq-0083,Thạch Douxian các loại,Douxian,3Q Gion,bgkq-0083,70000,draft
+thach-hung-chuong-jelly-bgkq-0084,Thạch Hùng Chương jelly,Hùng Chương,3Q Gion,bgkq-0084,110000,draft
+thuy-tinh-hung-chuong-bgkq-0085,Thủy Tinh Hùng Chương,Hùng Chương,3Q Gion,bgkq-0085,200000,draft
+sot-socola-hershey-bgkq-0086,Sốt Socola Hershey,,Sôt Topping,bgkq-0086,155000,draft
+sot-douxian-cac-loai-bgkq-0087,Sốt Douxian các loại,Douxian,Sôt Topping,bgkq-0087,53000,draft
+sot-gold-matcha-bgkq-0088,Sốt Gold Matcha,Gold,Sôt Topping,bgkq-0088,74000,draft
+sot-gold-so-bgkq-0089,Sốt Gold  SÔ,Gold,Sôt Topping,bgkq-0089,71000,draft
+sot-gold-mon-bgkq-0090,Sốt Gold  MÔN,Gold,Sôt Topping,bgkq-0090,66000,draft
+sot-gold-khac-bgkq-0091,Sốt Gold khác,Gold,Sôt Topping,bgkq-0091,62000,draft
+dao-lon-rhodes-giat-bgkq-0092,Đào lon Rhodes giật,,Trai Cây Hôp,bgkq-0092,62000,draft
+dao-lon-thai-bgkq-0093,Đào lon Thái,,Trai Cây Hôp,bgkq-0093,29000,draft
+dao-contree-bgkq-0094,Đào contree,,Trai Cây Hôp,bgkq-0094,32000,draft
+vai-lon-hoang-gia-bgkq-0095,VẢI LON HOÀNG GIA,,Trai Cây Hôp,bgkq-0095,28000,draft
+sen-nif-bgkq-0096,SEN NIF,,Trai Cây Hôp,bgkq-0096,55000,draft
+nhan-thai-bgkq-0097,NHÃN thái,,Trai Cây Hôp,bgkq-0097,40000,draft
+atiso-bgkq-0098,ATISO,,Trai Cây Hôp,bgkq-0098,75000,draft
+nha-dam-bgkq-0099,Nha Đam,,Trai Cây Hôp,bgkq-0099,29000,draft
+thot-not-bgkq-0100,Thốt Nốt,,Trai Cây Hôp,bgkq-0100,52000,draft
+da-me-tan-loc-bgkq-0101,ĐÁ ME TẤN LỘC,,Trai Cây Hôp,bgkq-0101,80000,draft
+nuoc-cot-dua-thai-1-lit-bgkq-0102,Nước cốt dừa thai 1 lit,,Trai Cây Hôp,bgkq-0102,71000,draft
+rau-cau-soc-vang-bgkq-0103,Rau câu Sóc Vàng,,Rau Câu,bgkq-0103,52000,draft
+rau-cau-thao-van-bgkq-0104,Rau câu Thảo Vân,,Rau Câu,bgkq-0104,230000,draft
+rau-cau-gion-agar-bgkq-0105,RAU CÂU GIÒN AGAR,,Rau Câu,bgkq-0105,110000,draft
+rau-cau-ca-deo-bgkq-0106,RAU CÂU CÁ DẺO,,Rau Câu,bgkq-0106,60000,draft
+flan-douxian-bgkq-0107,Flan Douxian,Douxian,Flan,bgkq-0107,170000,draft
+flan-mota-bgkq-0108,Flan  mota,,Flan,bgkq-0108,145000,draft_missing_image
+flan-mota-so-bgkq-0109,Flan  mota sô,,Flan,bgkq-0109,155000,draft_missing_image
+flan-mole-trung-bgkq-0110,Flan Mole trứng,Mole,Flan,bgkq-0110,227000,draft
+flan-mole-so-bgkq-0111,Flan Mole SÔ,Mole,Flan,bgkq-0111,257000,draft
+flan-mole-mon-bgkq-0112,Flan Mole MÔN,Mole,Flan,bgkq-0112,207000,draft
+flan-mole-dau-bgkq-0113,Flan Mole DÂU,Mole,Flan,bgkq-0113,198000,draft
+plan-mole-dua-bgkq-0114,PLAN MOLE DƯA,Mole,Flan,bgkq-0114,198000,draft
+bot-sua-hp-bgkq-0115,Bột sữa HP,,Bôt Sua,bgkq-0115,75000,draft
+bot-sua-b-one-bgkq-0116,Bột sữa B one,,Bôt Sua,bgkq-0116,69000,draft
+bot-sua-mt35-bgkq-0117,Bột sữa MT35,,Bôt Sua,bgkq-0117,118000,draft
+bot-milkfoarm-luave-bgkq-0118,Bột milkfoarm Luave,Luave,Bôt Sua,bgkq-0118,128000,draft
+bot-frappe-luave-bgkq-0119,Bột frappe luave,Luave,Bôt Sua,bgkq-0119,138000,draft
+bot-milkfoam-erdoli-bgkq-0120,BỘT MILKFOAM ERDOLI,,Bôt Sua,bgkq-0120,275000,draft_missing_image
+bot-milkfoam-muoi-bien-bgkq-0121,Bột milkfoam muối biển,,Bôt Sua,bgkq-0121,92000,draft
+bot-kem-trung-dai-loan-bgkq-0122,Bột kem trứng Đài loan,,Bôt Sua,bgkq-0122,155000,draft
+bot-sua-frima-bgkq-0123,Bot sua Frima,,Bôt Sua,bgkq-0123,2120000,draft
+bot-sua-frima-1kg-bgkq-0124,Bot sua Frima 1KG,,Bôt Sua,bgkq-0124,93000,draft
+bot-sua-thai-bgkq-0125,Bot Sữa Thái,,Bôt Sua,bgkq-0125,1540000,draft
+bot-sua-kievit-bgkq-0126,Bot sua Kievit,,Bôt Sua,bgkq-0126,1840000,draft
+bot-indo-mafac-bgkq-0127,Bột indo mafac,,Bôt Sua,bgkq-0127,75000,draft
+bot-mon-bkb-bgkq-0128,Bột môn bkb,BKB,Bôt Sua,bgkq-0128,100000,draft
+sua-tuoi-tatte-bgkq-0129,Sữa tươi TATTE,,Bôt Sua,bgkq-0129,30000,draft
+sua-tuoi-blan-bgkq-0130,Sữa tươi Blan,,Bôt Sua,bgkq-0130,30000,draft
+sua-dac-nidoo-bgkq-0131,Sữa Đặc Nidoo,,Sữa Đặc,bgkq-0131,42000,draft
+sua-dac-larose-nap-dut-bgkq-0132,Sua dac larose nap dut,,Sữa Đặc,bgkq-0132,42000,draft
+sua-dac-larose-thuong-bgkq-0133,Sữa Đặc larose thuong,,Sữa Đặc,bgkq-0133,41000,draft
+sua-ella-bgkq-0134,SỮA ELLA,,Sữa Đặc,bgkq-0134,40000,draft
+bot-milo-bgkq-0135,Bột Milo,,Bot Cacao,bgkq-0135,170000,draft
+bot-cacao-luave-bgkq-0136,Bột Cacao Luave,Luave,Bot Cacao,bgkq-0136,155000,draft
+ca-cao-dance-bgkq-0137,CA CAO DANCE,,Bot Cacao,bgkq-0137,145000,draft
+bot-cacao-maly-bgkq-0138,Bột Cacao Maly,,Bot Cacao,bgkq-0138,70000,draft
+bot-mon-king-bgkq-0139,Bột môn King,,Bot Cacao,bgkq-0139,152000,draft
+bot-so-king-bgkq-0140,Bột sô King,,Bot Cacao,bgkq-0140,192000,draft
+bot-so-gtp-bgkq-0141,BỘT SÔ GTP,GTP,Bot Cacao,bgkq-0141,185000,draft
+bot-so-bao-anh-bgkq-0142,Bột sô bảo anh,,Bot Cacao,bgkq-0142,72000,draft
+bot-mon-gtp-bgkq-0143,Bột môn GTP,GTP,Bot Cacao,bgkq-0143,174000,draft
+hong-tra-gtp-1kg-bgkq-0144,Hồng Trà GTP 1kg,GTP,Trà Các Loại,bgkq-0144,140000,draft
+hong-tra-king-bgkq-0145,Hồng Trà King,,Trà Các Loại,bgkq-0145,118000,draft
+tra-lai-king-bgkq-0146,Trà lài King,,Trà Các Loại,bgkq-0146,155000,draft
+tra-olong-kinh-bgkq-0147,Tra olong kinh,,Trà Các Loại,bgkq-0147,160000,draft
+tra-lai-loc-phat-bgkq-0148,Trà lài Lộc Phát,Lộc Phát,Trà Các Loại,bgkq-0148,155000,draft
+tra-den-loc-phat-bgkq-0149,Trà đen Lộc Phát,Lộc Phát,Trà Các Loại,bgkq-0149,155000,draft
+tra-olong-loc-phat-bgkq-0150,Trà olong Lộc phát,Lộc Phát,Trà Các Loại,bgkq-0150,306000,draft
+tra-den-9-douxian-bgkq-0151,Trà đen 9 Douxian,Douxian,Trà Các Loại,bgkq-0151,43000,draft
+tra-den-ht-9-bong-bgkq-0152,Trà đen HT 9 bóng,,Trà Các Loại,bgkq-0152,45000,draft
+tra-den-ht-9-luave-bgkq-0153,Trà đen HT 9 Luave,Luave,Trà Các Loại,bgkq-0153,68000,draft
+tra-den-hoang-gia-bgkq-0154,Trà đen Hoàng Gia,,Trà Các Loại,bgkq-0154,57000,draft
+tra-lai-hoang-gia-bgkq-0155,Trà lài Hoàng Gia,,Trà Các Loại,bgkq-0155,80000,draft
+tra-olong-tam-hg-500gr-bgkq-0156,Trà olong tấm HG 500gr,,Trà Các Loại,bgkq-0156,80000,draft
+tra-dua-sao-vang-bgkq-0157,Trà dứa sao vàng,,Trà Các Loại,bgkq-0157,27000,draft
+hong-tra-tui-loc-tnb-bgkq-0158,Hồng trà túi lọc TNB,,Trà Các Loại,bgkq-0158,26000,draft
+tra-dao-tui-loc-tnb-bgkq-0159,Trà đào túi lọc TNB,,Trà Các Loại,bgkq-0159,37000,draft
+tra-lai-tui-loc-tnb-bgkq-0160,Trà lài túi lọc TNB,,Trà Các Loại,bgkq-0160,27000,draft
+tra-den-phuc-long-bgkq-0161,Tra den phuc long,,Trà Các Loại,bgkq-0161,107000,draft
+tra-sen-lai-phuc-long-bgkq-0162,Trà sen/LÀI Phúc Long,Phúc Long,Trà Các Loại,bgkq-0162,38000,draft
+tra-olong-phuc-long-bgkq-0163,tra olong phuc long,,Trà Các Loại,bgkq-0163,40000,draft
+tra-sen-lai-thai-nguyen-bgkq-0164,Trà sen/LÀI Thái Nguyên,,Trà Các Loại,bgkq-0164,40000,draft
+lipton-cozy-bgkq-0165,Lipton COZY,Cozy,Trà Các Loại,bgkq-0165,79000,draft
+tra-cozy-hoa-tan-bgkq-0166,Trà Cozy Hòa tan,Cozy,Trà Các Loại,bgkq-0166,36000,draft
+tra-cozy-tui-loc-bgkq-0167,Trà Cozy túi lọc,Cozy,Trà Các Loại,bgkq-0167,38000,draft
+tra-thai-xanh-do-cty-bgkq-0168,Trà Thái xanh/đỏ Cty,,Trà Các Loại,bgkq-0168,70000,draft
+tra-thai-xanh-thuong-bgkq-0169,Trà Thái xanh thường,,Trà Các Loại,bgkq-0169,65000,draft
+tra-gao-novia-bgkq-0170,Trà gạo novia,,Trà Các Loại,bgkq-0170,125000,draft
+tra-den-novia-bgkq-0171,Trà đen novia,,Trà Các Loại,bgkq-0171,82000,draft
+tra-lai-novia-bgkq-0172,Trà  lài novia,,Trà Các Loại,bgkq-0172,80000,draft
+hong-tra-co-gai-bgkq-0173,HỒNG TRÀ CÔ GÁI,,Trà Các Loại,bgkq-0173,110000,draft
+tra-den-co-gai-bgkq-0174,TRÀ ĐEN CÔ GÁI,,Trà Các Loại,bgkq-0174,84000,draft
+tra-lai-co-gai-bgkq-0175,TRÀ LÀI CÔ GÁI,,Trà Các Loại,bgkq-0175,84000,draft
+tra-lai-nhu-y-bgkq-0176,TRÀ LÀI NHƯ Ý,,Trà Các Loại,bgkq-0176,80000,draft
+tra-gao-rang-ona-bgkq-0177,TRÀ GẠO RANG ONA,,Trà Các Loại,bgkq-0177,127000,draft
+tra-olong-tu-quy-bgkq-0178,TRÀ OLONG TỨ QUÝ,,Trà Các Loại,bgkq-0178,153000,draft
+tra-hp-bgkq-0179,Trà HP,,Trà Các Loại,bgkq-0179,150000,draft
+mat-ong-euro-deli-bgkq-0180,Mật ong Euro deli,,Đồ Lẻ,bgkq-0180,210000,draft
+la-rong-bien-bgkq-0181,Lá Rong Biển,,Đồ Lẻ,bgkq-0181,285000,draft
+gas-kem-mosa-bgkq-0182,Gas kem Mosa,,Đồ Lẻ,bgkq-0182,82000,draft
+than-tre-bgkq-0183,Than tre,,Đồ Lẻ,bgkq-0183,102000,draft
+galatin-thuong-bgkq-0184,galatin thuong,,Đồ Lẻ,bgkq-0184,290000,draft
+hat-chia-bgkq-0185,Hạt Chia,,Đồ Lẻ,bgkq-0185,110000,draft
+bot-matcha-dai-loan-bgkq-0186,Bột Matcha đai loan,,Đồ Lẻ,bgkq-0186,360000,draft
+bot-matcha-cozy-bgkq-0187,Bot matcha cozy,Cozy,Đồ Lẻ,bgkq-0187,143000,draft
+bot-matcha-seoul-bgkq-0188,Bot matcha SEOUL,,Đồ Lẻ,bgkq-0188,129000,draft
+bot-lac-pho-mai-bgkq-0189,Bột lắc phô mai,,Đồ Lẻ,bgkq-0189,180000,draft
+bot-man-pho-mai-ong-gia-bgkq-0190,Bột mặn phô mai ông già,,Đồ Lẻ,bgkq-0190,415000,draft
+suong-sao-trang-den-bgkq-0191,Sương Sáo trắng/đen,,Đồ Lẻ,bgkq-0191,15500,draft
+suong-sao-den-mota-bgkq-0192,Sương sáo đen mota,,Đồ Lẻ,bgkq-0192,13000,draft
+ice-hot-lun-bgkq-0193,Ice hot lùn,,Đồ Lẻ,bgkq-0193,31000,draft
+rich-lun-bgkq-0194,Rich lun,Rich,Đồ Lẻ,bgkq-0194,32000,draft
+ice-hot-on-top-bgkq-0195,Ice hot on top,,Đồ Lẻ,bgkq-0195,72000,draft
+pho-mai-bo-cuoi-bgkq-0196,PHÔ MAI BÒ CƯỜI,,Đồ Lẻ,bgkq-0196,79000,draft
+pho-mai-khoi-2-5kg-mozela-bgkq-0197,Phô mai khối 2.5kg mozela,,Đồ Lẻ,bgkq-0197,430000,draft
+pho-mai-khoi-3-6-kg-mozela-bgkq-0198,Phô mai khối 3.6 kg mozela,,Đồ Lẻ,bgkq-0198,620000,draft
+giam-tao-bgkq-0199,Giấm Táo,,Đồ Lẻ,bgkq-0199,75000,draft
+tui-ga-ran-500gr-bgkq-0200,Túi gà rán 500gr,,Đồ Lẻ,bgkq-0200,23000,draft
+cot-bi-dao-wonderfull-bgkq-0201,CỐT bí đao wonderfull,,Đồ Lẻ,bgkq-0201,45000,draft
+lau-kim-chi-bgkq-0202,Lẩu Kim chi,,Đồ Lẻ,bgkq-0202,102000,draft
+ong-hut-ts-trang-bgkq-0203,Ống hút ts trang,,Ông Hút,bgkq-0203,28000,draft
+ong-hut-ts-trang-boc-mang-bgkq-0204,ông hut ts trang boc mang,,Ông Hút,bgkq-0204,30000,draft
+ong-hut-trang-phi-6-8-bgkq-0205,ong hut trang phi 6/8,,Ông Hút,bgkq-0205,28000,draft
+ong-hut-ts-den-phi-6-8-bgkq-0206,ong hut ts đen phi 6/8,,Ông Hút,bgkq-0206,25000,draft
+muong-ukp-bgkq-0207,Muỗng UKP,,Muỗng,bgkq-0207,6000,draft
+muong-thuong-ngan-bgkq-0208,Muỗng Thường ngắn,,Muỗng,bgkq-0208,6000,draft
+muong-dai-bgkq-0209,Muỗng dài,,Muỗng,bgkq-0209,11000,draft
+nap-ngang-bgkq-0210,Nắp ngang,,Nắp,bgkq-0210,7000,draft
+nap-cau-vuong-bgkq-0211,Nắp cầu/ vuông,,Nắp,bgkq-0211,11000,draft
+bich-1ly-ngang-bgkq-0212,Bịch 1ly ngang,,Bao Ly,bgkq-0212,53000,draft
+bich-2ly-ngang-bgkq-0213,Bịch 2ly ngang,,Bao Ly,bgkq-0213,53000,draft
+bich-1ly-thuong-bgkq-0214,Bịch 1ly thường,,Bao Ly,bgkq-0214,50000,draft
+bich-chu-t-bgkq-0215,Bịch chữ T,,Bao Ly,bgkq-0215,58000,draft
+bich-1lit-bgkq-0216,Bịch 1Lit,,Bao Ly,bgkq-0216,58000,draft
+cuon-ep-bgkq-0217,Cuộn ép,,Bao Ly,bgkq-0217,110000,draft
+mi-koreno-100-goi-bgkq-0218,Mì Koreno 100 gói,,Nguyên Liệu Mỳ Cay,bgkq-0218,680000,draft
+mi-lau-koreno-80-goi-bgkq-0219,Mì lẩu koreno 80 gói,,Nguyên Liệu Mỳ Cay,bgkq-0219,460000,draft
+mi-acecook-deli-bgkq-0220,MÌ ACECOOK DELI,Ok,Nguyên Liệu Mỳ Cay,bgkq-0220,420000,draft
+kim-chi-bgkq-0221,Kim chi,,Nguyên Liệu Mỳ Cay,bgkq-0221,50000,draft
+bot-sup-bgkq-0222,Bột sup,,Nguyên Liệu Mỳ Cay,bgkq-0222,137000,draft
+bot-ot-bgkq-0223,Bột ớt,,Nguyên Liệu Mỳ Cay,bgkq-0223,130000,draft
+tinh-dau-ot-bgkq-0224,Tinh dầu ớt,,Nguyên Liệu Mỳ Cay,bgkq-0224,155000,draft
+nam-bgkq-0225,Nấm,,Nguyên Liệu Mỳ Cay,bgkq-0225,0,draft
+cai-tim-bgkq-0226,Cải Tím,,Nguyên Liệu Mỳ Cay,bgkq-0226,0,draft
+bong-cai-xanh-bgkq-0227,Bông cải xanh,,Nguyên Liệu Mỳ Cay,bgkq-0227,0,draft
+ca-hanh-tieu-bgkq-0228,Cá hành tiêu,,Thực Phẩm Đông Lạnh,bgkq-0228,60000,draft
+ca-hanh-ot-bgkq-0229,Cá hành ớt,,Thực Phẩm Đông Lạnh,bgkq-0229,31500,draft
+ca-vien-trang-beco-bgkq-0230,Cá viên trắng Beco,,Thực Phẩm Đông Lạnh,bgkq-0230,60000,draft
+ca-sing-bgkq-0231,Cá Sing,,Thực Phẩm Đông Lạnh,bgkq-0231,62000,draft
+ca-cut-bgkq-0232,Cá Cút,,Thực Phẩm Đông Lạnh,bgkq-0232,32000,draft
+dau-hu-ca-bgkq-0233,Đậu hủ cá,,Thực Phẩm Đông Lạnh,bgkq-0233,100000,draft
+dau-hu-pho-mai-lc-bgkq-0234,Đậu hủ Phô mai LC,,Thực Phẩm Đông Lạnh,bgkq-0234,46000,draft
+dau-hu-phomai-ngon-bgkq-0235,Đậu hủ phomai ngon,,Thực Phẩm Đông Lạnh,bgkq-0235,48000,draft
+khoai-tay-2kg-bgkq-0236,Khoai tây 2kg,,Thực Phẩm Đông Lạnh,bgkq-0236,130000,draft
+khoai-tay-1kg-bgkq-0237,Khoai tây 1kg,,Thực Phẩm Đông Lạnh,bgkq-0237,60000,draft
+pho-mai-que-hop-bgkq-0238,Phô mai que hộp,,Thực Phẩm Đông Lạnh,bgkq-0238,52000,draft
+oc-nhoi-bgkq-0239,Ốc nhồi,,Thực Phẩm Đông Lạnh,bgkq-0239,33000,draft
+bo-vien-bgkq-0240,Bò Viên,,Thực Phẩm Đông Lạnh,bgkq-0240,32500,draft
+bo-la-lot-bgkq-0241,Bò lá lốt,,Thực Phẩm Đông Lạnh,bgkq-0241,43000,draft
+xuc-xich-yummy-bgkq-0242,Xúc Xích Yummy,,Thực Phẩm Đông Lạnh,bgkq-0242,40000,draft
+xuc-xich-tokyo-bgkq-0243,Xúc Xích Tokyo,Ok,Thực Phẩm Đông Lạnh,bgkq-0243,38000,draft
+xuc-xich-vuon-bia-bgkq-0244,Xúc Xích Vườn bia,,Thực Phẩm Đông Lạnh,bgkq-0244,50000,draft
+doi-sun-bgkq-0245,Dồi Sụn,,Thực Phẩm Đông Lạnh,bgkq-0245,39000,draft
+vien-tha-lau-bgkq-0246,Viên Thả lẩu,,Thực Phẩm Đông Lạnh,bgkq-0246,43000,draft
+banh-bao-trung-bgkq-0247,Bánh Bao Trứng,,Thực Phẩm Đông Lạnh,bgkq-0247,45000,draft
+cha-ca-hap-bgkq-0248,Chả cá Hấp,,Thực Phẩm Đông Lạnh,bgkq-0248,30000,draft
+cha-que-bgkq-0249,Chả quế,,Thực Phẩm Đông Lạnh,bgkq-0249,30000,draft
+cha-gio-bgkq-0250,Chả Giò,,Thực Phẩm Đông Lạnh,bgkq-0250,33000,draft
+cha-ca-han-quoc-bgkq-0251,Chả cá Hàn Quốc,,Thực Phẩm Đông Lạnh,bgkq-0251,37000,draft
+thanh-cua-dai-1kg-bgkq-0252,Thanh cua dài 1kg,,Thực Phẩm Đông Lạnh,bgkq-0252,130000,draft
+thanh-cua-lichuan-bgkq-0253,Thanh cua Lichuan,,Thực Phẩm Đông Lạnh,bgkq-0253,75000,draft
+com-hong-ongon-bgkq-0254,Cốm hồng Ongon,,Thực Phẩm Đông Lạnh,bgkq-0254,52000,draft
+com-hong-thien-nhien-bgkq-0255,Cốm hồng Thiên Nhiên,,Thực Phẩm Đông Lạnh,bgkq-0255,37000,draft
+hotdog-pho-mai-bgkq-0256,Hotdog phô mai,,Thực Phẩm Đông Lạnh,bgkq-0256,38000,draft
+tom-vien-bgkq-0257,Tôm viên,,Thực Phẩm Đông Lạnh,bgkq-0257,31500,draft
+tom-con-ongon-bgkq-0258,Tôm Con Ongon,,Thực Phẩm Đông Lạnh,bgkq-0258,42000,draft
+chao-sa-bgkq-0259,Chạo sả,,Thực Phẩm Đông Lạnh,bgkq-0259,30000,draft
+tui-tien-hai-san-bgkq-0260,Túi tiền Hải Sản,,Thực Phẩm Đông Lạnh,bgkq-0260,44000,draft
+banh-sua-tuoi-bgkq-0261,Bánh sữa tươi,,Thực Phẩm Đông Lạnh,bgkq-0261,28000,draft
+banh-gao-thoi-bgkq-0262,Bánh gạo thỏi,,Thực Phẩm Đông Lạnh,bgkq-0262,55000,draft
+sot-banh-gao-saijang-bgkq-0263,Sốt bánh gạo saijang,,Thực Phẩm Đông Lạnh,bgkq-0263,53000,draft
+sot-banh-gao-ky-bgkq-0264,sốt bánh gao ky,,Thực Phẩm Đông Lạnh,bgkq-0264,40000,draft
+hanh-phi-anh-tu-bgkq-0265,hành phi anh tú,,Nguyên Liệu Bánh Tráng,bgkq-0265,75000,draft
+hanh-phi-thuong-bgkq-0266,hành phi thường,,Nguyên Liệu Bánh Tráng,bgkq-0266,45000,draft
+kho-bo-bgkq-0267,khô bò,,Nguyên Liệu Bánh Tráng,bgkq-0267,112000,draft
+kho-ga-bgkq-0268,khô gà,,Nguyên Liệu Bánh Tráng,bgkq-0268,130000,draft
+banh-tran-nuong-trang-vang-bgkq-0269,bánh trán nướng trắng+vàng,,Nguyên Liệu Bánh Tráng,bgkq-0269,45000,draft
+banh-trang-cuon-do-bgkq-0270,bánh tráng cuốn đỏ,,Nguyên Liệu Bánh Tráng,bgkq-0270,45000,draft
+banh-trang-cat-bgkq-0271,bánh tráng cắt,,Nguyên Liệu Bánh Tráng,bgkq-0271,110000,draft
+nuoc-bo-1-lit-bgkq-0272,nước bò 1 lit,,Nguyên Liệu Bánh Tráng,bgkq-0272,37000,draft
+nuoc-bo-bgkq-0273,nước bò,,Nguyên Liệu Bánh Tráng,bgkq-0273,145000,draft
+bo-trang-vang-bgkq-0274,bơ trắng+vàng,,Nguyên Liệu Bánh Tráng,bgkq-0274,35000,draft
+kho-muc-bgkq-0275,khô mực,,Nguyên Liệu Bánh Tráng,bgkq-0275,225000,draft
+ruoc-bgkq-0276,Ruốc,,Nguyên Liệu Bánh Tráng,bgkq-0276,35000,draft_missing_image
