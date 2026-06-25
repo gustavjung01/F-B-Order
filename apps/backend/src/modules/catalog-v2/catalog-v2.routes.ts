@@ -6,6 +6,9 @@ import { evaluateCatalogV2Pricing, type CatalogV2PriceRow } from "./catalog-v2.p
 
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const DEFAULT_CATALOG_ASSET_BASE_URL = "https://cdn.bepsi.click";
+const DEFAULT_PAGE_SIZE = 40;
+const MAX_PAGE_SIZE = 100;
+const MAX_OFFSET = 10000;
 
 const OPTION_VALUE_LABELS: Record<string, string> = {
   dau: "Dâu",
@@ -76,14 +79,37 @@ type VariantRow = CatalogV2PriceRow & {
   parent_max_price?: string | null;
 };
 
+type FacetRow = {
+  id: string;
+  name: string;
+  product_count: number;
+};
+
+type CatalogFilters = {
+  q: string | null;
+  industry: string | null;
+  brand: string | null;
+  subcategory: string | null;
+};
+
+type FilterKey = keyof CatalogFilters;
+
 function readText(value: unknown): string | null {
   return typeof value === "string" && value.trim() ? value.trim() : null;
 }
 
-function readLimit(value: unknown): number {
+function readBoundedInteger(value: unknown, fallback: number, minimum: number, maximum: number): number {
   const parsed = Number.parseInt(String(value ?? ""), 10);
-  if (!Number.isFinite(parsed)) return 300;
-  return Math.min(Math.max(parsed, 1), 500);
+  if (!Number.isFinite(parsed)) return fallback;
+  return Math.min(Math.max(parsed, minimum), maximum);
+}
+
+function readLimit(value: unknown): number {
+  return readBoundedInteger(value, DEFAULT_PAGE_SIZE, 1, MAX_PAGE_SIZE);
+}
+
+function readOffset(value: unknown): number {
+  return readBoundedInteger(value, 0, 0, MAX_OFFSET);
 }
 
 function readPrice(value: unknown): number | null {
@@ -328,6 +354,54 @@ function variantSelect(priceGroupParameter: number) {
   `;
 }
 
+function buildFilterQuery(
+  filters: CatalogFilters,
+  initialValues: unknown[] = [],
+  omitted: ReadonlySet<FilterKey> = new Set(),
+) {
+  const values = [...initialValues];
+  const clauses = [
+    "product.catalog_version = 'hung-phat-v2'",
+    "product.status = 'active'",
+    "variant.catalog_version = 'hung-phat-v2'",
+    "variant.is_active = true",
+    "variant.is_public = true",
+    "variant.status IN ('active', 'market_price')",
+  ];
+
+  if (!omitted.has("industry") && filters.industry && filters.industry !== "all") {
+    values.push(filters.industry);
+    clauses.push(`product.industry_key = $${values.length}`);
+  }
+  if (!omitted.has("brand") && filters.brand && filters.brand !== "all") {
+    values.push(filters.brand);
+    clauses.push(`product.brand = $${values.length}`);
+  }
+  if (!omitted.has("subcategory") && filters.subcategory && filters.subcategory !== "all") {
+    values.push(filters.subcategory);
+    clauses.push(`product.subcategory = $${values.length}`);
+  }
+  if (!omitted.has("q") && filters.q) {
+    values.push(`%${filters.q}%`);
+    clauses.push(`(
+      variant.name ILIKE $${values.length}
+      OR variant.sku ILIKE $${values.length}
+      OR product.name ILIKE $${values.length}
+      OR COALESCE(product.brand, '') ILIKE $${values.length}
+    )`);
+  }
+
+  return { clauses, values };
+}
+
+function toFacet(row: FacetRow) {
+  return {
+    id: row.id,
+    name: row.name,
+    productCount: Number(row.product_count) || 0,
+  };
+}
+
 export function createCatalogV2Router(
   identityResolver: IdentityResolver = async () => anonymousIdentity,
 ) {
@@ -337,95 +411,120 @@ export function createCatalogV2Router(
     const identity = await resolveIdentity(req, res, identityResolver);
     if (!identity) return;
 
-    const q = readText(req.query.q);
-    const industry = readText(req.query.industry);
-    const brand = readText(req.query.brand);
-    const subcategory = readText(req.query.subcategory);
+    const filters: CatalogFilters = {
+      q: readText(req.query.q),
+      industry: readText(req.query.industry),
+      brand: readText(req.query.brand),
+      subcategory: readText(req.query.subcategory),
+    };
     const limit = readLimit(req.query.limit);
+    const offset = readOffset(req.query.offset);
     const priceGroupId = identity.kind === "customer" ? identity.priceGroupId : null;
-    const values: unknown[] = [priceGroupId];
-    const clauses = [
-      "product.catalog_version = 'hung-phat-v2'",
-      "product.status = 'active'",
-      "variant.catalog_version = 'hung-phat-v2'",
-      "variant.is_active = true",
-      "variant.is_public = true",
-      "variant.status IN ('active', 'market_price')",
-    ];
+    const listFilter = buildFilterQuery(filters, [priceGroupId]);
+    const countFilter = buildFilterQuery(filters);
+    const industryFacetFilter = buildFilterQuery(filters, [], new Set<FilterKey>(["industry"]));
+    const brandFacetFilter = buildFilterQuery(filters, [], new Set<FilterKey>(["brand"]));
 
-    if (industry && industry !== "all") {
-      values.push(industry);
-      clauses.push(`product.industry_key = $${values.length}`);
-    }
-    if (brand && brand !== "all") {
-      values.push(brand);
-      clauses.push(`product.brand = $${values.length}`);
-    }
-    if (subcategory && subcategory !== "all") {
-      values.push(subcategory);
-      clauses.push(`product.subcategory = $${values.length}`);
-    }
-    if (q) {
-      values.push(`%${q}%`);
-      clauses.push(`(
-        variant.name ILIKE $${values.length}
-        OR variant.sku ILIKE $${values.length}
-        OR product.name ILIKE $${values.length}
-        OR COALESCE(product.brand, '') ILIKE $${values.length}
-      )`);
-    }
-
-    values.push(limit);
+    listFilter.values.push(limit, offset);
+    const limitParameter = listFilter.values.length - 1;
+    const offsetParameter = listFilter.values.length;
 
     try {
-      const result = await getDb().query<VariantRow>(
-        `SELECT *
-         FROM (
-           SELECT base.*,
-             ROW_NUMBER() OVER (
-               PARTITION BY base.product_id
-               ORDER BY base.sort_order, base.sku
-             ) AS product_rank,
-             (SELECT COUNT(*)
-              FROM catalog_variants sibling
-              WHERE sibling.product_id = base.product_id::uuid
-                AND sibling.catalog_version = 'hung-phat-v2'
-                AND sibling.is_active = true
-                AND sibling.is_public = true
-                AND sibling.status IN ('active', 'market_price'))::int AS parent_variant_count,
-             (SELECT MIN(sibling.shop_price)::text
-              FROM catalog_variants sibling
-              WHERE sibling.product_id = base.product_id::uuid
-                AND sibling.catalog_version = 'hung-phat-v2'
-                AND sibling.is_active = true
-                AND sibling.is_public = true
-                AND sibling.status IN ('active', 'market_price')
-                AND sibling.price_mode = 'fixed'
-                AND sibling.shop_price IS NOT NULL) AS parent_min_price,
-             (SELECT MAX(sibling.shop_price)::text
-              FROM catalog_variants sibling
-              WHERE sibling.product_id = base.product_id::uuid
-                AND sibling.catalog_version = 'hung-phat-v2'
-                AND sibling.is_active = true
-                AND sibling.is_public = true
-                AND sibling.status IN ('active', 'market_price')
-                AND sibling.price_mode = 'fixed'
-                AND sibling.shop_price IS NOT NULL) AS parent_max_price
+      const [productsResult, totalResult, industriesResult, brandsResult] = await Promise.all([
+        getDb().query<VariantRow>(
+          `SELECT *
            FROM (
-             ${variantSelect(1)}
-             WHERE ${clauses.join(" AND ")}
-           ) base
-         ) ranked
-         WHERE product_rank = 1
-         ORDER BY product_sort_order, sort_order, sku
-         LIMIT $${values.length}`,
-        values,
-      );
+             SELECT base.*,
+               ROW_NUMBER() OVER (
+                 PARTITION BY base.product_id
+                 ORDER BY base.sort_order, base.sku
+               ) AS product_rank,
+               (SELECT COUNT(*)
+                FROM catalog_variants sibling
+                WHERE sibling.product_id = base.product_id::uuid
+                  AND sibling.catalog_version = 'hung-phat-v2'
+                  AND sibling.is_active = true
+                  AND sibling.is_public = true
+                  AND sibling.status IN ('active', 'market_price'))::int AS parent_variant_count,
+               (SELECT MIN(sibling.shop_price)::text
+                FROM catalog_variants sibling
+                WHERE sibling.product_id = base.product_id::uuid
+                  AND sibling.catalog_version = 'hung-phat-v2'
+                  AND sibling.is_active = true
+                  AND sibling.is_public = true
+                  AND sibling.status IN ('active', 'market_price')
+                  AND sibling.price_mode = 'fixed'
+                  AND sibling.shop_price IS NOT NULL) AS parent_min_price,
+               (SELECT MAX(sibling.shop_price)::text
+                FROM catalog_variants sibling
+                WHERE sibling.product_id = base.product_id::uuid
+                  AND sibling.catalog_version = 'hung-phat-v2'
+                  AND sibling.is_active = true
+                  AND sibling.is_public = true
+                  AND sibling.status IN ('active', 'market_price')
+                  AND sibling.price_mode = 'fixed'
+                  AND sibling.shop_price IS NOT NULL) AS parent_max_price
+             FROM (
+               ${variantSelect(1)}
+               WHERE ${listFilter.clauses.join(" AND ")}
+             ) base
+           ) ranked
+           WHERE product_rank = 1
+           ORDER BY product_sort_order, sort_order, sku
+           LIMIT $${limitParameter} OFFSET $${offsetParameter}`,
+          listFilter.values,
+        ),
+        getDb().query<{ total: number }>(
+          `SELECT COUNT(DISTINCT product.id)::int AS total
+           FROM catalog_variants variant
+           JOIN catalog_products product ON product.id = variant.product_id
+           WHERE ${countFilter.clauses.join(" AND ")}`,
+          countFilter.values,
+        ),
+        getDb().query<FacetRow>(
+          `SELECT
+             product.industry_key AS id,
+             product.industry AS name,
+             COUNT(DISTINCT product.id)::int AS product_count
+           FROM catalog_variants variant
+           JOIN catalog_products product ON product.id = variant.product_id
+           WHERE ${industryFacetFilter.clauses.join(" AND ")}
+           GROUP BY product.industry_key, product.industry
+           ORDER BY product.industry`,
+          industryFacetFilter.values,
+        ),
+        getDb().query<FacetRow>(
+          `SELECT
+             product.brand AS id,
+             product.brand AS name,
+             COUNT(DISTINCT product.id)::int AS product_count
+           FROM catalog_variants variant
+           JOIN catalog_products product ON product.id = variant.product_id
+           WHERE ${brandFacetFilter.clauses.join(" AND ")}
+             AND product.brand IS NOT NULL
+             AND BTRIM(product.brand) <> ''
+           GROUP BY product.brand
+           ORDER BY product.brand`,
+          brandFacetFilter.values,
+        ),
+      ]);
+
+      const total = Number(totalResult.rows[0]?.total) || 0;
+      const products = productsResult.rows.map((row) => toParentCard(row, identity));
 
       res.json({
-        products: result.rows.map((row) => toParentCard(row, identity)),
-        total: result.rows.length,
+        products,
+        total,
         cardModel: "parent",
+        pagination: {
+          limit,
+          offset,
+          hasMore: offset + products.length < total,
+        },
+        facets: {
+          industries: industriesResult.rows.map(toFacet),
+          brands: brandsResult.rows.map(toFacet),
+        },
       });
     } catch (error) {
       console.error("catalog v2 products failed", error);
@@ -480,9 +579,9 @@ export function createCatalogV2Router(
           industryKey: selected.industry_key,
           subcategory: selected.subcategory,
           image: {
-            key: selected.cover_image_key,
-            objectKey: selected.cover_image_object_key,
-            url: assetUrl(selected.cover_image_object_key),
+            key: selected.cover_image_key || selected.image_key,
+            objectKey: selected.cover_image_object_key || selected.image_object_key,
+            url: assetUrl(selected.cover_image_object_key || selected.image_object_key),
           },
         },
         optionGroups: deriveOptionGroups(variantsResult.rows, selected.option_groups),

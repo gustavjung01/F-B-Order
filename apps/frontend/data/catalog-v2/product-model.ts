@@ -66,10 +66,29 @@ export type CatalogV2ParentProduct = {
   image: CatalogV2Image;
 };
 
+export type CatalogV2FilterOption = {
+  id: string;
+  name: string;
+  productCount: number;
+};
+
+export type CatalogV2Pagination = {
+  limit: number;
+  offset: number;
+  hasMore: boolean;
+};
+
+export type CatalogV2Facets = {
+  industries: CatalogV2FilterOption[];
+  brands: CatalogV2FilterOption[];
+};
+
 export type CatalogV2ListResponse = {
   products: CatalogV2VariantCard[];
   total: number;
   cardModel: "parent";
+  pagination: CatalogV2Pagination;
+  facets: CatalogV2Facets;
 };
 
 export type CatalogV2DetailResponse = {
@@ -77,10 +96,4 @@ export type CatalogV2DetailResponse = {
   optionGroups: CatalogV2OptionGroup[];
   variants: CatalogV2VariantCard[];
   selectedVariantId: string;
-};
-
-export type CatalogV2FilterOption = {
-  id: string;
-  name: string;
-  productCount: number;
 };

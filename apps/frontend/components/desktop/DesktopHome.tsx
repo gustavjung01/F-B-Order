@@ -72,6 +72,7 @@ export function DesktopHome({ active = "home" }: { active?: AppNavKey }) {
     searchText,
     setSearchText,
     loading,
+    loadingMore,
     error,
     total,
     shownCount,
@@ -120,22 +121,24 @@ export function DesktopHome({ active = "home" }: { active?: AppNavKey }) {
         </div>
 
         {loading ? <ProductGridState>Đang tải sản phẩm...</ProductGridState> : null}
-        {!loading && error ? <ProductGridState>{error}</ProductGridState> : null}
+        {!loading && error && products.length === 0 ? <ProductGridState>{error}</ProductGridState> : null}
         {!loading && !error && products.length === 0 ? <ProductGridState>Không có sản phẩm phù hợp</ProductGridState> : null}
-        {!loading && !error && products.length > 0 ? (
+        {!loading && products.length > 0 ? (
           <>
             <div className="grid grid-cols-4 gap-5">
               {products.map((product) => <DesktopProductCard key={product.product_id} product={product} />)}
             </div>
             <div className="mt-8 flex flex-col items-center gap-3">
               <p className="text-sm font-black text-slate-500">Đang hiển thị {shownCount}/{total} sản phẩm</p>
+              {error ? <p className="text-center text-sm font-black text-red-600">{error}</p> : null}
               {hasMore ? (
                 <button
                   type="button"
-                  onClick={showMore}
-                  className="rounded-2xl bg-[#ff5a00] px-8 py-4 text-base font-black text-white shadow-lg shadow-orange-200 transition hover:-translate-y-0.5 hover:bg-[#e95000]"
+                  onClick={() => void showMore()}
+                  disabled={loadingMore}
+                  className="rounded-2xl bg-[#ff5a00] px-8 py-4 text-base font-black text-white shadow-lg shadow-orange-200 transition hover:-translate-y-0.5 hover:bg-[#e95000] disabled:cursor-wait disabled:opacity-60 disabled:hover:translate-y-0"
                 >
-                  Xem thêm {Math.min(pageSize, total - shownCount)} sản phẩm
+                  {loadingMore ? "Đang tải thêm..." : `Xem thêm ${Math.min(pageSize, total - shownCount)} sản phẩm`}
                 </button>
               ) : null}
             </div>

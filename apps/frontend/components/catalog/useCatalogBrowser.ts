@@ -1,13 +1,15 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type {
   CatalogV2FilterOption,
+  CatalogV2ListResponse,
   CatalogV2VariantCard,
 } from "@/data/catalog-v2/product-model";
 import { fetchCatalogV2List } from "@/lib/catalog-v2-client";
 
-const PAGE_SIZE = 20;
+const PAGE_SIZE = 40;
+const SEARCH_DEBOUNCE_MS = 220;
 
 function normalizeFilterValue(value: string) {
   return value
@@ -24,112 +26,105 @@ function isFrozenIndustry(value: string) {
   return normalized === "dong-lanh" || normalized === "thuc-pham-dong-lanh";
 }
 
-function isFrozenProduct(product: CatalogV2VariantCard) {
-  return isFrozenIndustry(product.industryKey) || isFrozenIndustry(product.industry);
-}
-
-function buildProductsUrl(industryKey: string, brand: string, q: string) {
+function buildProductsUrl(
+  industryKey: string,
+  brand: string,
+  q: string,
+  offset: number,
+) {
   const params = new URLSearchParams();
   if (industryKey !== "all") params.set("industry", industryKey);
   if (brand !== "all" && !isFrozenIndustry(industryKey)) params.set("brand", brand);
   if (q.trim()) params.set("q", q.trim());
-  params.set("limit", "500");
+  params.set("limit", String(PAGE_SIZE));
+  params.set("offset", String(offset));
   return `/api/catalog-v2/products?${params.toString()}`;
 }
 
-function buildOptions(
-  products: CatalogV2VariantCard[],
-  keySelector: (product: CatalogV2VariantCard) => string | null,
-  nameSelector: (product: CatalogV2VariantCard) => string | null,
-): CatalogV2FilterOption[] {
-  const counts = new Map<string, { name: string; count: number }>();
-  for (const product of products) {
-    const id = keySelector(product);
-    const name = nameSelector(product);
-    if (!id || !name) continue;
-    const current = counts.get(id);
-    counts.set(id, { name, count: (current?.count ?? 0) + 1 });
-  }
-  return [...counts.entries()]
-    .sort((left, right) => left[1].name.localeCompare(right[1].name, "vi"))
-    .map(([id, value]) => ({ id, name: value.name, productCount: value.count }));
+function normalizeIndustryFacets(options: CatalogV2FilterOption[]) {
+  return options.map((option) => ({
+    ...option,
+    name: isFrozenIndustry(option.id) || isFrozenIndustry(option.name)
+      ? "Đông Lạnh"
+      : option.name,
+  }));
 }
 
-export function useCatalogBrowser() {
-  const [products, setProducts] = useState<CatalogV2VariantCard[]>([]);
-  const [allProducts, setAllProducts] = useState<CatalogV2VariantCard[]>([]);
+export function useCatalogBrowser(initialCatalog: CatalogV2ListResponse | null = null) {
+  const [products, setProducts] = useState<CatalogV2VariantCard[]>(initialCatalog?.products ?? []);
+  const [industries, setIndustries] = useState<CatalogV2FilterOption[]>(
+    normalizeIndustryFacets(initialCatalog?.facets.industries ?? []),
+  );
+  const [brands, setBrands] = useState<CatalogV2FilterOption[]>(initialCatalog?.facets.brands ?? []);
   const [selectedIndustry, setSelectedIndustryState] = useState("all");
-  const [selectedBrand, setSelectedBrand] = useState("all");
+  const [selectedBrand, setSelectedBrandState] = useState("all");
   const [searchText, setSearchText] = useState("");
-  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
-  const [loading, setLoading] = useState(true);
+  const [appliedSearch, setAppliedSearch] = useState("");
+  const [loading, setLoading] = useState(!initialCatalog);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState("");
+  const [total, setTotal] = useState(Number(initialCatalog?.total) || 0);
+  const [hasMore, setHasMore] = useState(Boolean(initialCatalog?.pagination.hasMore));
+  const requestVersion = useRef(0);
+  const hasUnusedInitialCatalog = useRef(Boolean(initialCatalog));
 
   const isBrandFilterHidden = isFrozenIndustry(selectedIndustry);
 
   useEffect(() => {
+    const timer = window.setTimeout(() => {
+      setAppliedSearch(searchText.trim());
+    }, SEARCH_DEBOUNCE_MS);
+
+    return () => window.clearTimeout(timer);
+  }, [searchText]);
+
+  useEffect(() => {
+    if (
+      hasUnusedInitialCatalog.current
+      && selectedIndustry === "all"
+      && selectedBrand === "all"
+      && appliedSearch === ""
+    ) {
+      hasUnusedInitialCatalog.current = false;
+      return;
+    }
+
+    hasUnusedInitialCatalog.current = false;
+    const version = ++requestVersion.current;
     let activeRequest = true;
 
-    async function loadProducts() {
+    async function loadFirstPage() {
       try {
         setLoading(true);
+        setLoadingMore(false);
         setError("");
+
         const data = await fetchCatalogV2List(
-          buildProductsUrl(selectedIndustry, selectedBrand, searchText),
+          buildProductsUrl(selectedIndustry, selectedBrand, appliedSearch, 0),
         );
-        if (!activeRequest) return;
-        const nextProducts = Array.isArray(data.products) ? data.products : [];
-        setProducts(nextProducts);
-        if (selectedIndustry === "all" && selectedBrand === "all" && !searchText.trim()) {
-          setAllProducts(nextProducts);
-        }
+        if (!activeRequest || version !== requestVersion.current) return;
+
+        setProducts(Array.isArray(data.products) ? data.products : []);
+        setIndustries(normalizeIndustryFacets(data.facets?.industries ?? []));
+        setBrands(isBrandFilterHidden ? [] : (data.facets?.brands ?? []));
+        setTotal(Number(data.total) || 0);
+        setHasMore(Boolean(data.pagination?.hasMore));
       } catch (loadError) {
-        if (!activeRequest) return;
+        if (!activeRequest || version !== requestVersion.current) return;
         setError(loadError instanceof Error ? loadError.message : "Không tải được sản phẩm");
         setProducts([]);
+        setTotal(0);
+        setHasMore(false);
       } finally {
-        if (activeRequest) setLoading(false);
+        if (activeRequest && version === requestVersion.current) setLoading(false);
       }
     }
 
-    const timer = window.setTimeout(loadProducts, 180);
+    void loadFirstPage();
     return () => {
       activeRequest = false;
-      window.clearTimeout(timer);
     };
-  }, [selectedIndustry, selectedBrand, searchText]);
-
-  useEffect(() => {
-    setVisibleCount(PAGE_SIZE);
-  }, [selectedIndustry, selectedBrand, searchText]);
-
-  const industrySource = useMemo(
-    () => selectedBrand === "all" || isBrandFilterHidden
-      ? allProducts
-      : allProducts.filter((product) => product.brand === selectedBrand || isFrozenProduct(product)),
-    [allProducts, isBrandFilterHidden, selectedBrand],
-  );
-  const brandSource = useMemo(
-    () => selectedIndustry === "all"
-      ? allProducts.filter((product) => !isFrozenProduct(product))
-      : isBrandFilterHidden
-        ? []
-        : allProducts.filter((product) => product.industryKey === selectedIndustry),
-    [allProducts, isBrandFilterHidden, selectedIndustry],
-  );
-
-  const industries = useMemo(
-    () => buildOptions(
-      industrySource,
-      (product) => product.industryKey,
-      (product) => isFrozenProduct(product) ? "Đông Lạnh" : product.industry,
-    ),
-    [industrySource],
-  );
-  const brands = useMemo(
-    () => buildOptions(brandSource, (product) => product.brand, (product) => product.brand),
-    [brandSource],
-  );
+  }, [appliedSearch, isBrandFilterHidden, selectedBrand, selectedIndustry]);
 
   useEffect(() => {
     if (selectedIndustry !== "all" && !industries.some((option) => option.id === selectedIndustry)) {
@@ -139,37 +134,61 @@ export function useCatalogBrowser() {
 
   useEffect(() => {
     if (isBrandFilterHidden && selectedBrand !== "all") {
-      setSelectedBrand("all");
+      setSelectedBrandState("all");
       return;
     }
     if (selectedBrand !== "all" && !brands.some((option) => option.id === selectedBrand)) {
-      setSelectedBrand("all");
+      setSelectedBrandState("all");
     }
   }, [brands, isBrandFilterHidden, selectedBrand]);
 
+  const showMore = useCallback(async () => {
+    if (loading || loadingMore || !hasMore) return;
+
+    const version = requestVersion.current;
+    const offset = products.length;
+
+    try {
+      setLoadingMore(true);
+      setError("");
+      const data = await fetchCatalogV2List(
+        buildProductsUrl(selectedIndustry, selectedBrand, appliedSearch, offset),
+      );
+      if (version !== requestVersion.current) return;
+
+      setProducts((current) => {
+        const existingIds = new Set(current.map((product) => product.product_id));
+        const nextProducts = data.products.filter((product) => !existingIds.has(product.product_id));
+        return [...current, ...nextProducts];
+      });
+      setIndustries(normalizeIndustryFacets(data.facets?.industries ?? []));
+      setBrands(isBrandFilterHidden ? [] : (data.facets?.brands ?? []));
+      setTotal(Number(data.total) || 0);
+      setHasMore(Boolean(data.pagination?.hasMore));
+    } catch (loadError) {
+      if (version !== requestVersion.current) return;
+      setError(loadError instanceof Error ? loadError.message : "Không tải thêm được sản phẩm");
+    } finally {
+      if (version === requestVersion.current) setLoadingMore(false);
+    }
+  }, [appliedSearch, hasMore, isBrandFilterHidden, loading, loadingMore, products.length, selectedBrand, selectedIndustry]);
+
   function setSelectedIndustry(value: string) {
     setSelectedIndustryState(value);
-    if (isFrozenIndustry(value)) setSelectedBrand("all");
+    if (isFrozenIndustry(value)) setSelectedBrandState("all");
+  }
+
+  function setSelectedBrand(value: string) {
+    setSelectedBrandState(value);
   }
 
   function resetFilters() {
     setSelectedIndustryState("all");
-    setSelectedBrand("all");
-  }
-
-  const visibleProducts = useMemo(
-    () => products.slice(0, visibleCount),
-    [products, visibleCount],
-  );
-  const shownCount = visibleProducts.length;
-  const hasMore = shownCount < products.length;
-
-  function showMore() {
-    setVisibleCount((current) => Math.min(current + PAGE_SIZE, products.length));
+    setSelectedBrandState("all");
   }
 
   return {
-    products: visibleProducts,
+    products,
     industries,
     brands,
     selectedIndustry,
@@ -180,9 +199,10 @@ export function useCatalogBrowser() {
     searchText,
     setSearchText,
     loading,
+    loadingMore,
     error,
-    total: products.length,
-    shownCount,
+    total,
+    shownCount: products.length,
     hasMore,
     showMore,
     pageSize: PAGE_SIZE,
