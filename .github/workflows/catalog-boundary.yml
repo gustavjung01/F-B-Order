@@ -39,7 +39,20 @@ jobs:
         run: pnpm frontend:audit:copy
 
       - name: Typecheck
-        run: pnpm typecheck
+        run: |
+          set +e
+          pnpm typecheck > typecheck.log 2>&1
+          status=$?
+          cat typecheck.log
+          exit $status
+
+      - name: Upload typecheck diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: catalog-typecheck-diagnostics
+          path: typecheck.log
+          retention-days: 1
 
       - name: Build frontend
         run: pnpm build:frontend
