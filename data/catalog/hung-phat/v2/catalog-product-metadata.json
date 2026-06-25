@@ -8,7 +8,26 @@
           "key": "flavor",
           "name": "Vị",
           "required": true,
-          "values": ["Dâu", "Kiwi", "Chanh dây", "Phúc bồn tử", "Dưa lưới", "Vải", "Cam", "Việt quất", "Táo xanh", "Blue Curacao", "Bạc hà", "Sô-cô-la"]
+          "values": [
+            "Dâu",
+            "Đào",
+            "Nho",
+            "Kiwi",
+            "Chanh dây",
+            "Phúc bồn tử",
+            "Dưa lưới",
+            "Vải",
+            "Cam",
+            "Việt quất",
+            "Táo xanh",
+            "Blue Curacao",
+            "Bạc hà",
+            "Sô-cô-la",
+            "Trà xanh Matcha",
+            "Hỗn hợp trái cây (Blue Punch)",
+            "Khoai môn",
+            "Cookies"
+          ]
         }
       ],
       "variantOptions": {
@@ -16,6 +35,7 @@
       },
       "auditSources": [
         "https://cuahangnguyenlieu.com.vn/siro-bac-ha-pixie-thai",
+        "https://phacheviet.com/collections/syrup-thai-pixie",
         "https://phacheviet.com/products/syrup-pixie-chanh-day",
         "https://phacheviet.com/products/syrup-pixie-viet-quat"
       ]
@@ -27,7 +47,7 @@
           "key": "flavor",
           "name": "Vị",
           "required": true,
-          "values": ["Dâu", "Đào", "Vải", "Việt quất", "Táo xanh", "Xoài", "Chanh dây"]
+          "values": ["Blue Hawaii", "Dưa hấu", "Nho", "Xoài", "Bạc hà", "Chanh dây", "Đào", "Dâu", "Dưa lưới", "Táo xanh", "Vải", "Việt quất"]
         }
       ],
       "variantOptions": {
@@ -36,17 +56,47 @@
       "auditSources": [
         "https://vinbar.vn/products/siro-thai-chanh-day-cao-cap",
         "https://vinbar.vn/products/siro-thai-viet-quat-cao-cap",
+        "https://phacheviet.com/collections/syrup-ding-fong-750ml",
         "https://phacheviet.com/products/syrup-ding-fong-dau"
       ]
     },
     "siro-mama-gold": {
+      "nameOverride": "Siro Golden Farm",
+      "brandOverride": "Golden Farm",
       "catalogGroupKey": "siro",
       "choiceGroups": [
         {
           "key": "flavor",
           "name": "Vị",
           "required": true,
-          "values": ["Dâu", "Đào", "Ổi hồng", "Việt quất", "Xoài", "Nho", "Kiwi", "Chanh dây", "Vải", "Bạc hà", "Blue Curacao", "Sâm dứa"]
+          "values": [
+            "Bạc hà",
+            "Cam",
+            "Caramel",
+            "Chanh",
+            "Chanh dây",
+            "Đào",
+            "Dâu",
+            "Dừa",
+            "Dưa hấu",
+            "Dưa lưới",
+            "Đường đen",
+            "Khoai môn",
+            "Việt quất",
+            "Vải",
+            "Thơm",
+            "Mãng cầu",
+            "Kiwi",
+            "Ổi hồng",
+            "Xoài",
+            "Nhãn",
+            "Lựu",
+            "Trái cây nhiệt đới"
+          ],
+          "valuesBySku": {
+            "BGKQ-0004": ["Bạc hà", "Cam", "Caramel", "Chanh", "Chanh dây", "Đào", "Dâu", "Dừa", "Dưa hấu", "Dưa lưới", "Đường đen", "Khoai môn"],
+            "BGKQ-0005": ["Việt quất", "Dâu", "Chanh", "Vải", "Thơm", "Mãng cầu", "Kiwi", "Chanh dây", "Đào", "Dưa hấu", "Ổi hồng", "Xoài", "Dưa lưới", "Nhãn", "Lựu", "Trái cây nhiệt đới"]
+          }
         }
       ],
       "variantOptions": {
@@ -54,10 +104,12 @@
         "BGKQ-0005": { "size": "700 ml", "package": "Thùng 12 chai", "sell_unit": "chai" }
       },
       "auditSources": [
+        "https://phacheviet.com/collections/syrup-golden-farm-2l",
         "https://phacheviet.com/products/syrup-golden-farm-2l-dau",
         "https://phacheviet.com/products/syrup-goldenfarm-dam-dac-700ml",
         "https://dodunglambanh.vn/siro-dam-dac-oi-hong-golden-farm-chai-700ml"
-      ]
+      ],
+      "auditNote": "Dung tích quyết định SKU và giá; vị là lựa chọn không đổi giá. Danh sách vị được giới hạn theo từng SKU."
     },
     "siro-gtp": {
       "catalogGroupKey": "siro",
@@ -66,7 +118,28 @@
           "key": "flavor",
           "name": "Vị",
           "required": true,
-          "values": ["Trái cây nhiệt đới", "Dâu", "Đường đen"]
+          "values": [
+            "Trái cây nhiệt đới",
+            "Sâm dứa",
+            "Ổi xá lị",
+            "Khoai môn",
+            "Việt quất",
+            "Phúc bồn tử",
+            "Chanh dây",
+            "Dưa lưới",
+            "Bạc hà",
+            "Kiwi",
+            "Vải",
+            "Nho",
+            "Táo xanh",
+            "Đào",
+            "Cam",
+            "Đường đen",
+            "Sô-cô-la",
+            "Dâu",
+            "Caramel",
+            "Blue Curacao"
+          ]
         }
       ],
       "variantOptions": {
@@ -85,7 +158,7 @@
           "key": "flavor",
           "name": "Vị",
           "required": true,
-          "values": ["Dâu", "Đào", "Vải", "Ổi", "Việt quất", "Phúc bồn tử", "Bạc hà", "Khoai môn", "Blue Curacao", "Sâm dứa", "Dưa lưới", "Kiwi", "Táo xanh", "Chanh dây", "Xoài"]
+          "values": ["Dâu", "Đào", "Vải", "Ổi", "Việt quất", "Phúc bồn tử", "Bạc hà", "Khoai môn", "Blue Curacao", "Sâm dứa", "Dưa lưới", "Kiwi", "Táo xanh", "Chanh dây", "Xoài", "Măng cụt", "Mật ong"]
         }
       ],
       "variantOptions": {
@@ -94,6 +167,7 @@
       "disabledSkus": ["BGKQ-0009"],
       "auditSources": [
         "https://sanhoxanh.com/",
+        "https://phacheviet.com/collections/syrup-vina",
         "https://phacheviet.com/products/vina-syrup-dau-750ml",
         "https://phacheviet.com/products/vina-syrup-vai-750ml"
       ],
@@ -106,14 +180,15 @@
           "key": "flavor",
           "name": "Vị",
           "required": true,
-          "values": ["Chanh", "Sâm dứa", "Dưa lưới", "Vải", "Đào", "Khoai môn", "Cam", "Dâu", "Ổi", "Việt quất", "Chanh dây", "Me", "Mơ", "Lựu"]
+          "values": ["Chanh xanh", "Sâm dứa", "Dưa lưới", "Vải", "Đào", "Khoai môn", "Cam", "Dâu", "Ổi hồng", "Việt quất", "Chanh dây", "Me", "Mơ", "Lựu", "Sầu riêng", "Sô-cô-la"]
         }
       ],
       "variantOptions": {
         "BGKQ-0010": { "size": "500 ml (680 g)", "package": "Thùng 24 chai", "sell_unit": "chai" }
       },
       "auditSources": [
-        "https://sanhoxanh.com/si-ro-carisa-dao-500ml-2/"
+        "https://sanhoxanh.com/si-ro-carisa-dao-500ml-2/",
+        "https://nguyenlieusohala.com/siro-carisa-chai-500ml"
       ]
     },
     "siro-changthai-bgkq-0011": {
@@ -123,7 +198,7 @@
           "key": "flavor",
           "name": "Vị",
           "required": true,
-          "values": ["Dâu", "Đào", "Vải", "Kiwi", "Chanh dây", "Phúc bồn tử", "Blue Curacao", "Việt quất", "Xoài", "Vỏ cam", "Trà xanh"]
+          "values": ["Đào", "Khoai môn", "Mãng cầu", "Ổi", "Blue Curacao", "Bạc hà", "Trà xanh", "Kiwi", "Táo xanh", "Phúc bồn tử", "Dưa lưới", "Xoài", "Chanh dây", "Việt quất", "Dâu", "Vải"]
         }
       ],
       "variantOptions": {
@@ -132,7 +207,8 @@
       "auditSources": [
         "https://saovietfood.vn/siro-chang-thai-dao.html",
         "https://phacheviet.com/products/syrup-changthai-vai"
-      ]
+      ],
+      "auditNote": "Bỏ lựa chọn Vỏ cam vì trùng nhận diện với Blue Curacao trong danh mục nguồn."
     },
     "siro-dd-hoang-kim-bgkq-0013": {
       "catalogGroupKey": "siro",
@@ -150,7 +226,11 @@
           "key": "flavor",
           "name": "Vị",
           "required": true,
-          "values": ["Dâu", "Đào", "Vải", "Bạc hà", "Chanh", "Đường đen"]
+          "values": ["Dâu", "Đào", "Vải", "Bạc hà", "Chanh", "Đường đen", "Dưa lưới", "Táo xanh", "Việt quất", "Sô-cô-la"],
+          "valuesBySku": {
+            "BGKQ-0012": ["Dâu", "Đào", "Vải", "Bạc hà", "Chanh", "Đường đen", "Dưa lưới", "Táo xanh", "Việt quất", "Sô-cô-la"],
+            "BGKQ-0014": ["Đào"]
+          }
         }
       ],
       "variantOptions": {
@@ -159,9 +239,11 @@
       },
       "auditSources": [
         "https://phacheviet.com/products/syrup-douxian-dao-2-5kg-1",
+        "https://pacheda.com/products/siro-douxian-cac-vi-2-5kg",
         "https://nguyenlieuphachequangnhung.com/products/siro-douxian-duong-den-2-5kg-binh-tron",
         "https://nguyenlieuphachequangnhung.com/products/siro-douxian-dao-2-5kg-binh-vuong"
-      ]
+      ],
+      "auditNote": "Kiểu bình quyết định SKU và giá; vị không đổi giá. Bình vuông hiện chỉ mở vị đã được xác nhận chắc chắn."
     }
   }
 }
