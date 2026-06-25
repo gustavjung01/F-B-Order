@@ -1,4 +1,4 @@
-import { DesktopHomeIndustry } from "@/components/desktop/DesktopHomeIndustry";
+import { DesktopHomeBranded } from "@/components/desktop/DesktopHomeBranded";
 
-const DesktopHome = DesktopHomeIndustry;
+const DesktopHome = DesktopHomeBranded;
 export { DesktopHome };
