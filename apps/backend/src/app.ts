@@ -5,7 +5,7 @@ import helmet from "helmet";
 import { createAdminCustomersRouter } from "./modules/admin/admin-customers.routes";
 import { anonymousIdentity, resolveRequestIdentity } from "./modules/auth/auth.identity";
 import { createAuthRouter } from "./modules/auth/auth.routes";
-import { createCatalogV2CartRouter } from "./modules/catalog-v2/catalog-v2-cart.routes";
+import { createCatalogV2ChoiceCartRouter } from "./modules/catalog-v2/catalog-v2-choice-cart.routes";
 import { createCatalogV2Router } from "./modules/catalog-v2/catalog-v2-grouped.routes";
 import { createCartRouter } from "./modules/catalog/cart.routes";
 import { createCatalogRouter } from "./modules/catalog/catalog.routes";
@@ -64,8 +64,8 @@ export function createApp(config: AppConfig) {
   app.use("/api/catalog", createCatalogRouter(identityResolver));
 
   if (clerkEnabled) {
-    app.use("/catalog/cart", createCatalogV2CartRouter(resolveRequestIdentity));
-    app.use("/api/cart-v2", createCatalogV2CartRouter(resolveRequestIdentity));
+    app.use("/catalog/cart", createCatalogV2ChoiceCartRouter(resolveRequestIdentity));
+    app.use("/api/cart-v2", createCatalogV2ChoiceCartRouter(resolveRequestIdentity));
     app.use("/api/auth", createAuthRouter(resolveRequestIdentity));
     app.use("/api/cart", createCartRouter(resolveRequestIdentity));
     app.use("/api/orders", createOrdersRouter(resolveRequestIdentity));
