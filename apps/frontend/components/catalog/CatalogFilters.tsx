@@ -1,15 +1,17 @@
 "use client";
 
 import { useState } from "react";
+import { BrandBadge, BrandFilterOption } from "@/components/catalog/BrandBadge";
 import type { CatalogV2FilterOption } from "@/data/catalog-v2/product-model";
 
 type CatalogFiltersProps = {
   industries: CatalogV2FilterOption[];
   brands: CatalogV2FilterOption[];
   selectedIndustry: string;
-  selectedBrand: string;
+  selectedBrands: string[];
   onIndustryChange: (value: string) => void;
-  onBrandChange: (value: string) => void;
+  onBrandToggle: (value: string) => void;
+  onClearBrands: () => void;
   onReset: () => void;
   resultCount: number;
   hideBrandFilter?: boolean;
@@ -19,13 +21,14 @@ function FilterFields({
   industries,
   brands,
   selectedIndustry,
-  selectedBrand,
+  selectedBrands,
   onIndustryChange,
-  onBrandChange,
+  onBrandToggle,
+  onClearBrands,
   hideBrandFilter = false,
 }: Omit<CatalogFiltersProps, "onReset" | "resultCount">) {
   return (
-    <div className={`grid gap-3 ${hideBrandFilter ? "" : "md:grid-cols-2"}`}>
+    <div className="grid gap-4">
       <label className="grid gap-1.5">
         <span className="text-xs font-black uppercase tracking-[0.12em] text-slate-500">Ngành hàng</span>
         <select
@@ -43,21 +46,31 @@ function FilterFields({
       </label>
 
       {!hideBrandFilter ? (
-        <label className="grid gap-1.5">
-          <span className="text-xs font-black uppercase tracking-[0.12em] text-slate-500">Thương hiệu</span>
-          <select
-            value={selectedBrand}
-            onChange={(event) => onBrandChange(event.target.value)}
-            className="h-12 rounded-[16px] border border-[#e7dccd] bg-white px-4 text-sm font-black text-[#0b1220] outline-none focus:border-[#ff5a00]"
-          >
-            <option value="all">Tất cả thương hiệu</option>
+        <section className="grid gap-2.5" aria-label="Lọc theo thương hiệu">
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <p className="text-xs font-black uppercase tracking-[0.12em] text-slate-500">Thương hiệu</p>
+              <p className="mt-1 text-[11px] font-bold text-slate-400">Có thể chọn nhiều thương hiệu</p>
+            </div>
+            {selectedBrands.length > 0 ? (
+              <button type="button" onClick={onClearBrands} className="shrink-0 rounded-full bg-[#fff3ea] px-3 py-1.5 text-[11px] font-black text-[#ff5a00]">
+                Bỏ chọn ({selectedBrands.length})
+              </button>
+            ) : null}
+          </div>
+
+          <div className="grid max-h-64 grid-cols-2 gap-2 overflow-y-auto pr-1 sm:grid-cols-3 lg:grid-cols-4">
             {brands.map((option) => (
-              <option key={option.id} value={option.id}>
-                {option.name} ({option.productCount})
-              </option>
+              <BrandFilterOption
+                key={option.id}
+                brand={option.name}
+                count={option.productCount}
+                selected={selectedBrands.includes(option.id)}
+                onToggle={() => onBrandToggle(option.id)}
+              />
             ))}
-          </select>
-        </label>
+          </div>
+        </section>
       ) : null}
     </div>
   );
@@ -66,15 +79,21 @@ function FilterFields({
 export function CatalogFilters(props: CatalogFiltersProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const hideBrandFilter = props.hideBrandFilter ?? false;
-  const hasFilter = props.selectedIndustry !== "all" || (!hideBrandFilter && props.selectedBrand !== "all");
+  const hasFilter = props.selectedIndustry !== "all" || (!hideBrandFilter && props.selectedBrands.length > 0);
   const selectedIndustryName = props.industries.find((item) => item.id === props.selectedIndustry)?.name;
-  const selectedBrandName = hideBrandFilter
-    ? undefined
-    : props.brands.find((item) => item.id === props.selectedBrand)?.name;
+  const selectedBrandOptions = hideBrandFilter
+    ? []
+    : props.selectedBrands
+      .map((brandId) => props.brands.find((item) => item.id === brandId))
+      .filter((item): item is CatalogV2FilterOption => Boolean(item));
   const filterDescription = hideBrandFilter
     ? "Sản phẩm đông lạnh được sắp xếp theo ngành hàng"
-    : "Lọc nhanh theo ngành hàng và thương hiệu";
-  const mobileFilterLabel = hideBrandFilter ? "Lọc sản phẩm đông lạnh" : "Lọc sản phẩm";
+    : "Lọc theo ngành hàng và chọn đồng thời nhiều thương hiệu";
+  const mobileFilterLabel = hideBrandFilter
+    ? "Lọc sản phẩm đông lạnh"
+    : props.selectedBrands.length > 0
+      ? `Bộ lọc · ${props.selectedBrands.length} thương hiệu`
+      : "Lọc sản phẩm";
 
   return (
     <>
@@ -111,18 +130,18 @@ export function CatalogFilters(props: CatalogFiltersProps) {
               {selectedIndustryName} ×
             </button>
           ) : null}
-          {selectedBrandName ? (
-            <button type="button" onClick={() => props.onBrandChange("all")} className="rounded-full bg-[#eefbf6] px-3 py-2 text-xs font-black text-[#08775f] ring-1 ring-[#b9eadb]">
-              {selectedBrandName} ×
+          {selectedBrandOptions.map((brand) => (
+            <button key={brand.id} type="button" onClick={() => props.onBrandToggle(brand.id)} className="rounded-full focus:outline-none">
+              <BrandBadge brand={brand.name} compact className="pr-2.5" />
             </button>
-          ) : null}
+          ))}
         </div>
       ) : null}
 
       {mobileOpen ? (
         <div className="fixed inset-0 z-[90] bg-slate-950/45 md:hidden" role="dialog" aria-modal="true">
           <button type="button" aria-label="Đóng bộ lọc" className="absolute inset-0 h-full w-full" onClick={() => setMobileOpen(false)} />
-          <section className="absolute inset-x-0 bottom-0 rounded-t-[30px] bg-[#f7f3eb] p-5 pb-[calc(env(safe-area-inset-bottom)+20px)] shadow-[0_-24px_80px_rgba(15,23,42,0.28)]">
+          <section className="absolute inset-x-0 bottom-0 max-h-[88vh] overflow-y-auto rounded-t-[30px] bg-[#f7f3eb] p-5 pb-[calc(env(safe-area-inset-bottom)+20px)] shadow-[0_-24px_80px_rgba(15,23,42,0.28)]">
             <div className="mx-auto mb-4 h-1.5 w-12 rounded-full bg-slate-300" />
             <div className="mb-5 flex items-center justify-between">
               <div>
