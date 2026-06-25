@@ -11,7 +11,13 @@ type AccountActionProps = {
   className?: string;
 };
 
-export function AccountAction({ href, children, signedOutLabel = "Dang nhap", signedOutHref = "/sign-in", className = "" }: AccountActionProps) {
+export function AccountAction({
+  href,
+  children,
+  signedOutLabel = "Đăng nhập",
+  signedOutHref = "/sign-in",
+  className = "",
+}: AccountActionProps) {
   const baseClass = className || "flex h-12 items-center justify-center rounded-[18px] bg-[#0b1220] px-5 text-[16px] font-black text-white shadow-[0_12px_22px_rgba(15,23,42,0.18)]";
 
   return (

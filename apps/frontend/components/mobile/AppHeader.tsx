@@ -42,7 +42,7 @@ export function AppHeader() {
   return (
     <header className={`fixed inset-x-0 top-0 z-40 border-b border-[#eee7dc]/70 bg-[#f7f3eb]/95 px-3 pb-1.5 pt-[calc(env(safe-area-inset-top)+6px)] backdrop-blur-xl transition-transform duration-200 ease-out will-change-transform ${hidden ? "-translate-y-full" : "translate-y-0"}`}>
       <div className="mx-auto flex max-w-md items-center justify-between gap-1.5">
-        <Link href="/" prefetch={false} aria-label="Bep Si F&B" className="block h-[48px] w-[194px] min-[375px]:w-[204px] min-[390px]:w-[210px] shrink-0 overflow-hidden rounded-[10px]">
+        <Link href="/" prefetch={false} aria-label="Bếp Sỉ F&B" className="block h-[48px] w-[194px] min-[375px]:w-[204px] min-[390px]:w-[210px] shrink-0 overflow-hidden rounded-[10px]">
           <span
             className="block h-full w-full"
             style={{
@@ -56,14 +56,14 @@ export function AppHeader() {
         </Link>
 
         <div className="flex shrink-0 items-center gap-1">
-          <span aria-label="Thong bao" className="grid h-9 w-9 place-items-center rounded-full bg-white text-[17px] font-black text-[#ff5a00] shadow-sm ring-1 ring-[#eee7dc]">🔔</span>
+          <span aria-label="Thông báo" className="grid h-9 w-9 place-items-center rounded-full bg-white text-[17px] font-black text-[#ff5a00] shadow-sm ring-1 ring-[#eee7dc]">🔔</span>
           <SignedIn>
             <div className="grid h-9 w-9 place-items-center rounded-full bg-white shadow-sm ring-1 ring-[#eee7dc]">
               <UserButton afterSignOutUrl="/" userProfileMode="modal" />
             </div>
           </SignedIn>
           <SignedOut>
-            <Link href="/sign-in" prefetch={false} aria-label="Account" className="grid h-9 w-9 place-items-center rounded-full bg-white text-[11px] font-black text-[#0b1220] shadow-sm ring-1 ring-[#eee7dc]">
+            <Link href="/sign-in" prefetch={false} aria-label="Tài khoản" className="grid h-9 w-9 place-items-center rounded-full bg-white text-[11px] font-black text-[#0b1220] shadow-sm ring-1 ring-[#eee7dc]">
               TK
             </Link>
           </SignedOut>

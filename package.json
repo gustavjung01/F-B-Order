@@ -17,7 +17,7 @@
     "build:backend": "pnpm --filter @fb-order/backend build",
     "lint": "pnpm -r lint",
     "typecheck": "pnpm -r typecheck",
-    "test:catalog-parent": "pnpm catalog:map:v2 && pnpm catalog:preview:parent:v2 && pnpm typecheck && pnpm run build:frontend",
+    "test:catalog-parent": "pnpm catalog:map:v2 && pnpm catalog:preview:parent:v2 && pnpm frontend:audit:copy && pnpm typecheck && pnpm run build:frontend",
     "test:auth-pricing": "pnpm --filter @fb-order/backend test:auth-pricing",
     "db:migrate": "pnpm --filter @fb-order/backend db:migrate",
     "db:migrate:baseline": "pnpm --filter @fb-order/backend db:migrate:baseline",
@@ -31,6 +31,7 @@
     "catalog:audit:content:v2": "node scripts/catalog/hung-phat-v2/build-content-audit.mjs",
     "catalog:db:audit:heroku:v2": "pnpm --filter @fb-order/backend catalog:v2:dry-run",
     "test:catalog-api:v2": "pnpm --filter @fb-order/backend test:catalog-v2",
+    "frontend:audit:copy": "node scripts/frontend/audit-production-copy.mjs",
     "catalog:preview:v2": "node scripts/catalog/hung-phat-v2/build-phase3-preview.mjs",
     "catalog:preview:parent:v2": "node scripts/catalog/hung-phat-v2/build-parent-map.mjs && node scripts/catalog/hung-phat-v2/build-parent-preview-v2.mjs"
   },

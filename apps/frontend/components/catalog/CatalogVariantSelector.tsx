@@ -194,7 +194,7 @@ export function CatalogVariantSelector({
       }
       setMessage(`Đã thêm ${items.length} phân loại, tổng ${totalQuantity} sản phẩm vào giỏ.`);
     } catch {
-      setMessage("Không kết nối được backend giỏ hàng.");
+      setMessage("Không thể cập nhật giỏ hàng. Vui lòng thử lại.");
     } finally {
       setAdding(false);
     }

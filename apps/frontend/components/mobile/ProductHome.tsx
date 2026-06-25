@@ -50,8 +50,8 @@ function ProductCard({ product, onOpen }: { product: CatalogV2VariantCard; onOpe
       </div>
 
       <div className="mt-2.5">
-        <p className="inline-flex max-w-full rounded-full bg-[#fff3ea] px-2.5 py-1.5 text-[12px] font-black text-[#ff5a00] ring-1 ring-[#ffd0b3]">
-          <span className="truncate">{getCatalogV2PriceLabel(product)}</span>
+        <p className="flex w-full items-center justify-center rounded-[13px] bg-[#fff3ea] px-2 py-1.5 text-center text-[11px] font-black leading-tight text-[#ff5a00] ring-1 ring-[#ffd0b3]">
+          {getCatalogV2PriceLabel(product)}
         </p>
       </div>
 
@@ -94,7 +94,7 @@ export function ProductHome({ active = "home" }: { active?: AppNavKey }) {
     isBrandFilterHidden,
   } = useCatalogBrowser();
 
-  const subtitle = loading ? "Đang tải catalog" : `${total} sản phẩm`;
+  const subtitle = loading ? "Đang tải sản phẩm" : `${total} sản phẩm`;
 
   return (
     <MobilePageShell active={active} title="Bếp Sỉ F&B" subtitle={subtitle}>
@@ -109,7 +109,7 @@ export function ProductHome({ active = "home" }: { active?: AppNavKey }) {
               Nguyên liệu F&B cho quán
             </h2>
           </div>
-          <input value={searchText} onChange={(event) => setSearchText(event.target.value)} placeholder="Tìm tên, thương hiệu hoặc SKU..." className="absolute bottom-4 left-4 right-4 h-12 rounded-[18px] border border-white/80 bg-white/95 px-4 text-[15px] font-bold shadow-sm outline-none placeholder:text-slate-400 focus:border-[#ff5a00] focus:bg-white" />
+          <input value={searchText} onChange={(event) => setSearchText(event.target.value)} placeholder="Tìm tên, thương hiệu hoặc mã sản phẩm..." className="absolute bottom-4 left-4 right-4 h-12 rounded-[18px] border border-white/80 bg-white/95 px-4 text-[15px] font-bold shadow-sm outline-none placeholder:text-slate-400 focus:border-[#ff5a00] focus:bg-white" />
         </div>
       </div>
 
@@ -129,7 +129,7 @@ export function ProductHome({ active = "home" }: { active?: AppNavKey }) {
 
       <div className="mt-4 flex items-center justify-between gap-3">
         <h2 className="text-xl font-black text-[#0b1220]">{loading ? "Đang tải" : `${total} sản phẩm`}</h2>
-        <span className="shrink-0 rounded-full bg-white px-3 py-1.5 text-[10px] font-black text-slate-500 ring-1 ring-[#eee7dc]">2 card / hàng</span>
+        <span className="shrink-0 rounded-full bg-white px-3 py-1.5 text-[10px] font-black text-slate-500 ring-1 ring-[#eee7dc]">Danh mục sản phẩm</span>
       </div>
 
       <div className="mt-3 grid grid-cols-2 items-stretch gap-3">

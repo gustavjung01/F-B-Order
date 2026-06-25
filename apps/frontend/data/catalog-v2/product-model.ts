@@ -38,6 +38,9 @@ export type CatalogV2VariantCard = {
   commercialDataConfidence?: "high" | "medium" | null;
   priceMode: "fixed" | "market";
   price: number | null;
+  priceMin?: number | null;
+  priceMax?: number | null;
+  variantCount?: number;
   priceLabel: string | null;
   pricing: CatalogV2Pricing;
   image: CatalogV2Image;

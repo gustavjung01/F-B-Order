@@ -37,12 +37,12 @@ function formatMoney(value: number) {
 }
 
 function syncErrorMessage(status: number, code?: string) {
-  if (status === 401 || code === "AUTH_REQUIRED") return "Bạn cần đăng nhập để đồng bộ giỏ hàng.";
+  if (status === 401 || code === "AUTH_REQUIRED") return "Bạn cần đăng nhập để cập nhật giỏ hàng.";
   if (code === "CUSTOMER_PROFILE_REQUIRED") return "Bạn cần tạo hồ sơ quán trước khi đặt hàng.";
   if (code === "CUSTOMER_NOT_APPROVED") return "Hồ sơ quán chưa được duyệt.";
-  if (code === "MARKET_PRICE") return "Sản phẩm thời giá không thể nằm trong giỏ đặt trực tiếp.";
+  if (code === "MARKET_PRICE") return "Sản phẩm thời giá cần được báo giá riêng.";
   if (code === "DEALER_PRICE_UNAVAILABLE") return "Sản phẩm chưa có giá đại lý.";
-  return "Backend chưa đồng bộ được giỏ hàng.";
+  return "Không thể cập nhật giỏ hàng. Vui lòng thử lại.";
 }
 
 export default function CartPage() {
@@ -87,9 +87,9 @@ export default function CartPage() {
         try {
           const detail = await fetchCatalogV2Detail(item.variantId);
           const variant = detail.variants.find((candidate) => candidate.variant_id === item.variantId) || null;
-          return { item, variant, error: variant ? null : "Biến thể không còn tồn tại" };
+          return { item, variant, error: variant ? null : "Sản phẩm này không còn được bán" };
         } catch {
-          return { item, variant: null, error: "Không kết nối được catalog" };
+          return { item, variant: null, error: "Không tải được thông tin sản phẩm" };
         }
       }));
 
@@ -138,7 +138,7 @@ export default function CartPage() {
       }
     } catch {
       setStoredItems(updateCartItemQuantity(item.variantId, previousQuantity));
-      setError("Không kết nối được backend để cập nhật số lượng.");
+      setError("Không thể cập nhật số lượng. Vui lòng thử lại.");
     } finally {
       setSyncingVariantId(null);
     }
@@ -158,7 +158,7 @@ export default function CartPage() {
       }
       setStoredItems(removeCartItem(variantId));
     } catch {
-      setError("Không kết nối được backend để xóa sản phẩm.");
+      setError("Không thể xóa sản phẩm. Vui lòng thử lại.");
     } finally {
       setSyncingVariantId(null);
     }
@@ -171,7 +171,7 @@ export default function CartPage() {
       fetch(`/api/cart-v2/items/${encodeURIComponent(item.variantId)}`, { method: "DELETE" })
     )));
     if (results.some((response) => !response.ok)) {
-      setError("Có dòng chưa xóa được trên backend. Hãy thử lại.");
+      setError("Một số sản phẩm chưa thể xóa. Vui lòng thử lại.");
       return;
     }
     clearCartItems();
@@ -179,20 +179,20 @@ export default function CartPage() {
   }
 
   return (
-    <ResponsivePageShell active="cart" title="Giỏ hàng" subtitle={itemCount > 0 ? `${itemCount} sản phẩm` : "Giỏ hàng variant_id"}>
+    <ResponsivePageShell active="cart" title="Giỏ hàng" subtitle={itemCount > 0 ? `${itemCount} sản phẩm` : "Chưa có sản phẩm"}>
       <section className="rounded-[26px] bg-[#fff1d7] p-5 shadow-[0_14px_30px_rgba(15,23,42,0.085)] ring-1 ring-white/80 md:p-8">
-        <p className="text-[12px] font-black uppercase tracking-[0.16em] text-[#ff5a00]">Catalog v2</p>
-        <h1 className="mt-3 text-[26px] font-black leading-tight tracking-tight md:text-5xl">Giỏ hàng lưu đúng variant_id</h1>
-        <p className="mt-3 text-[14px] font-semibold leading-6 text-slate-700 md:text-base">Tên, SKU, giá đại lý và ảnh luôn được tải lại từ biến thể thật.</p>
+        <p className="text-[12px] font-black uppercase tracking-[0.16em] text-[#ff5a00]">Đơn hàng của bạn</p>
+        <h1 className="mt-3 text-[26px] font-black leading-tight tracking-tight md:text-5xl">Kiểm tra sản phẩm trước khi đặt hàng</h1>
+        <p className="mt-3 text-[14px] font-semibold leading-6 text-slate-700 md:text-base">Giá và tình trạng sản phẩm được cập nhật trực tiếp từ hệ thống.</p>
       </section>
 
       {error ? <p className="mt-4 rounded-[20px] bg-red-50 p-4 text-sm font-black text-red-700 ring-1 ring-red-100">{error}</p> : null}
-      {!loaded || hydrating ? <p className="mt-4 rounded-[24px] bg-white p-5 font-black text-slate-600 ring-1 ring-[#eee7dc]">Đang tải các variant trong giỏ...</p> : null}
+      {!loaded || hydrating ? <p className="mt-4 rounded-[24px] bg-white p-5 font-black text-slate-600 ring-1 ring-[#eee7dc]">Đang cập nhật giỏ hàng...</p> : null}
 
       {loaded && storedItems.length === 0 ? (
         <section className="mt-4 rounded-[26px] bg-white p-5 ring-1 ring-[#efe7dc]">
           <h2 className="text-[24px] font-black">Giỏ hàng đang trống</h2>
-          <Link href="/products" className="mt-5 inline-flex rounded-[18px] bg-[#0b1220] px-5 py-3 text-sm font-black text-white">Xem 188 sản phẩm</Link>
+          <Link href="/" className="mt-5 inline-flex rounded-[18px] bg-[#0b1220] px-5 py-3 text-sm font-black text-white">Tiếp tục mua hàng</Link>
         </section>
       ) : null}
 
@@ -210,14 +210,14 @@ export default function CartPage() {
                     </Link>
                     <div className="min-w-0 flex-1">
                       <Link href={`/products/${variant.variant_id}`} className="text-[18px] font-black leading-tight hover:text-[#ff5a00]">{variant.name}</Link>
-                      <p className="mt-1 text-xs font-bold text-slate-500">{variant.sku}</p>
+                      <p className="mt-1 text-xs font-bold text-slate-500">Mã sản phẩm: {variant.sku}</p>
                       <p className="mt-1 text-xs font-bold text-slate-500">{getCatalogV2OptionSummary(variant)}</p>
                       <p className="mt-2 text-xs font-black uppercase tracking-[0.1em] text-[#ff5a00]">Giá đại lý</p>
                       <p className="mt-1 text-sm font-black text-[#ff5a00]">{getCatalogV2PriceLabel(variant)}</p>
                       {variant.price !== null ? <p className="mt-1 text-lg font-black text-[#ff5a00]">{formatMoney(variant.price * line.item.quantity)}</p> : null}
                     </div>
                   </div>
-                ) : <p className="font-black text-red-700">{line.error || `Không tìm thấy variant ${line.item.variantId}`}</p>}
+                ) : <p className="font-black text-red-700">{line.error || "Không tìm thấy thông tin sản phẩm"}</p>}
 
                 <div className="mt-4 flex items-center gap-3">
                   <div className="grid h-11 flex-1 grid-cols-3 overflow-hidden rounded-[16px] border border-[#eee7dc] bg-[#fbfaf7] font-black md:max-w-[220px]">
@@ -238,15 +238,15 @@ export default function CartPage() {
           <div className="flex items-center justify-between gap-3">
             <div>
               <p className="text-xs font-black uppercase tracking-[0.14em] text-slate-400">Tạm tính theo giá đại lý</p>
-              <p className="mt-1 text-2xl font-black text-[#ff5a00]">{completePriceCount === lines.length ? formatMoney(totalPreview) : "Có dòng chưa có giá"}</p>
+              <p className="mt-1 text-2xl font-black text-[#ff5a00]">{completePriceCount === lines.length ? formatMoney(totalPreview) : "Có sản phẩm chưa có giá"}</p>
             </div>
             <button type="button" onClick={() => void clearCart()} className="text-sm font-black text-slate-500">Xóa giỏ</button>
           </div>
           <div className="mt-4 rounded-[18px] bg-[#fbfaf7] p-4 text-sm font-bold leading-6 text-slate-600 ring-1 ring-[#eee7dc]">
-            Giỏ hàng lưu variant_id. Bước tiếp theo là nối order v2 theo đúng biến thể.
+            Đơn hàng sẽ được xác nhận theo đúng sản phẩm, quy cách và số lượng đã chọn.
           </div>
           <button type="button" disabled className="mt-4 h-[52px] w-full cursor-not-allowed rounded-[18px] bg-slate-300 px-5 py-3 text-base font-black text-white">
-            Checkout variant đang chờ order v2
+            Đặt hàng trực tuyến đang được hoàn thiện
           </button>
         </section>
       ) : null}

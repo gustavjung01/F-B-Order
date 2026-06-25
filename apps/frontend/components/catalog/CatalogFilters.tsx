@@ -72,9 +72,9 @@ export function CatalogFilters(props: CatalogFiltersProps) {
     ? undefined
     : props.brands.find((item) => item.id === props.selectedBrand)?.name;
   const filterDescription = hideBrandFilter
-    ? "Đông Lạnh chỉ lọc theo ngành hàng"
-    : "Chọn theo ngành hàng và thương hiệu";
-  const mobileFilterLabel = hideBrandFilter ? "Bộ lọc: Đông Lạnh" : "Bộ lọc: Ngành hàng · Thương hiệu";
+    ? "Sản phẩm đông lạnh được sắp xếp theo ngành hàng"
+    : "Lọc nhanh theo ngành hàng và thương hiệu";
+  const mobileFilterLabel = hideBrandFilter ? "Lọc sản phẩm đông lạnh" : "Lọc sản phẩm";
 
   return (
     <>

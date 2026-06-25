@@ -42,9 +42,9 @@ export function ProductQuickView({ product, onClose }: { product: CatalogV2Varia
         if (!active) return;
         setDetail(data);
         setSelectedVariantId(data.selectedVariantId || product.variant_id);
-      } catch (error) {
+      } catch {
         if (!active) return;
-        setMessage(error instanceof Error ? error.message : "Không tải được sản phẩm");
+        setMessage("Không tải được thông tin sản phẩm");
       } finally {
         if (active) setLoading(false);
       }
@@ -87,7 +87,7 @@ export function ProductQuickView({ product, onClose }: { product: CatalogV2Varia
         <div className="flex items-center justify-between border-b border-[#eee7dc] px-4 py-3">
           <div>
             <p className="text-[11px] font-black uppercase tracking-[0.14em] text-[#ff5a00]">Chọn phân loại</p>
-            <p className="text-sm font-bold text-slate-500">Một sản phẩm cha · nhiều biến thể</p>
+            <p className="text-sm font-bold text-slate-500">Chọn đúng quy cách và số lượng cần mua</p>
           </div>
           <button type="button" onClick={onClose} className="grid h-9 w-9 place-items-center rounded-full bg-white text-lg font-black text-slate-700 shadow-sm ring-1 ring-[#eee7dc]">×</button>
         </div>
@@ -99,11 +99,11 @@ export function ProductQuickView({ product, onClose }: { product: CatalogV2Varia
 
           {selectedVariant.brand ? <p className="mt-4 text-[11px] font-black uppercase tracking-[0.12em] text-[#ff5a00]">{selectedVariant.brand}</p> : null}
           <h2 className="mt-2 text-[28px] font-black leading-tight tracking-tight text-[#0b1220]">{detail?.product.name || product.name}</h2>
-          <p className="mt-2 text-sm font-bold text-slate-500">Đang chọn SKU: {selectedVariant.sku}</p>
+          <p className="mt-2 text-sm font-bold text-slate-500">Mã sản phẩm: {selectedVariant.sku}</p>
 
           {selectedVariant.shortDescription ? (
             <div className="mt-4 rounded-[20px] bg-white p-4 text-sm font-bold leading-relaxed text-slate-600 ring-1 ring-[#eee7dc]">
-              <p className="text-[11px] font-black uppercase tracking-[0.12em] text-slate-400">Mô tả ngắn</p>
+              <p className="text-[11px] font-black uppercase tracking-[0.12em] text-slate-400">Thông tin sản phẩm</p>
               <p className="mt-2">{selectedVariant.shortDescription}</p>
             </div>
           ) : null}
@@ -114,11 +114,11 @@ export function ProductQuickView({ product, onClose }: { product: CatalogV2Varia
             </div>
           ) : (
             <p className="mt-4 rounded-[18px] bg-amber-50 p-3 text-sm font-black text-amber-800 ring-1 ring-amber-100">
-              Dung tích hoặc khối lượng chưa được xác minh từ nguồn hàng.
+              Quy cách sản phẩm đang được cập nhật.
             </p>
           )}
 
-          {loading ? <p className="mt-4 rounded-[18px] bg-white p-4 text-sm font-black text-slate-500 ring-1 ring-[#eee7dc]">Đang tải phân loại...</p> : null}
+          {loading ? <p className="mt-4 rounded-[18px] bg-white p-4 text-sm font-black text-slate-500 ring-1 ring-[#eee7dc]">Đang tải các lựa chọn...</p> : null}
           {message ? <p className="mt-4 rounded-[18px] bg-red-50 p-4 text-sm font-black text-red-700">{message}</p> : null}
 
           {detail ? (
