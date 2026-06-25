@@ -15,15 +15,15 @@
   "groups": [
     {
       "parentKey": "sot-gold",
-      "name": "Sốt Gold",
-      "brand": "Gold",
+      "name": "Sốt Golden Farm",
+      "brand": "Golden Farm",
       "coverImageKey": "bgkq-0088",
       "optionGroups": ["flavor"],
       "members": [
         { "sku": "BGKQ-0088", "variantKey": "sot-gold--matcha", "options": { "flavor": "matcha" } },
         { "sku": "BGKQ-0089", "variantKey": "sot-gold--socola", "options": { "flavor": "socola" } },
         { "sku": "BGKQ-0090", "variantKey": "sot-gold--mon", "options": { "flavor": "mon" } },
-        { "sku": "BGKQ-0091", "variantKey": "sot-gold--khac", "options": { "flavor": "khac" } }
+        { "sku": "BGKQ-0091", "variantKey": "sot-gold--caramel", "options": { "flavor": "caramel" } }
       ]
     },
     {
