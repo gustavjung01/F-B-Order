@@ -2,6 +2,7 @@ import { enrichCatalogV2Variant } from "@/data/catalog-v2/commercial-supplements
 import type {
   CatalogV2DetailResponse,
   CatalogV2ListResponse,
+  CatalogV2OptionGroup,
 } from "@/data/catalog-v2/product-model";
 
 export class CatalogV2RequestError extends Error {
@@ -17,6 +18,53 @@ export class CatalogV2RequestError extends Error {
 }
 
 const inFlightRequests = new Map<string, Promise<unknown>>();
+
+function normalizedOptionGroupKey(value: string) {
+  const key = value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/đ/g, "d")
+    .replace(/[^a-z0-9]+/g, "_")
+    .replace(/^_+|_+$/g, "");
+
+  if ([
+    "size",
+    "kich_thuoc",
+    "dung_tich",
+    "khoi_luong",
+    "trong_luong",
+    "volume",
+    "weight",
+    "capacity",
+  ].includes(key)) {
+    return "size";
+  }
+
+  return key;
+}
+
+export function normalizeCatalogV2OptionGroups(groups: CatalogV2OptionGroup[]) {
+  const merged = new Map<string, CatalogV2OptionGroup>();
+
+  for (const group of groups) {
+    const key = normalizedOptionGroupKey(group.key || group.name);
+    const current = merged.get(key);
+    const values = current ? [...current.values] : [];
+
+    for (const value of group.values) {
+      if (!values.includes(value)) values.push(value);
+    }
+
+    merged.set(key, {
+      key,
+      name: key === "size" ? "Dung tích / khối lượng" : group.name,
+      values,
+    });
+  }
+
+  return [...merged.values()];
+}
 
 async function requestJson<T>(url: string): Promise<T> {
   const existing = inFlightRequests.get(url);
@@ -61,6 +109,7 @@ export async function fetchCatalogV2Detail(variantId: string) {
   );
   return {
     ...response,
+    optionGroups: normalizeCatalogV2OptionGroups(response.optionGroups),
     variants: response.variants.map(enrichCatalogV2Variant),
   };
 }
