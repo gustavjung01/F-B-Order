@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { CatalogFilters } from "@/components/catalog/CatalogFilters";
 import { CatalogHero } from "@/components/catalog/CatalogHero";
 import { CompactProductCard } from "@/components/catalog/CompactProductCard";
-import { IndustryCatalogFilters } from "@/components/catalog/IndustryCatalogFilters";
-import { useIndustryCatalogBrowser } from "@/components/catalog/useIndustryCatalogBrowser";
+import { useMultiBrandCatalogBrowser } from "@/components/catalog/useMultiBrandCatalogBrowser";
 import { MobilePageShell } from "@/components/mobile/MobilePageShell";
 import { ProductQuickView } from "@/components/mobile/ProductQuickView";
 import type { AppNavKey } from "@/components/navigation/app-navigation";
@@ -16,13 +16,13 @@ function ProductListState({ children }: { children: string }) {
 
 export function ProductHomeBranded({ active = "home", initialCatalog }: { active?: AppNavKey; initialCatalog: CatalogV2ListResponse | null }) {
   const [selectedProduct, setSelectedProduct] = useState<CatalogV2VariantCard | null>(null);
-  const catalog = useIndustryCatalogBrowser(initialCatalog);
+  const catalog = useMultiBrandCatalogBrowser(initialCatalog);
   return (
     <MobilePageShell active={active} title="Bếp Sỉ F&B" subtitle={catalog.loading ? "Đang tải sản phẩm" : `${catalog.total} sản phẩm`}>
       <h1 className="sr-only">Sản phẩm</h1>
       <CatalogHero searchText={catalog.searchText} onSearchChange={catalog.setSearchText} />
       <div className="mt-4">
-        <IndustryCatalogFilters industries={catalog.industries} selectedIndustry={catalog.selectedIndustry} onIndustryChange={catalog.setSelectedIndustry} onReset={catalog.resetFilters} resultCount={catalog.total} />
+        <CatalogFilters industries={catalog.industries} brands={catalog.brands} selectedIndustry={catalog.selectedIndustry} selectedBrands={catalog.selectedBrands} onIndustryChange={catalog.setSelectedIndustry} onBrandToggle={catalog.toggleBrand} onClearBrands={catalog.clearBrands} onReset={catalog.resetFilters} resultCount={catalog.total} hideBrandFilter={catalog.isBrandFilterHidden} />
       </div>
       <div className="mt-4 flex items-center justify-between gap-3">
         <h2 className="text-xl font-black text-[#0b1220]">{catalog.loading ? "Đang tải" : `${catalog.total} sản phẩm`}</h2>
