@@ -90,14 +90,30 @@ function validateChoiceGroups(groups, productKey) {
   }
 }
 
+function validateStringMap(value, field, productKey) {
+  if (value === undefined) return;
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    throw new Error(`${field} must be an object for ${productKey}`);
+  }
+  for (const [key, entry] of Object.entries(value)) {
+    if (!String(key).trim() || !String(entry || "").trim()) {
+      throw new Error(`Invalid ${field} entry for ${productKey}`);
+    }
+  }
+}
+
 export function loadCatalogV2ProductMetadata(repoRoot) {
   const dataDir = path.join(repoRoot, "data/catalog/hung-phat/v2");
   const taxonomy = JSON.parse(fs.readFileSync(path.join(dataDir, "tea-group-taxonomy.json"), "utf8"));
   const metadata = JSON.parse(fs.readFileSync(path.join(dataDir, "catalog-product-metadata.json"), "utf8"));
+  const overridesPath = path.join(dataDir, "catalog-product-overrides.json");
+  const overrides = fs.existsSync(overridesPath)
+    ? JSON.parse(fs.readFileSync(overridesPath, "utf8"))
+    : { version: 1, products: {} };
   const mappingRows = parseCsv(fs.readFileSync(path.join(dataDir, "tea-product-group-map.csv"), "utf8"));
 
   if (taxonomy.industryKey !== "nguyen-lieu-tra-sua") throw new Error("Unexpected tea taxonomy industry key.");
-  if (metadata.version !== 1) throw new Error("Unsupported catalog product metadata version.");
+  if (metadata.version !== 1 || overrides.version !== 1) throw new Error("Unsupported catalog product metadata version.");
 
   const validGroups = new Set(taxonomy.groups.map((group) => group.key));
   const approvedGroups = new Map();
@@ -110,15 +126,23 @@ export function loadCatalogV2ProductMetadata(repoRoot) {
     approvedGroups.set(parentKey, groupKey);
   }
 
+  const configuredProducts = {
+    ...(metadata.products || {}),
+    ...(overrides.products || {}),
+  };
   const products = new Map();
   const disabledSkus = new Set();
-  for (const [productKey, value] of Object.entries(metadata.products || {})) {
+  for (const [productKey, value] of Object.entries(configuredProducts)) {
     const product = value && typeof value === "object" ? value : {};
     const choiceGroups = product.choiceGroups || [];
     validateChoiceGroups(choiceGroups, productKey);
     if (product.catalogGroupKey && !validGroups.has(product.catalogGroupKey)) {
       throw new Error(`Unknown metadata group ${product.catalogGroupKey} for ${productKey}.`);
     }
+    if (product.optionGroupsOverride !== undefined && !Array.isArray(product.optionGroupsOverride)) {
+      throw new Error(`optionGroupsOverride must be an array for ${productKey}`);
+    }
+    validateStringMap(product.variantNameOverrides, "variantNameOverrides", productKey);
     for (const sku of product.disabledSkus || []) disabledSkus.add(String(sku));
     products.set(productKey, product);
   }
@@ -127,14 +151,23 @@ export function loadCatalogV2ProductMetadata(repoRoot) {
     disabledSkus,
     forProduct(row) {
       const configured = products.get(row.productKey) || {};
-      const catalogGroupKey = configured.catalogGroupKey
-        || approvedGroups.get(row.productKey)
-        || (row.industryKey === taxonomy.industryKey ? inferTeaGroup(row) : null);
+      const hasConfiguredGroup = Object.prototype.hasOwnProperty.call(configured, "catalogGroupKey");
+      const catalogGroupKey = hasConfiguredGroup
+        ? configured.catalogGroupKey
+        : approvedGroups.get(row.productKey)
+          || (row.industryKey === taxonomy.industryKey ? inferTeaGroup(row) : null);
       return {
         catalogGroupKey,
         choiceGroups: configured.choiceGroups || [],
         nameOverride: configured.nameOverride || null,
+        brandOverride: configured.brandOverride || null,
+        industryOverride: configured.industryOverride || null,
+        industryKeyOverride: configured.industryKeyOverride || null,
+        sourceGroupOverride: configured.sourceGroupOverride || null,
+        subcategoryOverride: configured.subcategoryOverride || null,
+        optionGroupsOverride: configured.optionGroupsOverride || null,
         variantOptions: configured.variantOptions || {},
+        variantNameOverrides: configured.variantNameOverrides || {},
       };
     },
   };

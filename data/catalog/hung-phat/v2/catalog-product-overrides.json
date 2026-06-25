@@ -1,0 +1,76 @@
+{
+  "version": 1,
+  "products": {
+    "thach-douxian-cac-loai-bgkq-0083": {
+      "catalogGroupKey": "thach-rau-cau",
+      "choiceGroups": [
+        {
+          "key": "flavor_or_type",
+          "name": "Loại / vị",
+          "required": true,
+          "values": [
+            "Hạt 3D lớn - Cà phê",
+            "Hạt rau câu nguyên vị",
+            "Hạt 5 màu",
+            "Hạt 3D lớn - Matcha",
+            "Cá 4 màu",
+            "Trứng",
+            "Thạch dừa hương dâu",
+            "Thạch dừa hương vải",
+            "Thạch dừa táo xanh"
+          ]
+        }
+      ],
+      "auditNote": "Các loại dùng chung SKU BGKQ-0083, giá và ảnh; lựa chọn được lưu trong đơn hàng."
+    },
+    "sot-douxian-cac-loai-bgkq-0087": {
+      "catalogGroupKey": "sot",
+      "choiceGroups": [
+        {
+          "key": "flavor",
+          "name": "Vị",
+          "required": true,
+          "values": ["Caramel", "Dâu", "Sô-cô-la"]
+        }
+      ],
+      "auditNote": "Ba vị dùng chung SKU BGKQ-0087, giá và ảnh."
+    },
+    "sot-gold": {
+      "nameOverride": "Sốt Golden Farm",
+      "brandOverride": "Golden Farm",
+      "catalogGroupKey": "sot",
+      "choiceGroups": [],
+      "optionGroupsOverride": ["flavor"],
+      "variantOptions": {
+        "BGKQ-0088": { "flavor": "Matcha", "package": "Thùng 12 chai" },
+        "BGKQ-0089": { "flavor": "Sô-cô-la", "package": "Thùng 12 chai" },
+        "BGKQ-0090": { "flavor": "Môn", "package": "Thùng 12 chai" },
+        "BGKQ-0091": { "flavor": "Caramel", "package": "Thùng 12 chai" }
+      },
+      "variantNameOverrides": {
+        "BGKQ-0088": "Sốt Golden Farm Matcha",
+        "BGKQ-0089": "Sốt Golden Farm Sô-cô-la",
+        "BGKQ-0090": "Sốt Golden Farm Môn",
+        "BGKQ-0091": "Sốt Golden Farm Caramel"
+      },
+      "auditNote": "Giữ bốn SKU riêng vì bốn mức giá khác nhau; BGKQ-0091 được xác định là Caramel."
+    },
+    "sinh-to-vina": {
+      "catalogGroupKey": "sinh-to",
+      "choiceGroups": [],
+      "optionGroupsOverride": ["size", "flavor"],
+      "sourceGroupOverride": "Sinh Tố Vina",
+      "subcategoryOverride": "Sinh Tố Vina",
+      "auditNote": "Giữ flavor và size là variant có giá riêng; chỉ sửa source group bị ghi nhầm."
+    },
+    "pho-mai-mozzarella": {
+      "catalogGroupKey": null,
+      "choiceGroups": [],
+      "industryOverride": "Đông Lạnh",
+      "industryKeyOverride": "dong-lanh",
+      "sourceGroupOverride": "Thực Phẩm Đông Lạnh",
+      "subcategoryOverride": "Thực Phẩm Đông Lạnh",
+      "auditNote": "Phô mai Mozzarella là hàng đông lạnh, không thuộc Nguyên Liệu Trà Sữa."
+    }
+  }
+}
