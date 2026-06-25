@@ -388,14 +388,14 @@ export function createCatalogV2Router(
              ) AS product_rank,
              (SELECT COUNT(*)
               FROM catalog_variants sibling
-              WHERE sibling.product_id = base.product_id
+              WHERE sibling.product_id = base.product_id::uuid
                 AND sibling.catalog_version = 'hung-phat-v2'
                 AND sibling.is_active = true
                 AND sibling.is_public = true
                 AND sibling.status IN ('active', 'market_price'))::int AS parent_variant_count,
              (SELECT MIN(sibling.shop_price)::text
               FROM catalog_variants sibling
-              WHERE sibling.product_id = base.product_id
+              WHERE sibling.product_id = base.product_id::uuid
                 AND sibling.catalog_version = 'hung-phat-v2'
                 AND sibling.is_active = true
                 AND sibling.is_public = true
@@ -404,7 +404,7 @@ export function createCatalogV2Router(
                 AND sibling.shop_price IS NOT NULL) AS parent_min_price,
              (SELECT MAX(sibling.shop_price)::text
               FROM catalog_variants sibling
-              WHERE sibling.product_id = base.product_id
+              WHERE sibling.product_id = base.product_id::uuid
                 AND sibling.catalog_version = 'hung-phat-v2'
                 AND sibling.is_active = true
                 AND sibling.is_public = true
