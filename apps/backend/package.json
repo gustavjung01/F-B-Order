@@ -20,7 +20,7 @@
     "catalog:audit": "node scripts/audit-catalog-source.mjs",
     "catalog:import": "node scripts/import-hung-phat-catalog.mjs",
     "catalog:v2:dry-run": "node scripts/import-catalog-v2.mjs",
-    "catalog:v2:apply": "node scripts/apply-catalog-v2-release.mjs"
+    "catalog:v2:apply": "node scripts/import-catalog-v2.mjs --apply"
   },
   "dependencies": {
     "@clerk/express": "latest",
