@@ -88,7 +88,7 @@ type FacetRow = {
 type CatalogFilters = {
   q: string | null;
   industry: string | null;
-  brand: string | null;
+  brands: string[];
   subcategory: string | null;
 };
 
@@ -96,6 +96,14 @@ type FilterKey = keyof CatalogFilters;
 
 function readText(value: unknown): string | null {
   return typeof value === "string" && value.trim() ? value.trim() : null;
+}
+
+function readTextList(value: unknown): string[] {
+  const values = Array.isArray(value) ? value : [value];
+  const normalized = values.flatMap((item) => (
+    typeof item === "string" ? item.split(",") : []
+  )).map((item) => item.trim()).filter(Boolean);
+  return [...new Set(normalized)].slice(0, 50);
 }
 
 function readBoundedInteger(value: unknown, fallback: number, minimum: number, maximum: number): number {
@@ -373,9 +381,9 @@ function buildFilterQuery(
     values.push(filters.industry);
     clauses.push(`product.industry_key = $${values.length}`);
   }
-  if (!omitted.has("brand") && filters.brand && filters.brand !== "all") {
-    values.push(filters.brand);
-    clauses.push(`product.brand = $${values.length}`);
+  if (!omitted.has("brands") && filters.brands.length > 0) {
+    values.push(filters.brands);
+    clauses.push(`product.brand = ANY($${values.length}::text[])`);
   }
   if (!omitted.has("subcategory") && filters.subcategory && filters.subcategory !== "all") {
     values.push(filters.subcategory);
@@ -414,7 +422,7 @@ export function createCatalogV2Router(
     const filters: CatalogFilters = {
       q: readText(req.query.q),
       industry: readText(req.query.industry),
-      brand: readText(req.query.brand),
+      brands: readTextList(req.query.brand),
       subcategory: readText(req.query.subcategory),
     };
     const limit = readLimit(req.query.limit);
@@ -423,7 +431,7 @@ export function createCatalogV2Router(
     const listFilter = buildFilterQuery(filters, [priceGroupId]);
     const countFilter = buildFilterQuery(filters);
     const industryFacetFilter = buildFilterQuery(filters, [], new Set<FilterKey>(["industry"]));
-    const brandFacetFilter = buildFilterQuery(filters, [], new Set<FilterKey>(["brand"]));
+    const brandFacetFilter = buildFilterQuery(filters, [], new Set<FilterKey>(["brands"]));
 
     listFilter.values.push(limit, offset);
     const limitParameter = listFilter.values.length - 1;
