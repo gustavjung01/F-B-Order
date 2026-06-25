@@ -14,7 +14,7 @@ import {
 } from "../catalog-v2/catalog-v2.pricing";
 import { OrderEngineError } from "./order-errors";
 
-const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{12}$/i;
+const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const MAX_ORDER_LINES = 100;
 const MAX_ITEM_QUANTITY = 1_000_000;
 const MAX_SELECTION_COUNT = 20;
