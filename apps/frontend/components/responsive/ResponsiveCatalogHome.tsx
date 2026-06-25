@@ -1,8 +1,8 @@
 "use client";
 
 import { createElement, useSyncExternalStore } from "react";
-import { DesktopHome } from "@/components/desktop/DesktopHome";
-import { ProductHome } from "@/components/mobile/ProductHome";
+import { DesktopHomeBranded } from "@/components/desktop/DesktopHomeBranded";
+import { ProductHomeBranded } from "@/components/mobile/ProductHomeBranded";
 import type { AppNavKey } from "@/components/navigation/app-navigation";
 import type { CatalogV2ListResponse } from "@/data/catalog-v2/product-model";
 
@@ -28,9 +28,9 @@ export function ResponsiveCatalogHome(props: {
 }) {
   const isDesktop = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
   if (isDesktop) {
-    return createElement(DesktopHome, { active: props.active ?? "home" });
+    return createElement(DesktopHomeBranded, { active: props.active ?? "home" });
   }
-  return createElement(ProductHome, {
+  return createElement(ProductHomeBranded, {
     active: props.active ?? "home",
     initialCatalog: props.initialCatalog,
   });
