@@ -137,18 +137,42 @@ function displayOptions(value: unknown): Record<string, string> {
   return result;
 }
 
+function displayChoiceValues(value: unknown) {
+  return Array.isArray(value)
+    ? [...new Set(value.map(displayValue).filter((item): item is string => typeof item === "string" && Boolean(item)))]
+    : [];
+}
+
 function normalizeChoiceGroups(value: unknown) {
   if (!Array.isArray(value)) return [];
   return value.flatMap((group) => {
     if (!group || typeof group !== "object") return [];
-    const raw = group as { key?: unknown; name?: unknown; required?: unknown; values?: unknown };
+    const raw = group as {
+      key?: unknown;
+      name?: unknown;
+      required?: unknown;
+      values?: unknown;
+      valuesBySku?: unknown;
+    };
     const key = typeof raw.key === "string" ? canonicalOptionKey(raw.key) : "";
     const name = typeof raw.name === "string" ? raw.name.trim() : "";
-    const values = Array.isArray(raw.values)
-      ? raw.values.map(displayValue).filter((item): item is string => typeof item === "string" && Boolean(item))
-      : [];
+    const values = displayChoiceValues(raw.values);
     if (!key || !name || values.length === 0) return [];
-    return [{ key, name, required: raw.required !== false, values: [...new Set(values)] }];
+
+    const valuesBySku = raw.valuesBySku && typeof raw.valuesBySku === "object" && !Array.isArray(raw.valuesBySku)
+      ? Object.fromEntries(Object.entries(raw.valuesBySku as Record<string, unknown>).flatMap(([sku, scoped]) => {
+        const scopedValues = displayChoiceValues(scoped);
+        return sku.trim() && scopedValues.length > 0 ? [[sku.trim(), scopedValues] as const] : [];
+      }))
+      : {};
+
+    return [{
+      key,
+      name,
+      required: raw.required !== false,
+      values,
+      ...(Object.keys(valuesBySku).length > 0 ? { valuesBySku } : {}),
+    }];
   });
 }
 
