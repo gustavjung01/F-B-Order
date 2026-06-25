@@ -6,7 +6,7 @@ import { useCatalogBrowser } from "@/components/catalog/useCatalogBrowser";
 import { MobilePageShell } from "@/components/mobile/MobilePageShell";
 import { ProductQuickView } from "@/components/mobile/ProductQuickView";
 import type { AppNavKey } from "@/components/navigation/app-navigation";
-import type { CatalogV2VariantCard } from "@/data/catalog-v2/product-model";
+import type { CatalogV2ListResponse, CatalogV2VariantCard } from "@/data/catalog-v2/product-model";
 import {
   getCatalogV2OrderLabel,
   getCatalogV2PriceLabel,
@@ -72,7 +72,13 @@ function ProductListState({ children }: { children: string }) {
   return <div className="col-span-2 rounded-[24px] border border-dashed border-[#e7dccd] bg-white/70 px-5 py-8 text-center text-[15px] font-black text-slate-500 shadow-sm">{children}</div>;
 }
 
-export function ProductHome({ active = "home" }: { active?: AppNavKey }) {
+export function ProductHome({
+  active = "home",
+  initialCatalog,
+}: {
+  active?: AppNavKey;
+  initialCatalog: CatalogV2ListResponse | null;
+}) {
   const [selectedProduct, setSelectedProduct] = useState<CatalogV2VariantCard | null>(null);
   const {
     products,
@@ -94,7 +100,7 @@ export function ProductHome({ active = "home" }: { active?: AppNavKey }) {
     showMore,
     pageSize,
     isBrandFilterHidden,
-  } = useCatalogBrowser();
+  } = useCatalogBrowser(initialCatalog);
 
   const subtitle = loading ? "Đang tải sản phẩm" : `${total} sản phẩm`;
 
