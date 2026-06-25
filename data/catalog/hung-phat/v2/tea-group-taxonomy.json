@@ -1,0 +1,127 @@
+{
+  "version": 1,
+  "industryKey": "nguyen-lieu-tra-sua",
+  "industryName": "Nguyên liệu trà sữa",
+  "mappingPolicy": "manual-review-only",
+  "groups": [
+    {
+      "key": "tra",
+      "name": "Trà",
+      "sortOrder": 10,
+      "customerVisible": true,
+      "description": "Hồng trà, trà đen, trà lài, ô long, trà gạo và các loại trà dùng pha chế."
+    },
+    {
+      "key": "siro",
+      "name": "Siro",
+      "sortOrder": 20,
+      "customerVisible": true,
+      "description": "Siro tạo vị, siro đường đen và siro chuyên dùng pha chế."
+    },
+    {
+      "key": "sinh-to",
+      "name": "Sinh tố",
+      "sortOrder": 30,
+      "customerVisible": true,
+      "description": "Sinh tố và puree trái cây cô đặc dùng pha đồ uống."
+    },
+    {
+      "key": "sot",
+      "name": "Sốt",
+      "sortOrder": 40,
+      "customerVisible": true,
+      "description": "Sốt topping, sốt trang trí và sốt tạo vị."
+    },
+    {
+      "key": "tran-chau",
+      "name": "Trân châu",
+      "sortOrder": 50,
+      "customerVisible": true,
+      "description": "Trân châu đen, trắng, hoàng kim và các dòng trân châu nấu."
+    },
+    {
+      "key": "3q",
+      "name": "3Q",
+      "sortOrder": 60,
+      "customerVisible": true,
+      "description": "Topping 3Q giòn, 3Q đường đen, 3Q ô long và các dòng tương đương."
+    },
+    {
+      "key": "thach-rau-cau",
+      "name": "Thạch & rau câu",
+      "sortOrder": 70,
+      "customerVisible": true,
+      "description": "Thạch jelly, thạch thủy tinh, rau câu và topping dạng thạch."
+    },
+    {
+      "key": "flan-pudding",
+      "name": "Flan & pudding",
+      "sortOrder": 80,
+      "customerVisible": true,
+      "description": "Flan, pudding và topping trứng sữa đóng hũ hoặc đóng khay."
+    },
+    {
+      "key": "bot-sua-kem-beo",
+      "name": "Bột sữa & kem béo",
+      "sortOrder": 90,
+      "customerVisible": true,
+      "description": "Bột sữa, non-dairy creamer và kem béo dùng pha trà sữa."
+    },
+    {
+      "key": "bot-tao-vi",
+      "name": "Bột tạo vị",
+      "sortOrder": 100,
+      "customerVisible": true,
+      "description": "Bột môn, cacao, sô-cô-la, matcha và các loại bột tạo vị."
+    },
+    {
+      "key": "sua-kem",
+      "name": "Sữa & kem",
+      "sortOrder": 110,
+      "customerVisible": true,
+      "description": "Sữa đặc, sữa tươi, whipping và các sản phẩm sữa dùng pha chế."
+    },
+    {
+      "key": "milk-foam-kem-cheese",
+      "name": "Milk foam & kem cheese",
+      "sortOrder": 120,
+      "customerVisible": true,
+      "description": "Bột milk foam, kem cheese, kem trứng và nền foam."
+    },
+    {
+      "key": "duong-chat-tao-ngot",
+      "name": "Đường & chất tạo ngọt",
+      "sortOrder": 130,
+      "customerVisible": true,
+      "description": "Đường đen, đường nâu, đường nước và chất tạo ngọt dùng pha chế."
+    },
+    {
+      "key": "trai-cay-hop",
+      "name": "Trái cây hộp",
+      "sortOrder": 140,
+      "customerVisible": true,
+      "description": "Đào, vải, nhãn, nha đam và trái cây đóng hộp hoặc đóng lon."
+    },
+    {
+      "key": "topping-khac",
+      "name": "Topping khác",
+      "sortOrder": 150,
+      "customerVisible": true,
+      "description": "Hạt, thốt nốt, phô mai và topping pha chế không thuộc các nhóm trên."
+    },
+    {
+      "key": "khac-da-duyet",
+      "name": "Khác đã duyệt",
+      "sortOrder": 900,
+      "customerVisible": true,
+      "description": "Chỉ dùng khi sản phẩm đã được duyệt nhưng không phù hợp các nhóm chuẩn."
+    },
+    {
+      "key": "chua-phan-nhom",
+      "name": "Chưa phân nhóm",
+      "sortOrder": 999,
+      "customerVisible": false,
+      "description": "Trạng thái nội bộ cho sản phẩm đang chờ người quản trị phân nhóm."
+    }
+  ]
+}
