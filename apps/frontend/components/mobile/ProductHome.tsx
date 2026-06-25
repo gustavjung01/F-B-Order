@@ -1,3 +1,3 @@
-import { ProductHomeBranded } from "@/components/mobile/ProductHomeBranded";
+import { ProductHomeTea } from "@/components/mobile/ProductHomeTea";
 
-export const ProductHome = ProductHomeBranded;
+export const ProductHome = ProductHomeTea;
