@@ -1,3 +1,3 @@
-import { SelectionCartPage } from "@/components/cart/SelectionCartPage";
+import { SelectionOrderCartPage } from "@/components/cart/SelectionOrderCartPage";
 
-export default SelectionCartPage;
+export default SelectionOrderCartPage;
