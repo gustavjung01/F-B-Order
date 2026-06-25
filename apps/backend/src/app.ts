@@ -6,7 +6,7 @@ import { createAdminCustomersRouter } from "./modules/admin/admin-customers.rout
 import { anonymousIdentity, resolveRequestIdentity } from "./modules/auth/auth.identity";
 import { createAuthRouter } from "./modules/auth/auth.routes";
 import { createCatalogV2ChoiceCartRouter } from "./modules/catalog-v2/catalog-v2-choice-cart.routes";
-import { createCatalogV2Router } from "./modules/catalog-v2/catalog-v2-grouped.routes";
+import { createCatalogV2DetailRouter } from "./modules/catalog-v2/catalog-v2-detail.routes";
 import { createCatalogV2ListRouter } from "./modules/catalog-v2/catalog-v2-list.routes";
 import { createCartRouter } from "./modules/catalog/cart.routes";
 import { createCatalogRouter } from "./modules/catalog/catalog.routes";
@@ -61,9 +61,9 @@ export function createApp(config: AppConfig) {
   const identityResolver = clerkEnabled ? resolveRequestIdentity : async () => anonymousIdentity;
 
   app.use("/catalog", createCatalogV2ListRouter(identityResolver));
-  app.use("/catalog", createCatalogV2Router(identityResolver));
+  app.use("/catalog", createCatalogV2DetailRouter(identityResolver));
   app.use("/api/catalog-v2", createCatalogV2ListRouter(identityResolver));
-  app.use("/api/catalog-v2", createCatalogV2Router(identityResolver));
+  app.use("/api/catalog-v2", createCatalogV2DetailRouter(identityResolver));
   app.use("/api/catalog", createCatalogRouter(identityResolver));
 
   if (clerkEnabled) {
