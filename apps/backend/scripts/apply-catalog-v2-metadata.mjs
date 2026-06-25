@@ -15,6 +15,8 @@ export async function applyCatalogV2Metadata(client, repoRoot = defaultRepoRoot)
   let groups = 0;
   let choices = 0;
   let variants = 0;
+  let variantNames = 0;
+  let productOverrides = 0;
 
   for (const row of products.rows) {
     const value = metadata.forProduct({
@@ -23,18 +25,51 @@ export async function applyCatalogV2Metadata(client, repoRoot = defaultRepoRoot)
       industryKey: row.industry_key,
       sourceGroup: row.source_group,
     });
-    await client.query(`UPDATE catalog_products SET catalog_group_key=$2, choice_groups=$3::jsonb,
-      name=COALESCE($4,name), updated_at=now() WHERE id=$1`,
-    [row.id, value.catalogGroupKey, JSON.stringify(value.choiceGroups), value.nameOverride]);
+    const result = await client.query(`UPDATE catalog_products SET
+      catalog_group_key=$2,
+      choice_groups=$3::jsonb,
+      name=COALESCE($4,name),
+      brand=COALESCE($5,brand),
+      industry=COALESCE($6,industry),
+      industry_key=COALESCE($7,industry_key),
+      source_group=COALESCE($8,source_group),
+      subcategory=COALESCE($9,subcategory),
+      option_groups=COALESCE($10::jsonb,option_groups),
+      updated_at=now()
+      WHERE id=$1`, [
+      row.id,
+      value.catalogGroupKey,
+      JSON.stringify(value.choiceGroups),
+      value.nameOverride,
+      value.brandOverride,
+      value.industryOverride,
+      value.industryKeyOverride,
+      value.sourceGroupOverride,
+      value.subcategoryOverride,
+      value.optionGroupsOverride ? JSON.stringify(value.optionGroupsOverride) : null,
+    ]);
+    if (result.rowCount !== 1) throw new Error(`Missing metadata product ${row.product_key}`);
     if (value.catalogGroupKey) groups += 1;
     if (value.choiceGroups.length) choices += 1;
+    if (
+      value.nameOverride || value.brandOverride || value.industryOverride
+      || value.industryKeyOverride || value.sourceGroupOverride
+      || value.subcategoryOverride || value.optionGroupsOverride
+    ) productOverrides += 1;
 
     for (const [sku, options] of Object.entries(value.variantOptions)) {
-      const result = await client.query(`UPDATE catalog_variants
+      const variantResult = await client.query(`UPDATE catalog_variants
         SET options=(options-'flavor'-'flavor_or_type') || $3::jsonb, updated_at=now()
         WHERE product_id=$1 AND sku=$2`, [row.id, sku, JSON.stringify(options)]);
-      if (result.rowCount !== 1) throw new Error(`Missing metadata variant ${row.product_key}/${sku}`);
+      if (variantResult.rowCount !== 1) throw new Error(`Missing metadata variant ${row.product_key}/${sku}`);
       variants += 1;
+    }
+
+    for (const [sku, name] of Object.entries(value.variantNameOverrides)) {
+      const nameResult = await client.query(`UPDATE catalog_variants
+        SET name=$3, updated_at=now() WHERE product_id=$1 AND sku=$2`, [row.id, sku, name]);
+      if (nameResult.rowCount !== 1) throw new Error(`Missing metadata variant name ${row.product_key}/${sku}`);
+      variantNames += 1;
     }
   }
 
@@ -46,7 +81,7 @@ export async function applyCatalogV2Metadata(client, repoRoot = defaultRepoRoot)
     throw new Error(`Expected to disable ${disabledSkus.length} metadata variants, found ${disabledResult.rowCount ?? 0}.`);
   }
 
-  return { groups, choices, variants, disabledSkus };
+  return { groups, choices, variants, variantNames, productOverrides, disabledSkus };
 }
 
 async function runCli() {
