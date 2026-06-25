@@ -6,7 +6,7 @@ import { createAdminCustomersRouter } from "./modules/admin/admin-customers.rout
 import { anonymousIdentity, resolveRequestIdentity } from "./modules/auth/auth.identity";
 import { createAuthRouter } from "./modules/auth/auth.routes";
 import { createCatalogV2CartRouter } from "./modules/catalog-v2/catalog-v2-cart.routes";
-import { createCatalogV2Router } from "./modules/catalog-v2/catalog-v2.routes";
+import { createCatalogV2Router } from "./modules/catalog-v2/catalog-v2-grouped.routes";
 import { createCartRouter } from "./modules/catalog/cart.routes";
 import { createCatalogRouter } from "./modules/catalog/catalog.routes";
 import { createAdminOrdersRouter } from "./modules/orders/admin-orders.routes";
@@ -59,11 +59,8 @@ export function createApp(config: AppConfig) {
 
   const identityResolver = clerkEnabled ? resolveRequestIdentity : async () => anonymousIdentity;
 
-  // Catalog v2 contract: list = 188 parent-product cards; detail = sellable sibling variants.
   app.use("/catalog", createCatalogV2Router(identityResolver));
   app.use("/api/catalog-v2", createCatalogV2Router(identityResolver));
-
-  // Legacy catalog remains available during the controlled frontend cutover.
   app.use("/api/catalog", createCatalogRouter(identityResolver));
 
   if (clerkEnabled) {
