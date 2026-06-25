@@ -75,6 +75,10 @@ function inferTeaGroup({ name, sourceGroup }) {
   return "topping-khac";
 }
 
+function normalizeChoiceValues(value) {
+  return Array.isArray(value) ? value.map((entry) => String(entry).trim()).filter(Boolean) : [];
+}
+
 function validateChoiceGroups(groups, productKey) {
   if (!Array.isArray(groups)) throw new Error(`choiceGroups must be an array for ${productKey}`);
   const keys = new Set();
@@ -82,10 +86,28 @@ function validateChoiceGroups(groups, productKey) {
     if (!group || typeof group !== "object") throw new Error(`Invalid choice group for ${productKey}`);
     const key = String(group.key || "").trim();
     const name = String(group.name || "").trim();
-    const values = Array.isArray(group.values) ? group.values.map((value) => String(value).trim()).filter(Boolean) : [];
+    const values = normalizeChoiceValues(group.values);
     if (!key || !name || values.length === 0) throw new Error(`Incomplete choice group for ${productKey}`);
     if (keys.has(key)) throw new Error(`Duplicate choice group ${key} for ${productKey}`);
     if (new Set(values).size !== values.length) throw new Error(`Duplicate choice values for ${productKey}/${key}`);
+
+    if (group.valuesBySku !== undefined) {
+      if (!group.valuesBySku || typeof group.valuesBySku !== "object" || Array.isArray(group.valuesBySku)) {
+        throw new Error(`valuesBySku must be an object for ${productKey}/${key}`);
+      }
+      for (const [sku, rawValues] of Object.entries(group.valuesBySku)) {
+        const scopedValues = normalizeChoiceValues(rawValues);
+        if (!String(sku).trim() || scopedValues.length === 0) {
+          throw new Error(`Incomplete valuesBySku entry for ${productKey}/${key}`);
+        }
+        if (new Set(scopedValues).size !== scopedValues.length) {
+          throw new Error(`Duplicate SKU choice values for ${productKey}/${key}/${sku}`);
+        }
+        if (scopedValues.some((value) => !values.includes(value))) {
+          throw new Error(`SKU choice value is missing from the parent list for ${productKey}/${key}/${sku}`);
+        }
+      }
+    }
     keys.add(key);
   }
 }
