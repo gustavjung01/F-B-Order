@@ -3,6 +3,7 @@ export type CatalogChoiceGroup = {
   name: string;
   required: boolean;
   values: string[];
+  valuesBySku?: Record<string, string[]>;
 };
 
 export function normalizeChoiceKey(value: string) {
@@ -15,19 +16,46 @@ export function normalizeChoiceKey(value: string) {
     .replace(/^_+|_+$/g, "");
 }
 
+function normalizeChoiceValues(value: unknown) {
+  return Array.isArray(value)
+    ? [...new Set(value.map((item) => String(item).trim()).filter(Boolean))]
+    : [];
+}
+
+function parseValuesBySku(value: unknown) {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return undefined;
+  const entries = Object.entries(value as Record<string, unknown>).flatMap(([sku, rawValues]) => {
+    const values = normalizeChoiceValues(rawValues);
+    return sku.trim() && values.length > 0 ? [[sku.trim(), values] as const] : [];
+  });
+  return entries.length > 0 ? Object.fromEntries(entries) : undefined;
+}
+
 export function parseCatalogChoiceGroups(value: unknown): CatalogChoiceGroup[] {
   if (!Array.isArray(value)) return [];
   return value.flatMap((group) => {
     if (!group || typeof group !== "object") return [];
-    const raw = group as { key?: unknown; name?: unknown; required?: unknown; values?: unknown };
+    const raw = group as { key?: unknown; name?: unknown; required?: unknown; values?: unknown; valuesBySku?: unknown };
     const key = typeof raw.key === "string" ? normalizeChoiceKey(raw.key) : "";
     const name = typeof raw.name === "string" ? raw.name.trim() : "";
-    const values = Array.isArray(raw.values)
-      ? raw.values.map((item) => String(item).trim()).filter(Boolean)
-      : [];
+    const values = normalizeChoiceValues(raw.values);
     if (!key || !name || values.length === 0) return [];
-    return [{ key, name, required: raw.required !== false, values: [...new Set(values)] }];
+    const valuesBySku = parseValuesBySku(raw.valuesBySku);
+    return [{
+      key,
+      name,
+      required: raw.required !== false,
+      values,
+      ...(valuesBySku ? { valuesBySku } : {}),
+    }];
   });
+}
+
+export function catalogChoiceGroupsForSku(groups: CatalogChoiceGroup[], sku: string) {
+  return groups.map((group) => ({
+    ...group,
+    values: group.valuesBySku?.[sku] || group.values,
+  }));
 }
 
 export function catalogSelectionKey(selections: Record<string, string>) {

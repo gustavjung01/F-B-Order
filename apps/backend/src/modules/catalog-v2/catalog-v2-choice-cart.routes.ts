@@ -2,7 +2,11 @@ import type { Request, Response } from "express";
 import { Router } from "express";
 import { getDb } from "../../db/pool";
 import type { CustomerIdentity, RequestIdentity } from "../auth/auth.identity";
-import { parseCatalogChoiceGroups, validateCatalogSelections } from "./catalog-v2-choices";
+import {
+  catalogChoiceGroupsForSku,
+  parseCatalogChoiceGroups,
+  validateCatalogSelections,
+} from "./catalog-v2-choices";
 import {
   ensureActiveCatalogCart,
   findCatalogChoiceVariant,
@@ -54,7 +58,8 @@ export function createCatalogV2ChoiceCartRouter(identityResolver: IdentityResolv
 
       const variant = await findCatalogChoiceVariant(variantId, identity.priceGroupId, quantity);
       if (!variant) return void res.status(404).json({ error: "VARIANT_NOT_FOUND" });
-      const selection = validateCatalogSelections(req.body?.selections, parseCatalogChoiceGroups(variant.choice_groups));
+      const groups = catalogChoiceGroupsForSku(parseCatalogChoiceGroups(variant.choice_groups), variant.sku);
+      const selection = validateCatalogSelections(req.body?.selections, groups);
       const pricing = evaluateCatalogV2Pricing(identity, variant);
       if (!pricing.canOrder || pricing.amount === null) {
         return void res.status(422).json({ error: pricing.reason || "VARIANT_NOT_ORDERABLE", variant_id: variantId });

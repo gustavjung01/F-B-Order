@@ -1,7 +1,12 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import type { CatalogV2DetailResponse, CatalogV2OptionGroup, CatalogV2VariantCard } from "@/data/catalog-v2/product-model";
+import type {
+  CatalogV2ChoiceGroup,
+  CatalogV2DetailResponse,
+  CatalogV2OptionGroup,
+  CatalogV2VariantCard,
+} from "@/data/catalog-v2/product-model";
 import { getCatalogV2OrderLabel, getCatalogV2PriceLabel } from "@/lib/catalog-v2-display";
 import { addCartItem } from "@/lib/cartStorageV4";
 
@@ -36,6 +41,24 @@ function availableValues(detail: CatalogV2DetailResponse, options: Record<string
   )));
 }
 
+function choiceGroupsForVariant(groups: CatalogV2ChoiceGroup[], variant: CatalogV2VariantCard | null) {
+  return groups.map((group) => ({
+    ...group,
+    values: variant ? group.valuesBySku?.[variant.sku] || group.values : group.values,
+  }));
+}
+
+function retainValidChoices(
+  current: Record<string, string>,
+  groups: CatalogV2ChoiceGroup[],
+  variant: CatalogV2VariantCard | null,
+) {
+  const activeGroups = choiceGroupsForVariant(groups, variant);
+  return Object.fromEntries(Object.entries(current).filter(([key, value]) => (
+    activeGroups.some((group) => group.key === key && group.values.includes(value))
+  )));
+}
+
 function errorText(status: number, code?: string) {
   if (status === 401 || code === "AUTH_REQUIRED") return "Bạn cần đăng nhập trước khi thêm giỏ.";
   if (code === "CUSTOMER_PROFILE_REQUIRED") return "Bạn cần tạo hồ sơ quán trước khi đặt hàng.";
@@ -46,7 +69,7 @@ function errorText(status: number, code?: string) {
 }
 
 export function CompactPurchaseSelector({ detail, initialVariantId, onVariantChange }: Props) {
-  const choiceGroups = detail.choiceGroups ?? [];
+  const rawChoiceGroups = detail.choiceGroups ?? [];
   const firstVariant = detail.variants.find((item) => item.variant_id === initialVariantId) || detail.variants[0];
   const [options, setOptions] = useState<Record<string, string>>(() => initialOptions(detail, firstVariant));
   const [choices, setChoices] = useState<Record<string, string>>({});
@@ -54,6 +77,10 @@ export function CompactPurchaseSelector({ detail, initialVariantId, onVariantCha
   const [adding, setAdding] = useState(false);
   const [message, setMessage] = useState("");
   const variant = useMemo(() => resolveVariant(detail, options), [detail, options]);
+  const choiceGroups = useMemo(
+    () => choiceGroupsForVariant(rawChoiceGroups, variant),
+    [rawChoiceGroups, variant],
+  );
   const choicesReady = choiceGroups.every((group) => !group.required || Boolean(choices[group.key]));
 
   function updateOption(groupIndex: number, key: string, value: string) {
@@ -61,6 +88,7 @@ export function CompactPurchaseSelector({ detail, initialVariantId, onVariantCha
     for (let index = groupIndex + 1; index < detail.optionGroups.length; index += 1) delete next[detail.optionGroups[index].key];
     setOptions(next);
     const resolved = resolveVariant(detail, next);
+    setChoices((current) => retainValidChoices(current, rawChoiceGroups, resolved));
     if (resolved) onVariantChange?.(resolved);
     setMessage("");
   }

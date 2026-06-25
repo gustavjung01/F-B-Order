@@ -58,6 +58,7 @@ export type CatalogV2OptionGroup = {
 
 export type CatalogV2ChoiceGroup = CatalogV2OptionGroup & {
   required: boolean;
+  valuesBySku?: Record<string, string[]>;
 };
 
 export type CatalogV2ParentProduct = {
