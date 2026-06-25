@@ -1,5 +1,3 @@
-import "server-only";
-
 import { auth } from "@clerk/nextjs/server";
 import { enrichCatalogV2Variant } from "@/data/catalog-v2/commercial-supplements";
 import type { CatalogV2ListResponse } from "@/data/catalog-v2/product-model";
