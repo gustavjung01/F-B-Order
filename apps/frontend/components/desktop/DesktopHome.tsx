@@ -11,6 +11,7 @@ import {
   getCatalogV2PriceHeading,
   getCatalogV2PriceLabel,
   getCatalogV2SpecificationLabel,
+  getCatalogV2VariantCountLabel,
 } from "@/lib/catalog-v2-display";
 
 function categoryEmoji(id: string) {
@@ -43,7 +44,7 @@ function DesktopProductCard({ product }: { product: CatalogV2VariantCard }) {
         <p className="mt-1 inline-flex rounded-full bg-[#fff3ea] px-3 py-2 text-sm font-black text-[#ff5a00] ring-1 ring-[#ffd0b3]">{getCatalogV2PriceLabel(product)}</p>
       </div>
       <div className="mt-5 flex gap-2">
-        <Link href={detailHref} className="flex-1 rounded-2xl bg-[#fbfaf7] px-4 py-3 text-center text-sm font-black ring-1 ring-[#eee7dc]">Chọn phân loại</Link>
+        <Link href={detailHref} className="flex-1 rounded-2xl bg-[#fbfaf7] px-4 py-3 text-center text-sm font-black ring-1 ring-[#eee7dc]">{getCatalogV2VariantCountLabel(product)}</Link>
         <span className={`rounded-2xl px-4 py-3 text-center text-xs font-black ${product.isOrderable ? "bg-[#0b1220] text-white" : "bg-slate-200 text-slate-600"}`}>{getCatalogV2OrderLabel(product)}</span>
       </div>
     </article>
