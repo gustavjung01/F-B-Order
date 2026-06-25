@@ -10,8 +10,9 @@ if (oneSignalEnabled) {
   importScripts("https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.sw.js");
 }
 
-const CACHE_VERSION = "bep-si-fb-pwa-v11";
-const RUNTIME_CACHE = "bep-si-fb-runtime-v11";
+const CACHE_VERSION = "bep-si-fb-pwa-v12";
+const RUNTIME_CACHE = "bep-si-fb-runtime-v12";
+const NAVIGATION_TIMEOUT_MS = 1200;
 
 const OFFLINE_FALLBACK = [
   "/",
@@ -35,13 +36,18 @@ self.addEventListener("install", function (event) {
 
 self.addEventListener("activate", function (event) {
   event.waitUntil(
-    caches.keys().then(function (keys) {
-      return Promise.all(keys.filter(function (key) {
-        return key !== CACHE_VERSION && key !== RUNTIME_CACHE;
-      }).map(function (key) {
-        return caches.delete(key);
-      }));
-    }).then(function () {
+    Promise.all([
+      caches.keys().then(function (keys) {
+        return Promise.all(keys.filter(function (key) {
+          return key !== CACHE_VERSION && key !== RUNTIME_CACHE;
+        }).map(function (key) {
+          return caches.delete(key);
+        }));
+      }),
+      self.registration.navigationPreload
+        ? self.registration.navigationPreload.enable().catch(function () {})
+        : Promise.resolve()
+    ]).then(function () {
       return self.clients.claim();
     })
   );
@@ -55,18 +61,53 @@ function failedFetchResponse() {
   return Response.error();
 }
 
-function networkFirst(request) {
-  return fetch(request, { cache: "no-store" }).then(function (response) {
-    var copy = response.clone();
-    caches.open(RUNTIME_CACHE).then(function (cache) {
-      cache.put(request, copy);
+function cacheRuntimeResponse(request, response) {
+  if (!response || !response.ok) return response;
+
+  var copy = response.clone();
+  caches.open(RUNTIME_CACHE).then(function (cache) {
+    cache.put(request, copy);
+  }).catch(function () {});
+
+  return response;
+}
+
+function cachedNavigationResponse(request) {
+  return caches.match(request).then(function (cached) {
+    if (cached) return cached;
+    return caches.match("/");
+  });
+}
+
+function navigationNetworkFirst(event) {
+  var request = event.request;
+  var networkPromise = Promise.resolve(event.preloadResponse)
+    .then(function (preloaded) {
+      if (preloaded) return preloaded;
+      return fetch(request, { cache: "no-store" });
+    })
+    .then(function (response) {
+      return cacheRuntimeResponse(request, response);
+    })
+    .catch(function () {
+      return null;
     });
-    return response;
-  }).catch(function () {
-    return caches.match(request).then(function (cached) {
-      if (cached) return cached;
-      return caches.match("/").then(function (fallback) {
-        return fallback || failedFetchResponse();
+
+  var timeoutPromise = new Promise(function (resolve) {
+    setTimeout(function () {
+      cachedNavigationResponse(request).then(resolve).catch(function () {
+        resolve(null);
+      });
+    }, NAVIGATION_TIMEOUT_MS);
+  });
+
+  return Promise.race([networkPromise, timeoutPromise]).then(function (response) {
+    if (response) return response;
+
+    return networkPromise.then(function (networkResponse) {
+      if (networkResponse) return networkResponse;
+      return cachedNavigationResponse(request).then(function (cached) {
+        return cached || failedFetchResponse();
       });
     });
   });
@@ -104,8 +145,8 @@ self.addEventListener("fetch", function (event) {
     return;
   }
 
-  if (request.mode === "navigate" || request.headers.get("accept")?.includes("text/html")) {
-    event.respondWith(networkFirst(request));
+  if (request.mode === "navigate" || (request.headers.get("accept") || "").includes("text/html")) {
+    event.respondWith(navigationNetworkFirst(event));
     return;
   }
 
