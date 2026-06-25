@@ -1,1 +1,1 @@
-export { dynamic, POST } from "../../../remove/route";
+export { dynamic, POST } from "../../remove/route";
