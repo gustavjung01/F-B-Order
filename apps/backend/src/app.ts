@@ -12,7 +12,7 @@ import { createCartRouter } from "./modules/catalog/cart.routes";
 import { createCatalogRouter } from "./modules/catalog/catalog.routes";
 import { createAdminOrdersRouter } from "./modules/orders/admin-orders.routes";
 import { createCustomerOrdersRouter } from "./modules/orders/customer-orders.routes";
-import { createOrdersRouter } from "./modules/orders/orders.routes";
+import { createOrderEntryRouter } from "./modules/orders/orders-entry.routes";
 
 export type AppConfig = {
   corsOrigin: string;
@@ -71,7 +71,7 @@ export function createApp(config: AppConfig) {
     app.use("/api/cart-v2", createCatalogV2ChoiceCartRouter(resolveRequestIdentity));
     app.use("/api/auth", createAuthRouter(resolveRequestIdentity));
     app.use("/api/cart", createCartRouter(resolveRequestIdentity));
-    app.use("/api/orders", createOrdersRouter(resolveRequestIdentity));
+    app.use("/api/orders", createOrderEntryRouter(resolveRequestIdentity));
     app.use("/api/customer/orders", createCustomerOrdersRouter(resolveRequestIdentity));
     app.use("/api/admin/customers", createAdminCustomersRouter(resolveRequestIdentity));
     app.use("/api/admin/orders", createAdminOrdersRouter(resolveRequestIdentity));
