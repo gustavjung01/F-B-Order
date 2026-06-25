@@ -106,10 +106,14 @@ export function loadCatalogV2ProductMetadata(repoRoot) {
   const dataDir = path.join(repoRoot, "data/catalog/hung-phat/v2");
   const taxonomy = JSON.parse(fs.readFileSync(path.join(dataDir, "tea-group-taxonomy.json"), "utf8"));
   const metadata = JSON.parse(fs.readFileSync(path.join(dataDir, "catalog-product-metadata.json"), "utf8"));
+  const overridesPath = path.join(dataDir, "catalog-product-overrides.json");
+  const overrides = fs.existsSync(overridesPath)
+    ? JSON.parse(fs.readFileSync(overridesPath, "utf8"))
+    : { version: 1, products: {} };
   const mappingRows = parseCsv(fs.readFileSync(path.join(dataDir, "tea-product-group-map.csv"), "utf8"));
 
   if (taxonomy.industryKey !== "nguyen-lieu-tra-sua") throw new Error("Unexpected tea taxonomy industry key.");
-  if (metadata.version !== 1) throw new Error("Unsupported catalog product metadata version.");
+  if (metadata.version !== 1 || overrides.version !== 1) throw new Error("Unsupported catalog product metadata version.");
 
   const validGroups = new Set(taxonomy.groups.map((group) => group.key));
   const approvedGroups = new Map();
@@ -122,9 +126,13 @@ export function loadCatalogV2ProductMetadata(repoRoot) {
     approvedGroups.set(parentKey, groupKey);
   }
 
+  const configuredProducts = {
+    ...(metadata.products || {}),
+    ...(overrides.products || {}),
+  };
   const products = new Map();
   const disabledSkus = new Set();
-  for (const [productKey, value] of Object.entries(metadata.products || {})) {
+  for (const [productKey, value] of Object.entries(configuredProducts)) {
     const product = value && typeof value === "object" ? value : {};
     const choiceGroups = product.choiceGroups || [];
     validateChoiceGroups(choiceGroups, productKey);
