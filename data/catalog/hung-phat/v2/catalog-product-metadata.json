@@ -1,0 +1,167 @@
+{
+  "version": 1,
+  "products": {
+    "siro-thai-pixe-bgkq-0002": {
+      "catalogGroupKey": "siro",
+      "choiceGroups": [
+        {
+          "key": "flavor",
+          "name": "Vị",
+          "required": true,
+          "values": ["Dâu", "Kiwi", "Chanh dây", "Phúc bồn tử", "Dưa lưới", "Vải", "Cam", "Việt quất", "Táo xanh", "Blue Curacao", "Bạc hà", "Sô-cô-la"]
+        }
+      ],
+      "variantOptions": {
+        "BGKQ-0002": { "size": "730 ml", "package": "Thùng 12 chai", "sell_unit": "chai" }
+      },
+      "auditSources": [
+        "https://cuahangnguyenlieu.com.vn/siro-bac-ha-pixie-thai",
+        "https://phacheviet.com/products/syrup-pixie-chanh-day",
+        "https://phacheviet.com/products/syrup-pixie-viet-quat"
+      ]
+    },
+    "siro-thai-dingfong-bgkq-0003": {
+      "catalogGroupKey": "siro",
+      "choiceGroups": [
+        {
+          "key": "flavor",
+          "name": "Vị",
+          "required": true,
+          "values": ["Dâu", "Đào", "Vải", "Việt quất", "Táo xanh", "Xoài", "Chanh dây"]
+        }
+      ],
+      "variantOptions": {
+        "BGKQ-0003": { "size": "760 ml", "package": "Thùng 12 chai", "sell_unit": "chai" }
+      },
+      "auditSources": [
+        "https://vinbar.vn/products/siro-thai-chanh-day-cao-cap",
+        "https://vinbar.vn/products/siro-thai-viet-quat-cao-cap",
+        "https://phacheviet.com/products/syrup-ding-fong-dau"
+      ]
+    },
+    "siro-mama-gold": {
+      "catalogGroupKey": "siro",
+      "choiceGroups": [
+        {
+          "key": "flavor",
+          "name": "Vị",
+          "required": true,
+          "values": ["Dâu", "Đào", "Ổi hồng", "Việt quất", "Xoài", "Nho", "Kiwi", "Chanh dây", "Vải", "Bạc hà", "Blue Curacao", "Sâm dứa"]
+        }
+      ],
+      "variantOptions": {
+        "BGKQ-0004": { "size": "2 L", "package": "Thùng 4 bình", "sell_unit": "bình" },
+        "BGKQ-0005": { "size": "700 ml", "package": "Thùng 12 chai", "sell_unit": "chai" }
+      },
+      "auditSources": [
+        "https://phacheviet.com/products/syrup-golden-farm-2l-dau",
+        "https://phacheviet.com/products/syrup-goldenfarm-dam-dac-700ml",
+        "https://dodunglambanh.vn/siro-dam-dac-oi-hong-golden-farm-chai-700ml"
+      ]
+    },
+    "siro-gtp": {
+      "catalogGroupKey": "siro",
+      "choiceGroups": [
+        {
+          "key": "flavor",
+          "name": "Vị",
+          "required": true,
+          "values": ["Trái cây nhiệt đới", "Dâu", "Đường đen"]
+        }
+      ],
+      "variantOptions": {
+        "BGKQ-0006": { "size": "930 ml", "package": "Thùng 12 chai", "sell_unit": "chai" }
+      },
+      "disabledSkus": ["BGKQ-0007"],
+      "auditSources": [
+        "https://mekongxuanphuc.com/siro-gia-thinh-phat-930ml-huong-cac-loai-gtp"
+      ],
+      "auditNote": "BGKQ-0007 là dòng giá tách theo vị trong dữ liệu cũ; vô hiệu hóa để một size không đổi giá theo vị."
+    },
+    "siro-vina": {
+      "catalogGroupKey": "siro",
+      "choiceGroups": [
+        {
+          "key": "flavor",
+          "name": "Vị",
+          "required": true,
+          "values": ["Dâu", "Đào", "Vải", "Ổi", "Việt quất", "Phúc bồn tử", "Bạc hà", "Khoai môn", "Blue Curacao", "Sâm dứa", "Dưa lưới", "Kiwi", "Táo xanh", "Chanh dây", "Xoài"]
+        }
+      ],
+      "variantOptions": {
+        "BGKQ-0008": { "size": "750 ml", "package": "Thùng 12 chai", "sell_unit": "chai" }
+      },
+      "disabledSkus": ["BGKQ-0009"],
+      "auditSources": [
+        "https://sanhoxanh.com/",
+        "https://phacheviet.com/products/vina-syrup-dau-750ml",
+        "https://phacheviet.com/products/vina-syrup-vai-750ml"
+      ],
+      "auditNote": "BGKQ-0009 là giá tách riêng vị sâm dứa trong dữ liệu cũ; vô hiệu hóa để mọi vị 750 ml dùng giá SKU BGKQ-0008."
+    },
+    "siro-carisa-bgkq-0010": {
+      "catalogGroupKey": "siro",
+      "choiceGroups": [
+        {
+          "key": "flavor",
+          "name": "Vị",
+          "required": true,
+          "values": ["Chanh", "Sâm dứa", "Dưa lưới", "Vải", "Đào", "Khoai môn", "Cam", "Dâu", "Ổi", "Việt quất", "Chanh dây", "Me", "Mơ", "Lựu"]
+        }
+      ],
+      "variantOptions": {
+        "BGKQ-0010": { "size": "500 ml (680 g)", "package": "Thùng 24 chai", "sell_unit": "chai" }
+      },
+      "auditSources": [
+        "https://sanhoxanh.com/si-ro-carisa-dao-500ml-2/"
+      ]
+    },
+    "siro-changthai-bgkq-0011": {
+      "catalogGroupKey": "siro",
+      "choiceGroups": [
+        {
+          "key": "flavor",
+          "name": "Vị",
+          "required": true,
+          "values": ["Dâu", "Đào", "Vải", "Kiwi", "Chanh dây", "Phúc bồn tử", "Blue Curacao", "Việt quất", "Xoài", "Vỏ cam", "Trà xanh"]
+        }
+      ],
+      "variantOptions": {
+        "BGKQ-0011": { "size": "1 L", "package": "Thùng 15 chai", "sell_unit": "chai" }
+      },
+      "auditSources": [
+        "https://saovietfood.vn/siro-chang-thai-dao.html",
+        "https://phacheviet.com/products/syrup-changthai-vai"
+      ]
+    },
+    "siro-dd-hoang-kim-bgkq-0013": {
+      "catalogGroupKey": "siro",
+      "choiceGroups": [],
+      "variantOptions": {
+        "BGKQ-0013": { "size": "2 L", "package": "Thùng 6 chai", "sell_unit": "chai" }
+      },
+      "auditNote": "Sản phẩm đường đen một vị; không hiển thị lựa chọn vị dư thừa."
+    },
+    "siro-douxian-2l": {
+      "nameOverride": "Siro Douxian 2,5 kg",
+      "catalogGroupKey": "siro",
+      "choiceGroups": [
+        {
+          "key": "flavor",
+          "name": "Vị",
+          "required": true,
+          "values": ["Dâu", "Đào", "Vải", "Bạc hà", "Chanh", "Đường đen"]
+        }
+      ],
+      "variantOptions": {
+        "BGKQ-0012": { "size": "2,5 kg", "type": "Bình tròn", "package": "Thùng 6 bình", "sell_unit": "bình" },
+        "BGKQ-0014": { "size": "2,5 kg", "type": "Bình vuông / Hoàng kim", "package": "Thùng 6 bình", "sell_unit": "bình" }
+      },
+      "auditSources": [
+        "https://phacheviet.com/products/syrup-douxian-dao-2-5kg-1",
+        "https://nguyenlieuphachequangnhung.com/products/siro-douxian-duong-den-2-5kg-binh-tron",
+        "https://nguyenlieuphachequangnhung.com/products/siro-douxian-dao-2-5kg-binh-vuong"
+      ]
+    }
+  }
+}
