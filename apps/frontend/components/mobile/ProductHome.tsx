@@ -86,6 +86,7 @@ export function ProductHome({ active = "home" }: { active?: AppNavKey }) {
     searchText,
     setSearchText,
     loading,
+    loadingMore,
     error,
     total,
     shownCount,
@@ -135,21 +136,23 @@ export function ProductHome({ active = "home" }: { active?: AppNavKey }) {
 
       <div className="mt-3 grid grid-cols-2 items-stretch gap-3">
         {loading ? <ProductListState>Đang tải sản phẩm...</ProductListState> : null}
-        {!loading && error ? <ProductListState>{error}</ProductListState> : null}
+        {!loading && error && products.length === 0 ? <ProductListState>{error}</ProductListState> : null}
         {!loading && !error && products.length === 0 ? <ProductListState>Không có sản phẩm phù hợp</ProductListState> : null}
-        {!loading && !error ? products.map((product) => <ProductCard key={product.product_id} product={product} onOpen={() => setSelectedProduct(product)} />) : null}
+        {!loading ? products.map((product) => <ProductCard key={product.product_id} product={product} onOpen={() => setSelectedProduct(product)} />) : null}
       </div>
 
-      {!loading && !error && products.length > 0 ? (
+      {!loading && products.length > 0 ? (
         <div className="mt-5 flex flex-col items-center gap-3">
           <p className="text-xs font-black text-slate-500">Đang hiển thị {shownCount}/{total} sản phẩm</p>
+          {error ? <p className="text-center text-xs font-black text-red-600">{error}</p> : null}
           {hasMore ? (
             <button
               type="button"
-              onClick={showMore}
-              className="h-12 w-full rounded-[18px] bg-[#ff5a00] px-5 text-[15px] font-black text-white shadow-lg shadow-orange-200 active:scale-[0.99]"
+              onClick={() => void showMore()}
+              disabled={loadingMore}
+              className="h-12 w-full rounded-[18px] bg-[#ff5a00] px-5 text-[15px] font-black text-white shadow-lg shadow-orange-200 disabled:cursor-wait disabled:opacity-60 active:scale-[0.99]"
             >
-              Xem thêm {Math.min(pageSize, total - shownCount)} sản phẩm
+              {loadingMore ? "Đang tải thêm..." : `Xem thêm ${Math.min(pageSize, total - shownCount)} sản phẩm`}
             </button>
           ) : null}
         </div>
