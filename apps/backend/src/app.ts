@@ -5,13 +5,14 @@ import helmet from "helmet";
 import { createAdminCustomersRouter } from "./modules/admin/admin-customers.routes";
 import { anonymousIdentity, resolveRequestIdentity } from "./modules/auth/auth.identity";
 import { createAuthRouter } from "./modules/auth/auth.routes";
-import { createCatalogV2CartRouter } from "./modules/catalog-v2/catalog-v2-cart.routes";
-import { createCatalogV2Router } from "./modules/catalog-v2/catalog-v2.routes";
+import { createCatalogV2ChoiceCartRouter } from "./modules/catalog-v2/catalog-v2-choice-cart.routes";
+import { createCatalogV2DetailRouter } from "./modules/catalog-v2/catalog-v2-detail.routes";
+import { createCatalogV2ListRouter } from "./modules/catalog-v2/catalog-v2-list.routes";
 import { createCartRouter } from "./modules/catalog/cart.routes";
 import { createCatalogRouter } from "./modules/catalog/catalog.routes";
 import { createAdminOrdersRouter } from "./modules/orders/admin-orders.routes";
 import { createCustomerOrdersRouter } from "./modules/orders/customer-orders.routes";
-import { createOrdersRouter } from "./modules/orders/orders.routes";
+import { createOrderEntryRouter } from "./modules/orders/orders-entry.routes";
 
 export type AppConfig = {
   corsOrigin: string;
@@ -59,19 +60,18 @@ export function createApp(config: AppConfig) {
 
   const identityResolver = clerkEnabled ? resolveRequestIdentity : async () => anonymousIdentity;
 
-  // Catalog v2 contract: list = 188 parent-product cards; detail = sellable sibling variants.
-  app.use("/catalog", createCatalogV2Router(identityResolver));
-  app.use("/api/catalog-v2", createCatalogV2Router(identityResolver));
-
-  // Legacy catalog remains available during the controlled frontend cutover.
+  app.use("/catalog", createCatalogV2ListRouter(identityResolver));
+  app.use("/catalog", createCatalogV2DetailRouter(identityResolver));
+  app.use("/api/catalog-v2", createCatalogV2ListRouter(identityResolver));
+  app.use("/api/catalog-v2", createCatalogV2DetailRouter(identityResolver));
   app.use("/api/catalog", createCatalogRouter(identityResolver));
 
   if (clerkEnabled) {
-    app.use("/catalog/cart", createCatalogV2CartRouter(resolveRequestIdentity));
-    app.use("/api/cart-v2", createCatalogV2CartRouter(resolveRequestIdentity));
+    app.use("/catalog/cart", createCatalogV2ChoiceCartRouter(resolveRequestIdentity));
+    app.use("/api/cart-v2", createCatalogV2ChoiceCartRouter(resolveRequestIdentity));
     app.use("/api/auth", createAuthRouter(resolveRequestIdentity));
     app.use("/api/cart", createCartRouter(resolveRequestIdentity));
-    app.use("/api/orders", createOrdersRouter(resolveRequestIdentity));
+    app.use("/api/orders", createOrderEntryRouter(resolveRequestIdentity));
     app.use("/api/customer/orders", createCustomerOrdersRouter(resolveRequestIdentity));
     app.use("/api/admin/customers", createAdminCustomersRouter(resolveRequestIdentity));
     app.use("/api/admin/orders", createAdminOrdersRouter(resolveRequestIdentity));

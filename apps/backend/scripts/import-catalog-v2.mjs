@@ -3,6 +3,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import dotenv from "dotenv";
 import pg from "pg";
+import { applyCatalogV2Metadata } from "./apply-catalog-v2-metadata.mjs";
 import { loadCatalogV2Supplement } from "./catalog-v2-supplement.mjs";
 
 const { Pool } = pg;
@@ -267,6 +268,18 @@ try {
       counts.dealer_prices === expectedDealerPrices && counts.package_info === expectedVariants,
       `Commercial data mismatch: ${JSON.stringify(counts)}`,
     );
+
+    const metadata = await applyCatalogV2Metadata(client, repoRoot);
+    const finalResult = await client.query(`SELECT
+      (SELECT COUNT(*) FROM catalog_variants WHERE catalog_version='hung-phat-v2' AND is_active AND is_public AND status IN ('active','market_price'))::int AS active_variants,
+      (SELECT COUNT(*) FROM catalog_products WHERE catalog_version='hung-phat-v2' AND status='active' AND catalog_group_key IS NOT NULL)::int AS grouped_products,
+      (SELECT COUNT(*) FROM catalog_products WHERE catalog_version='hung-phat-v2' AND status='active' AND jsonb_array_length(choice_groups) > 0)::int AS choice_products,
+      (SELECT COUNT(*) FROM catalog_variants WHERE catalog_version='hung-phat-v2' AND sku=ANY($1::text[]) AND status='inactive' AND NOT is_active AND NOT is_public AND NOT is_orderable)::int AS disabled_variants`, [metadata.disabledSkus]);
+    const finalCounts = finalResult.rows[0];
+    assert(finalCounts.grouped_products === metadata.groups, `Catalog group metadata mismatch: ${JSON.stringify(finalCounts)}`);
+    assert(finalCounts.choice_products === metadata.choices, `Catalog choice metadata mismatch: ${JSON.stringify(finalCounts)}`);
+    assert(finalCounts.disabled_variants === metadata.disabledSkus.length, `Disabled metadata variant mismatch: ${JSON.stringify(finalCounts)}`);
+
     await client.query("COMMIT");
     console.log(JSON.stringify({
       phase: 5,
@@ -274,13 +287,15 @@ try {
       applied: true,
       target,
       parentProducts: counts.products,
-      variants: counts.variants,
+      importedVariants: counts.variants,
+      activeVariants: finalCounts.active_variants,
       marketPriceVariants: counts.market,
       images: counts.images,
       dealerPrices: counts.dealer_prices,
       variantsWithPackageInfo: counts.package_info,
       variantsWithExactSize: counts.exact_sizes,
       variantsMissingExactSize: counts.variants - counts.exact_sizes,
+      metadata,
     }, null, 2));
   }
 } catch (error) {

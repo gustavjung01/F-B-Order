@@ -28,6 +28,7 @@ export type CatalogV2VariantCard = {
   brand: string | null;
   industry: string;
   industryKey: string;
+  catalogGroupKey?: string | null;
   subcategory: string | null;
   options: Record<string, string>;
   sizeLabel: string | null;
@@ -55,6 +56,10 @@ export type CatalogV2OptionGroup = {
   values: string[];
 };
 
+export type CatalogV2ChoiceGroup = CatalogV2OptionGroup & {
+  required: boolean;
+};
+
 export type CatalogV2ParentProduct = {
   id: string;
   productKey: string;
@@ -62,6 +67,7 @@ export type CatalogV2ParentProduct = {
   brand: string | null;
   industry: string;
   industryKey: string;
+  catalogGroupKey?: string | null;
   subcategory: string | null;
   image: CatalogV2Image;
 };
@@ -80,6 +86,7 @@ export type CatalogV2Pagination = {
 
 export type CatalogV2Facets = {
   industries: CatalogV2FilterOption[];
+  groups?: CatalogV2FilterOption[];
   brands: CatalogV2FilterOption[];
 };
 
@@ -94,6 +101,7 @@ export type CatalogV2ListResponse = {
 export type CatalogV2DetailResponse = {
   product: CatalogV2ParentProduct;
   optionGroups: CatalogV2OptionGroup[];
+  choiceGroups?: CatalogV2ChoiceGroup[];
   variants: CatalogV2VariantCard[];
   selectedVariantId: string;
 };
