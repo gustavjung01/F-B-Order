@@ -11,6 +11,7 @@ import {
   getCatalogV2OrderLabel,
   getCatalogV2PriceLabel,
   getCatalogV2SpecificationLabel,
+  getCatalogV2VariantCountLabel,
 } from "@/lib/catalog-v2-display";
 
 function categoryEmoji(id: string) {
@@ -57,7 +58,7 @@ function ProductCard({ product, onOpen }: { product: CatalogV2VariantCard; onOpe
 
       <div className="mt-auto grid grid-cols-2 gap-2 pt-3">
         <button type="button" onClick={onOpen} className="min-h-11 rounded-[14px] bg-[#fbfaf7] px-2 py-2 text-[11px] font-black leading-tight text-[#0b1220] ring-1 ring-[#eee7dc]">
-          Chọn phân loại
+          {getCatalogV2VariantCountLabel(product)}
         </button>
         <span className={`flex min-h-11 items-center justify-center rounded-[14px] px-2 py-2 text-center text-[10px] font-black leading-tight ${product.isOrderable ? "bg-[#0b1220] text-white" : "bg-slate-200 text-slate-600"}`}>
           {getCatalogV2OrderLabel(product)}

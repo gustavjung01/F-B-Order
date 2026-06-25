@@ -47,6 +47,11 @@ export function getCatalogV2OrderLabel(variant: CatalogV2VariantCard) {
   return variant.isOrderable ? "Thêm vào giỏ" : "Chưa thể đặt";
 }
 
+export function getCatalogV2VariantCountLabel(variant: CatalogV2VariantCard) {
+  const count = Math.max(Number(variant.variantCount) || 1, 1);
+  return `${count} phân loại`;
+}
+
 export function getCatalogV2OptionSummary(variant: CatalogV2VariantCard) {
   const values = Object.entries(variant.options)
     .filter(([key, value]) => !["package", "sell_unit", "size", "weight", "volume", "capacity"].includes(key) && Boolean(value))
