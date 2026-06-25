@@ -2,7 +2,7 @@ import type { Request, Response } from "express";
 import { Router } from "express";
 import type { RequestIdentity } from "../auth/auth.identity";
 import { isOrderEngineError, OrderEngineError } from "./order-errors";
-import { listCustomerOrders } from "./customer-orders.service";
+import { listCustomerOrdersV2 } from "./customer-orders-v2.service";
 
 type IdentityResolver = (req: Request) => Promise<RequestIdentity>;
 
@@ -29,7 +29,7 @@ export function createCustomerOrdersRouter(identityResolver: IdentityResolver) {
     try {
       const identity = requireCustomer(await identityResolver(req));
       const parsedLimit = Number.parseInt(String(req.query.limit ?? "50"), 10);
-      const result = await listCustomerOrders(identity, {
+      const result = await listCustomerOrdersV2(identity, {
         limit: Number.isFinite(parsedLimit) ? parsedLimit : 50,
       });
       res.json(result);
