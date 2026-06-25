@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type {
   CatalogV2FilterOption,
+  CatalogV2ListResponse,
   CatalogV2VariantCard,
 } from "@/data/catalog-v2/product-model";
 import { fetchCatalogV2List } from "@/lib/catalog-v2-client";
@@ -49,20 +50,23 @@ function normalizeIndustryFacets(options: CatalogV2FilterOption[]) {
   }));
 }
 
-export function useCatalogBrowser() {
-  const [products, setProducts] = useState<CatalogV2VariantCard[]>([]);
-  const [industries, setIndustries] = useState<CatalogV2FilterOption[]>([]);
-  const [brands, setBrands] = useState<CatalogV2FilterOption[]>([]);
+export function useCatalogBrowser(initialCatalog: CatalogV2ListResponse | null = null) {
+  const [products, setProducts] = useState<CatalogV2VariantCard[]>(initialCatalog?.products ?? []);
+  const [industries, setIndustries] = useState<CatalogV2FilterOption[]>(
+    normalizeIndustryFacets(initialCatalog?.facets.industries ?? []),
+  );
+  const [brands, setBrands] = useState<CatalogV2FilterOption[]>(initialCatalog?.facets.brands ?? []);
   const [selectedIndustry, setSelectedIndustryState] = useState("all");
   const [selectedBrand, setSelectedBrandState] = useState("all");
   const [searchText, setSearchText] = useState("");
   const [appliedSearch, setAppliedSearch] = useState("");
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!initialCatalog);
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState("");
-  const [total, setTotal] = useState(0);
-  const [hasMore, setHasMore] = useState(false);
+  const [total, setTotal] = useState(Number(initialCatalog?.total) || 0);
+  const [hasMore, setHasMore] = useState(Boolean(initialCatalog?.pagination.hasMore));
   const requestVersion = useRef(0);
+  const hasUnusedInitialCatalog = useRef(Boolean(initialCatalog));
 
   const isBrandFilterHidden = isFrozenIndustry(selectedIndustry);
 
@@ -75,6 +79,17 @@ export function useCatalogBrowser() {
   }, [searchText]);
 
   useEffect(() => {
+    if (
+      hasUnusedInitialCatalog.current
+      && selectedIndustry === "all"
+      && selectedBrand === "all"
+      && appliedSearch === ""
+    ) {
+      hasUnusedInitialCatalog.current = false;
+      return;
+    }
+
+    hasUnusedInitialCatalog.current = false;
     const version = ++requestVersion.current;
     let activeRequest = true;
 
