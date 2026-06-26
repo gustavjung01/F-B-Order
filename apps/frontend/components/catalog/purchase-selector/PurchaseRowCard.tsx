@@ -22,18 +22,18 @@ export function PurchaseRowCard(props: {
 }) {
   const { row, variant, choiceGroups, label } = props.item;
   return (
-    <div className="rounded-[16px] bg-[#fbfaf7] p-3 ring-1 ring-[#e7dccd]">
-      <div className="mb-2.5 flex items-center justify-between gap-2">
+    <div className="rounded-[14px] bg-[#fbfaf7] p-2.5 ring-1 ring-[#e7dccd]">
+      <div className="mb-2 flex items-center justify-between gap-2">
         <p className="text-xs font-black text-[#0b1220]">Phân loại {props.index + 1}</p>
         {props.rowCount > 1 ? (
-          <button type="button" onClick={() => props.removeRow(row.id)} className="rounded-full bg-white px-2.5 py-1 text-[11px] font-black text-red-600 ring-1 ring-red-100">
+          <button type="button" onClick={() => props.removeRow(row.id)} className="rounded-full bg-white px-2 py-0.5 text-[10px] font-black text-red-600 ring-1 ring-red-100">
             Xóa
           </button>
         ) : null}
       </div>
 
       {props.hasSelectableGroups ? (
-        <div className="space-y-3">
+        <div className="space-y-2">
           {props.detail.optionGroups.map((group, groupIndex) => {
             const controlKey = `${row.id}:option:${group.key}`;
             return (
@@ -67,13 +67,15 @@ export function PurchaseRowCard(props: {
         </div>
       ) : null}
 
-      <div className="mt-2.5 flex items-center justify-between gap-2 rounded-[14px] bg-white p-2.5 ring-1 ring-[#e7dccd]">
-        <div className="min-w-0">
-          <p className="truncate text-[10px] font-black text-slate-500">{variant?.sku || "Chưa chọn đủ phân loại"}</p>
-          {label ? <p className="mt-0.5 truncate text-xs font-black text-slate-700">{label}</p> : null}
-          <p className="mt-0.5 text-sm font-black text-[#ff5a00]">{variant ? getCatalogV2PriceLabel(variant) : "Chọn phân loại"}</p>
+      <div className="mt-2 flex items-center justify-between gap-2 rounded-[12px] bg-white p-2 ring-1 ring-[#e7dccd]">
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-xs font-black text-slate-700">{label || "Chưa chọn đủ phân loại"}</p>
+          <div className="mt-0.5 flex min-w-0 items-center justify-between gap-2">
+            <p className="truncate text-[9px] font-black text-slate-400">{variant?.sku || "Chưa chọn"}</p>
+            <p className="shrink-0 text-sm font-black text-[#ff5a00]">{variant ? getCatalogV2PriceLabel(variant) : "Chọn phân loại"}</p>
+          </div>
         </div>
-        <div className="grid h-10 w-28 shrink-0 grid-cols-3 overflow-hidden rounded-[12px] border border-[#e7dccd] bg-white text-sm font-black">
+        <div className="grid h-9 w-24 shrink-0 grid-cols-3 overflow-hidden rounded-[10px] border border-[#e7dccd] bg-white text-sm font-black">
           <button type="button" onClick={() => props.updateQuantity(row.id, row.quantity - 1)}>−</button>
           <span className="grid place-items-center border-x border-[#e7dccd]">{row.quantity}</span>
           <button type="button" onClick={() => props.updateQuantity(row.id, row.quantity + 1)}>+</button>
