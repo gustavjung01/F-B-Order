@@ -16,6 +16,7 @@ import { createOrderEntryRouter } from "./modules/orders/orders-entry.routes";
 import { createAdminRecipeRouter } from "./modules/recipes/admin-recipe.routes";
 import { createRecipeCatalogLinkRouter } from "./modules/recipes/recipe-catalog-link.routes";
 import { createRecipeReadRouter } from "./modules/recipes/recipe.routes";
+import { createRecipeScaleRouter } from "./modules/recipes/recipe-scale.routes";
 
 export type AppConfig = {
   corsOrigin: string;
@@ -69,7 +70,9 @@ export function createApp(config: AppConfig) {
   app.use("/api/catalog-v2", createCatalogV2DetailRouter(identityResolver));
   app.use("/api/catalog", createCatalogRouter(identityResolver));
   app.use("/recipes", createRecipeReadRouter());
+  app.use("/recipes", createRecipeScaleRouter());
   app.use("/api/recipes", createRecipeReadRouter());
+  app.use("/api/recipes", createRecipeScaleRouter());
 
   if (clerkEnabled) {
     app.use("/catalog/cart", createCatalogV2ChoiceCartRouter(resolveRequestIdentity));
