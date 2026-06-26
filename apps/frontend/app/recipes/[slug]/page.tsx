@@ -1,7 +1,9 @@
-import { redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import { RecipeDetailClient } from "@/components/recipes/RecipeDetailClient";
 import { ResponsivePageShell } from "@/components/responsive/ResponsivePageShell";
-import { RECIPES_PUBLIC_ENABLED } from "@/data/recipes/public-status";
+import { fetchPublicRecipeDetail, fetchRelatedPublicRecipes } from "@/lib/recipes-server";
+
+export const dynamic = "force-dynamic";
 
 type RecipeDetailPageProps = {
   params: {
@@ -9,14 +11,18 @@ type RecipeDetailPageProps = {
   };
 };
 
-export default function RecipeDetailPage({ params }: RecipeDetailPageProps) {
-  if (!RECIPES_PUBLIC_ENABLED) {
-    redirect("/recipes");
-  }
+export default async function RecipeDetailPage({ params }: RecipeDetailPageProps) {
+  const recipe = await fetchPublicRecipeDetail(params.slug);
+  if (!recipe) notFound();
+
+  const related = await fetchRelatedPublicRecipes(recipe.id, 6).catch((error) => {
+    console.error("related public recipes render failed", error);
+    return { recipes: [], total: 0 };
+  });
 
   return (
-    <ResponsivePageShell active="recipes" title="Chi tiết công thức" subtitle="Hướng dẫn và định lượng">
-      <RecipeDetailClient slug={params.slug} />
+    <ResponsivePageShell active="recipes" title="Công thức" subtitle={recipe.title}>
+      <RecipeDetailClient recipe={recipe} relatedRecipes={related.recipes} />
     </ResponsivePageShell>
   );
 }

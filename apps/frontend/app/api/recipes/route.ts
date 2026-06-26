@@ -1,26 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
-import { RECIPES_PUBLIC_STATUS } from "@/data/recipes/public-status";
+import { proxyBackendJson } from "@/lib/backend-api";
 
 export const dynamic = "force-dynamic";
 
-function getLimit(request: NextRequest) {
-  const value = request.nextUrl.searchParams.get("limit");
-  if (!value) return null;
-
-  const parsed = Number.parseInt(value, 10);
-  return Number.isFinite(parsed) ? parsed : null;
+function noStore(response: Response): Response {
+  response.headers.set("cache-control", "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0");
+  return response;
 }
 
 export async function GET(request: NextRequest) {
-  return NextResponse.json({
-    approved: false,
-    featureStatus: RECIPES_PUBLIC_STATUS,
-    filters: {
-      category: null,
-      brand: null,
-      search: null,
-      limit: getLimit(request),
-    },
-    recipes: [],
-  });
+  try {
+    const query = request.nextUrl.searchParams.toString();
+    return noStore(await proxyBackendJson(query ? `/api/recipes?${query}` : "/api/recipes"));
+  } catch (error) {
+    console.error("public recipe list proxy failed", error);
+    return NextResponse.json({ error: "RECIPE_SOURCE_UNAVAILABLE" }, { status: 503 });
+  }
 }

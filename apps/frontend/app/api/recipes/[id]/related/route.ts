@@ -5,17 +5,19 @@ export const dynamic = "force-dynamic";
 
 type RouteContext = {
   params: {
-    slug: string;
+    id: string;
   };
 };
 
-export async function GET(_request: NextRequest, { params }: RouteContext) {
+export async function GET(request: NextRequest, { params }: RouteContext) {
   try {
-    const response = await proxyBackendJson(`/api/recipes/${encodeURIComponent(params.slug)}`);
+    const limit = request.nextUrl.searchParams.get("limit");
+    const query = limit ? `?limit=${encodeURIComponent(limit)}` : "";
+    const response = await proxyBackendJson(`/api/recipes/${encodeURIComponent(params.id)}/related${query}`);
     response.headers.set("cache-control", "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0");
     return response;
   } catch (error) {
-    console.error("public recipe detail proxy failed", error);
+    console.error("related recipes proxy failed", error);
     return NextResponse.json({ error: "RECIPE_SOURCE_UNAVAILABLE" }, { status: 503 });
   }
 }
