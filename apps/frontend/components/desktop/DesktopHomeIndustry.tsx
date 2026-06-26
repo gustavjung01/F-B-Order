@@ -6,8 +6,10 @@ import { useIndustryCatalogBrowser } from "@/components/catalog/useIndustryCatal
 import { DesktopHeader } from "@/components/desktop/DesktopHeader";
 import type { AppNavKey } from "@/components/navigation/app-navigation";
 
+const TEA_INDUSTRY_KEY = "nguyen-lieu-tra-sua";
+
 export function DesktopHomeIndustry({ active = "home" }: { active?: AppNavKey }) {
-  const catalog = useIndustryCatalogBrowser();
+  const catalog = useIndustryCatalogBrowser(null, TEA_INDUSTRY_KEY);
   return (
     <main className="min-h-screen bg-[#f7f3eb] text-[#0b1220]">
       <DesktopHeader active={active} />
