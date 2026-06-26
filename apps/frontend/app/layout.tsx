@@ -52,10 +52,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             };
           `}
         </Script>
-        <Script src="/open-external-browser.js?v=4" strategy="afterInteractive" />
-        <Script src="/pwa-install-button.js?v=6" strategy="afterInteractive" />
-        <Script src="/pwa-update-toast.js?v=6" strategy="afterInteractive" />
-        <Script src="/pwa-register.js?v=6" strategy="afterInteractive" />
+        <Script src="/open-external-browser.js" strategy="afterInteractive" />
+        <Script src="/pwa-install-button.js" strategy="afterInteractive" />
+        <Script src="/pwa-register.js" strategy="afterInteractive" />
         {oneSignalEnabled ? <OneSignalBootstrap appId={oneSignalAppId ?? ""} enabled={oneSignalEnabled} /> : null}
       </body>
     </html>

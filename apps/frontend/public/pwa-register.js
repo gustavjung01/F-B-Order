@@ -21,39 +21,64 @@
     return;
   }
 
-  var applyingUpdate = false;
+  var reloading = false;
+  var registration = null;
+  var lastUpdateCheck = 0;
+  var UPDATE_CHECK_INTERVAL = 60 * 1000;
 
-  function installUpdateHandlers(registration) {
-    if (!registration) return;
+  function reloadOnce(buildId) {
+    if (reloading) return;
 
-    registration.addEventListener("updatefound", function () {
-      var worker = registration.installing;
-      if (!worker) return;
+    var storageKey = buildId ? "bep-si-fb-sw-reloaded:" + buildId : "";
+    try {
+      if (storageKey && sessionStorage.getItem(storageKey) === "1") return;
+      if (storageKey) sessionStorage.setItem(storageKey, "1");
+    } catch (error) {}
 
-      worker.addEventListener("statechange", function () {
-        if (worker.state === "installed" && navigator.serviceWorker.controller) {
-          window.dispatchEvent(new CustomEvent("bep-si-fb-sw-update-ready", { detail: { registration: registration } }));
-        }
-      });
-    });
-
-    window.addEventListener("bep-si-fb-apply-update", function () {
-      applyingUpdate = true;
-      if (registration.waiting) {
-        registration.waiting.postMessage({ type: "SKIP_WAITING" });
-        return;
-      }
-      registration.update().then(function () {
-        if (registration.waiting) registration.waiting.postMessage({ type: "SKIP_WAITING" });
-      }).catch(function () {
-        applyingUpdate = false;
-      });
-    });
+    reloading = true;
+    window.location.reload();
   }
 
-  navigator.serviceWorker.addEventListener("controllerchange", function () {
-    if (!applyingUpdate) return;
-    window.location.reload();
+  navigator.serviceWorker.addEventListener("message", function (event) {
+    var data = event.data;
+    if (!data || data.type !== "PWA_RELEASE_ACTIVATED") return;
+
+    var port = event.ports && event.ports[0];
+    if (!port) {
+      if (data.isUpdate) reloadOnce(data.buildId);
+      return;
+    }
+
+    var fallbackReload = setTimeout(function () {
+      if (data.isUpdate) reloadOnce(data.buildId);
+    }, 1700);
+
+    port.onmessage = function (ackEvent) {
+      var ack = ackEvent.data;
+      if (!ack || ack.type !== "PWA_RELEASE_ACKNOWLEDGED" || ack.buildId !== data.buildId) return;
+
+      clearTimeout(fallbackReload);
+      if (data.isUpdate) reloadOnce(data.buildId);
+    };
+
+    port.postMessage({ type: "PWA_RELEASE_ACK", buildId: data.buildId });
+  });
+
+  function checkForUpdate(force) {
+    if (!registration) return;
+
+    var now = Date.now();
+    if (!force && now - lastUpdateCheck < UPDATE_CHECK_INTERVAL) return;
+    lastUpdateCheck = now;
+    registration.update().catch(function () {});
+  }
+
+  window.addEventListener("pageshow", function () {
+    checkForUpdate(false);
+  });
+
+  document.addEventListener("visibilitychange", function () {
+    if (document.visibilityState === "visible") checkForUpdate(false);
   });
 
   window.addEventListener("load", function () {
@@ -63,11 +88,12 @@
       serviceWorkerUrl += "?onesignal=1";
     }
 
-    navigator.serviceWorker.register(serviceWorkerUrl).then(function (registration) {
-      installUpdateHandlers(registration);
-      setTimeout(function () {
-        registration.update().catch(function () {});
-      }, 2500);
+    navigator.serviceWorker.register(serviceWorkerUrl, {
+      scope: "/",
+      updateViaCache: "none",
+    }).then(function (registered) {
+      registration = registered;
+      checkForUpdate(true);
     }).catch(function (error) {
       console.warn("Service worker registration failed:", error);
     });
