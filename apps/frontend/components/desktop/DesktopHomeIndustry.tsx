@@ -5,11 +5,10 @@ import { TeaGroupFilter } from "@/components/catalog/TeaGroupFilter";
 import { useIndustryCatalogBrowser } from "@/components/catalog/useIndustryCatalogBrowser";
 import { DesktopHeader } from "@/components/desktop/DesktopHeader";
 import type { AppNavKey } from "@/components/navigation/app-navigation";
+import type { CatalogV2ListResponse } from "@/data/catalog-v2/product-model";
 
-const TEA_INDUSTRY_KEY = "nguyen-lieu-tra-sua";
-
-export function DesktopHomeIndustry({ active = "home" }: { active?: AppNavKey }) {
-  const catalog = useIndustryCatalogBrowser(null, TEA_INDUSTRY_KEY);
+export function DesktopHomeIndustry({ active = "home", initialCatalog }: { active?: AppNavKey; initialCatalog: CatalogV2ListResponse | null }) {
+  const catalog = useIndustryCatalogBrowser(initialCatalog);
   return (
     <main className="min-h-screen bg-[#f7f3eb] text-[#0b1220]">
       <DesktopHeader active={active} />
@@ -25,7 +24,7 @@ export function DesktopHomeIndustry({ active = "home" }: { active?: AppNavKey })
         {!catalog.loading && catalog.products.length > 0 ? (
           <>
             <div className="grid grid-cols-4 gap-5">
-              {catalog.products.map((product) => <CompactProductCard key={product.product_id} product={product} href={`/products/${product.variant_id}`} desktop />)}
+              {catalog.products.map((product) => <CompactProductCard key={product.product_id} product={product} href={"/products/" + product.variant_id} desktop />)}
             </div>
             {catalog.hasMore ? <button type="button" onClick={catalog.showMore} disabled={catalog.loadingMore} className="mx-auto mt-8 block rounded-2xl bg-[#ff5a00] px-8 py-4 font-black text-white disabled:opacity-60">{catalog.loadingMore ? "Đang tải thêm..." : "Xem thêm sản phẩm"}</button> : null}
           </>
