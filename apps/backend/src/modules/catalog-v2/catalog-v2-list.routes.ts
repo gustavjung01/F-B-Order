@@ -7,6 +7,7 @@ import { evaluateCatalogV2Pricing, type CatalogV2PriceRow } from "./catalog-v2.p
 const DEFAULT_PAGE_SIZE = 40;
 const MAX_PAGE_SIZE = 100;
 const MAX_OFFSET = 10000;
+const MAX_FILTER_VALUES = 50;
 const ASSET_BASE_URL = "https://cdn.bepsi.click";
 
 const GROUP_LABELS: Record<string, string> = {
@@ -20,7 +21,7 @@ const GROUP_LABELS: Record<string, string> = {
 };
 
 type IdentityResolver = (req: Request) => Promise<RequestIdentity>;
-type Filters = { q: string | null; industry: string | null; group: string | null };
+type Filters = { q: string | null; industries: string[]; groups: string[] };
 type VariantRow = CatalogV2PriceRow & {
   variant_id: string; product_id: string; product_key: string; product_name: string;
   brand: string | null; industry: string; industry_key: string; catalog_group_key: string | null;
@@ -33,6 +34,13 @@ type FacetRow = { id: string; name?: string; product_count: number };
 
 function readText(value: unknown) {
   return typeof value === "string" && value.trim() ? value.trim() : null;
+}
+
+function readTextList(value: unknown) {
+  const values = Array.isArray(value) ? value : [value];
+  return [...new Set(values.flatMap((entry) => (
+    typeof entry === "string" ? entry.split(",") : []
+  )).map((entry) => entry.trim()).filter(Boolean))].slice(0, MAX_FILTER_VALUES);
 }
 
 function integer(value: unknown, fallback: number, min: number, max: number) {
@@ -58,13 +66,13 @@ function filterQuery(filters: Filters, initialValues: unknown[] = [], omit: Set<
     "variant.catalog_version='hung-phat-v2'", "variant.is_active=true", "variant.is_public=true",
     "variant.status IN ('active','market_price')",
   ];
-  if (!omit.has("industry") && filters.industry && filters.industry !== "all") {
-    values.push(filters.industry);
-    clauses.push(`product.industry_key=$${values.length}`);
+  if (!omit.has("industries") && filters.industries.length > 0) {
+    values.push(filters.industries);
+    clauses.push(`product.industry_key=ANY($${values.length}::text[])`);
   }
-  if (!omit.has("group") && filters.group && filters.group !== "all") {
-    values.push(filters.group);
-    clauses.push(`product.catalog_group_key=$${values.length}`);
+  if (!omit.has("groups") && filters.groups.length > 0) {
+    values.push(filters.groups);
+    clauses.push(`product.catalog_group_key=ANY($${values.length}::text[])`);
   }
   if (!omit.has("q") && filters.q) {
     values.push(`%${filters.q}%`);
@@ -131,14 +139,18 @@ export function createCatalogV2ListRouter(identityResolver: IdentityResolver = a
   router.get("/products", async (req, res) => {
     const requestIdentity = await identity(req, res, identityResolver);
     if (!requestIdentity) return;
-    const filters: Filters = { q: readText(req.query.q), industry: readText(req.query.industry), group: readText(req.query.group) };
+    const filters: Filters = {
+      q: readText(req.query.q),
+      industries: readTextList(req.query.industry),
+      groups: readTextList(req.query.group),
+    };
     const limit = integer(req.query.limit, DEFAULT_PAGE_SIZE, 1, MAX_PAGE_SIZE);
     const offset = integer(req.query.offset, 0, 0, MAX_OFFSET);
     const priceGroupId = requestIdentity.kind === "customer" ? requestIdentity.priceGroupId : null;
     const listFilter = filterQuery(filters, [priceGroupId]);
     const countFilter = filterQuery(filters);
-    const industryFilter = filterQuery(filters, [], new Set(["industry"]));
-    const groupFilter = filterQuery(filters, [], new Set(["group"]));
+    const industryFilter = filterQuery(filters, [], new Set(["industries"]));
+    const groupFilter = filterQuery(filters, [], new Set(["groups"]));
     listFilter.values.push(limit, offset);
     const limitParameter = listFilter.values.length - 1;
     const offsetParameter = listFilter.values.length;
