@@ -19,6 +19,7 @@
     "typecheck": "pnpm -r typecheck",
     "test:catalog-parent": "pnpm catalog:map:v2 && pnpm catalog:preview:parent:v2 && pnpm frontend:audit:copy && pnpm typecheck && pnpm run build:frontend",
     "test:auth-pricing": "pnpm --filter @fb-order/backend test:auth-pricing",
+    "test:recipe-read": "pnpm --filter @fb-order/backend test:recipe-read",
     "db:migrate": "pnpm --filter @fb-order/backend db:migrate",
     "db:migrate:baseline": "pnpm --filter @fb-order/backend db:migrate:baseline",
     "db:test:migrations": "pnpm --filter @fb-order/backend db:test:migrations",
