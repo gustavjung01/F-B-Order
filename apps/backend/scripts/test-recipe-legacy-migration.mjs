@@ -183,16 +183,16 @@ async function main() {
          'db/migrations/009a_recipe_legacy_bridge.sql',
          'db/migrations/010_recipe_core.sql',
          'db/migrations/010a_recipe_legacy_name_bridge.sql'
-       )
-       ORDER BY filename`,
+       )`,
     );
+    assert.equal(ledger.rowCount, 3);
     assert.deepEqual(
-      ledger.rows.map((row) => row.filename),
-      [
+      new Set(ledger.rows.map((row) => row.filename)),
+      new Set([
         "db/migrations/009a_recipe_legacy_bridge.sql",
         "db/migrations/010_recipe_core.sql",
         "db/migrations/010a_recipe_legacy_name_bridge.sql",
-      ],
+      ]),
     );
 
     console.log("Legacy Recipe database migration passed.");
