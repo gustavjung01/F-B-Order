@@ -67,13 +67,14 @@ test("generator writes matching build IDs and the release lifecycle invariants",
   }
 });
 
-test("checked-in release artifacts use the same build ID", function () {
+test("checked-in release artifacts use the same build ID and template", function () {
   const appVersion = JSON.parse(readFileSync(join(publicDir, "app-version.json"), "utf8"));
   const worker = readFileSync(join(publicDir, "service-worker.js"), "utf8");
+  const template = readFileSync(templatePath, "utf8");
 
   assert.equal(typeof appVersion.buildId, "string");
   assert.ok(appVersion.buildId.length > 0);
-  assert.match(worker, new RegExp(`const BUILD_ID = ${JSON.stringify(appVersion.buildId).replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`));
+  assert.equal(worker, renderServiceWorker(template, appVersion.buildId));
 });
 
 test("registration lifecycle has no pre-activation version bookkeeping", function () {
