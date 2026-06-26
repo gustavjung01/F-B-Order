@@ -64,4 +64,4 @@ pnpm --filter @fb-order/backend dev
 - Database nội bộ vẫn lưu `customer_id`, `role`, `price_group`, `sales_owner` để xử lý nghiệp vụ.
 - PWA phải làm từ đầu, không để cuối mới vá.
 
-<!-- Vercel production deployment refresh: 2026-06-26 catalog-multifilter -->
+<!-- Vercel production deployment refresh: 2026-06-26 catalog-multifilter-2 -->
