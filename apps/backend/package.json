@@ -15,6 +15,7 @@
     "test:recipe-read": "tsx scripts/test-recipe-read-api.ts",
     "test:recipe-admin": "tsx scripts/test-admin-recipe-workflow.ts",
     "test:recipe-cost": "tsx scripts/test-recipe-cost-engine.ts",
+    "test:recipe-cart": "tsx scripts/test-recipe-add-to-cart.ts",
     "db:migrate": "node scripts/run-migrations.mjs",
     "db:migrate:baseline": "node scripts/run-migrations.mjs --baseline-existing",
     "db:test:migrations": "node scripts/test-migrations.mjs",
