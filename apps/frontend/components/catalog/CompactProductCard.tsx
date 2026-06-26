@@ -7,7 +7,6 @@ import type { CatalogV2VariantCard } from "@/data/catalog-v2/product-model";
 import {
   getCatalogV2PriceLabel,
   getCatalogV2SpecificationLabel,
-  getCatalogV2VariantCountLabel,
 } from "@/lib/catalog-v2-display";
 import { getBrandVisual } from "@/lib/brand-visuals";
 
@@ -68,40 +67,31 @@ export function CompactProductCard({
         href={href}
         onOpen={onOpen}
         ariaLabel={`Mở ${product.name}`}
-        className={`relative grid w-full place-items-center overflow-hidden text-center ${desktop ? "h-48 p-4 text-6xl" : "h-[132px] p-3 text-[44px]"}`}
+        className={`relative grid w-full place-items-center overflow-hidden text-center ${desktop ? "h-44 p-3 text-5xl" : "h-[112px] p-2.5 text-[40px]"}`}
       >
         <BrandBadge brand={product.brand} compact={!desktop} className="absolute right-2 top-2 z-10 max-w-[78%] shadow-sm" />
         {product.image.url ? (
-          <img src={product.image.url} alt={product.name} className="h-full w-full object-contain pt-4" />
+          <img src={product.image.url} alt={product.name} className="h-full w-full object-contain pt-3" />
         ) : categoryEmoji(product.industryKey)}
       </OpenTarget>
 
-      <div className={`flex flex-1 flex-col ${desktop ? "p-4 pt-3" : "p-3 pt-2.5"}`}>
+      <div className={`flex flex-1 flex-col ${desktop ? "p-3.5 pt-2.5" : "p-2.5 pt-2"}`}>
         <OpenTarget
           href={href}
           onOpen={onOpen}
-          className={`block w-full text-left font-black leading-[1.18] tracking-tight text-[#0b1220] hover:text-[#ff5a00] ${desktop ? "min-h-[48px] text-lg" : "min-h-[38px] text-[15px]"}`}
+          className={`block w-full text-left font-black leading-[1.18] tracking-tight text-[#0b1220] hover:text-[#ff5a00] ${desktop ? "min-h-[44px] text-base" : "min-h-[34px] text-[14px]"}`}
         >
           <span className="line-clamp-2">{product.name}</span>
         </OpenTarget>
 
-        <p className={`mt-2 flex min-w-0 items-center gap-1.5 font-bold leading-tight text-slate-500 ${desktop ? "text-xs" : "text-[11px]"}`}>
+        <p className={`mt-1.5 flex min-w-0 items-center gap-1.5 font-bold leading-tight text-slate-500 ${desktop ? "text-xs" : "text-[10px]"}`}>
           <PackageIcon />
           <span className="truncate">{getCatalogV2SpecificationLabel(product)}</span>
         </p>
 
-        <p className={`mt-3 font-black leading-tight text-[#f05213] ${desktop ? "text-lg" : "text-[14px]"}`}>
+        <p className={`mt-2 font-black leading-tight text-[#f05213] ${desktop ? "text-lg" : "text-[14px]"}`}>
           {getCatalogV2PriceLabel(product)}
         </p>
-
-        <OpenTarget
-          href={href}
-          onOpen={onOpen}
-          className={`mt-3 flex w-full items-center justify-between rounded-[14px] bg-[#fff7f1] px-3 font-black text-[#0b1220] ring-1 ring-[#f5dfd1] active:scale-[0.99] ${desktop ? "min-h-11 text-sm" : "min-h-10 text-[11px]"}`}
-        >
-          <span>{getCatalogV2VariantCountLabel(product)}</span>
-          <span className="text-lg leading-none text-[#f05213]">→</span>
-        </OpenTarget>
       </div>
     </article>
   );
