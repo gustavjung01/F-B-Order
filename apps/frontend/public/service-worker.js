@@ -10,119 +10,148 @@ if (oneSignalEnabled) {
   importScripts("https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.sw.js");
 }
 
-const CACHE_VERSION = "bep-si-fb-pwa-v12";
-const RUNTIME_CACHE = "bep-si-fb-runtime-v12";
-const NAVIGATION_TIMEOUT_MS = 1200;
-
-const OFFLINE_FALLBACK = [
-  "/",
-  "/manifest.webmanifest",
-  "/icons/icon-192.png"
+const BUILD_ID = "e3784d5777b5-source-20260626";
+const PRECACHE = "bep-si-fb-pwa-" + BUILD_ID;
+const ASSET_CACHE = "bep-si-fb-assets-" + BUILD_ID;
+const OFFLINE_URL = "/offline.html";
+const APP_CACHE_PREFIXES = [
+  "bep-si-fb-pwa-",
+  "bep-si-fb-runtime-",
+  "bep-si-fb-assets-",
 ];
-
-const STATIC_ASSET_RE = /\.(?:js|css|png|jpg|jpeg|svg|webp|gif|ico|woff2?)$/i;
+const IMMUTABLE_ASSET_PREFIX = "/_next/static/";
 const AUTH_ROUTE_RE = /^\/(?:sign-in|sign-up)(?:\/|$)/;
 const CLERK_ROUTE_RE = /^\/__clerk(?:\/|$)/;
 
-self.addEventListener("install", function (event) {
-  event.waitUntil(
-    caches.open(CACHE_VERSION).then(function (cache) {
-      return cache.addAll(OFFLINE_FALLBACK);
-    }).then(function () {
-      return self.skipWaiting();
-    })
-  );
-});
-
-self.addEventListener("activate", function (event) {
-  event.waitUntil(
-    Promise.all([
-      caches.keys().then(function (keys) {
-        return Promise.all(keys.filter(function (key) {
-          return key !== CACHE_VERSION && key !== RUNTIME_CACHE;
-        }).map(function (key) {
-          return caches.delete(key);
-        }));
-      }),
-      self.registration.navigationPreload
-        ? self.registration.navigationPreload.enable().catch(function () {})
-        : Promise.resolve()
-    ]).then(function () {
-      return self.clients.claim();
-    })
-  );
-});
-
-self.addEventListener("message", function (event) {
-  if (event.data && event.data.type === "SKIP_WAITING") self.skipWaiting();
-});
+function isAppCache(cacheName) {
+  return APP_CACHE_PREFIXES.some(function (prefix) {
+    return cacheName.indexOf(prefix) === 0;
+  });
+}
 
 function failedFetchResponse() {
   return Response.error();
 }
 
-function cacheRuntimeResponse(request, response) {
-  if (!response || !response.ok) return response;
+self.addEventListener("install", function (event) {
+  event.waitUntil(
+    caches.open(PRECACHE)
+      .then(function (cache) {
+        return cache.add(new Request(OFFLINE_URL, { cache: "reload" })).catch(function () {});
+      })
+      .then(function () {
+        return self.skipWaiting();
+      }),
+  );
+});
 
-  var copy = response.clone();
-  caches.open(RUNTIME_CACHE).then(function (cache) {
-    cache.put(request, copy);
-  }).catch(function () {});
+function notifyClientOfRelease(client, isUpdate) {
+  if (!client) return Promise.resolve();
 
-  return response;
-}
+  if (!isUpdate || typeof MessageChannel === "undefined") {
+    client.postMessage({
+      type: "PWA_RELEASE_ACTIVATED",
+      buildId: BUILD_ID,
+      isUpdate: isUpdate,
+    });
+    return Promise.resolve();
+  }
 
-function cachedNavigationResponse(request) {
-  return caches.match(request).then(function (cached) {
-    if (cached) return cached;
-    return caches.match("/");
+  return new Promise(function (resolve) {
+    var settled = false;
+    var channel = new MessageChannel();
+    var timeout = setTimeout(function () {
+      if (settled) return;
+      settled = true;
+
+      if (typeof client.navigate === "function") {
+        Promise.resolve(client.navigate(client.url)).catch(function () {}).then(resolve);
+        return;
+      }
+
+      resolve();
+    }, 1200);
+
+    channel.port1.onmessage = function (event) {
+      var data = event.data;
+      if (!data || data.type !== "PWA_RELEASE_ACK" || data.buildId !== BUILD_ID) return;
+
+      settled = true;
+      clearTimeout(timeout);
+      resolve();
+    };
+
+    client.postMessage(
+      {
+        type: "PWA_RELEASE_ACTIVATED",
+        buildId: BUILD_ID,
+        isUpdate: true,
+      },
+      [channel.port2],
+    );
   });
 }
 
-function navigationNetworkFirst(event) {
-  var request = event.request;
-  var networkPromise = Promise.resolve(event.preloadResponse)
+self.addEventListener("activate", function (event) {
+  event.waitUntil(
+    caches.keys()
+      .then(function (keys) {
+        var previousReleaseExists = keys.some(function (key) {
+          return isAppCache(key) && key !== PRECACHE && key !== ASSET_CACHE;
+        });
+
+        return Promise.all([
+          Promise.all(keys.filter(function (key) {
+            return isAppCache(key) && key !== PRECACHE && key !== ASSET_CACHE;
+          }).map(function (key) {
+            return caches.delete(key);
+          })),
+          self.registration.navigationPreload
+            ? self.registration.navigationPreload.enable().catch(function () {})
+            : Promise.resolve(),
+        ]).then(function () {
+          return self.clients.claim();
+        }).then(function () {
+          return self.clients.matchAll({ type: "window", includeUncontrolled: true });
+        }).then(function (clients) {
+          return Promise.all(clients.map(function (client) {
+            return notifyClientOfRelease(client, previousReleaseExists);
+          }));
+        });
+      }),
+  );
+});
+
+self.addEventListener("message", function (event) {
+  if (event.data && event.data.type === "SKIP_WAITING") {
+    self.skipWaiting();
+  }
+});
+
+function navigationFromNetwork(event) {
+  return Promise.resolve(event.preloadResponse)
     .then(function (preloaded) {
       if (preloaded) return preloaded;
-      return fetch(request, { cache: "no-store" });
-    })
-    .then(function (response) {
-      return cacheRuntimeResponse(request, response);
+      return fetch(event.request, { cache: "no-store" });
     })
     .catch(function () {
-      return null;
-    });
-
-  var timeoutPromise = new Promise(function (resolve) {
-    setTimeout(function () {
-      cachedNavigationResponse(request).then(resolve).catch(function () {
-        resolve(null);
-      });
-    }, NAVIGATION_TIMEOUT_MS);
-  });
-
-  return Promise.race([networkPromise, timeoutPromise]).then(function (response) {
-    if (response) return response;
-
-    return networkPromise.then(function (networkResponse) {
-      if (networkResponse) return networkResponse;
-      return cachedNavigationResponse(request).then(function (cached) {
-        return cached || failedFetchResponse();
+      return caches.match(OFFLINE_URL).then(function (offline) {
+        return offline || failedFetchResponse();
       });
     });
-  });
 }
 
-function staleWhileRevalidate(request) {
-  return caches.open(RUNTIME_CACHE).then(function (cache) {
+function immutableAssetCacheFirst(request) {
+  return caches.open(ASSET_CACHE).then(function (cache) {
     return cache.match(request).then(function (cached) {
-      var fetchPromise = fetch(request).then(function (response) {
-        if (response && response.ok) cache.put(request, response.clone());
+      if (cached) return cached;
+
+      return fetch(request).then(function (response) {
+        if (response && response.ok) {
+          cache.put(request, response.clone()).catch(function () {});
+        }
         return response;
-      }).catch(function () {
-        return cached || failedFetchResponse();
       });
-      return cached || fetchPromise;
     });
   });
 }
@@ -133,24 +162,24 @@ self.addEventListener("fetch", function (event) {
 
   if (request.method !== "GET") return;
   if (url.origin !== self.location.origin) return;
-
   if (AUTH_ROUTE_RE.test(url.pathname) || CLERK_ROUTE_RE.test(url.pathname)) return;
 
-  if (url.pathname === "/service-worker.js" || url.pathname === "/app-version.json" || url.pathname === "/manifest.webmanifest") {
-    event.respondWith(fetch(request, { cache: "no-store" }).catch(function () {
-      return caches.match(request).then(function (cached) {
-        return cached || failedFetchResponse();
-      });
-    }));
+  if (
+    url.pathname === "/service-worker.js" ||
+    url.pathname === "/app-version.json" ||
+    url.pathname === "/pwa-register.js" ||
+    url.pathname === "/manifest.webmanifest"
+  ) {
+    event.respondWith(fetch(request, { cache: "no-store" }));
     return;
   }
 
   if (request.mode === "navigate" || (request.headers.get("accept") || "").includes("text/html")) {
-    event.respondWith(navigationNetworkFirst(event));
+    event.respondWith(navigationFromNetwork(event));
     return;
   }
 
-  if (STATIC_ASSET_RE.test(url.pathname)) {
-    event.respondWith(staleWhileRevalidate(request));
+  if (url.pathname.indexOf(IMMUTABLE_ASSET_PREFIX) === 0) {
+    event.respondWith(immutableAssetCacheFirst(request));
   }
 });
