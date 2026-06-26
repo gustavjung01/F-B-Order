@@ -9,7 +9,8 @@ export const MIGRATION_FILES = Object.freeze([
   "db/migrations/008_catalog_v2_cart_identity.sql",
   "db/migrations/009_catalog_groups_and_choices.sql",
   "db/migrations/009a_recipe_legacy_bridge.sql",
-  "db/migrations/010_recipe_core.sql"
+  "db/migrations/010_recipe_core.sql",
+  "db/migrations/010a_recipe_legacy_name_bridge.sql"
 ]);
 
 export const BASELINE_MIGRATION_FILES = Object.freeze([
