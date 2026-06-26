@@ -101,6 +101,20 @@ function ChoiceButtons(props: {
   );
 }
 
+function selectedPurchaseLabel(
+  detail: CatalogV2DetailResponse,
+  options: Record<string, string>,
+  choices: Record<string, string>,
+) {
+  const optionValues = detail.optionGroups
+    .map((group) => options[group.key])
+    .filter((value): value is string => Boolean(value));
+  const choiceValues = (detail.choiceGroups ?? [])
+    .map((group) => choices[group.key])
+    .filter((value): value is string => Boolean(value));
+  return [...optionValues, ...choiceValues].join(" · ");
+}
+
 export function CompactPurchaseSelector({ detail, initialVariantId, onVariantChange }: Props) {
   const rawChoiceGroups = detail.choiceGroups ?? [];
   const firstVariant = detail.variants.find((item) => item.variant_id === initialVariantId) || detail.variants[0];
@@ -115,6 +129,7 @@ export function CompactPurchaseSelector({ detail, initialVariantId, onVariantCha
     [rawChoiceGroups, variant],
   );
   const choicesReady = choiceGroups.every((group) => !group.required || Boolean(choices[group.key]));
+  const selectedLabel = selectedPurchaseLabel(detail, options, choices);
 
   function updateOption(groupIndex: number, key: string, value: string) {
     const next = { ...options, [key]: value };
@@ -140,7 +155,7 @@ export function CompactPurchaseSelector({ detail, initialVariantId, onVariantCha
       return;
     }
     if (!variant.isOrderable) {
-      setMessage(getCatalogV2OrderLabel(variant));
+      setMessage(selectedLabel ? `Đã chọn ${selectedLabel}. ${getCatalogV2OrderLabel(variant)}.` : getCatalogV2OrderLabel(variant));
       return;
     }
     setAdding(true);
@@ -157,7 +172,7 @@ export function CompactPurchaseSelector({ detail, initialVariantId, onVariantCha
         return;
       }
       addCartItem({ variantId: variant.variant_id, quantity, selections: choices });
-      setMessage(`Đã thêm ${quantity} sản phẩm vào giỏ.`);
+      setMessage(`Đã thêm ${quantity}${selectedLabel ? ` × ${selectedLabel}` : " sản phẩm"} vào giỏ.`);
     } catch {
       setMessage("Không thể cập nhật giỏ hàng. Vui lòng thử lại.");
     } finally {
@@ -196,6 +211,7 @@ export function CompactPurchaseSelector({ detail, initialVariantId, onVariantCha
       <div className="mt-2.5 flex items-center justify-between gap-2 rounded-[16px] bg-[#fbfaf7] p-2.5 ring-1 ring-[#e7dccd]">
         <div className="min-w-0">
           <p className="truncate text-[10px] font-black text-slate-500">{variant?.sku || "Chưa chọn đủ phân loại"}</p>
+          {selectedLabel ? <p className="mt-0.5 truncate text-xs font-black text-slate-700">Đã chọn: {selectedLabel}</p> : null}
           <p className="mt-0.5 text-sm font-black text-[#ff5a00]">{variant ? getCatalogV2PriceLabel(variant) : "Chọn phân loại"}</p>
         </div>
         <div className="grid h-10 w-28 shrink-0 grid-cols-3 overflow-hidden rounded-[12px] border border-[#e7dccd] bg-white text-sm font-black">
@@ -205,8 +221,8 @@ export function CompactPurchaseSelector({ detail, initialVariantId, onVariantCha
         </div>
       </div>
       {message ? <p className={`mt-2 rounded-[12px] p-2.5 text-xs font-black ${message.startsWith("Đã thêm") ? "bg-[#e9fbf2] text-[#08775f]" : "bg-red-50 text-red-700"}`}>{message}</p> : null}
-      <button type="button" onClick={() => void addToCart()} disabled={adding || !variant || !choicesReady || !variant?.isOrderable} className="mt-2.5 h-12 w-full rounded-[16px] bg-[#ff5a00] text-sm font-black text-white shadow-[0_12px_24px_rgba(255,90,0,0.2)] disabled:bg-slate-300 disabled:shadow-none">
-        {adding ? "Đang thêm..." : variant && !variant.isOrderable ? getCatalogV2OrderLabel(variant) : "Thêm vào giỏ"}
+      <button type="button" onClick={() => void addToCart()} disabled={adding || !variant || !choicesReady} className="mt-2.5 h-12 w-full rounded-[16px] bg-[#ff5a00] text-sm font-black text-white shadow-[0_12px_24px_rgba(255,90,0,0.2)] disabled:bg-slate-300 disabled:shadow-none">
+        {adding ? "Đang thêm..." : selectedLabel ? `Thêm ${selectedLabel} vào giỏ` : "Thêm vào giỏ"}
       </button>
     </section>
   );
