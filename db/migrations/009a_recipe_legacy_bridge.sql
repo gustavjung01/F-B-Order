@@ -90,6 +90,7 @@ CREATE TABLE IF NOT EXISTS recipe_ingredients (
   recipe_id UUID NOT NULL REFERENCES recipes(id) ON DELETE CASCADE,
   product_id UUID REFERENCES products(id) ON DELETE SET NULL,
   product_name TEXT,
+  name TEXT,
   quantity NUMERIC(14,2),
   unit TEXT,
   note TEXT,
@@ -102,6 +103,7 @@ ALTER TABLE recipe_ingredients
   ADD COLUMN IF NOT EXISTS recipe_id UUID REFERENCES recipes(id) ON DELETE CASCADE,
   ADD COLUMN IF NOT EXISTS product_id UUID REFERENCES products(id) ON DELETE SET NULL,
   ADD COLUMN IF NOT EXISTS product_name TEXT,
+  ADD COLUMN IF NOT EXISTS name TEXT,
   ADD COLUMN IF NOT EXISTS quantity NUMERIC(14,2),
   ADD COLUMN IF NOT EXISTS unit TEXT,
   ADD COLUMN IF NOT EXISTS note TEXT,
@@ -115,6 +117,7 @@ ALTER TABLE recipe_ingredients ALTER COLUMN unit TYPE TEXT USING unit::text;
 UPDATE recipe_ingredients
 SET
   product_name = COALESCE(NULLIF(BTRIM(product_name), ''), 'Nguyên liệu'),
+  name = COALESCE(NULLIF(BTRIM(name), ''), NULLIF(BTRIM(product_name), ''), 'Nguyên liệu'),
   optional = COALESCE(optional, false),
   sort_order = COALESCE(sort_order, 0),
   created_at = COALESCE(created_at, now());
