@@ -3,6 +3,8 @@ import cors from "cors";
 import express from "express";
 import helmet from "helmet";
 import { createAdminCustomersRouter } from "./modules/admin/admin-customers.routes";
+import { createAdminAiGatewayRouter } from "./modules/ai/ai-gateway.routes";
+import type { AiGatewayService } from "./modules/ai/ai-gateway.service";
 import { anonymousIdentity, resolveRequestIdentity } from "./modules/auth/auth.identity";
 import { createAuthRouter } from "./modules/auth/auth.routes";
 import { createCatalogV2ChoiceCartRouter } from "./modules/catalog-v2/catalog-v2-choice-cart.routes";
@@ -20,11 +22,14 @@ export type AppConfig = {
   port: number;
   clerkSecretKey?: string;
   clerkPublishableKey?: string;
+  aiGatewayService?: AiGatewayService | null;
+  aiProvider?: "vertex_ai" | "disabled";
 };
 
 export function createApp(config: AppConfig) {
   const app = express();
   const clerkEnabled = Boolean(config.clerkSecretKey && config.clerkPublishableKey);
+  const aiGatewayConfigured = Boolean(config.aiGatewayService);
 
   app.disable("x-powered-by");
   app.use(helmet());
@@ -39,6 +44,10 @@ export function createApp(config: AppConfig) {
     clerkMissing: {
       secretKey: !config.clerkSecretKey,
       publishableKey: !config.clerkPublishableKey,
+    },
+    aiGateway: {
+      configured: aiGatewayConfigured,
+      provider: config.aiProvider ?? "disabled",
     },
     time: new Date().toISOString(),
   });
@@ -75,6 +84,13 @@ export function createApp(config: AppConfig) {
     app.use("/api/customer/orders", createCustomerOrdersRouter(resolveRequestIdentity));
     app.use("/api/admin/customers", createAdminCustomersRouter(resolveRequestIdentity));
     app.use("/api/admin/orders", createAdminOrdersRouter(resolveRequestIdentity));
+    if (config.aiGatewayService) {
+      app.use("/api/admin/ai", createAdminAiGatewayRouter(resolveRequestIdentity, config.aiGatewayService));
+    } else {
+      app.use("/api/admin/ai", (_req, res) => {
+        res.status(503).json({ error: "AI_GATEWAY_NOT_CONFIGURED" });
+      });
+    }
   } else {
     const clerkUnavailable = (_req: express.Request, res: express.Response) => {
       res.status(503).json({ error: "CLERK_NOT_CONFIGURED" });
@@ -87,6 +103,7 @@ export function createApp(config: AppConfig) {
     app.use("/api/customer/orders", clerkUnavailable);
     app.use("/api/admin/customers", clerkUnavailable);
     app.use("/api/admin/orders", clerkUnavailable);
+    app.use("/api/admin/ai", clerkUnavailable);
   }
 
   app.use((_req, res) => res.status(404).json({ error: "NOT_FOUND" }));
