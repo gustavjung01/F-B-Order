@@ -1,0 +1,65 @@
+name: Recipe core schema
+
+on:
+  push:
+    branches:
+      - "feat/recipe-core-schema"
+  pull_request:
+    branches:
+      - main
+      - "feat/recipe-domain-contract"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: fb_order_recipe
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d fb_order_recipe"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5432/fb_order_recipe
+      TEST_DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5432/postgres
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.34.4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Verify migration runner on fresh, legacy and baseline databases
+        run: pnpm db:test:migrations
+
+      - name: Migrate Recipe Core database
+        run: pnpm db:migrate
+
+      - name: Verify Recipe Core schema and invariants
+        run: pnpm db:verify:recipe-contract
+
+      - name: Build backend
+        run: pnpm run build:backend
