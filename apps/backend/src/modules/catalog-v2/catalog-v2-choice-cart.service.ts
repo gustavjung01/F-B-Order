@@ -1,6 +1,8 @@
-import type { PoolClient } from "pg";
+import type { Pool, PoolClient } from "pg";
 import { getDb } from "../../db/pool";
 import type { CatalogV2PriceRow } from "./catalog-v2.pricing";
+
+export type CatalogCartQueryable = Pick<Pool, "query"> | Pick<PoolClient, "query">;
 
 export type CatalogChoiceVariantRow = CatalogV2PriceRow & {
   variant_id: string;
@@ -16,8 +18,9 @@ export async function findCatalogChoiceVariant(
   variantId: string,
   priceGroupId: string | null,
   quantity: number,
+  db: CatalogCartQueryable = getDb(),
 ) {
-  const result = await getDb().query<CatalogChoiceVariantRow>(
+  const result = await db.query<CatalogChoiceVariantRow>(
     `SELECT
        variant.id::text AS variant_id,
        product.id::text AS product_id,
