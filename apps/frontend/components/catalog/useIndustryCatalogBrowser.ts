@@ -145,6 +145,11 @@ export function useIndustryCatalogBrowser(
     setSelectedIndustries([]);
   }
 
+  function setSelectedIndustry(value: string) {
+    if (value === "all") clearIndustries();
+    else toggleIndustry(value);
+  }
+
   function toggleGroup(value: string) {
     setSelectedGroups((current) => (
       current.includes(value) ? current.filter((item) => item !== value) : [...current, value]
@@ -153,6 +158,11 @@ export function useIndustryCatalogBrowser(
 
   function clearGroups() {
     setSelectedGroups([]);
+  }
+
+  function setSelectedGroup(value: string) {
+    if (value === "all") clearGroups();
+    else toggleGroup(value);
   }
 
   function resetFilters() {
@@ -170,6 +180,10 @@ export function useIndustryCatalogBrowser(
     selectedGroups,
     toggleGroup,
     clearGroups,
+    selectedIndustry: industryQueryKey || "all",
+    setSelectedIndustry,
+    selectedGroup: groupQueryKey || "all",
+    setSelectedGroup,
     showGroupFilter,
     resetFilters,
     searchText,
