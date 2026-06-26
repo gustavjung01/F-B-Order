@@ -7,6 +7,8 @@ import { fileURLToPath } from "node:url";
 import { createBuildId, renderServiceWorker, writePwaRelease } from "./write-app-version.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
+const frontendDir = join(__dirname, "..");
+const publicDir = join(frontendDir, "public");
 const templatePath = join(__dirname, "service-worker.template.js");
 
 test("createBuildId produces release-specific IDs", function () {
@@ -33,12 +35,12 @@ test("renderServiceWorker rejects a template without the build placeholder", fun
 });
 
 test("generator writes matching build IDs and the release lifecycle invariants", function () {
-  const publicDir = mkdtempSync(join(tmpdir(), "fb-order-pwa-"));
+  const temporaryPublicDir = mkdtempSync(join(tmpdir(), "fb-order-pwa-"));
   const buildId = "abc123-dpl_test-abcdef123456";
 
   try {
     const result = writePwaRelease({
-      publicDir,
+      publicDir: temporaryPublicDir,
       templatePath,
       git: "abc123",
       builtAt: "2026-06-26T00:00:00.000Z",
@@ -61,6 +63,26 @@ test("generator writes matching build IDs and the release lifecycle invariants",
     assert.doesNotMatch(worker, /NAVIGATION_TIMEOUT_MS/);
     assert.doesNotMatch(worker, /caches\.match\("\/"\)/);
   } finally {
-    rmSync(publicDir, { recursive: true, force: true });
+    rmSync(temporaryPublicDir, { recursive: true, force: true });
   }
+});
+
+test("checked-in release artifacts use the same build ID", function () {
+  const appVersion = JSON.parse(readFileSync(join(publicDir, "app-version.json"), "utf8"));
+  const worker = readFileSync(join(publicDir, "service-worker.js"), "utf8");
+
+  assert.equal(typeof appVersion.buildId, "string");
+  assert.ok(appVersion.buildId.length > 0);
+  assert.match(worker, new RegExp(`const BUILD_ID = ${JSON.stringify(appVersion.buildId).replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`));
+});
+
+test("registration lifecycle has no pre-activation version bookkeeping", function () {
+  const registration = readFileSync(join(publicDir, "pwa-register.js"), "utf8");
+  const layout = readFileSync(join(frontendDir, "app", "layout.tsx"), "utf8");
+
+  assert.match(registration, /updateViaCache: "none"/);
+  assert.match(registration, /PWA_RELEASE_ACTIVATED/);
+  assert.doesNotMatch(registration, /localStorage/);
+  assert.doesNotMatch(layout, /pwa-update-toast/);
+  assert.doesNotMatch(layout, /\.js\?v=\d+/);
 });
