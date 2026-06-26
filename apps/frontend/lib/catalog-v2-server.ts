@@ -40,6 +40,7 @@ export async function fetchInitialCatalogV2(): Promise<CatalogV2ListResponse> {
     },
     facets: {
       industries: payload.facets?.industries ?? [],
+      groups: payload.facets?.groups ?? [],
       brands: payload.facets?.brands ?? [],
     },
   };
