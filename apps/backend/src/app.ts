@@ -14,6 +14,7 @@ import { createAdminOrdersRouter } from "./modules/orders/admin-orders.routes";
 import { createCustomerOrdersRouter } from "./modules/orders/customer-orders.routes";
 import { createOrderEntryRouter } from "./modules/orders/orders-entry.routes";
 import { createAdminRecipeRouter } from "./modules/recipes/admin-recipe.routes";
+import { createRecipeCatalogLinkRouter } from "./modules/recipes/recipe-catalog-link.routes";
 import { createRecipeReadRouter } from "./modules/recipes/recipe.routes";
 
 export type AppConfig = {
@@ -80,6 +81,7 @@ export function createApp(config: AppConfig) {
     app.use("/api/admin/customers", createAdminCustomersRouter(resolveRequestIdentity));
     app.use("/api/admin/orders", createAdminOrdersRouter(resolveRequestIdentity));
     app.use("/api/admin/recipes", createAdminRecipeRouter(resolveRequestIdentity));
+    app.use("/api/admin/recipe-catalog-links", createRecipeCatalogLinkRouter(resolveRequestIdentity));
   } else {
     const clerkUnavailable = (_req: express.Request, res: express.Response) => {
       res.status(503).json({ error: "CLERK_NOT_CONFIGURED" });
@@ -93,6 +95,7 @@ export function createApp(config: AppConfig) {
     app.use("/api/admin/customers", clerkUnavailable);
     app.use("/api/admin/orders", clerkUnavailable);
     app.use("/api/admin/recipes", clerkUnavailable);
+    app.use("/api/admin/recipe-catalog-links", clerkUnavailable);
   }
 
   app.use((_req, res) => res.status(404).json({ error: "NOT_FOUND" }));
