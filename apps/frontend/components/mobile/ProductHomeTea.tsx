@@ -10,13 +10,15 @@ import { ProductQuickViewCompact } from "@/components/mobile/ProductQuickViewCom
 import type { AppNavKey } from "@/components/navigation/app-navigation";
 import type { CatalogV2ListResponse, CatalogV2VariantCard } from "@/data/catalog-v2/product-model";
 
+const TEA_INDUSTRY_KEY = "nguyen-lieu-tra-sua";
+
 function ListState({ children }: { children: string }) {
   return <div className="col-span-2 rounded-[24px] border border-dashed border-[#e7dccd] bg-white/70 px-5 py-8 text-center text-sm font-black text-slate-500">{children}</div>;
 }
 
 export function ProductHomeTea({ active = "home", initialCatalog }: { active?: AppNavKey; initialCatalog: CatalogV2ListResponse | null }) {
   const [selectedProduct, setSelectedProduct] = useState<CatalogV2VariantCard | null>(null);
-  const catalog = useIndustryCatalogBrowser(initialCatalog);
+  const catalog = useIndustryCatalogBrowser(initialCatalog, TEA_INDUSTRY_KEY);
   return (
     <MobilePageShell active={active} title="Bếp Sỉ F&B" subtitle={catalog.loading ? "Đang tải sản phẩm" : `${catalog.total} sản phẩm`}>
       <CatalogHero searchText={catalog.searchText} onSearchChange={catalog.setSearchText} />
