@@ -12,6 +12,8 @@ import {
 async function main() {
   const db = getDb();
   const suffix = randomUUID().replaceAll("-", "");
+  const strawberryKey = `flavor=${encodeURIComponent("Dâu")}`;
+  const peachKey = `flavor=${encodeURIComponent("Đào")}`;
   let customerId: string | null = null;
   let productId: string | null = null;
 
@@ -64,7 +66,7 @@ async function main() {
     });
     assert.ok(added.cartId);
     assert.equal(added.item.quantity, 2);
-    assert.equal(added.item.selectionKey, "flavor=Dâu");
+    assert.equal(added.item.selectionKey, strawberryKey);
     assert.equal(added.item.lineTotal, 140000);
 
     const updated = await addCatalogChoiceCartItem(identity, {
@@ -80,7 +82,7 @@ async function main() {
       quantity: 1,
       selections: { flavor: "Đào" },
     });
-    assert.equal(secondSelection.item.selectionKey, "flavor=Đào");
+    assert.equal(secondSelection.item.selectionKey, peachKey);
 
     const rows = await db.query<{ quantity: string; selection_key: string }>(
       `SELECT quantity::text,selection_key
@@ -90,14 +92,14 @@ async function main() {
       [added.cartId],
     );
     assert.deepEqual(rows.rows, [
-      { quantity: "3.00", selection_key: "flavor=Dâu" },
-      { quantity: "1.00", selection_key: "flavor=Đào" },
-    ]);
+      { quantity: "3.00", selection_key: strawberryKey },
+      { quantity: "1.00", selection_key: peachKey },
+    ].sort((left, right) => left.selection_key.localeCompare(right.selection_key)));
 
     const beforeRollback = await db.query<{ quantity: string }>(
       `SELECT quantity::text FROM cart_items
-       WHERE cart_id=$1::uuid AND variant_id=$2::uuid AND selection_key='flavor=Dâu'`,
-      [added.cartId, variantId],
+       WHERE cart_id=$1::uuid AND variant_id=$2::uuid AND selection_key=$3`,
+      [added.cartId, variantId, strawberryKey],
     );
     assert.equal(beforeRollback.rows[0].quantity, "3.00");
 
@@ -113,14 +115,14 @@ async function main() {
 
     const afterRollback = await db.query<{ quantity: string }>(
       `SELECT quantity::text FROM cart_items
-       WHERE cart_id=$1::uuid AND variant_id=$2::uuid AND selection_key='flavor=Dâu'`,
-      [added.cartId, variantId],
+       WHERE cart_id=$1::uuid AND variant_id=$2::uuid AND selection_key=$3`,
+      [added.cartId, variantId, strawberryKey],
     );
     assert.equal(afterRollback.rows[0].quantity, "3.00");
 
     const removed = await removeCatalogChoiceCartItem(identity, {
       variantId,
-      selectionKey: "flavor=Dâu",
+      selectionKey: strawberryKey,
     });
     assert.equal(removed.removed, true);
 
@@ -128,7 +130,7 @@ async function main() {
       `SELECT selection_key FROM cart_items WHERE cart_id=$1::uuid`,
       [added.cartId],
     );
-    assert.deepEqual(remaining.rows, [{ selection_key: "flavor=Đào" }]);
+    assert.deepEqual(remaining.rows, [{ selection_key: peachKey }]);
 
     const deniedIdentities: Array<[RequestIdentity, string]> = [
       [{ kind: "anonymous", clerkUserId: null }, "AUTH_REQUIRED"],
