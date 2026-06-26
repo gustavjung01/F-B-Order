@@ -78,6 +78,10 @@ function notifyClientOfRelease(client, isUpdate) {
 
       settled = true;
       clearTimeout(timeout);
+      channel.port1.postMessage({
+        type: "PWA_RELEASE_ACKNOWLEDGED",
+        buildId: BUILD_ID,
+      });
       resolve();
     };
 
