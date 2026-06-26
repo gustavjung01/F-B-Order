@@ -86,3 +86,9 @@ resource "google_secret_manager_secret_iam_member" "runtime_accessor" {
   role      = "roles/secretmanager.secretAccessor"
   member    = "serviceAccount:${google_service_account.runtime.email}"
 }
+
+resource "google_project_iam_member" "runtime_vertex_user" {
+  project = var.project_id
+  role    = "roles/aiplatform.user"
+  member  = "serviceAccount:${google_service_account.runtime.email}"
+}
