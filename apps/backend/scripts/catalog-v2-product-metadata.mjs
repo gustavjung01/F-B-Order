@@ -51,6 +51,10 @@ function normalize(value) {
     .replace(/^-+|-+$/g, "");
 }
 
+function isFrozenSourceGroup(value) {
+  return normalize(value).includes("dong-lanh");
+}
+
 function inferTeaGroup({ name, sourceGroup }) {
   const product = normalize(name);
   const source = normalize(sourceGroup);
@@ -173,20 +177,23 @@ export function loadCatalogV2ProductMetadata(repoRoot) {
     disabledSkus,
     forProduct(row) {
       const configured = products.get(row.productKey) || {};
+      const frozenSource = isFrozenSourceGroup(row.sourceGroup);
       const hasConfiguredGroup = Object.prototype.hasOwnProperty.call(configured, "catalogGroupKey");
       const catalogGroupKey = hasConfiguredGroup
         ? configured.catalogGroupKey
-        : approvedGroups.get(row.productKey)
-          || (row.industryKey === taxonomy.industryKey ? inferTeaGroup(row) : null);
+        : frozenSource
+          ? null
+          : approvedGroups.get(row.productKey)
+            || (row.industryKey === taxonomy.industryKey ? inferTeaGroup(row) : null);
       return {
         catalogGroupKey,
         choiceGroups: configured.choiceGroups || [],
         nameOverride: configured.nameOverride || null,
         brandOverride: configured.brandOverride || null,
-        industryOverride: configured.industryOverride || null,
-        industryKeyOverride: configured.industryKeyOverride || null,
-        sourceGroupOverride: configured.sourceGroupOverride || null,
-        subcategoryOverride: configured.subcategoryOverride || null,
+        industryOverride: configured.industryOverride || (frozenSource ? "Đông Lạnh" : null),
+        industryKeyOverride: configured.industryKeyOverride || (frozenSource ? "dong-lanh" : null),
+        sourceGroupOverride: configured.sourceGroupOverride || (frozenSource ? "Thực Phẩm Đông Lạnh" : null),
+        subcategoryOverride: configured.subcategoryOverride || (frozenSource ? "Thực Phẩm Đông Lạnh" : null),
         optionGroupsOverride: configured.optionGroupsOverride || null,
         variantOptions: configured.variantOptions || {},
         variantNameOverrides: configured.variantNameOverrides || {},
