@@ -1,5 +1,6 @@
 import dotenv from "dotenv";
 import { createApp } from "./app";
+import { createAiGatewayRuntimeFromEnv } from "./modules/ai/ai-gateway.factory";
 
 dotenv.config();
 
@@ -9,6 +10,7 @@ const corsOrigin = process.env.CORS_ORIGIN || process.env.FRONTEND_URL || "http:
 const clerkSecretKey = process.env.CLERK_SECRET_KEY?.trim();
 const clerkPublishableKey =
   process.env.CLERK_PUBLISHABLE_KEY?.trim() || process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY?.trim();
+const aiGateway = createAiGatewayRuntimeFromEnv();
 
 const app = createApp({
   port,
@@ -16,8 +18,10 @@ const app = createApp({
   corsOrigin,
   clerkSecretKey,
   clerkPublishableKey,
+  aiGatewayService: aiGateway.service,
+  aiProvider: aiGateway.provider,
 });
 
 app.listen(port, () => {
-  console.log(`${serviceName} listening on port ${port}`);
+  console.log(`${serviceName} listening on port ${port}; AI provider=${aiGateway.provider}`);
 });
