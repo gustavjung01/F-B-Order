@@ -40,6 +40,8 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm typecheck
       - run: pnpm db:test:migrations
+      - name: Reproduce legacy local Recipe migration
+        run: node apps/backend/scripts/test-recipe-legacy-migration.mjs
       - run: pnpm db:migrate
       - run: pnpm db:verify:recipe-contract
       - run: pnpm test:recipe-read
