@@ -1,9 +1,11 @@
 "use client";
 
-import type { CatalogV2DetailResponse } from "@/data/catalog-v2/product-model";
+import type { CatalogV2DetailResponse, CatalogV2VariantCard } from "@/data/catalog-v2/product-model";
 import { getCatalogV2PriceLabel } from "@/lib/catalog-v2-display";
 import { ChoiceControl } from "./ChoiceControl";
 import { availableValues, type ResolvedSelectionRow } from "./selection-model";
+import { usePurchaseCartAction } from "./usePurchaseCartAction";
+import { usePurchaseRowState } from "./usePurchaseRowState";
 
 export function PurchaseRowCard(props: {
   detail: CatalogV2DetailResponse;
