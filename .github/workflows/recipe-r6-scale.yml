@@ -39,7 +39,7 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm typecheck
-      - name: Reproduce legacy local Recipe migration
+      - name: Reproduce legacy local Recipe migration after bridge
         id: legacy_recipe_migration
         continue-on-error: true
         run: node apps/backend/scripts/test-recipe-legacy-migration.mjs > legacy-recipe-migration.log 2>&1
