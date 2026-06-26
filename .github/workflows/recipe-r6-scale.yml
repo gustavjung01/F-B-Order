@@ -39,9 +39,20 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm typecheck
-      - run: pnpm db:test:migrations
       - name: Reproduce legacy local Recipe migration
-        run: node apps/backend/scripts/test-recipe-legacy-migration.mjs
+        id: legacy_recipe_migration
+        continue-on-error: true
+        run: node apps/backend/scripts/test-recipe-legacy-migration.mjs > legacy-recipe-migration.log 2>&1
+      - name: Upload legacy Recipe migration log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: legacy-recipe-migration-log
+          path: legacy-recipe-migration.log
+      - name: Fail when legacy Recipe migration failed
+        if: steps.legacy_recipe_migration.outcome == 'failure'
+        run: exit 1
+      - run: pnpm db:test:migrations
       - run: pnpm db:migrate
       - run: pnpm db:verify:recipe-contract
       - run: pnpm test:recipe-read
