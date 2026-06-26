@@ -1,6 +1,15 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "nextjs",
   "installCommand": "npm install",
   "buildCommand": "npm run build",
-  "outputDirectory": ".next"
+  "outputDirectory": ".next",
+  "git": {
+    "deploymentEnabled": {
+      "feat/recipe-r2-clean": false,
+      "feat/recipe-r3-clean": false,
+      "feat/recipe-r4-clean": false,
+      "feat/recipe-r5-catalog-linking": false
+    }
+  }
 }
