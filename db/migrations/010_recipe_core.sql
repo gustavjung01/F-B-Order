@@ -45,6 +45,10 @@ WHERE status NOT IN ('draft', 'in_review', 'published', 'archived')
    OR status IN ('active', 'needs_review', 'inactive');
 ALTER TABLE recipes ALTER COLUMN status SET DEFAULT 'draft';
 
+UPDATE recipes
+SET archived_at = COALESCE(archived_at, updated_at, now())
+WHERE status = 'archived';
+
 ALTER TABLE recipes DROP CONSTRAINT IF EXISTS recipes_aliases_shape_check;
 ALTER TABLE recipes ADD CONSTRAINT recipes_aliases_shape_check
   CHECK (jsonb_typeof(aliases) = 'array');
@@ -85,10 +89,6 @@ ALTER TABLE recipes DROP CONSTRAINT IF EXISTS recipes_archived_at_check;
 ALTER TABLE recipes ADD CONSTRAINT recipes_archived_at_check
   CHECK (status <> 'archived' OR archived_at IS NOT NULL);
 
-UPDATE recipes
-SET archived_at = COALESCE(archived_at, updated_at, now())
-WHERE status = 'archived';
-
 ALTER TABLE recipes DROP CONSTRAINT IF EXISTS recipes_provenance_source_check;
 ALTER TABLE recipes ADD CONSTRAINT recipes_provenance_source_check
   CHECK (provenance_source IN ('human', 'ai', 'imported'));
@@ -109,6 +109,18 @@ CREATE TABLE IF NOT EXISTS recipe_versions (
   CONSTRAINT recipe_versions_snapshot_shape_check CHECK (jsonb_typeof(snapshot) = 'object'),
   UNIQUE(recipe_id, version_number)
 );
+
+CREATE OR REPLACE FUNCTION prevent_recipe_version_update()
+RETURNS TRIGGER AS $$
+BEGIN
+  RAISE EXCEPTION 'Recipe version snapshots are immutable';
+END;
+$$ LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS prevent_recipe_version_update_trigger ON recipe_versions;
+CREATE TRIGGER prevent_recipe_version_update_trigger
+BEFORE UPDATE ON recipe_versions
+FOR EACH ROW EXECUTE FUNCTION prevent_recipe_version_update();
 
 -- ---------------------------------------------------------------------------
 -- Recipe ingredients
@@ -288,8 +300,8 @@ ALTER TABLE recipe_steps
   ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ NOT NULL DEFAULT now();
 
 UPDATE recipe_steps
-SET instruction = content
-WHERE instruction IS NULL;
+SET instruction = COALESCE(NULLIF(BTRIM(content), ''), 'Bước chế biến')
+WHERE instruction IS NULL OR BTRIM(instruction) = '';
 
 UPDATE recipe_steps
 SET media_url = image_url
