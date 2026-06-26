@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "prebuild": "node scripts/write-app-version.mjs",
+    "prebuild": "node scripts/write-app-version.mjs && node --test scripts/write-app-version.test.mjs",
     "icons:gen": "node scripts/generate-pwa-icons.cjs",
     "catalog:normalize": "node scripts/import-hung-phat-catalog.mjs",
     "build": "next build",
