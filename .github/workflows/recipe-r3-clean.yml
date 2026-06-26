@@ -54,7 +54,12 @@ jobs:
       - name: Build backend
         run: pnpm run build:backend
       - name: Build frontend
-        run: pnpm run build:frontend
+        run: |
+          pnpm run build:frontend > /tmp/frontend-build.log 2>&1 || {
+            tail -n 120 /tmp/frontend-build.log
+            exit 1
+          }
+          tail -n 40 /tmp/frontend-build.log
 
   validate-r4:
     runs-on: ubuntu-latest
@@ -100,4 +105,9 @@ jobs:
       - name: Build backend
         run: pnpm run build:backend
       - name: Build frontend
-        run: pnpm run build:frontend
+        run: |
+          pnpm run build:frontend > /tmp/frontend-build.log 2>&1 || {
+            tail -n 120 /tmp/frontend-build.log
+            exit 1
+          }
+          tail -n 40 /tmp/frontend-build.log
