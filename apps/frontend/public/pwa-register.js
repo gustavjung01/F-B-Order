@@ -43,11 +43,25 @@
     var data = event.data;
     if (!data || data.type !== "PWA_RELEASE_ACTIVATED") return;
 
-    if (event.ports && event.ports[0]) {
-      event.ports[0].postMessage({ type: "PWA_RELEASE_ACK", buildId: data.buildId });
+    var port = event.ports && event.ports[0];
+    if (!port) {
+      if (data.isUpdate) reloadOnce(data.buildId);
+      return;
     }
 
-    if (data.isUpdate) reloadOnce(data.buildId);
+    var fallbackReload = setTimeout(function () {
+      if (data.isUpdate) reloadOnce(data.buildId);
+    }, 1700);
+
+    port.onmessage = function (ackEvent) {
+      var ack = ackEvent.data;
+      if (!ack || ack.type !== "PWA_RELEASE_ACKNOWLEDGED" || ack.buildId !== data.buildId) return;
+
+      clearTimeout(fallbackReload);
+      if (data.isUpdate) reloadOnce(data.buildId);
+    };
+
+    port.postMessage({ type: "PWA_RELEASE_ACK", buildId: data.buildId });
   });
 
   function checkForUpdate(force) {
