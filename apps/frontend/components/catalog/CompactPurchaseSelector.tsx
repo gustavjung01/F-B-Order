@@ -68,36 +68,76 @@ function errorText(status: number, code?: string) {
   return "Không thêm được sản phẩm vào giỏ.";
 }
 
-function ChoiceButtons(props: {
+function ChoiceControl(props: {
+  groupKey: string;
   name: string;
   values: string[];
   selected: string;
+  expanded: boolean;
+  onToggle: () => void;
   onSelect: (value: string) => void;
 }) {
+  if (props.values.length <= 3) {
+    return (
+      <fieldset className="min-w-0">
+        <legend className="mb-1.5 text-[10px] font-black uppercase tracking-[0.08em] text-slate-500">{props.name}</legend>
+        <div className="flex flex-wrap gap-1.5">
+          {props.values.map((value) => {
+            const active = props.selected === value;
+            return (
+              <button
+                key={value}
+                type="button"
+                aria-pressed={active}
+                onClick={() => props.onSelect(value)}
+                className={`min-h-10 rounded-[12px] border px-3 py-2 text-xs font-black transition active:scale-[0.98] ${
+                  active
+                    ? "border-[#ff5a00] bg-[#fff3e8] text-[#d84b00] ring-1 ring-[#ff5a00]"
+                    : "border-[#e7dccd] bg-white text-slate-700 hover:border-[#ffb27a]"
+                }`}
+              >
+                {value}
+              </button>
+            );
+          })}
+        </div>
+      </fieldset>
+    );
+  }
+
   return (
-    <fieldset className="min-w-0">
-      <legend className="mb-1.5 text-[10px] font-black uppercase tracking-[0.08em] text-slate-500">{props.name}</legend>
-      <div className="flex flex-wrap gap-1.5">
-        {props.values.map((value) => {
-          const active = props.selected === value;
-          return (
-            <button
-              key={value}
-              type="button"
-              aria-pressed={active}
-              onClick={() => props.onSelect(value)}
-              className={`min-h-10 rounded-[12px] border px-3 py-2 text-xs font-black transition active:scale-[0.98] ${
-                active
-                  ? "border-[#ff5a00] bg-[#fff3e8] text-[#d84b00] ring-1 ring-[#ff5a00]"
-                  : "border-[#e7dccd] bg-white text-slate-700 hover:border-[#ffb27a]"
-              }`}
-            >
-              {value}
-            </button>
-          );
-        })}
-      </div>
-    </fieldset>
+    <div className="min-w-0">
+      <p className="mb-1.5 text-[10px] font-black uppercase tracking-[0.08em] text-slate-500">{props.name}</p>
+      <button
+        type="button"
+        aria-expanded={props.expanded}
+        aria-controls={`choices-${props.groupKey}`}
+        onClick={props.onToggle}
+        className="flex h-11 w-full items-center justify-between rounded-[12px] border border-[#e7dccd] bg-white px-3 text-left text-sm font-black text-slate-700"
+      >
+        <span className="truncate">{props.selected || `Chọn ${props.name.toLowerCase()}`}</span>
+        <span className={`ml-3 text-xs transition ${props.expanded ? "rotate-180" : ""}`}>⌄</span>
+      </button>
+      {props.expanded ? (
+        <div id={`choices-${props.groupKey}`} className="mt-2 max-h-44 overflow-y-auto rounded-[12px] border border-[#e7dccd] bg-white p-1.5 shadow-sm">
+          {props.values.map((value) => {
+            const active = props.selected === value;
+            return (
+              <button
+                key={value}
+                type="button"
+                onClick={() => props.onSelect(value)}
+                className={`flex min-h-10 w-full items-center rounded-[10px] px-3 text-left text-sm font-black ${
+                  active ? "bg-[#fff3e8] text-[#d84b00]" : "text-slate-700 hover:bg-slate-50"
+                }`}
+              >
+                {value}
+              </button>
+            );
+          })}
+        </div>
+      ) : null}
+    </div>
   );
 }
 
@@ -120,6 +160,7 @@ export function CompactPurchaseSelector({ detail, initialVariantId, onVariantCha
   const firstVariant = detail.variants.find((item) => item.variant_id === initialVariantId) || detail.variants[0];
   const [options, setOptions] = useState<Record<string, string>>(() => initialOptions(detail, firstVariant));
   const [choices, setChoices] = useState<Record<string, string>>({});
+  const [openGroupKey, setOpenGroupKey] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [adding, setAdding] = useState(false);
   const [message, setMessage] = useState("");
@@ -143,6 +184,7 @@ export function CompactPurchaseSelector({ detail, initialVariantId, onVariantCha
       }
     }
     setOptions(next);
+    setOpenGroupKey(null);
     const resolved = resolveVariant(detail, next);
     setChoices((current) => retainValidChoices(current, rawChoiceGroups, resolved));
     if (resolved) onVariantChange?.(resolved);
@@ -186,22 +228,29 @@ export function CompactPurchaseSelector({ detail, initialVariantId, onVariantCha
       {(detail.optionGroups.length > 0 || choiceGroups.length > 0) ? (
         <div className="space-y-3 rounded-[16px] bg-[#fbfaf7] p-3 ring-1 ring-[#e7dccd]">
           {detail.optionGroups.map((group, index) => (
-            <ChoiceButtons
+            <ChoiceControl
               key={group.key}
+              groupKey={group.key}
               name={group.name}
               values={availableValues(detail, options, group)}
               selected={options[group.key] || ""}
+              expanded={openGroupKey === group.key}
+              onToggle={() => setOpenGroupKey((current) => current === group.key ? null : group.key)}
               onSelect={(value) => updateOption(index, group.key, value)}
             />
           ))}
           {choiceGroups.map((group) => (
-            <ChoiceButtons
+            <ChoiceControl
               key={group.key}
+              groupKey={group.key}
               name={group.name}
               values={group.values}
               selected={choices[group.key] || ""}
+              expanded={openGroupKey === group.key}
+              onToggle={() => setOpenGroupKey((current) => current === group.key ? null : group.key)}
               onSelect={(value) => {
                 setChoices((current) => ({ ...current, [group.key]: value }));
+                setOpenGroupKey(null);
                 setMessage("");
               }}
             />
