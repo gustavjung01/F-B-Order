@@ -45,6 +45,10 @@ const GROUP_VISUALS: Record<string, Visual> = {
   "khac-da-duyet": { icon: "📦", background: "#f1f5f9", foreground: "#334155", border: "#cbd5e1" },
 };
 
+function parseSelection(value: string) {
+  return value === "all" ? [] : value.split(",").map((item) => item.trim()).filter(Boolean);
+}
+
 function selectedText(options: CatalogV2FilterOption[], selected: string[], allText: string, unit: string) {
   if (selected.length === 0) return allText;
   if (selected.length === 1) return options.find((option) => option.id === selected[0])?.name || `1 ${unit}`;
@@ -106,21 +110,21 @@ function AllRow(props: { label: string; checked: boolean; onChange: () => void }
 export function TeaGroupFilter(props: {
   industries: CatalogV2FilterOption[];
   groups: CatalogV2FilterOption[];
-  selectedIndustries: string[];
-  selectedGroups: string[];
+  industry: string;
+  group: string;
   showGroups: boolean;
   total: number;
-  onToggleIndustry: (value: string) => void;
-  onClearIndustries: () => void;
-  onToggleGroup: (value: string) => void;
-  onClearGroups: () => void;
+  onIndustry: (value: string) => void;
+  onGroup: (value: string) => void;
   onReset: () => void;
 }) {
   const [openPanel, setOpenPanel] = useState<"industries" | "groups" | null>(null);
-  const industrySummary = selectedText(props.industries, props.selectedIndustries, "Tất cả ngành", "ngành");
-  const groupSummary = selectedText(props.groups, props.selectedGroups, "Tất cả nhóm", "nhóm");
-  const industryIcon = props.selectedIndustries.length === 1 ? visualForIndustry(props.selectedIndustries[0]).icon : "🧺";
-  const hasFilters = props.selectedIndustries.length > 0 || props.selectedGroups.length > 0;
+  const selectedIndustries = parseSelection(props.industry);
+  const selectedGroups = parseSelection(props.group);
+  const industrySummary = selectedText(props.industries, selectedIndustries, "Tất cả ngành", "ngành");
+  const groupSummary = selectedText(props.groups, selectedGroups, "Tất cả nhóm", "nhóm");
+  const industryIcon = selectedIndustries.length === 1 ? visualForIndustry(selectedIndustries[0]).icon : "🧺";
+  const hasFilters = selectedIndustries.length > 0 || selectedGroups.length > 0;
 
   return (
     <section className="rounded-[22px] bg-white p-3.5 shadow-sm ring-1 ring-[#eee7dc]">
@@ -142,14 +146,14 @@ export function TeaGroupFilter(props: {
           {openPanel === "industries" ? (
             <div className="mt-2 rounded-[16px] border border-[#e7dccd] bg-white p-1.5 shadow-[0_14px_35px_rgba(15,23,42,0.12)]">
               <div className="max-h-64 space-y-1 overflow-y-auto overscroll-contain pr-1">
-                <AllRow label="Tất cả ngành hàng" checked={props.selectedIndustries.length === 0} onChange={props.onClearIndustries} />
+                <AllRow label="Tất cả ngành hàng" checked={selectedIndustries.length === 0} onChange={() => props.onIndustry("all")} />
                 {props.industries.map((option) => (
                   <OptionRow
                     key={option.id}
                     option={option}
-                    checked={props.selectedIndustries.includes(option.id)}
+                    checked={selectedIndustries.includes(option.id)}
                     visual={visualForIndustry(option.id)}
-                    onChange={() => props.onToggleIndustry(option.id)}
+                    onChange={() => props.onIndustry(option.id)}
                   />
                 ))}
               </div>
@@ -175,14 +179,14 @@ export function TeaGroupFilter(props: {
             {openPanel === "groups" ? (
               <div className="mt-2 rounded-[16px] border border-[#e7dccd] bg-white p-1.5 shadow-[0_14px_35px_rgba(15,23,42,0.12)]">
                 <div className="max-h-64 space-y-1 overflow-y-auto overscroll-contain pr-1">
-                  <AllRow label="Tất cả nhóm hàng" checked={props.selectedGroups.length === 0} onChange={props.onClearGroups} />
+                  <AllRow label="Tất cả nhóm hàng" checked={selectedGroups.length === 0} onChange={() => props.onGroup("all")} />
                   {props.groups.map((option) => (
                     <OptionRow
                       key={option.id}
                       option={option}
-                      checked={props.selectedGroups.includes(option.id)}
+                      checked={selectedGroups.includes(option.id)}
                       visual={visualForGroup(option.id)}
-                      onChange={() => props.onToggleGroup(option.id)}
+                      onChange={() => props.onGroup(option.id)}
                     />
                   ))}
                 </div>
