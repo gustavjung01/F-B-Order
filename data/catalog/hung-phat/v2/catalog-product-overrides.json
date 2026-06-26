@@ -1,6 +1,55 @@
 {
   "version": 1,
   "products": {
+    "siro-torani-bgkq-0001": {
+      "catalogGroupKey": "siro",
+      "choiceGroups": [
+        {
+          "key": "flavor",
+          "name": "Vị",
+          "required": true,
+          "values": [
+            "Vanilla",
+            "Dừa",
+            "Xoài",
+            "Chuối",
+            "Caramel mặn",
+            "Caramel",
+            "Sô-cô-la Milano",
+            "Irish Cream",
+            "Blue Curacao",
+            "Hạt dẻ",
+            "Hạnh nhân (Orgeat)",
+            "Amaretto",
+            "Đường mía",
+            "Bạc hà",
+            "Chai Tea",
+            "Hoa hồng",
+            "Butterscotch",
+            "Kiwi"
+          ]
+        }
+      ],
+      "variantOptions": {
+        "BGKQ-0001": { "size": "750 ml", "package": "Thùng 12 chai", "sell_unit": "chai" }
+      },
+      "auditSources": [
+        "https://www.torani.com/products/original-syrups.html",
+        "https://www.torani.com/products/original-syrups.html?p=2",
+        "https://www.torani.com/products/original-syrups.html?p=3"
+      ],
+      "auditNote": "Một SKU và một mức giá cho dòng Torani Original 750 ml; vị là lựa chọn mua hàng, không tạo SKU mới."
+    },
+    "siro-douxian-a-bgkq-0062": {
+      "catalogGroupKey": "duong-chat-tao-ngot",
+      "choiceGroups": [],
+      "sourceGroupOverride": "Đường Đen",
+      "subcategoryOverride": "Đường Đen",
+      "variantOptions": {
+        "BGKQ-0062": { "package": "Thùng 24 chai", "sell_unit": "chai" }
+      },
+      "auditNote": "Douxian A+ nằm trong nhóm đường đen và chỉ có một loại; không hiển thị lựa chọn vị giả."
+    },
     "thach-douxian-cac-loai-bgkq-0083": {
       "catalogGroupKey": "thach-rau-cau",
       "choiceGroups": [
