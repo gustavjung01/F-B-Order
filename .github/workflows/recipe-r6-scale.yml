@@ -1,0 +1,50 @@
+name: Recipe R6 scale
+
+on:
+  push:
+    branches:
+      - feat/recipe-r6-scale-engine
+  pull_request:
+    branches:
+      - feat/recipe-r5-linking
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: fb_order_recipe_r6
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d fb_order_recipe_r6"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5432/fb_order_recipe_r6
+      TEST_DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5432/postgres
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.34.4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm typecheck
+      - run: pnpm db:test:migrations
+      - run: pnpm db:migrate
+      - run: pnpm db:verify:recipe-contract
+      - run: pnpm test:recipe-read
+      - run: pnpm --filter @fb-order/backend test:recipe-admin
+      - run: pnpm --filter @fb-order/backend exec tsx scripts/test-recipe-catalog-linking.ts
+      - run: pnpm --filter @fb-order/backend exec tsx scripts/test-recipe-scale-engine.ts
+      - run: pnpm run build:backend
+      - run: pnpm run build:frontend
