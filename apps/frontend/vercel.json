@@ -6,7 +6,7 @@
   "outputDirectory": ".next",
   "git": {
     "deploymentEnabled": {
-      "feat/recipe-r4-public": false,
+      "feat/recipe-r4-public": true,
       "feat/recipe-r4-public-final": false
     }
   }
