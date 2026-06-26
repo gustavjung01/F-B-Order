@@ -27,7 +27,12 @@ export function ResponsiveCatalogHome(props: {
   initialCatalog: CatalogV2ListResponse | null;
 }) {
   const isDesktop = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
-  if (isDesktop) return createElement(DesktopHomeIndustry, { active: props.active ?? "home" });
+  if (isDesktop) {
+    return createElement(DesktopHomeIndustry, {
+      active: props.active ?? "home",
+      initialCatalog: props.initialCatalog,
+    });
+  }
   return createElement(ProductHomeTea, {
     active: props.active ?? "home",
     initialCatalog: props.initialCatalog,
