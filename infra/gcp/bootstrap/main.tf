@@ -10,4 +10,8 @@ resource "google_storage_bucket" "terraform_state" {
   versioning {
     enabled = true
   }
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }
