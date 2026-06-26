@@ -85,7 +85,7 @@ jobs:
       - run: pnpm db:verify:recipe-contract
       - run: pnpm test:recipe-read
       - run: pnpm run build:backend
-      - name: Build frontend
+      - name: Build frontend after route fix
         id: frontend_build
         continue-on-error: true
         run: pnpm run build:frontend > frontend-build.log 2>&1
