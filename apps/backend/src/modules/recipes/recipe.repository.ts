@@ -15,6 +15,9 @@ import type { RecipeListFilters } from "./recipe.types";
 const PUBLIC_RECIPE_CLAUSES = [
   "recipe.status = 'published'",
   "recipe.visibility = 'public'",
+  "recipe.published_at IS NOT NULL",
+  "recipe.yield_quantity IS NOT NULL",
+  "recipe.yield_unit IS NOT NULL",
 ];
 
 function cardSelect(recipeAlias = "recipe") {
@@ -183,7 +186,9 @@ export async function loadPublicRecipeSections(recipeId: string, db: Pool = getD
          catalog_variant.is_orderable AS current_variant_is_orderable
        FROM recipe_ingredients ingredient
        LEFT JOIN catalog_products catalog_product ON catalog_product.id = ingredient.catalog_product_id
-       LEFT JOIN catalog_variants catalog_variant ON catalog_variant.id = ingredient.catalog_variant_id
+       LEFT JOIN catalog_variants catalog_variant
+         ON catalog_variant.id = ingredient.catalog_variant_id
+        AND catalog_variant.product_id = ingredient.catalog_product_id
        WHERE ingredient.recipe_id = $1::uuid
        ORDER BY ingredient.sort_order, ingredient.id`,
       [recipeId],
@@ -279,7 +284,9 @@ export async function loadPublicRecipeSections(recipeId: string, db: Pool = getD
          catalog_variant.is_orderable AS current_variant_is_orderable
        FROM recipe_product_links link
        LEFT JOIN catalog_products catalog_product ON catalog_product.id = link.catalog_product_id
-       LEFT JOIN catalog_variants catalog_variant ON catalog_variant.id = link.catalog_variant_id
+       LEFT JOIN catalog_variants catalog_variant
+         ON catalog_variant.id = link.catalog_variant_id
+        AND catalog_variant.product_id = link.catalog_product_id
        WHERE link.recipe_id = $1::uuid
        ORDER BY link.sort_order, link.id`,
       [recipeId],
@@ -308,7 +315,7 @@ export async function listRelatedPublicRecipes(
     [source.id],
   );
   const tagIds = tagResult.rows.map((row) => row.tag_id);
-  const categoryId = source.category?.id;
+  const categoryId = source.category_id;
 
   if (!categoryId && tagIds.length === 0) return [];
 
