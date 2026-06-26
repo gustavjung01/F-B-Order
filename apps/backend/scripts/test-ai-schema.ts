@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { validateAiOutput } from "../src/modules/ai/ai-output-validator";
 import {
   AI_SCHEMA_VERSION,
   AiSchemaError,
@@ -66,6 +67,30 @@ assert.equal(jsonRequest.controls.maxOutputTokens, 2048);
 if (jsonRequest.response.format === "json") {
   assert.equal(jsonRequest.response.schema.additionalProperties, false);
   assert.equal(jsonRequest.response.schema.properties?.ingredients.items?.type, "object");
+  assert.deepEqual(
+    validateAiOutput({
+      title: "Trà đào",
+      yield: 20,
+      ingredients: [{ name: "Siro đào", quantity: 200, unit: "ml" }],
+    }, jsonRequest.response.schema),
+    {
+      title: "Trà đào",
+      yield: 20,
+      ingredients: [{ name: "Siro đào", quantity: 200, unit: "ml" }],
+    },
+  );
+  expectSchemaError(
+    () => validateAiOutput({ title: "Trà đào", yield: 20, ingredients: [], extra: true }, jsonRequest.response.schema),
+    "MODEL_OUTPUT_SCHEMA_MISMATCH",
+  );
+  expectSchemaError(
+    () => validateAiOutput({ title: "Trà đào", yield: "20", ingredients: [] }, jsonRequest.response.schema),
+    "MODEL_OUTPUT_SCHEMA_MISMATCH",
+  );
+  expectSchemaError(
+    () => validateAiOutput({ title: "Trà đào", yield: 20, ingredients: [{ name: "Siro", quantity: 1, unit: "kg" }] }, jsonRequest.response.schema),
+    "MODEL_OUTPUT_SCHEMA_MISMATCH",
+  );
 }
 
 expectSchemaError(
