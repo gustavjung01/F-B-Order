@@ -68,6 +68,39 @@ function errorText(status: number, code?: string) {
   return "Không thêm được sản phẩm vào giỏ.";
 }
 
+function ChoiceButtons(props: {
+  name: string;
+  values: string[];
+  selected: string;
+  onSelect: (value: string) => void;
+}) {
+  return (
+    <fieldset className="min-w-0">
+      <legend className="mb-1.5 text-[10px] font-black uppercase tracking-[0.08em] text-slate-500">{props.name}</legend>
+      <div className="flex flex-wrap gap-1.5">
+        {props.values.map((value) => {
+          const active = props.selected === value;
+          return (
+            <button
+              key={value}
+              type="button"
+              aria-pressed={active}
+              onClick={() => props.onSelect(value)}
+              className={`min-h-10 rounded-[12px] border px-3 py-2 text-xs font-black transition active:scale-[0.98] ${
+                active
+                  ? "border-[#ff5a00] bg-[#fff3e8] text-[#d84b00] ring-1 ring-[#ff5a00]"
+                  : "border-[#e7dccd] bg-white text-slate-700 hover:border-[#ffb27a]"
+              }`}
+            >
+              {value}
+            </button>
+          );
+        })}
+      </div>
+    </fieldset>
+  );
+}
+
 export function CompactPurchaseSelector({ detail, initialVariantId, onVariantChange }: Props) {
   const rawChoiceGroups = detail.choiceGroups ?? [];
   const firstVariant = detail.variants.find((item) => item.variant_id === initialVariantId) || detail.variants[0];
@@ -85,7 +118,15 @@ export function CompactPurchaseSelector({ detail, initialVariantId, onVariantCha
 
   function updateOption(groupIndex: number, key: string, value: string) {
     const next = { ...options, [key]: value };
-    for (let index = groupIndex + 1; index < detail.optionGroups.length; index += 1) delete next[detail.optionGroups[index].key];
+    for (let index = groupIndex + 1; index < detail.optionGroups.length; index += 1) {
+      const nextGroup = detail.optionGroups[index];
+      const validValues = availableValues(detail, next, nextGroup);
+      const currentValue = next[nextGroup.key];
+      if (!currentValue || !validValues.includes(currentValue)) {
+        if (validValues.length === 1) next[nextGroup.key] = validValues[0];
+        else delete next[nextGroup.key];
+      }
+    }
     setOptions(next);
     const resolved = resolveVariant(detail, next);
     setChoices((current) => retainValidChoices(current, rawChoiceGroups, resolved));
@@ -95,7 +136,7 @@ export function CompactPurchaseSelector({ detail, initialVariantId, onVariantCha
 
   async function addToCart() {
     if (!variant || !choicesReady || adding) {
-      setMessage("Chọn đủ size và vị.");
+      setMessage("Chọn đủ phân loại cần thiết.");
       return;
     }
     if (!variant.isOrderable) {
@@ -128,30 +169,33 @@ export function CompactPurchaseSelector({ detail, initialVariantId, onVariantCha
     <section className="mt-3">
       <h3 className="mb-2 text-base font-black text-[#0b1220]">Phân loại mua hàng</h3>
       {(detail.optionGroups.length > 0 || choiceGroups.length > 0) ? (
-        <div className="grid grid-cols-2 gap-2">
+        <div className="space-y-3 rounded-[16px] bg-[#fbfaf7] p-3 ring-1 ring-[#e7dccd]">
           {detail.optionGroups.map((group, index) => (
-            <label key={group.key} className="grid min-w-0 gap-1">
-              <span className="text-[10px] font-black uppercase tracking-[0.08em] text-slate-500">{group.name}</span>
-              <select value={options[group.key] || ""} onChange={(event) => updateOption(index, group.key, event.target.value)} className="h-10 min-w-0 rounded-[12px] border border-[#e7dccd] bg-white px-2 text-xs font-black outline-none focus:border-[#ff5a00]">
-                <option value="">Chọn</option>
-                {availableValues(detail, options, group).map((value) => <option key={value} value={value}>{value}</option>)}
-              </select>
-            </label>
+            <ChoiceButtons
+              key={group.key}
+              name={group.name}
+              values={availableValues(detail, options, group)}
+              selected={options[group.key] || ""}
+              onSelect={(value) => updateOption(index, group.key, value)}
+            />
           ))}
           {choiceGroups.map((group) => (
-            <label key={group.key} className="grid min-w-0 gap-1">
-              <span className="text-[10px] font-black uppercase tracking-[0.08em] text-slate-500">{group.name}</span>
-              <select value={choices[group.key] || ""} onChange={(event) => { setChoices((current) => ({ ...current, [group.key]: event.target.value })); setMessage(""); }} className="h-10 min-w-0 rounded-[12px] border border-[#e7dccd] bg-white px-2 text-xs font-black outline-none focus:border-[#ff5a00]">
-                <option value="">Chọn</option>
-                {group.values.map((value) => <option key={value} value={value}>{value}</option>)}
-              </select>
-            </label>
+            <ChoiceButtons
+              key={group.key}
+              name={group.name}
+              values={group.values}
+              selected={choices[group.key] || ""}
+              onSelect={(value) => {
+                setChoices((current) => ({ ...current, [group.key]: value }));
+                setMessage("");
+              }}
+            />
           ))}
         </div>
       ) : null}
       <div className="mt-2.5 flex items-center justify-between gap-2 rounded-[16px] bg-[#fbfaf7] p-2.5 ring-1 ring-[#e7dccd]">
         <div className="min-w-0">
-          <p className="truncate text-[10px] font-black text-slate-500">{variant?.sku || "Chưa chọn"}</p>
+          <p className="truncate text-[10px] font-black text-slate-500">{variant?.sku || "Chưa chọn đủ phân loại"}</p>
           <p className="mt-0.5 text-sm font-black text-[#ff5a00]">{variant ? getCatalogV2PriceLabel(variant) : "Chọn phân loại"}</p>
         </div>
         <div className="grid h-10 w-28 shrink-0 grid-cols-3 overflow-hidden rounded-[12px] border border-[#e7dccd] bg-white text-sm font-black">
