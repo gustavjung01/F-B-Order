@@ -39,27 +39,14 @@ jobs:
           node-version: 20
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - name: Typecheck all workspaces
-        run: pnpm typecheck
-      - name: Migration runner contract
-        run: pnpm db:test:migrations
-      - name: Migrate database
-        run: pnpm db:migrate
-      - name: Verify Recipe Core
-        run: pnpm db:verify:recipe-contract
-      - name: Test R2 public read API
-        run: pnpm test:recipe-read
-      - name: Test R3 admin workflow
-        run: pnpm --filter @fb-order/backend test:recipe-admin
-      - name: Build backend
-        run: pnpm run build:backend
-      - name: Build frontend
-        run: |
-          pnpm run build:frontend > /tmp/frontend-build.log 2>&1 || {
-            tail -n 120 /tmp/frontend-build.log
-            exit 1
-          }
-          tail -n 40 /tmp/frontend-build.log
+      - run: pnpm typecheck
+      - run: pnpm db:test:migrations
+      - run: pnpm db:migrate
+      - run: pnpm db:verify:recipe-contract
+      - run: pnpm test:recipe-read
+      - run: pnpm --filter @fb-order/backend test:recipe-admin
+      - run: pnpm run build:backend
+      - run: pnpm run build:frontend
 
   validate-r4:
     runs-on: ubuntu-latest
@@ -92,22 +79,22 @@ jobs:
           node-version: 20
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - name: Typecheck all workspaces
-        run: pnpm typecheck
-      - name: Migration runner contract
-        run: pnpm db:test:migrations
-      - name: Migrate database
-        run: pnpm db:migrate
-      - name: Verify Recipe Core
-        run: pnpm db:verify:recipe-contract
-      - name: Test R2 public read API
-        run: pnpm test:recipe-read
-      - name: Build backend
-        run: pnpm run build:backend
+      - run: pnpm typecheck
+      - run: pnpm db:test:migrations
+      - run: pnpm db:migrate
+      - run: pnpm db:verify:recipe-contract
+      - run: pnpm test:recipe-read
+      - run: pnpm run build:backend
       - name: Build frontend
-        run: |
-          pnpm run build:frontend > /tmp/frontend-build.log 2>&1 || {
-            tail -n 120 /tmp/frontend-build.log
-            exit 1
-          }
-          tail -n 40 /tmp/frontend-build.log
+        id: frontend_build
+        continue-on-error: true
+        run: pnpm run build:frontend > frontend-build.log 2>&1
+      - name: Upload frontend build log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: r4-frontend-build-log
+          path: frontend-build.log
+      - name: Fail when frontend build failed
+        if: steps.frontend_build.outcome == 'failure'
+        run: exit 1
