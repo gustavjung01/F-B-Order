@@ -14,6 +14,7 @@ import { createAdminOrdersRouter } from "./modules/orders/admin-orders.routes";
 import { createCustomerOrdersRouter } from "./modules/orders/customer-orders.routes";
 import { createOrderEntryRouter } from "./modules/orders/orders-entry.routes";
 import { createAdminRecipeRouter } from "./modules/recipes/admin-recipe.routes";
+import { createRecipeCartRouter } from "./modules/recipes/recipe-cart.routes";
 import { createRecipeCatalogLinkRouter } from "./modules/recipes/recipe-catalog-link.routes";
 import { createRecipeCostRouter } from "./modules/recipes/recipe-cost.routes";
 import { createRecipeReadRouter } from "./modules/recipes/recipe.routes";
@@ -80,6 +81,8 @@ export function createApp(config: AppConfig) {
   if (clerkEnabled) {
     app.use("/catalog/cart", createCatalogV2ChoiceCartRouter(resolveRequestIdentity));
     app.use("/api/cart-v2", createCatalogV2ChoiceCartRouter(resolveRequestIdentity));
+    app.use("/recipes", createRecipeCartRouter(resolveRequestIdentity));
+    app.use("/api/recipes", createRecipeCartRouter(resolveRequestIdentity));
     app.use("/api/auth", createAuthRouter(resolveRequestIdentity));
     app.use("/api/cart", createCartRouter(resolveRequestIdentity));
     app.use("/api/orders", createOrderEntryRouter(resolveRequestIdentity));
@@ -94,6 +97,8 @@ export function createApp(config: AppConfig) {
     };
     app.use("/catalog/cart", clerkUnavailable);
     app.use("/api/cart-v2", clerkUnavailable);
+    app.post("/recipes/:recipeId/cart", clerkUnavailable);
+    app.post("/api/recipes/:recipeId/cart", clerkUnavailable);
     app.use("/api/auth", clerkUnavailable);
     app.use("/api/cart", clerkUnavailable);
     app.use("/api/orders", clerkUnavailable);
