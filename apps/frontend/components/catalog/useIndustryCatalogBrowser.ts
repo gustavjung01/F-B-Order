@@ -34,21 +34,24 @@ function buildProductsUrl(industryKey: string, groupKey: string, query: string, 
   return `/api/catalog-v2/products?${params.toString()}`;
 }
 
-export function useIndustryCatalogBrowser(initialCatalog: CatalogV2ListResponse | null = null) {
+export function useIndustryCatalogBrowser(
+  initialCatalog: CatalogV2ListResponse | null = null,
+  defaultIndustry = "all",
+) {
   const [products, setProducts] = useState<CatalogV2VariantCard[]>(initialCatalog?.products ?? []);
   const [industries, setIndustries] = useState<CatalogV2FilterOption[]>(normalizeIndustryFacets(initialCatalog?.facets.industries ?? []));
   const [groups, setGroups] = useState<CatalogV2FilterOption[]>(initialCatalog?.facets.groups ?? []);
-  const [selectedIndustry, setSelectedIndustryState] = useState("all");
+  const [selectedIndustry, setSelectedIndustryState] = useState(defaultIndustry);
   const [selectedGroup, setSelectedGroup] = useState("all");
   const [searchText, setSearchText] = useState("");
   const [appliedSearch, setAppliedSearch] = useState("");
-  const [loading, setLoading] = useState(!initialCatalog);
+  const [loading, setLoading] = useState(!initialCatalog || defaultIndustry !== "all");
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState("");
   const [total, setTotal] = useState(Number(initialCatalog?.total) || 0);
   const [hasMore, setHasMore] = useState(Boolean(initialCatalog?.pagination.hasMore));
   const requestVersion = useRef(0);
-  const hasUnusedInitialCatalog = useRef(Boolean(initialCatalog));
+  const hasUnusedInitialCatalog = useRef(Boolean(initialCatalog) && defaultIndustry === "all");
 
   useEffect(() => {
     const timer = window.setTimeout(() => setAppliedSearch(searchText.trim()), SEARCH_DEBOUNCE_MS);
@@ -92,8 +95,10 @@ export function useIndustryCatalogBrowser(initialCatalog: CatalogV2ListResponse 
   }, [appliedSearch, selectedGroup, selectedIndustry]);
 
   useEffect(() => {
-    if (selectedIndustry !== "all" && !industries.some((option) => option.id === selectedIndustry)) setSelectedIndustryState("all");
-  }, [industries, selectedIndustry]);
+    if (selectedIndustry !== "all" && industries.length > 0 && !industries.some((option) => option.id === selectedIndustry)) {
+      setSelectedIndustryState(defaultIndustry);
+    }
+  }, [defaultIndustry, industries, selectedIndustry]);
 
   useEffect(() => {
     if (selectedIndustry !== TEA_INDUSTRY_KEY && selectedGroup !== "all") setSelectedGroup("all");
@@ -130,7 +135,7 @@ export function useIndustryCatalogBrowser(initialCatalog: CatalogV2ListResponse 
   }
 
   function resetFilters() {
-    setSelectedIndustryState("all");
+    setSelectedIndustryState(defaultIndustry);
     setSelectedGroup("all");
   }
 
