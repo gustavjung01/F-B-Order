@@ -9,7 +9,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test:pwa-release": "node --test scripts/write-app-version.test.mjs"
   },
   "dependencies": {
     "@clerk/nextjs": "^6.31.6",
