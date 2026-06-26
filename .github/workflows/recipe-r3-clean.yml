@@ -1,4 +1,4 @@
-name: Recipe R2 R3 clean
+name: Recipe clean chain
 
 on:
   push:
@@ -10,7 +10,7 @@ on:
       - "feat/recipe-r2-clean"
 
 jobs:
-  validate:
+  validate-r3:
     runs-on: ubuntu-latest
     services:
       postgres:
@@ -26,11 +26,9 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-
     env:
       DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5432/fb_order_recipe_clean
       TEST_DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5432/postgres
-
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -53,6 +51,52 @@ jobs:
         run: pnpm test:recipe-read
       - name: Test R3 admin workflow
         run: pnpm --filter @fb-order/backend test:recipe-admin
+      - name: Build backend
+        run: pnpm run build:backend
+      - name: Build frontend
+        run: pnpm run build:frontend
+
+  validate-r4:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: fb_order_recipe_r4
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d fb_order_recipe_r4"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5432/fb_order_recipe_r4
+      TEST_DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5432/postgres
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/recipe-r4-clean
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.34.4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Typecheck all workspaces
+        run: pnpm typecheck
+      - name: Migration runner contract
+        run: pnpm db:test:migrations
+      - name: Migrate database
+        run: pnpm db:migrate
+      - name: Verify Recipe Core
+        run: pnpm db:verify:recipe-contract
+      - name: Test R2 public read API
+        run: pnpm test:recipe-read
       - name: Build backend
         run: pnpm run build:backend
       - name: Build frontend
