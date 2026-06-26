@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { CompactPurchaseSelector } from "@/components/catalog/CompactPurchaseSelector";
+import { MultiPurchaseSelector as CompactPurchaseSelector } from "@/components/catalog/purchase-selector/MultiPurchaseSelector";
 import type { CatalogV2DetailResponse, CatalogV2VariantCard } from "@/data/catalog-v2/product-model";
 import { fetchCatalogV2Detail } from "@/lib/catalog-v2-client";
 
