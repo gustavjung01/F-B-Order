@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { CatalogV2FilterOption, CatalogV2ListResponse, CatalogV2VariantCard } from "@/data/catalog-v2/product-model";
 import { fetchCatalogV2List } from "@/lib/catalog-v2-client";
 
@@ -24,10 +24,19 @@ function normalizeIndustryFacets(options: CatalogV2FilterOption[]) {
   }));
 }
 
-function buildProductsUrl(industryKey: string, groupKey: string, query: string, offset: number) {
+function mergeFacets(current: CatalogV2FilterOption[], incoming: CatalogV2FilterOption[]) {
+  const incomingIds = new Set(incoming.map((option) => option.id));
+  return [...incoming, ...current.filter((option) => !incomingIds.has(option.id))];
+}
+
+function initialIndustries(defaultIndustry: string) {
+  return defaultIndustry === "all" ? [] : [defaultIndustry];
+}
+
+function buildProductsUrl(industryKeys: string[], groupKeys: string[], query: string, offset: number) {
   const params = new URLSearchParams();
-  if (industryKey !== "all") params.set("industry", industryKey);
-  if (industryKey === TEA_INDUSTRY_KEY && groupKey !== "all") params.set("group", groupKey);
+  if (industryKeys.length > 0) params.set("industry", industryKeys.join(","));
+  if (groupKeys.length > 0) params.set("group", groupKeys.join(","));
   if (query.trim()) params.set("q", query.trim());
   params.set("limit", String(PAGE_SIZE));
   params.set("offset", String(offset));
@@ -38,11 +47,12 @@ export function useIndustryCatalogBrowser(
   initialCatalog: CatalogV2ListResponse | null = null,
   defaultIndustry = "all",
 ) {
+  const defaultIndustrySelection = useMemo(() => initialIndustries(defaultIndustry), [defaultIndustry]);
   const [products, setProducts] = useState<CatalogV2VariantCard[]>(initialCatalog?.products ?? []);
   const [industries, setIndustries] = useState<CatalogV2FilterOption[]>(normalizeIndustryFacets(initialCatalog?.facets.industries ?? []));
   const [groups, setGroups] = useState<CatalogV2FilterOption[]>(initialCatalog?.facets.groups ?? []);
-  const [selectedIndustry, setSelectedIndustryState] = useState(defaultIndustry);
-  const [selectedGroup, setSelectedGroup] = useState("all");
+  const [selectedIndustries, setSelectedIndustries] = useState<string[]>(defaultIndustrySelection);
+  const [selectedGroups, setSelectedGroups] = useState<string[]>([]);
   const [searchText, setSearchText] = useState("");
   const [appliedSearch, setAppliedSearch] = useState("");
   const [loading, setLoading] = useState(!initialCatalog || defaultIndustry !== "all");
@@ -52,6 +62,9 @@ export function useIndustryCatalogBrowser(
   const [hasMore, setHasMore] = useState(Boolean(initialCatalog?.pagination.hasMore));
   const requestVersion = useRef(0);
   const hasUnusedInitialCatalog = useRef(Boolean(initialCatalog) && defaultIndustry === "all");
+  const industryQueryKey = selectedIndustries.join(",");
+  const groupQueryKey = selectedGroups.join(",");
+  const showGroupFilter = selectedIndustries.length === 0 || selectedIndustries.includes(TEA_INDUSTRY_KEY);
 
   useEffect(() => {
     const timer = window.setTimeout(() => setAppliedSearch(searchText.trim()), SEARCH_DEBOUNCE_MS);
@@ -59,7 +72,7 @@ export function useIndustryCatalogBrowser(
   }, [searchText]);
 
   useEffect(() => {
-    if (hasUnusedInitialCatalog.current && selectedIndustry === "all" && selectedGroup === "all" && appliedSearch === "") {
+    if (hasUnusedInitialCatalog.current && industryQueryKey === "" && groupQueryKey === "" && appliedSearch === "") {
       hasUnusedInitialCatalog.current = false;
       return;
     }
@@ -72,11 +85,11 @@ export function useIndustryCatalogBrowser(
         setLoading(true);
         setLoadingMore(false);
         setError("");
-        const data = await fetchCatalogV2List(buildProductsUrl(selectedIndustry, selectedGroup, appliedSearch, 0));
+        const data = await fetchCatalogV2List(buildProductsUrl(selectedIndustries, selectedGroups, appliedSearch, 0));
         if (!active || version !== requestVersion.current) return;
         setProducts(Array.isArray(data.products) ? data.products : []);
-        setIndustries(normalizeIndustryFacets(data.facets?.industries ?? []));
-        setGroups(data.facets?.groups ?? []);
+        setIndustries((current) => mergeFacets(current, normalizeIndustryFacets(data.facets?.industries ?? [])));
+        setGroups((current) => mergeFacets(current, data.facets?.groups ?? []));
         setTotal(Number(data.total) || 0);
         setHasMore(Boolean(data.pagination?.hasMore));
       } catch (loadError) {
@@ -92,18 +105,11 @@ export function useIndustryCatalogBrowser(
 
     void loadFirstPage();
     return () => { active = false; };
-  }, [appliedSearch, selectedGroup, selectedIndustry]);
+  }, [appliedSearch, groupQueryKey, industryQueryKey]);
 
   useEffect(() => {
-    if (selectedIndustry !== "all" && industries.length > 0 && !industries.some((option) => option.id === selectedIndustry)) {
-      setSelectedIndustryState(defaultIndustry);
-    }
-  }, [defaultIndustry, industries, selectedIndustry]);
-
-  useEffect(() => {
-    if (selectedIndustry !== TEA_INDUSTRY_KEY && selectedGroup !== "all") setSelectedGroup("all");
-    if (selectedGroup !== "all" && !groups.some((option) => option.id === selectedGroup)) setSelectedGroup("all");
-  }, [groups, selectedGroup, selectedIndustry]);
+    if (!showGroupFilter && selectedGroups.length > 0) setSelectedGroups([]);
+  }, [selectedGroups.length, showGroupFilter]);
 
   const showMore = useCallback(async () => {
     if (loading || loadingMore || !hasMore) return;
@@ -111,14 +117,14 @@ export function useIndustryCatalogBrowser(
     try {
       setLoadingMore(true);
       setError("");
-      const data = await fetchCatalogV2List(buildProductsUrl(selectedIndustry, selectedGroup, appliedSearch, products.length));
+      const data = await fetchCatalogV2List(buildProductsUrl(selectedIndustries, selectedGroups, appliedSearch, products.length));
       if (version !== requestVersion.current) return;
       setProducts((current) => {
         const existingIds = new Set(current.map((product) => product.product_id));
         return [...current, ...data.products.filter((product) => !existingIds.has(product.product_id))];
       });
-      setIndustries(normalizeIndustryFacets(data.facets?.industries ?? []));
-      setGroups(data.facets?.groups ?? []);
+      setIndustries((current) => mergeFacets(current, normalizeIndustryFacets(data.facets?.industries ?? [])));
+      setGroups((current) => mergeFacets(current, data.facets?.groups ?? []));
       setTotal(Number(data.total) || 0);
       setHasMore(Boolean(data.pagination?.hasMore));
     } catch (loadError) {
@@ -127,27 +133,44 @@ export function useIndustryCatalogBrowser(
     } finally {
       if (version === requestVersion.current) setLoadingMore(false);
     }
-  }, [appliedSearch, hasMore, loading, loadingMore, products.length, selectedGroup, selectedIndustry]);
+  }, [appliedSearch, groupQueryKey, hasMore, industryQueryKey, loading, loadingMore, products.length]);
 
-  function setSelectedIndustry(value: string) {
-    setSelectedIndustryState(value);
-    if (value !== TEA_INDUSTRY_KEY) setSelectedGroup("all");
+  function toggleIndustry(value: string) {
+    setSelectedIndustries((current) => (
+      current.includes(value) ? current.filter((item) => item !== value) : [...current, value]
+    ));
+  }
+
+  function clearIndustries() {
+    setSelectedIndustries([]);
+  }
+
+  function toggleGroup(value: string) {
+    setSelectedGroups((current) => (
+      current.includes(value) ? current.filter((item) => item !== value) : [...current, value]
+    ));
+  }
+
+  function clearGroups() {
+    setSelectedGroups([]);
   }
 
   function resetFilters() {
-    setSelectedIndustryState(defaultIndustry);
-    setSelectedGroup("all");
+    setSelectedIndustries(defaultIndustrySelection);
+    setSelectedGroups([]);
   }
 
   return {
     products,
     industries,
     groups,
-    selectedIndustry,
-    setSelectedIndustry,
-    selectedGroup,
-    setSelectedGroup,
-    showGroupFilter: selectedIndustry === TEA_INDUSTRY_KEY,
+    selectedIndustries,
+    toggleIndustry,
+    clearIndustries,
+    selectedGroups,
+    toggleGroup,
+    clearGroups,
+    showGroupFilter,
     resetFilters,
     searchText,
     setSearchText,
