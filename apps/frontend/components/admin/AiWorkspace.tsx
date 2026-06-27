@@ -72,6 +72,41 @@ type AgentRunResult = {
   };
 };
 
+type AiDraftDocument = {
+  id: string;
+  source: string;
+  status: string;
+  schemaVersion: string;
+  jsonPayload: unknown;
+  validationStatus: string;
+  validationErrors: unknown;
+  version: number;
+  reviewedByStaffId: string | null;
+  reviewedAt: string | null;
+  reviewNote: string | null;
+  applyStatus: string;
+  appliedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+  project: { key: string; name: string | null } | null;
+  agent: { key: string; name: string | null; useCase: string | null } | null;
+  model: { key: string; displayName: string | null } | null;
+};
+
+type AiDraftReviewLog = {
+  id: string;
+  fromStatus: string;
+  toStatus: string;
+  actorName: string | null;
+  note: string | null;
+  createdAt: string;
+};
+
+type AiDraftDetail = {
+  document: AiDraftDocument;
+  reviewLogs: AiDraftReviewLog[];
+};
+
 function errorText(error: unknown) {
   if (error instanceof AdminApiError) return `${error.message} (${error.code})`;
   return error instanceof Error ? error.message : "Có lỗi không xác định.";
@@ -113,7 +148,7 @@ function replaceAgent(items: AiAgent[], next: AiAgent) {
 
 export function AiWorkspace() {
   const { isLoaded, isSignedIn, getToken } = useAuth();
-  const [tab, setTab] = useState<"load" | "select" | "manual">("load");
+  const [tab, setTab] = useState<"load" | "select" | "review" | "manual">("load");
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -134,6 +169,12 @@ export function AiWorkspace() {
   const [runInputText, setRunInputText] = useState("Tạo bản nháp an toàn từ input JSON đã duyệt.");
   const [runInputJsonText, setRunInputJsonText] = useState("{\n  \"text\": \"Nhập dữ liệu chạy agent ở đây\"\n}");
   const [lastRun, setLastRun] = useState<AgentRunResult | null>(null);
+
+  const [draftStatus, setDraftStatus] = useState<"draft" | "approved" | "rejected" | "all">("draft");
+  const [drafts, setDrafts] = useState<AiDraftDocument[]>([]);
+  const [selectedDraftId, setSelectedDraftId] = useState("");
+  const [draftDetail, setDraftDetail] = useState<AiDraftDetail | null>(null);
+  const [draftReviewNote, setDraftReviewNote] = useState("");
 
   const [manualJsonText, setManualJsonText] = useState("{\n  \"note\": \"Nhập JSON thủ công ở đây\"\n}");
   const [manualSchemaText, setManualSchemaText] = useState("");
@@ -337,6 +378,67 @@ export function AiWorkspace() {
     }
   }, [runInputJsonText, runInputText, selectedAgentId, selectedModelId, token]);
 
+  const loadAiDrafts = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const authToken = await token();
+      const result = await adminApiFetch<{ documents: AiDraftDocument[] }>(
+        `/api/admin/ai-store/documents/ai-drafts?status=${draftStatus}`,
+        authToken,
+      );
+      setDrafts(result.documents);
+      if (selectedDraftId && !result.documents.some((document) => document.id === selectedDraftId)) {
+        setSelectedDraftId("");
+        setDraftDetail(null);
+      }
+      if (!selectedDraftId && result.documents[0]) setSelectedDraftId(result.documents[0].id);
+    } catch (loadError) {
+      setError(errorText(loadError));
+    } finally {
+      setLoading(false);
+    }
+  }, [draftStatus, selectedDraftId, token]);
+
+  const loadAiDraftDetail = useCallback(async (documentId: string) => {
+    if (!documentId) return;
+    setLoading(true);
+    setError(null);
+    try {
+      const authToken = await token();
+      const result = await adminApiFetch<AiDraftDetail>(`/api/admin/ai-store/documents/ai-drafts/${documentId}`, authToken);
+      setDraftDetail(result);
+      setSelectedDraftId(documentId);
+      setDraftReviewNote(result.document.reviewNote || "");
+    } catch (loadError) {
+      setError(errorText(loadError));
+    } finally {
+      setLoading(false);
+    }
+  }, [token]);
+
+  const reviewAiDraft = useCallback(async (action: "approve" | "reject") => {
+    if (!draftDetail) return;
+    setLoading(true);
+    setError(null);
+    setMessage(null);
+    try {
+      const authToken = await token();
+      const result = await adminApiFetch<{ document: AiDraftDocument }>(
+        `/api/admin/ai-store/documents/ai-drafts/${draftDetail.document.id}/review`,
+        authToken,
+        { method: "PATCH", body: JSON.stringify({ action, note: draftReviewNote }) },
+      );
+      setMessage(`Đã ${action === "approve" ? "approve" : "reject"} draft ${result.document.id}.`);
+      await loadAiDrafts();
+      await loadAiDraftDetail(result.document.id);
+    } catch (reviewError) {
+      setError(errorText(reviewError));
+    } finally {
+      setLoading(false);
+    }
+  }, [draftDetail, draftReviewNote, loadAiDraftDetail, loadAiDrafts, token]);
+
   const validateManualJson = useCallback(() => {
     try {
       parseJsonText(manualJsonText);
@@ -381,6 +483,14 @@ export function AiWorkspace() {
     if (selectedProjectId) void loadVersions(selectedProjectId);
   }, [loadVersions, selectedProjectId]);
 
+  useEffect(() => {
+    if (isLoaded && isSignedIn && tab === "review") void loadAiDrafts();
+  }, [isLoaded, isSignedIn, loadAiDrafts, tab]);
+
+  useEffect(() => {
+    if (selectedDraftId && tab === "review") void loadAiDraftDetail(selectedDraftId);
+  }, [loadAiDraftDetail, selectedDraftId, tab]);
+
   const selectedAgent = useMemo(
     () => agents.find((agent) => agent.id === selectedAgentId) || null,
     [agents, selectedAgentId],
@@ -404,6 +514,7 @@ export function AiWorkspace() {
       && selectedModel.isEnabled
       && selectedAgent.modelKey === selectedModel.modelKey,
   );
+  const selectedDraft = draftDetail?.document || null;
 
   if (!isLoaded) return <main className="min-h-screen p-8">Đang tải phiên đăng nhập…</main>;
   if (!isSignedIn) return <main className="min-h-screen p-8">Bạn cần đăng nhập để mở AI Workspace.</main>;
@@ -415,7 +526,7 @@ export function AiWorkspace() {
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-indigo-700">Bếp Sỉ AI</p>
             <h1 className="text-2xl font-bold">AI Workspace</h1>
-            <p className="mt-1 text-sm text-slate-500">Load JSON, duyệt agent, chạy agent approved và lưu draft an toàn.</p>
+            <p className="mt-1 text-sm text-slate-500">Load JSON, duyệt agent, chạy agent approved, duyệt draft trước khi apply.</p>
           </div>
           <div className="flex items-center gap-3">
             <a className="text-sm font-medium text-slate-600 hover:text-slate-950" href="/admin">Admin</a>
@@ -430,6 +541,7 @@ export function AiWorkspace() {
           {[
             ["load", "Load JSON Project"],
             ["select", "Agent Review / Run"],
+            ["review", "AI Draft Review"],
             ["manual", "Nhập tay / Lưu nháp"],
           ].map(([key, label]) => (
             <button
@@ -454,24 +566,11 @@ export function AiWorkspace() {
               <p className="mt-1 text-sm text-slate-500">Chọn file project JSON. File chỉ được lưu vào DB sau khi bấm lưu.</p>
               <label className="mt-5 block">
                 <span className="text-sm font-semibold">File .json</span>
-                <input
-                  className="mt-2 block w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm"
-                  type="file"
-                  accept=".json,application/json"
-                  onChange={(event) => void handleProjectFile(event.target.files?.[0] || null)}
-                />
+                <input className="mt-2 block w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm" type="file" accept=".json,application/json" onChange={(event) => void handleProjectFile(event.target.files?.[0] || null)} />
               </label>
               <div className="mt-4 flex flex-wrap gap-2">
-                <button className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white" onClick={previewProjectJson}>
-                  Preview JSON
-                </button>
-                <button
-                  className="rounded-lg bg-indigo-700 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
-                  disabled={loading || !projectJsonText.trim()}
-                  onClick={() => void saveProject()}
-                >
-                  Lưu project
-                </button>
+                <button className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white" onClick={previewProjectJson}>Preview JSON</button>
+                <button className="rounded-lg bg-indigo-700 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50" disabled={loading || !projectJsonText.trim()} onClick={() => void saveProject()}>Lưu project</button>
               </div>
               {projectPreview ? (
                 <div className="mt-5 rounded-xl bg-slate-50 p-4 text-sm">
@@ -489,12 +588,7 @@ export function AiWorkspace() {
                 <h2 className="text-lg font-bold">JSON project</h2>
                 <button className="text-sm font-semibold text-slate-600 hover:text-slate-950" onClick={() => setProjectJsonText("")}>Xóa</button>
               </div>
-              <textarea
-                className="min-h-[520px] w-full rounded-xl border border-slate-300 bg-slate-950 p-4 font-mono text-xs text-slate-50"
-                value={projectJsonText}
-                onChange={(event) => setProjectJsonText(event.target.value)}
-                placeholder="Dán project JSON vào đây hoặc chọn file .json"
-              />
+              <textarea className="min-h-[520px] w-full rounded-xl border border-slate-300 bg-slate-950 p-4 font-mono text-xs text-slate-50" value={projectJsonText} onChange={(event) => setProjectJsonText(event.target.value)} placeholder="Dán project JSON vào đây hoặc chọn file .json" />
             </div>
           </section>
         ) : null}
@@ -503,34 +597,24 @@ export function AiWorkspace() {
           <section className="grid gap-5 xl:grid-cols-[420px_1fr]">
             <div className="rounded-xl border border-slate-200 bg-white p-5">
               <h2 className="text-lg font-bold">Chọn project version</h2>
-              <label className="mt-4 grid gap-1 text-sm font-semibold">
-                Project
+              <label className="mt-4 grid gap-1 text-sm font-semibold">Project
                 <select className="rounded-lg border border-slate-300 px-3 py-2" value={selectedProjectId} onChange={(event) => setSelectedProjectId(event.target.value)}>
                   <option value="">Chọn project</option>
                   {projects.map((project) => <option key={project.id} value={project.id}>{project.name} · {project.projectKey}</option>)}
                 </select>
               </label>
-              <label className="mt-4 grid gap-1 text-sm font-semibold">
-                Version
+              <label className="mt-4 grid gap-1 text-sm font-semibold">Version
                 <select className="rounded-lg border border-slate-300 px-3 py-2" value={selectedVersionId} onChange={(event) => setSelectedVersionId(event.target.value)}>
                   <option value="">Chọn version</option>
                   {versions.map((version) => <option key={version.id} value={version.id}>v{version.version} · {formatDate(version.createdAt)}</option>)}
                 </select>
               </label>
               <div className="mt-5 flex flex-wrap gap-2">
-                <button className="rounded-lg bg-indigo-700 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50" disabled={loading || !selectedVersionId} onClick={() => void loadAgents()}>
-                  Load Agent
-                </button>
-                <button className="rounded-lg bg-sky-700 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50" disabled={loading || !selectedVersionId} onClick={() => void loadModels()}>
-                  Load Model
-                </button>
-                <button className="rounded-lg bg-white px-4 py-2 text-sm font-semibold text-slate-700 ring-1 ring-slate-200" disabled={loading} onClick={() => void loadProjects()}>
-                  Làm mới
-                </button>
+                <button className="rounded-lg bg-indigo-700 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50" disabled={loading || !selectedVersionId} onClick={() => void loadAgents()}>Load Agent</button>
+                <button className="rounded-lg bg-sky-700 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50" disabled={loading || !selectedVersionId} onClick={() => void loadModels()}>Load Model</button>
+                <button className="rounded-lg bg-white px-4 py-2 text-sm font-semibold text-slate-700 ring-1 ring-slate-200" disabled={loading} onClick={() => void loadProjects()}>Làm mới</button>
               </div>
-              <p className="mt-5 rounded-xl bg-amber-50 p-3 text-sm text-amber-800">
-                Agent phải được approve mới chạy được. Output chỉ lưu draft, chưa áp vào nghiệp vụ.
-              </p>
+              <p className="mt-5 rounded-xl bg-amber-50 p-3 text-sm text-amber-800">Agent phải được approve mới chạy được. Output chỉ lưu draft, chưa áp vào nghiệp vụ.</p>
             </div>
 
             <div className="grid gap-5">
@@ -582,16 +666,12 @@ export function AiWorkspace() {
                     <h2 className="text-lg font-bold">Run selected agent</h2>
                     <p className="mt-1 text-sm text-slate-500">Chỉ agent approved + enabled + model khớp mới chạy được.</p>
                   </div>
-                  <button className="rounded-lg bg-indigo-700 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50" disabled={loading || !canRunSelectedAgent} onClick={() => void runAgent()}>
-                    Run Agent
-                  </button>
+                  <button className="rounded-lg bg-indigo-700 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50" disabled={loading || !canRunSelectedAgent} onClick={() => void runAgent()}>Run Agent</button>
                 </div>
-                <label className="mt-4 grid gap-1 text-sm font-semibold">
-                  Input text
+                <label className="mt-4 grid gap-1 text-sm font-semibold">Input text
                   <textarea className="min-h-[90px] rounded-xl border border-slate-300 p-3 text-sm" value={runInputText} onChange={(event) => setRunInputText(event.target.value)} />
                 </label>
-                <label className="mt-4 grid gap-1 text-sm font-semibold">
-                  Input JSON theo inputSchema của agent
+                <label className="mt-4 grid gap-1 text-sm font-semibold">Input JSON theo inputSchema của agent
                   <textarea className="min-h-[220px] rounded-xl border border-slate-300 bg-slate-950 p-4 font-mono text-xs text-slate-50" value={runInputJsonText} onChange={(event) => setRunInputJsonText(event.target.value)} />
                 </label>
                 {lastRun ? (
@@ -600,6 +680,7 @@ export function AiWorkspace() {
                     <p><b>Request:</b> {lastRun.gateway.requestId}</p>
                     <p><b>Provider:</b> {lastRun.gateway.provider} · {lastRun.gateway.model}</p>
                     <p><b>Validation:</b> {lastRun.document.validationStatus}</p>
+                    <button className="mt-3 rounded-lg bg-slate-900 px-3 py-2 text-xs font-semibold text-white" onClick={() => { setTab("review"); setDraftStatus("draft"); setSelectedDraftId(lastRun.document.id); }}>Mở draft để duyệt</button>
                     <pre className="mt-3 max-h-[360px] overflow-auto rounded-lg bg-slate-950 p-3 text-xs text-white">{safeJson(lastRun.document.jsonPayload)}</pre>
                   </div>
                 ) : null}
@@ -608,24 +689,104 @@ export function AiWorkspace() {
           </section>
         ) : null}
 
+        {tab === "review" ? (
+          <section className="grid gap-5 xl:grid-cols-[430px_1fr]">
+            <div className="rounded-xl border border-slate-200 bg-white p-5">
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <h2 className="text-lg font-bold">AI Draft Review</h2>
+                  <p className="mt-1 text-sm text-slate-500">Duyệt AI draft trước khi bước sau được phép apply.</p>
+                </div>
+                <button className="rounded-lg bg-white px-3 py-2 text-sm font-semibold text-slate-700 ring-1 ring-slate-200" disabled={loading} onClick={() => void loadAiDrafts()}>Làm mới</button>
+              </div>
+              <label className="mt-4 grid gap-1 text-sm font-semibold">Trạng thái
+                <select className="rounded-lg border border-slate-300 px-3 py-2" value={draftStatus} onChange={(event) => { setDraftStatus(event.target.value as typeof draftStatus); setSelectedDraftId(""); setDraftDetail(null); }}>
+                  <option value="draft">Draft chờ duyệt</option>
+                  <option value="approved">Đã approve</option>
+                  <option value="rejected">Đã reject</option>
+                  <option value="all">Tất cả</option>
+                </select>
+              </label>
+              <div className="mt-5 max-h-[70vh] divide-y divide-slate-100 overflow-y-auto rounded-xl border border-slate-100">
+                {drafts.length === 0 ? <p className="p-4 text-sm text-slate-500">Không có AI draft phù hợp.</p> : null}
+                {drafts.map((draft) => (
+                  <button key={draft.id} className={`block w-full px-4 py-4 text-left hover:bg-slate-50 ${selectedDraftId === draft.id ? "bg-indigo-50" : ""}`} onClick={() => setSelectedDraftId(draft.id)}>
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <p className="font-semibold">{draft.agent?.name || draft.agent?.key || "AI draft"}</p>
+                        <p className="mt-1 text-xs text-slate-500">{draft.id}</p>
+                      </div>
+                      <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-700">{draft.status}</span>
+                    </div>
+                    <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-500">
+                      <span>{draft.agent?.useCase || "unknown"}</span>
+                      <span>{draft.applyStatus}</span>
+                      <span>{formatDate(draft.updatedAt)}</span>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="rounded-xl border border-slate-200 bg-white p-5">
+              {!selectedDraft ? <p className="text-sm text-slate-500">Chọn một AI draft để xem chi tiết.</p> : (
+                <div>
+                  <div className="flex flex-wrap items-start justify-between gap-3">
+                    <div>
+                      <h2 className="text-lg font-bold">{selectedDraft.agent?.name || selectedDraft.agent?.key || "AI draft"}</h2>
+                      <p className="mt-1 text-sm text-slate-500">{selectedDraft.id}</p>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      <button className="rounded-lg bg-emerald-700 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50" disabled={loading || selectedDraft.status !== "draft"} onClick={() => void reviewAiDraft("approve")}>Approve draft</button>
+                      <button className="rounded-lg bg-rose-700 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50" disabled={loading || selectedDraft.status !== "draft"} onClick={() => void reviewAiDraft("reject")}>Reject draft</button>
+                    </div>
+                  </div>
+
+                  <div className="mt-5 grid gap-3 text-sm md:grid-cols-2 xl:grid-cols-3">
+                    <p className="rounded-xl bg-slate-50 p-3"><b>Status:</b> {selectedDraft.status}</p>
+                    <p className="rounded-xl bg-slate-50 p-3"><b>Apply:</b> {selectedDraft.applyStatus}</p>
+                    <p className="rounded-xl bg-slate-50 p-3"><b>Validation:</b> {selectedDraft.validationStatus}</p>
+                    <p className="rounded-xl bg-slate-50 p-3"><b>Project:</b> {selectedDraft.project?.name || selectedDraft.project?.key || "—"}</p>
+                    <p className="rounded-xl bg-slate-50 p-3"><b>Model:</b> {selectedDraft.model?.displayName || selectedDraft.model?.key || "—"}</p>
+                    <p className="rounded-xl bg-slate-50 p-3"><b>Updated:</b> {formatDate(selectedDraft.updatedAt)}</p>
+                  </div>
+
+                  <label className="mt-5 grid gap-1 text-sm font-semibold">Ghi chú duyệt
+                    <textarea className="min-h-[100px] rounded-xl border border-slate-300 p-3 text-sm" value={draftReviewNote} onChange={(event) => setDraftReviewNote(event.target.value)} placeholder="Ghi chú cho quyết định approve/reject" />
+                  </label>
+
+                  <div className="mt-5">
+                    <h3 className="font-bold">Draft JSON</h3>
+                    <pre className="mt-2 max-h-[460px] overflow-auto rounded-xl bg-slate-950 p-4 text-xs text-white">{safeJson(selectedDraft.jsonPayload)}</pre>
+                  </div>
+
+                  <div className="mt-5">
+                    <h3 className="font-bold">Review logs</h3>
+                    {draftDetail?.reviewLogs.length === 0 ? <p className="mt-2 text-sm text-slate-500">Chưa có log duyệt.</p> : null}
+                    <div className="mt-2 divide-y divide-slate-100 rounded-xl border border-slate-100">
+                      {draftDetail?.reviewLogs.map((log) => (
+                        <div key={log.id} className="p-3 text-sm">
+                          <p><b>{log.fromStatus}</b> → <b>{log.toStatus}</b> · {formatDate(log.createdAt)}</p>
+                          <p className="mt-1 text-slate-500">{log.actorName || "Admin"}{log.note ? ` · ${log.note}` : ""}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </section>
+        ) : null}
+
         {tab === "manual" ? (
           <section className="grid gap-5 xl:grid-cols-[1fr_1fr]">
             <div className="rounded-xl border border-slate-200 bg-white p-5">
               <h2 className="text-lg font-bold">Nhập JSON thủ công</h2>
-              <textarea
-                className="mt-4 min-h-[520px] w-full rounded-xl border border-slate-300 bg-slate-950 p-4 font-mono text-xs text-slate-50"
-                value={manualJsonText}
-                onChange={(event) => setManualJsonText(event.target.value)}
-              />
+              <textarea className="mt-4 min-h-[520px] w-full rounded-xl border border-slate-300 bg-slate-950 p-4 font-mono text-xs text-slate-50" value={manualJsonText} onChange={(event) => setManualJsonText(event.target.value)} />
             </div>
             <div className="rounded-xl border border-slate-200 bg-white p-5">
               <h2 className="text-lg font-bold">Schema kiểm tra tùy chọn</h2>
-              <textarea
-                className="mt-4 min-h-[260px] w-full rounded-xl border border-slate-300 bg-slate-950 p-4 font-mono text-xs text-slate-50"
-                value={manualSchemaText}
-                onChange={(event) => setManualSchemaText(event.target.value)}
-                placeholder="Dán JSON schema nếu muốn backend validate. Có thể để trống."
-              />
+              <textarea className="mt-4 min-h-[260px] w-full rounded-xl border border-slate-300 bg-slate-950 p-4 font-mono text-xs text-slate-50" value={manualSchemaText} onChange={(event) => setManualSchemaText(event.target.value)} placeholder="Dán JSON schema nếu muốn backend validate. Có thể để trống." />
               <div className="mt-4 flex flex-wrap gap-2">
                 <button className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white" onClick={validateManualJson}>Validate JSON</button>
                 <button className="rounded-lg bg-emerald-700 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50" disabled={loading} onClick={() => void saveManualDraft()}>Lưu draft</button>
