@@ -5,6 +5,7 @@ import helmet from "helmet";
 import { createAdminCustomersRouter } from "./modules/admin/admin-customers.routes";
 import { createAdminAiGatewayRouter } from "./modules/ai/ai-gateway.routes";
 import type { AiGatewayService } from "./modules/ai/ai-gateway.service";
+import { createAdminAiProjectStoreRouter } from "./modules/ai/ai-project-store.routes";
 import { anonymousIdentity, resolveRequestIdentity } from "./modules/auth/auth.identity";
 import { createAuthRouter } from "./modules/auth/auth.routes";
 import { createCatalogV2ChoiceCartRouter } from "./modules/catalog-v2/catalog-v2-choice-cart.routes";
@@ -34,7 +35,7 @@ export function createApp(config: AppConfig) {
   app.disable("x-powered-by");
   app.use(helmet());
   app.use(cors({ origin: config.corsOrigin, credentials: true }));
-  app.use(express.json({ limit: "1mb" }));
+  app.use(express.json({ limit: "2mb" }));
 
   const healthPayload = () => ({
     ok: true,
@@ -84,12 +85,11 @@ export function createApp(config: AppConfig) {
     app.use("/api/customer/orders", createCustomerOrdersRouter(resolveRequestIdentity));
     app.use("/api/admin/customers", createAdminCustomersRouter(resolveRequestIdentity));
     app.use("/api/admin/orders", createAdminOrdersRouter(resolveRequestIdentity));
+    app.use("/api/admin/ai-store", createAdminAiProjectStoreRouter(resolveRequestIdentity));
     if (config.aiGatewayService) {
       app.use("/api/admin/ai", createAdminAiGatewayRouter(resolveRequestIdentity, config.aiGatewayService));
     } else {
-      app.use("/api/admin/ai", (_req, res) => {
-        res.status(503).json({ error: "AI_GATEWAY_NOT_CONFIGURED" });
-      });
+      app.use("/api/admin/ai", (_req, res) => res.status(503).json({ error: "AI_GATEWAY_NOT_CONFIGURED" }));
     }
   } else {
     const clerkUnavailable = (_req: express.Request, res: express.Response) => {
@@ -103,6 +103,7 @@ export function createApp(config: AppConfig) {
     app.use("/api/customer/orders", clerkUnavailable);
     app.use("/api/admin/customers", clerkUnavailable);
     app.use("/api/admin/orders", clerkUnavailable);
+    app.use("/api/admin/ai-store", clerkUnavailable);
     app.use("/api/admin/ai", clerkUnavailable);
   }
 
