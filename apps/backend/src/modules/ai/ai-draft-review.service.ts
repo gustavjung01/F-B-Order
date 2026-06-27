@@ -196,8 +196,8 @@ export class AiDraftReviewService {
       if (current.status !== "draft") {
         throw new AiProjectStoreError("AI_DRAFT_ALREADY_REVIEWED", 409, "Only draft AI documents can be reviewed.");
       }
-      if (current.validation_status !== "valid") {
-        throw new AiProjectStoreError("AI_DRAFT_INVALID", 409, "Only valid AI draft documents can be reviewed.");
+      if (action === "approve" && current.validation_status !== "valid") {
+        throw new AiProjectStoreError("AI_DRAFT_INVALID", 409, "Only valid AI draft documents can be approved.");
       }
       const updated = await client.query<AiDocumentRow>(
         `UPDATE ai_documents
@@ -225,8 +225,18 @@ export class AiDraftReviewService {
         [documentId, current.status, nextStatus, admin.staffId, note],
       );
       await client.query("COMMIT");
+      const updatedDocument = {
+        ...updated.rows[0],
+        project_key: current.project_key,
+        project_name: current.project_name,
+        agent_key: current.agent_key,
+        agent_name: current.agent_name,
+        agent_use_case: current.agent_use_case,
+        model_key: current.model_key,
+        model_display_name: current.model_display_name,
+      };
       return {
-        document: mapDocument({ ...current, ...updated.rows[0] }),
+        document: mapDocument(updatedDocument),
         reviewLog: {
           id: log.rows[0].id as string,
           documentId: log.rows[0].document_id as string,
