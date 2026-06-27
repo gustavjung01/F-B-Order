@@ -3,6 +3,7 @@ import cors from "cors";
 import express from "express";
 import helmet from "helmet";
 import { createAdminCustomersRouter } from "./modules/admin/admin-customers.routes";
+import { createAdminAiAppRuntimeRouter } from "./modules/ai/ai-app-runtime.routes";
 import { createAdminAiGatewayRouter } from "./modules/ai/ai-gateway.routes";
 import type { AiGatewayService } from "./modules/ai/ai-gateway.service";
 import { createAdminAiProjectStoreRouter } from "./modules/ai/ai-project-store.routes";
@@ -86,6 +87,7 @@ export function createApp(config: AppConfig) {
     app.use("/api/admin/customers", createAdminCustomersRouter(resolveRequestIdentity));
     app.use("/api/admin/orders", createAdminOrdersRouter(resolveRequestIdentity));
     app.use("/api/admin/ai-store", createAdminAiProjectStoreRouter(resolveRequestIdentity));
+    app.use("/api/admin/ai-runtime", createAdminAiAppRuntimeRouter(resolveRequestIdentity));
     if (config.aiGatewayService) {
       app.use("/api/admin/ai", createAdminAiGatewayRouter(resolveRequestIdentity, config.aiGatewayService));
     } else {
@@ -104,6 +106,7 @@ export function createApp(config: AppConfig) {
     app.use("/api/admin/customers", clerkUnavailable);
     app.use("/api/admin/orders", clerkUnavailable);
     app.use("/api/admin/ai-store", clerkUnavailable);
+    app.use("/api/admin/ai-runtime", clerkUnavailable);
     app.use("/api/admin/ai", clerkUnavailable);
   }
 

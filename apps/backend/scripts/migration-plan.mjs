@@ -13,7 +13,8 @@ const coreMigrations = [
 
 export const MIGRATION_FILES = Object.freeze([
   ...coreMigrations,
-  "apps/backend/sql/011_ai_project_store.sql"
+  "apps/backend/sql/011_ai_project_store.sql",
+  "apps/backend/sql/012_ai_app_runtime.sql"
 ]);
 
 export const BASELINE_MIGRATION_FILES = Object.freeze(coreMigrations.slice(0, 4));
