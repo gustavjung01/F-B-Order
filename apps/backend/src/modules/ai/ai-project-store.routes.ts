@@ -3,9 +3,10 @@ import type { RequestIdentity } from "../auth/auth.identity";
 import { AiGatewayError, type AiGatewayService } from "./ai-gateway.service";
 import { AiProjectSchemaError } from "./ai-project-schema";
 import { AiAgentRunnerService } from "./ai-agent-runner.service";
+import { AiDraftReviewService } from "./ai-draft-review.service";
 import { AiProjectStoreError, AiProjectStoreService } from "./ai-project-store.service";
 
- type IdentityResolver = (req: Request) => Promise<RequestIdentity>;
+type IdentityResolver = (req: Request) => Promise<RequestIdentity>;
 
 function sendError(res: Response, error: unknown) {
   if (error instanceof AiProjectStoreError) {
@@ -44,6 +45,7 @@ export function createAdminAiProjectStoreRouter(
 ) {
   const router = Router();
   const agentRunner = new AiAgentRunnerService(aiGatewayService);
+  const draftReview = new AiDraftReviewService();
 
   router.get("/projects", async (req, res) => {
     try {
@@ -104,6 +106,33 @@ export function createAdminAiProjectStoreRouter(
         modelId: req.body?.modelId,
         inputText: req.body?.inputText,
         inputJson: req.body?.inputJson,
+      }));
+    } catch (error) {
+      sendError(res, error);
+    }
+  });
+
+  router.get("/documents/ai-drafts", async (req, res) => {
+    try {
+      res.json(await draftReview.listAiDrafts(await identityResolver(req), req.query.status));
+    } catch (error) {
+      sendError(res, error);
+    }
+  });
+
+  router.get("/documents/ai-drafts/:documentId", async (req, res) => {
+    try {
+      res.json(await draftReview.getAiDraft(await identityResolver(req), req.params.documentId));
+    } catch (error) {
+      sendError(res, error);
+    }
+  });
+
+  router.patch("/documents/ai-drafts/:documentId/review", async (req, res) => {
+    try {
+      res.json(await draftReview.reviewAiDraft(await identityResolver(req), req.params.documentId, {
+        action: req.body?.action,
+        note: req.body?.note,
       }));
     } catch (error) {
       sendError(res, error);
