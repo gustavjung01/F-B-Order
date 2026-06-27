@@ -28,7 +28,26 @@ export function createApp(config: AppConfig) {
 
   app.disable("x-powered-by");
   app.use(helmet());
-  app.use(cors({ origin: config.corsOrigin, credentials: true }));
+  const allowedOrigins = new Set(
+    config.corsOrigin
+      .split(",")
+      .map((origin) => origin.trim())
+      .filter(Boolean),
+  );
+
+  app.use(
+    cors({
+      credentials: true,
+      origin(origin, callback) {
+        if (!origin || allowedOrigins.has(origin)) {
+          callback(null, true);
+          return;
+        }
+
+        callback(null, false);
+      },
+    }),
+  );
   app.use(express.json({ limit: "1mb" }));
 
   const healthPayload = () => ({
