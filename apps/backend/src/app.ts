@@ -85,7 +85,11 @@ export function createApp(config: AppConfig) {
     app.use("/api/customer/orders", createCustomerOrdersRouter(resolveRequestIdentity));
     app.use("/api/admin/customers", createAdminCustomersRouter(resolveRequestIdentity));
     app.use("/api/admin/orders", createAdminOrdersRouter(resolveRequestIdentity));
-    app.use("/api/admin/ai-store", createAdminAiProjectStoreRouter(resolveRequestIdentity));
+    app.use("/api/admin/ai-store", createAdminAiProjectStoreRouter(
+      resolveRequestIdentity,
+      undefined,
+      config.aiGatewayService ?? null,
+    ));
     if (config.aiGatewayService) {
       app.use("/api/admin/ai", createAdminAiGatewayRouter(resolveRequestIdentity, config.aiGatewayService));
     } else {
