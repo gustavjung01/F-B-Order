@@ -1,5 +1,4 @@
 import {
-  AI_SCHEMA_VERSION,
   AI_USE_CASES,
   parseAiJsonSchema,
   type AiJsonObject,
@@ -191,5 +190,5 @@ export function parseAiProjectDefinition(raw: unknown): AiProjectDefinition {
     };
   });
 
-  return { schemaVersion: AI_SCHEMA_VERSION, project, models, agents };
+  return { schemaVersion: AI_PROJECT_SCHEMA_VERSION, project, models, agents };
 }
