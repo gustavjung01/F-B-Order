@@ -54,6 +54,24 @@ type ProjectPreview = {
   agentCount: number;
 };
 
+type AgentRunResult = {
+  gateway: {
+    requestId: string;
+    provider: string;
+    model: string;
+    latencyMs: number;
+    finishReason: string | null;
+  };
+  document: {
+    id: string;
+    source: string;
+    status: string;
+    jsonPayload: unknown;
+    validationStatus: string;
+    createdAt: string;
+  };
+};
+
 function errorText(error: unknown) {
   if (error instanceof AdminApiError) return `${error.message} (${error.code})`;
   return error instanceof Error ? error.message : "Có lỗi không xác định.";
@@ -89,6 +107,10 @@ function safeJson(value: unknown) {
   return JSON.stringify(value, null, 2);
 }
 
+function replaceAgent(items: AiAgent[], next: AiAgent) {
+  return items.map((item) => item.id === next.id ? next : item);
+}
+
 export function AiWorkspace() {
   const { isLoaded, isSignedIn, getToken } = useAuth();
   const [tab, setTab] = useState<"load" | "select" | "manual">("load");
@@ -108,6 +130,10 @@ export function AiWorkspace() {
   const [fileName, setFileName] = useState<string | null>(null);
   const [projectJsonText, setProjectJsonText] = useState("");
   const [projectPreview, setProjectPreview] = useState<ProjectPreview | null>(null);
+
+  const [runInputText, setRunInputText] = useState("Tạo bản nháp an toàn từ input JSON đã duyệt.");
+  const [runInputJsonText, setRunInputJsonText] = useState("{\n  \"text\": \"Nhập dữ liệu chạy agent ở đây\"\n}");
+  const [lastRun, setLastRun] = useState<AgentRunResult | null>(null);
 
   const [manualJsonText, setManualJsonText] = useState("{\n  \"note\": \"Nhập JSON thủ công ở đây\"\n}");
   const [manualSchemaText, setManualSchemaText] = useState("");
@@ -150,6 +176,7 @@ export function AiWorkspace() {
       setModels([]);
       setSelectedAgentId("");
       setSelectedModelId("");
+      setLastRun(null);
     } catch (loadError) {
       setError(errorText(loadError));
     } finally {
@@ -260,6 +287,56 @@ export function AiWorkspace() {
     }
   }, [fileName, loadProjects, projectJsonText, token]);
 
+  const reviewAgent = useCallback(async (action: "approve" | "reject" | "disable") => {
+    if (!selectedAgentId) return;
+    setLoading(true);
+    setError(null);
+    setMessage(null);
+    try {
+      const authToken = await token();
+      const result = await adminApiFetch<{ agent: AiAgent; action: string }>(
+        `/api/admin/ai-store/agents/${selectedAgentId}/review`,
+        authToken,
+        { method: "PATCH", body: JSON.stringify({ action }) },
+      );
+      setAgents((current) => replaceAgent(current, result.agent));
+      setMessage(`Đã cập nhật agent: ${result.action}.`);
+    } catch (saveError) {
+      setError(errorText(saveError));
+    } finally {
+      setLoading(false);
+    }
+  }, [selectedAgentId, token]);
+
+  const runAgent = useCallback(async () => {
+    if (!selectedAgentId || !selectedModelId) {
+      setError("Chọn agent và model trước khi chạy.");
+      return;
+    }
+    setLoading(true);
+    setError(null);
+    setMessage(null);
+    setLastRun(null);
+    try {
+      const inputJson = parseJsonText(runInputJsonText);
+      const authToken = await token();
+      const result = await adminApiFetch<AgentRunResult>(
+        `/api/admin/ai-store/agents/${selectedAgentId}/run`,
+        authToken,
+        {
+          method: "POST",
+          body: JSON.stringify({ modelId: selectedModelId, inputText: runInputText, inputJson }),
+        },
+      );
+      setLastRun(result);
+      setMessage(`AI output đã lưu draft ${result.document.id}.`);
+    } catch (runError) {
+      setError(errorText(runError));
+    } finally {
+      setLoading(false);
+    }
+  }, [runInputJsonText, runInputText, selectedAgentId, selectedModelId, token]);
+
   const validateManualJson = useCallback(() => {
     try {
       parseJsonText(manualJsonText);
@@ -313,6 +390,21 @@ export function AiWorkspace() {
     [models, selectedModelId],
   );
 
+  useEffect(() => {
+    if (!selectedAgent || models.length === 0) return;
+    const matchingModel = models.find((model) => model.modelKey === selectedAgent.modelKey);
+    if (matchingModel && selectedModelId !== matchingModel.id) setSelectedModelId(matchingModel.id);
+  }, [models, selectedAgent, selectedModelId]);
+
+  const canRunSelectedAgent = Boolean(
+    selectedAgent
+      && selectedModel
+      && selectedAgent.reviewStatus === "approved"
+      && selectedAgent.isEnabled
+      && selectedModel.isEnabled
+      && selectedAgent.modelKey === selectedModel.modelKey,
+  );
+
   if (!isLoaded) return <main className="min-h-screen p-8">Đang tải phiên đăng nhập…</main>;
   if (!isSignedIn) return <main className="min-h-screen p-8">Bạn cần đăng nhập để mở AI Workspace.</main>;
 
@@ -323,7 +415,7 @@ export function AiWorkspace() {
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-indigo-700">Bếp Sỉ AI</p>
             <h1 className="text-2xl font-bold">AI Workspace</h1>
-            <p className="mt-1 text-sm text-slate-500">Load JSON project, chọn agent/model và lưu nháp thủ công.</p>
+            <p className="mt-1 text-sm text-slate-500">Load JSON, duyệt agent, chạy agent approved và lưu draft an toàn.</p>
           </div>
           <div className="flex items-center gap-3">
             <a className="text-sm font-medium text-slate-600 hover:text-slate-950" href="/admin">Admin</a>
@@ -337,7 +429,7 @@ export function AiWorkspace() {
         <div className="mb-5 flex flex-wrap gap-2">
           {[
             ["load", "Load JSON Project"],
-            ["select", "Load Agent / Model"],
+            ["select", "Agent Review / Run"],
             ["manual", "Nhập tay / Lưu nháp"],
           ].map(([key, label]) => (
             <button
@@ -436,39 +528,81 @@ export function AiWorkspace() {
                   Làm mới
                 </button>
               </div>
+              <p className="mt-5 rounded-xl bg-amber-50 p-3 text-sm text-amber-800">
+                Agent phải được approve mới chạy được. Output chỉ lưu draft, chưa áp vào nghiệp vụ.
+              </p>
             </div>
-            <div className="grid gap-5 lg:grid-cols-2">
-              <div className="rounded-xl border border-slate-200 bg-white p-5">
-                <h2 className="text-lg font-bold">Agents</h2>
-                <select className="mt-4 w-full rounded-lg border border-slate-300 px-3 py-2" value={selectedAgentId} onChange={(event) => setSelectedAgentId(event.target.value)}>
-                  <option value="">Chọn agent</option>
-                  {agents.map((agent) => <option key={agent.id} value={agent.id}>{agent.name} · {agent.agentKey}</option>)}
-                </select>
-                {selectedAgent ? (
-                  <div className="mt-4 space-y-2 rounded-xl bg-slate-50 p-4 text-sm">
-                    <p><b>Use case:</b> {selectedAgent.useCase}</p>
-                    <p><b>Model key:</b> {selectedAgent.modelKey}</p>
-                    <p><b>Review:</b> {selectedAgent.reviewStatus}</p>
-                    <p><b>Enabled:</b> {selectedAgent.isEnabled ? "Có" : "Không"}</p>
-                    <p className="text-slate-600">{selectedAgent.description || "Không có mô tả."}</p>
-                    <details><summary className="cursor-pointer font-semibold">Output schema</summary><pre className="mt-2 overflow-auto rounded-lg bg-slate-950 p-3 text-xs text-white">{safeJson(selectedAgent.outputSchema)}</pre></details>
-                  </div>
-                ) : <p className="mt-4 text-sm text-slate-500">Chưa load hoặc chưa chọn agent.</p>}
+
+            <div className="grid gap-5">
+              <div className="grid gap-5 lg:grid-cols-2">
+                <div className="rounded-xl border border-slate-200 bg-white p-5">
+                  <h2 className="text-lg font-bold">Agents</h2>
+                  <select className="mt-4 w-full rounded-lg border border-slate-300 px-3 py-2" value={selectedAgentId} onChange={(event) => setSelectedAgentId(event.target.value)}>
+                    <option value="">Chọn agent</option>
+                    {agents.map((agent) => <option key={agent.id} value={agent.id}>{agent.name} · {agent.agentKey}</option>)}
+                  </select>
+                  {selectedAgent ? (
+                    <div className="mt-4 space-y-2 rounded-xl bg-slate-50 p-4 text-sm">
+                      <p><b>Use case:</b> {selectedAgent.useCase}</p>
+                      <p><b>Model key:</b> {selectedAgent.modelKey}</p>
+                      <p><b>Review:</b> {selectedAgent.reviewStatus}</p>
+                      <p><b>Enabled:</b> {selectedAgent.isEnabled ? "Có" : "Không"}</p>
+                      <p className="text-slate-600">{selectedAgent.description || "Không có mô tả."}</p>
+                      <div className="flex flex-wrap gap-2 pt-2">
+                        <button className="rounded-lg bg-emerald-700 px-3 py-2 text-xs font-semibold text-white disabled:opacity-50" disabled={loading || selectedAgent.reviewStatus !== "untrusted"} onClick={() => void reviewAgent("approve")}>Approve</button>
+                        <button className="rounded-lg bg-rose-700 px-3 py-2 text-xs font-semibold text-white disabled:opacity-50" disabled={loading || selectedAgent.reviewStatus !== "untrusted"} onClick={() => void reviewAgent("reject")}>Reject</button>
+                        <button className="rounded-lg bg-slate-700 px-3 py-2 text-xs font-semibold text-white disabled:opacity-50" disabled={loading || selectedAgent.reviewStatus !== "approved"} onClick={() => void reviewAgent("disable")}>Disable</button>
+                      </div>
+                      <details><summary className="cursor-pointer font-semibold">Input schema</summary><pre className="mt-2 overflow-auto rounded-lg bg-slate-950 p-3 text-xs text-white">{safeJson(selectedAgent.inputSchema)}</pre></details>
+                      <details><summary className="cursor-pointer font-semibold">Output schema</summary><pre className="mt-2 overflow-auto rounded-lg bg-slate-950 p-3 text-xs text-white">{safeJson(selectedAgent.outputSchema)}</pre></details>
+                    </div>
+                  ) : <p className="mt-4 text-sm text-slate-500">Chưa load hoặc chưa chọn agent.</p>}
+                </div>
+                <div className="rounded-xl border border-slate-200 bg-white p-5">
+                  <h2 className="text-lg font-bold">Models</h2>
+                  <select className="mt-4 w-full rounded-lg border border-slate-300 px-3 py-2" value={selectedModelId} onChange={(event) => setSelectedModelId(event.target.value)}>
+                    <option value="">Chọn model</option>
+                    {models.map((model) => <option key={model.id} value={model.id}>{model.displayName} · {model.modelKey}</option>)}
+                  </select>
+                  {selectedModel ? (
+                    <div className="mt-4 space-y-2 rounded-xl bg-slate-50 p-4 text-sm">
+                      <p><b>Provider:</b> {selectedModel.provider}</p>
+                      <p><b>Model ID:</b> {selectedModel.modelId}</p>
+                      <p><b>Model key:</b> {selectedModel.modelKey}</p>
+                      <p><b>Enabled:</b> {selectedModel.isEnabled ? "Có" : "Không"}</p>
+                      {selectedAgent && selectedAgent.modelKey !== selectedModel.modelKey ? <p className="rounded-lg bg-rose-50 p-2 text-rose-800">Model không khớp agent.</p> : null}
+                    </div>
+                  ) : <p className="mt-4 text-sm text-slate-500">Chưa load hoặc chưa chọn model.</p>}
+                </div>
               </div>
+
               <div className="rounded-xl border border-slate-200 bg-white p-5">
-                <h2 className="text-lg font-bold">Models</h2>
-                <select className="mt-4 w-full rounded-lg border border-slate-300 px-3 py-2" value={selectedModelId} onChange={(event) => setSelectedModelId(event.target.value)}>
-                  <option value="">Chọn model</option>
-                  {models.map((model) => <option key={model.id} value={model.id}>{model.displayName} · {model.modelKey}</option>)}
-                </select>
-                {selectedModel ? (
-                  <div className="mt-4 space-y-2 rounded-xl bg-slate-50 p-4 text-sm">
-                    <p><b>Provider:</b> {selectedModel.provider}</p>
-                    <p><b>Model ID:</b> {selectedModel.modelId}</p>
-                    <p><b>Model key:</b> {selectedModel.modelKey}</p>
-                    <p><b>Enabled:</b> {selectedModel.isEnabled ? "Có" : "Không"}</p>
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div>
+                    <h2 className="text-lg font-bold">Run selected agent</h2>
+                    <p className="mt-1 text-sm text-slate-500">Chỉ agent approved + enabled + model khớp mới chạy được.</p>
                   </div>
-                ) : <p className="mt-4 text-sm text-slate-500">Chưa load hoặc chưa chọn model.</p>}
+                  <button className="rounded-lg bg-indigo-700 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50" disabled={loading || !canRunSelectedAgent} onClick={() => void runAgent()}>
+                    Run Agent
+                  </button>
+                </div>
+                <label className="mt-4 grid gap-1 text-sm font-semibold">
+                  Input text
+                  <textarea className="min-h-[90px] rounded-xl border border-slate-300 p-3 text-sm" value={runInputText} onChange={(event) => setRunInputText(event.target.value)} />
+                </label>
+                <label className="mt-4 grid gap-1 text-sm font-semibold">
+                  Input JSON theo inputSchema của agent
+                  <textarea className="min-h-[220px] rounded-xl border border-slate-300 bg-slate-950 p-4 font-mono text-xs text-slate-50" value={runInputJsonText} onChange={(event) => setRunInputJsonText(event.target.value)} />
+                </label>
+                {lastRun ? (
+                  <div className="mt-5 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm">
+                    <p><b>Draft:</b> {lastRun.document.id}</p>
+                    <p><b>Request:</b> {lastRun.gateway.requestId}</p>
+                    <p><b>Provider:</b> {lastRun.gateway.provider} · {lastRun.gateway.model}</p>
+                    <p><b>Validation:</b> {lastRun.document.validationStatus}</p>
+                    <pre className="mt-3 max-h-[360px] overflow-auto rounded-lg bg-slate-950 p-3 text-xs text-white">{safeJson(lastRun.document.jsonPayload)}</pre>
+                  </div>
+                ) : null}
               </div>
             </div>
           </section>
