@@ -1,0 +1,48 @@
+name: AI A1c project store
+
+on:
+  push:
+    branches:
+      - feat/ai-a1c-project-store
+  pull_request:
+    branches:
+      - feat/ai-a1b-gateway
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: fb_order_ai_a1c
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d fb_order_ai_a1c"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5432/fb_order_ai_a1c
+      TEST_DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5432/postgres
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.34.4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @fb-order/backend test:ai-schema
+      - run: pnpm db:test:migrations
+      - run: pnpm db:migrate
+      - run: pnpm --filter @fb-order/backend db:verify:ai-schema
+      - run: pnpm --filter @fb-order/backend test:ai-project-store
+      - run: pnpm typecheck
+      - run: pnpm run build:backend
+      - run: pnpm run build:frontend
