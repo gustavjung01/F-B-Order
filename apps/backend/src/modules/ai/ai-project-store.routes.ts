@@ -1,9 +1,11 @@
 import { Router, type Request, type Response } from "express";
 import type { RequestIdentity } from "../auth/auth.identity";
+import { AiGatewayError, type AiGatewayService } from "./ai-gateway.service";
 import { AiProjectSchemaError } from "./ai-project-schema";
+import { AiAgentRunnerService } from "./ai-agent-runner.service";
 import { AiProjectStoreError, AiProjectStoreService } from "./ai-project-store.service";
 
-type IdentityResolver = (req: Request) => Promise<RequestIdentity>;
+ type IdentityResolver = (req: Request) => Promise<RequestIdentity>;
 
 function sendError(res: Response, error: unknown) {
   if (error instanceof AiProjectStoreError) {
@@ -22,6 +24,15 @@ function sendError(res: Response, error: unknown) {
     });
     return;
   }
+  if (error instanceof AiGatewayError) {
+    res.status(error.status).json({
+      ...(error.requestId ? { requestId: error.requestId } : {}),
+      error: error.code,
+      message: error.message,
+      ...(error.details !== undefined ? { details: error.details } : {}),
+    });
+    return;
+  }
   console.error("AI project store request failed", error);
   res.status(500).json({ error: "AI_PROJECT_STORE_FAILED", message: "AI project store request failed." });
 }
@@ -29,8 +40,10 @@ function sendError(res: Response, error: unknown) {
 export function createAdminAiProjectStoreRouter(
   identityResolver: IdentityResolver,
   service = new AiProjectStoreService(),
+  aiGatewayService: AiGatewayService | null = null,
 ) {
   const router = Router();
+  const agentRunner = new AiAgentRunnerService(aiGatewayService);
 
   router.get("/projects", async (req, res) => {
     try {
@@ -70,6 +83,28 @@ export function createAdminAiProjectStoreRouter(
   router.get("/versions/:versionId/models", async (req, res) => {
     try {
       res.json(await service.loadModels(await identityResolver(req), req.params.versionId));
+    } catch (error) {
+      sendError(res, error);
+    }
+  });
+
+  router.patch("/agents/:agentId/review", async (req, res) => {
+    try {
+      res.json(await agentRunner.reviewAgent(await identityResolver(req), req.params.agentId, {
+        action: req.body?.action,
+      }));
+    } catch (error) {
+      sendError(res, error);
+    }
+  });
+
+  router.post("/agents/:agentId/run", async (req, res) => {
+    try {
+      res.status(201).json(await agentRunner.runAgent(await identityResolver(req), req.params.agentId, {
+        modelId: req.body?.modelId,
+        inputText: req.body?.inputText,
+        inputJson: req.body?.inputJson,
+      }));
     } catch (error) {
       sendError(res, error);
     }
