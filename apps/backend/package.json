@@ -16,6 +16,7 @@
     "test:vertex-provider": "tsx scripts/test-vertex-ai-provider.ts",
     "test:ai-project-store": "tsx scripts/test-ai-project-store.ts",
     "test:ai-agent-review-run": "tsx scripts/test-ai-agent-review-run.ts",
+    "test:ai-draft-review": "tsx scripts/test-ai-draft-review.ts",
     "db:migrate": "node scripts/run-migrations.mjs",
     "db:migrate:baseline": "node scripts/run-migrations.mjs --baseline-existing",
     "db:test:migrations": "node scripts/test-migrations.mjs",
