@@ -42,6 +42,8 @@ type AiDocumentRecipeRow = {
   agent_use_case: string | null;
 };
 
+type Queryable = Pick<Pool, "query">;
+
 const MAX_TITLE_LENGTH = 180;
 const MAX_TEXT_LENGTH = 5000;
 const MAX_SHORT_TEXT_LENGTH = 500;
@@ -182,7 +184,7 @@ function slugify(value: string) {
   return slug || "ai-recipe";
 }
 
-async function uniqueSlug(db: Pool, requested: string | null, title: string) {
+async function uniqueSlug(db: Queryable, requested: string | null, title: string) {
   const base = slugify(requested || title);
   for (let suffix = 0; suffix < 100; suffix += 1) {
     const candidate = suffix === 0 ? base : `${base}-${suffix + 1}`;
@@ -232,7 +234,7 @@ export class AiRecipeDraftService {
       }
 
       const payload = parsePayload(document.json_payload);
-      const slug = await uniqueSlug(client as unknown as Pool, payload.slug, payload.title);
+      const slug = await uniqueSlug(client, payload.slug, payload.title);
       const recipeResult = await client.query(
         `INSERT INTO recipes (
            slug,title,short_description,description,related_brand,cover_image_url,
@@ -254,8 +256,8 @@ export class AiRecipeDraftService {
 
       for (const [index, ingredient] of payload.ingredients.entries()) {
         await client.query(
-          `INSERT INTO recipe_ingredients (recipe_id,product_name,name,quantity,unit,note,optional,sort_order)
-           VALUES ($1,$2,$2,$3,$4,$5,$6,$7)`,
+          `INSERT INTO recipe_ingredients (recipe_id,product_name,quantity,unit,note,optional,sort_order)
+           VALUES ($1,$2,$3,$4,$5,$6,$7)`,
           [
             recipe.id,
             ingredient.name,
