@@ -1,4 +1,4 @@
-import type { Pool } from "pg";
+import type { Pool, QueryResult } from "pg";
 import { getDb } from "../../db/pool";
 import type { RequestIdentity, StaffIdentity } from "../auth/auth.identity";
 import { AiProjectStoreError } from "./ai-project-store.service";
@@ -42,7 +42,9 @@ type AiDocumentRecipeRow = {
   agent_use_case: string | null;
 };
 
-type Queryable = Pick<Pool, "query">;
+type Queryable = {
+  query: <T extends Record<string, unknown> = Record<string, unknown>>(text: string, values?: unknown[]) => Promise<QueryResult<T>>;
+};
 
 const MAX_TITLE_LENGTH = 180;
 const MAX_TEXT_LENGTH = 5000;
