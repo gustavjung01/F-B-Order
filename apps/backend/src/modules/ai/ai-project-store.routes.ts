@@ -4,7 +4,7 @@ import { AiGatewayError, type AiGatewayService } from "./ai-gateway.service";
 import { AiProjectSchemaError } from "./ai-project-schema";
 import { AiAgentRunnerService } from "./ai-agent-runner.service";
 import { AiDraftReviewService } from "./ai-draft-review.service";
-import { AiRecipeDraftService } from "./ai-recipe-draft.service";
+import { AiRecipeDraftCoreService } from "./ai-recipe-draft-core.service";
 import { AiProjectStoreError, AiProjectStoreService } from "./ai-project-store.service";
 
 type IdentityResolver = (req: Request) => Promise<RequestIdentity>;
@@ -47,7 +47,7 @@ export function createAdminAiProjectStoreRouter(
   const router = Router();
   const agentRunner = new AiAgentRunnerService(aiGatewayService);
   const draftReview = new AiDraftReviewService();
-  const recipeDraft = new AiRecipeDraftService();
+  const recipeDraft = new AiRecipeDraftCoreService();
 
   router.get("/projects", async (req, res) => {
     try {
