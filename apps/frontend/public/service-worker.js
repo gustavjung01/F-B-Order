@@ -20,6 +20,7 @@ const APP_CACHE_PREFIXES = [
   "bep-si-fb-assets-",
 ];
 const IMMUTABLE_ASSET_PREFIX = "/_next/static/";
+const NAVIGATION_TIMEOUT_MS = 8000;
 const AUTH_ROUTE_RE = /^\/(?:sign-in|sign-up)(?:\/|$)/;
 const CLERK_ROUTE_RE = /^\/__clerk(?:\/|$)/;
 
@@ -31,6 +32,21 @@ function isAppCache(cacheName) {
 
 function failedFetchResponse() {
   return Response.error();
+}
+
+function fetchWithTimeout(request, timeoutMs) {
+  if (typeof AbortController === "undefined") {
+    return fetch(request, { cache: "no-store" });
+  }
+
+  var controller = new AbortController();
+  var timeout = setTimeout(function () {
+    controller.abort();
+  }, timeoutMs);
+
+  return fetch(request, { cache: "no-store", signal: controller.signal }).finally(function () {
+    clearTimeout(timeout);
+  });
 }
 
 self.addEventListener("install", function (event) {
@@ -136,7 +152,7 @@ function navigationFromNetwork(event) {
   return Promise.resolve(event.preloadResponse)
     .then(function (preloaded) {
       if (preloaded) return preloaded;
-      return fetch(event.request, { cache: "no-store" });
+      return fetchWithTimeout(event.request, NAVIGATION_TIMEOUT_MS);
     })
     .catch(function () {
       return caches.match(OFFLINE_URL).then(function (offline) {

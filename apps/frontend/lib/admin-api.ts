@@ -1,4 +1,5 @@
 import { API_URL } from "./api";
+import { fetchWithTimeout } from "@/lib/fetch-with-timeout";
 
 export class AdminApiError extends Error {
   readonly status: number;
@@ -23,10 +24,12 @@ export async function adminApiFetch<T>(
   headers.set("Authorization", `Bearer ${token}`);
   if (options.body !== undefined) headers.set("Content-Type", "application/json");
 
-  const response = await fetch(`${API_URL}${path}`, {
+  const response = await fetchWithTimeout(`${API_URL}${path}`, {
     ...options,
     headers,
     cache: "no-store",
+    timeoutMs: 12_000,
+    timeoutMessage: "Admin API phản hồi quá chậm, vui lòng thử lại.",
   });
   const raw = await response.text();
   let payload: any = null;

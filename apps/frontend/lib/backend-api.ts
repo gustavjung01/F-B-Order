@@ -1,3 +1,5 @@
+import { FetchTimeoutError, fetchWithTimeout } from "@/lib/fetch-with-timeout";
+
 function normalizeBackendApiBaseUrl(value: string): string {
   const normalized = value.trim().replace(/\/+$/, "");
   return normalized.replace(/\/api$/i, "");
@@ -32,12 +34,36 @@ export async function proxyBackendJson(
   headers.set("accept", "application/json");
   if (options.body !== undefined) headers.set("content-type", "application/json");
 
-  const upstream = await fetch(getBackendApiUrl(pathname), {
-    method: options.method || "GET",
-    body: options.body,
-    cache: "no-store",
-    headers,
-  });
+  let upstream: Response;
+  try {
+    upstream = await fetchWithTimeout(getBackendApiUrl(pathname), {
+      method: options.method || "GET",
+      body: options.body,
+      cache: "no-store",
+      headers,
+      timeoutMs: 12_000,
+      timeoutMessage: "Backend upstream không phản hồi kịp thời.",
+    });
+  } catch (error) {
+    if (error instanceof FetchTimeoutError) {
+      return new Response(
+        JSON.stringify({
+          error: "UPSTREAM_TIMEOUT",
+          message: error.message,
+        }),
+        {
+          status: 504,
+          headers: {
+            "content-type": "application/json; charset=utf-8",
+            "x-bepsi-upstream-path": pathname,
+            "x-bepsi-upstream-status": "504",
+          },
+        },
+      );
+    }
+
+    throw error;
+  }
 
   const body = await upstream.text();
   return new Response(body, {

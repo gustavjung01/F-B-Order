@@ -1,3 +1,5 @@
+import { fetchWithTimeout } from "@/lib/fetch-with-timeout";
+
 export const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
 
 type ApiOptions = RequestInit & {
@@ -12,9 +14,11 @@ export async function apiFetch<T>(path: string, options: ApiOptions = {}): Promi
     headers.set("Authorization", `Bearer ${options.token}`);
   }
 
-  const response = await fetch(`${API_URL}${path}`, {
+  const response = await fetchWithTimeout(`${API_URL}${path}`, {
     ...options,
     headers,
+    timeoutMs: 10_000,
+    timeoutMessage: "API phản hồi quá chậm, vui lòng thử lại.",
   });
 
   if (!response.ok) {

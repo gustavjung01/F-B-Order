@@ -2,6 +2,7 @@ import { auth } from "@clerk/nextjs/server";
 import { enrichCatalogV2Variant } from "@/data/catalog-v2/commercial-supplements";
 import type { CatalogV2ListResponse } from "@/data/catalog-v2/product-model";
 import { getBackendApiUrl } from "@/lib/backend-api";
+import { fetchWithTimeout } from "@/lib/fetch-with-timeout";
 
 const INITIAL_CATALOG_PAGE_SIZE = 40;
 
@@ -12,8 +13,10 @@ export async function fetchInitialCatalogV2(): Promise<CatalogV2ListResponse> {
   url.searchParams.set("limit", String(INITIAL_CATALOG_PAGE_SIZE));
   url.searchParams.set("offset", "0");
 
-  const response = await fetch(url, {
+  const response = await fetchWithTimeout(url, {
     cache: "no-store",
+    timeoutMs: 8_000,
+    timeoutMessage: "Backend danh mục phản hồi quá chậm.",
     headers: {
       accept: "application/json",
       ...(token ? { authorization: `Bearer ${token}` } : {}),

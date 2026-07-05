@@ -10,8 +10,17 @@ const desktopQuery = "(min-width: 768px)";
 
 function subscribe(callback: () => void) {
   const media = window.matchMedia(desktopQuery);
-  media.addEventListener("change", callback);
-  return () => media.removeEventListener("change", callback);
+  if (typeof media.addEventListener === "function") {
+    media.addEventListener("change", callback);
+    return () => media.removeEventListener("change", callback);
+  }
+
+  if (typeof media.addListener === "function") {
+    media.addListener(callback);
+    return () => media.removeListener(callback);
+  }
+
+  return () => {};
 }
 
 function getSnapshot() {

@@ -55,12 +55,13 @@ test("generator writes matching build IDs and the release lifecycle invariants",
     assert.match(worker, new RegExp(`const BUILD_ID = ${JSON.stringify(buildId).replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`));
     assert.match(worker, /"bep-si-fb-pwa-" \+ BUILD_ID/);
     assert.match(worker, /"bep-si-fb-assets-" \+ BUILD_ID/);
+    assert.match(worker, /NAVIGATION_TIMEOUT_MS/);
+    assert.match(worker, /fetchWithTimeout\(event\.request, NAVIGATION_TIMEOUT_MS\)/);
     assert.match(worker, /self\.skipWaiting\(\)/);
     assert.match(worker, /self\.clients\.claim\(\)/);
     assert.match(worker, /fetch\(event\.request, \{ cache: "no-store" \}\)/);
     assert.match(worker, /\/_next\/static\//);
     assert.doesNotMatch(worker, /bep-si-fb-(?:pwa|runtime)-v12/);
-    assert.doesNotMatch(worker, /NAVIGATION_TIMEOUT_MS/);
     assert.doesNotMatch(worker, /caches\.match\("\/"\)/);
   } finally {
     rmSync(temporaryPublicDir, { recursive: true, force: true });

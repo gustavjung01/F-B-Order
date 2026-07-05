@@ -4,6 +4,7 @@ import type {
   CatalogV2ListResponse,
   CatalogV2OptionGroup,
 } from "@/data/catalog-v2/product-model";
+import { fetchWithTimeout } from "@/lib/fetch-with-timeout";
 
 export class CatalogV2RequestError extends Error {
   status: number;
@@ -70,7 +71,7 @@ async function requestJson<T>(url: string): Promise<T> {
   const existing = inFlightRequests.get(url);
   if (existing) return existing as Promise<T>;
 
-  const request = fetch(url, { cache: "no-store" })
+  const request = fetchWithTimeout(url, { cache: "no-store", timeoutMs: 10_000 })
     .then(async (response) => {
       const payload = (await response.json().catch(() => ({}))) as {
         error?: string;
