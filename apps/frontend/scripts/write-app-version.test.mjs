@@ -57,9 +57,12 @@ test("generator writes matching build IDs and the release lifecycle invariants",
     assert.match(worker, /"bep-si-fb-assets-" \+ BUILD_ID/);
     assert.match(worker, /NAVIGATION_TIMEOUT_MS/);
     assert.match(worker, /fetchWithTimeout\(event\.request, NAVIGATION_TIMEOUT_MS\)/);
+    assert.match(worker, /function navigationFromNetwork\(event\)/);
     assert.match(worker, /self\.skipWaiting\(\)/);
     assert.match(worker, /self\.clients\.claim\(\)/);
     assert.match(worker, /fetch\(event\.request, \{ cache: "no-store" \}\)/);
+    assert.match(worker, /Response\.error\(\)/);
+    assert.match(worker, /\/offline\.html/);
     assert.match(worker, /\/_next\/static\//);
     assert.doesNotMatch(worker, /bep-si-fb-(?:pwa|runtime)-v12/);
     assert.doesNotMatch(worker, /caches\.match\("\/"\)/);
