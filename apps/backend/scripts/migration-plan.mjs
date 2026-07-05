@@ -8,7 +8,8 @@ export const MIGRATION_FILES = Object.freeze([
   "db/migrations/007_catalog_v2_variants.sql",
   "db/migrations/008_catalog_v2_cart_identity.sql",
   "db/migrations/009_catalog_groups_and_choices.sql",
-  "db/migrations/010_ai_gateway_schema.sql"
+  "db/migrations/010_ai_gateway_schema.sql",
+  "db/migrations/011_ai_agent_builder.sql"
 ]);
 
 export const BASELINE_MIGRATION_FILES = Object.freeze([

@@ -2,6 +2,7 @@ import { clerkMiddleware } from "@clerk/express";
 import cors from "cors";
 import express from "express";
 import helmet from "helmet";
+import { createAgentBuilderRouter } from "./modules/agent-builder/agent-builder.routes";
 import { createAdminCustomersRouter } from "./modules/admin/admin-customers.routes";
 import { createAdminAiGatewayRouter } from "./modules/ai/ai-gateway.routes";
 import type { AiGatewayService } from "./modules/ai/ai-gateway.service";
@@ -83,6 +84,7 @@ export function createApp(config: AppConfig) {
     app.use("/api/orders", createOrderEntryRouter(resolveRequestIdentity));
     app.use("/api/customer/orders", createCustomerOrdersRouter(resolveRequestIdentity));
     app.use("/api/admin/customers", createAdminCustomersRouter(resolveRequestIdentity));
+    app.use("/api/admin/agent-builder", createAgentBuilderRouter(resolveRequestIdentity));
     app.use("/api/admin/orders", createAdminOrdersRouter(resolveRequestIdentity));
     if (config.aiGatewayService) {
       app.use("/api/admin/ai", createAdminAiGatewayRouter(resolveRequestIdentity, config.aiGatewayService));
@@ -102,6 +104,7 @@ export function createApp(config: AppConfig) {
     app.use("/api/orders", clerkUnavailable);
     app.use("/api/customer/orders", clerkUnavailable);
     app.use("/api/admin/customers", clerkUnavailable);
+    app.use("/api/admin/agent-builder", clerkUnavailable);
     app.use("/api/admin/orders", clerkUnavailable);
     app.use("/api/admin/ai", clerkUnavailable);
   }
