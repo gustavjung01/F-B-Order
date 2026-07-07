@@ -4,6 +4,8 @@ import type { ReactNode } from "react";
 const adminLinks = [
   { href: "/admin/orders", label: "Đơn hàng", icon: "📋" },
   { href: "/admin/customers", label: "Khách sỉ", icon: "🏪" },
+  { href: "/admin/recipes", label: "Công thức", icon: "🧪" },
+  { href: "/admin/recipes/scale", label: "Scale công thức", icon: "⚖️" },
 ];
 
 type AdminShellProps = {
