@@ -22,6 +22,21 @@ CREATE TABLE IF NOT EXISTS recipe_versions (
     CHECK (workflow_status IN ('draft', 'in_review', 'changes_requested', 'approved', 'published'))
 );
 
+ALTER TABLE recipe_versions
+  ADD COLUMN IF NOT EXISTS version_no INT,
+  ADD COLUMN IF NOT EXISTS workflow_status TEXT NOT NULL DEFAULT 'draft',
+  ADD COLUMN IF NOT EXISTS change_note TEXT,
+  ADD COLUMN IF NOT EXISTS reviewed_by_staff_id UUID REFERENCES staff_users(id) ON DELETE SET NULL,
+  ADD COLUMN IF NOT EXISTS reviewed_at TIMESTAMPTZ,
+  ADD COLUMN IF NOT EXISTS review_note TEXT,
+  ADD COLUMN IF NOT EXISTS published_by_staff_id UUID REFERENCES staff_users(id) ON DELETE SET NULL,
+  ADD COLUMN IF NOT EXISTS published_at TIMESTAMPTZ,
+  ADD COLUMN IF NOT EXISTS created_at TIMESTAMPTZ NOT NULL DEFAULT now();
+
+UPDATE recipe_versions
+SET version_no = COALESCE(version_no, version_number, 1)
+WHERE version_no IS NULL;
+
 ALTER TABLE recipes
   ADD COLUMN IF NOT EXISTS current_version_id UUID REFERENCES recipe_versions(id) ON DELETE SET NULL,
   ADD COLUMN IF NOT EXISTS published_version_id UUID REFERENCES recipe_versions(id) ON DELETE SET NULL,
