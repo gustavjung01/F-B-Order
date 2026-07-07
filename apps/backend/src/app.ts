@@ -14,6 +14,7 @@ import { createAdminOrdersRouter } from "./modules/orders/admin-orders.routes";
 import { createCustomerOrdersRouter } from "./modules/orders/customer-orders.routes";
 import { createOrderEntryRouter } from "./modules/orders/orders-entry.routes";
 import { createAdminRecipesRouter } from "./modules/recipes/recipe-admin.routes";
+import { createPublicRecipesRouter } from "./modules/recipes/recipe-public.routes";
 
 export type AppConfig = {
   corsOrigin: string;
@@ -64,6 +65,7 @@ export function createApp(config: AppConfig) {
   app.use("/api/catalog-v2", createCatalogV2ListRouter(identityResolver));
   app.use("/api/catalog-v2", createCatalogV2DetailRouter(identityResolver));
   app.use("/api/catalog", createCatalogRouter(identityResolver));
+  app.use("/api/recipes", createPublicRecipesRouter());
 
   if (clerkEnabled) {
     app.use("/catalog/cart", createCatalogV2ChoiceCartRouter(resolveRequestIdentity));

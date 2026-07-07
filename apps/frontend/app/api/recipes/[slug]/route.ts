@@ -1,15 +1,8 @@
-import { NextResponse } from "next/server";
-import { RECIPES_PUBLIC_STATUS } from "@/data/recipes/public-status";
+import { proxyBackendJson } from "@/lib/backend-api";
 
 export const dynamic = "force-dynamic";
 
-export async function GET() {
-  return NextResponse.json(
-    {
-      error: "RECIPE_FEATURE_DELAYED",
-      featureStatus: RECIPES_PUBLIC_STATUS,
-      message: "Tính năng Công thức đang được phát triển.",
-    },
-    { status: 404 },
-  );
+export async function GET(_request: Request, context: { params: Promise<{ slug: string }> }) {
+  const { slug } = await context.params;
+  return proxyBackendJson(`/api/recipes/${encodeURIComponent(slug)}`);
 }

@@ -10,7 +10,7 @@ if (oneSignalEnabled) {
   importScripts("https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.sw.js");
 }
 
-const BUILD_ID = "e3784d5777b5-source-20260626";
+const BUILD_ID = "bbb5bab5efc3-1783439929775-8022101102f5";
 const PRECACHE = "bep-si-fb-pwa-" + BUILD_ID;
 const ASSET_CACHE = "bep-si-fb-assets-" + BUILD_ID;
 const OFFLINE_URL = "/offline.html";
