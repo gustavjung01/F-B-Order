@@ -128,7 +128,7 @@ import pg from "pg";
 
 const { Pool } = pg;
 const connectionString = process.env.BEPSI_DATABASE_URL || process.env.DATABASE_URL;
-const pool = new Pool({ connectionString, max: 1 });
+const pool = new Pool({ connectionString, max: 1, ssl: { rejectUnauthorized: false } });
 try {
   const exists = await pool.query(`
     SELECT to_regclass('public.schema_migrations') IS NOT NULL AS exists
