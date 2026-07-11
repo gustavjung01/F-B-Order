@@ -123,7 +123,7 @@ corepack pnpm --filter @fb-order/backend db:audit:schema > "${BACKUP_DIR}/schema
 log "Verifying the audited Phase 1 production contract"
 corepack pnpm db:verify:order-contract
 
-LEDGER_ROW_COUNT="$(node --input-type=module <<'NODE'
+LEDGER_ROW_COUNT="$(corepack pnpm --filter @fb-order/backend exec node --input-type=module <<'NODE'
 import pg from "pg";
 
 const { Pool } = pg;
