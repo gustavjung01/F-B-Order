@@ -1,61 +1,37 @@
-﻿"use client";
+"use client";
 
 import { useUser } from "@clerk/nextjs";
 import { useEffect, useState } from "react";
 
-type NotificationStatus = "unsupported" | "default" | "granted" | "denied";
-
 declare global {
   interface Window {
-    OneSignal?: { login?: (id: string) => Promise<void> | void };
-    requestOneSignalNotificationPermission?: () => Promise<NotificationStatus>;
+    OneSignal?: {
+      login?: (id: string) => Promise<void> | void;
+    };
   }
-}
-
-function readNotificationStatus(): NotificationStatus {
-  if (typeof window === "undefined" || typeof Notification === "undefined") return "unsupported";
-  return Notification.permission;
-}
-
-function getStatusLabel(status: NotificationStatus) {
-  if (status === "granted") return "Đã bật";
-  if (status === "denied") return "Bị chặn";
-  if (status === "unsupported") return "Không hỗ trợ";
-  return "Chưa bật";
 }
 
 export function NotificationBell({ compact = false }: { compact?: boolean }) {
   const { user } = useUser();
-  const [status, setStatus] = useState<NotificationStatus>("default");
+  const [status, setStatus] = useState("Chưa bật");
 
   useEffect(() => {
-    setStatus(readNotificationStatus());
+    if (typeof Notification === "undefined") return;
+    setStatus(Notification.permission === "granted" ? "Đã bật" : Notification.permission === "denied" ? "Bị chặn" : "Chưa bật");
   }, []);
 
   async function enable() {
-    if (window.OneSignal?.login && user?.id) {
+    const permission = await Notification.requestPermission();
+    setStatus(permission === "granted" ? "Đã bật" : permission === "denied" ? "Bị chặn" : "Chưa bật");
+    if (permission === "granted" && user?.id && window.OneSignal?.login) {
       await window.OneSignal.login(user.id);
     }
-
-    const nextStatus = await window.requestOneSignalNotificationPermission?.();
-    setStatus(nextStatus ?? readNotificationStatus());
   }
 
-  const label = getStatusLabel(status);
-
   return (
-    <button
-      type="button"
-      title={`Thông báo: ${label}`}
-      onClick={enable}
-      className={
-        compact
-          ? "grid h-9 w-9 place-items-center rounded-full bg-white text-orange-500 shadow-sm ring-1 ring-[#eee7dc]"
-          : "inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-semibold text-orange-500 shadow-sm ring-1 ring-[#eee7dc]"
-      }
-    >
+    <button type="button" onClick={enable} title={status} className={compact ? "grid h-9 w-9 place-items-center rounded-full bg-white" : "inline-flex items-center gap-2 rounded-full bg-white px-4 py-2"}>
       <span aria-hidden="true">🔔</span>
-      {!compact && <span>{label}</span>}
+      {!compact && <span>{status}</span>}
     </button>
   );
 }
