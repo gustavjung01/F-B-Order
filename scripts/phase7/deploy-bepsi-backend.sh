@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+﻿#!/usr/bin/env bash
 set -Eeuo pipefail
 
 TARGET_SHA="${1:-}"
@@ -30,14 +30,14 @@ for command in git flock rsync corepack node curl pg_dump sudo; do
   command -v "$command" >/dev/null 2>&1 || die "Required command is missing: $command"
 done
 
-[[ -d "${SOURCE_DIR}/.git" ]] || die "Bếp Sỉ source repository is missing: ${SOURCE_DIR}"
-[[ -f "$ENV_FILE" ]] || die "Bếp Sỉ environment file is missing: ${ENV_FILE}"
+[[ -d "${SOURCE_DIR}/.git" ]] || die "Báº¿p Sá»‰ source repository is missing: ${SOURCE_DIR}"
+[[ -f "$ENV_FILE" ]] || die "Báº¿p Sá»‰ environment file is missing: ${ENV_FILE}"
 [[ -L "$CURRENT_LINK" ]] || die "${CURRENT_LINK} must be a release symlink before production deployment."
 
 SOURCE_REAL="$(readlink -f "$SOURCE_DIR")"
 CURRENT_REAL="$(readlink -f "$CURRENT_LINK")"
-[[ "$SOURCE_REAL" == "$APP_ROOT"/* ]] || die "Source path escaped Bếp Sỉ root."
-[[ "$CURRENT_REAL" == "$APP_ROOT"/* ]] || die "Current release escaped Bếp Sỉ root."
+[[ "$SOURCE_REAL" == "$APP_ROOT"/* ]] || die "Source path escaped Báº¿p Sá»‰ root."
+[[ "$CURRENT_REAL" == "$APP_ROOT"/* ]] || die "Current release escaped Báº¿p Sá»‰ root."
 [[ "$SOURCE_REAL" != *"/vlgn"* && "$SOURCE_REAL" != *"/tocviet"* ]] || die "Refusing to touch another application."
 [[ "$CURRENT_REAL" != *"/vlgn"* && "$CURRENT_REAL" != *"/tocviet"* ]] || die "Refusing to touch another application."
 
@@ -48,7 +48,7 @@ SERVICE_UNIT="$(sudo systemctl cat "$SERVICE_NAME")"
 printf '%s' "$SERVICE_UNIT" | grep -Fq "$CURRENT_LINK" || die "${SERVICE_NAME} is not configured to run from ${CURRENT_LINK}."
 printf '%s' "$SERVICE_UNIT" | grep -Eiq 'vlgn|tocviet' && die "Service unit contains another application path."
 
-log "Preparing writable Bếp Sỉ deployment directories"
+log "Preparing writable Báº¿p Sá»‰ deployment directories"
 sudo install -d -o "$DEPLOY_USER" -g "$DEPLOY_GROUP" -m 0750 "$RELEASES_DIR"
 sudo install -d -o "$DEPLOY_USER" -g "$DEPLOY_GROUP" -m 0700 "$BACKUP_DIR"
 sudo touch "$LOCK_FILE"
@@ -56,9 +56,9 @@ sudo chown "$DEPLOY_USER:$DEPLOY_GROUP" "$LOCK_FILE"
 sudo chmod 0600 "$LOCK_FILE"
 
 exec 9>"$LOCK_FILE"
-flock -n 9 || die "Another Bếp Sỉ production deployment is running."
+flock -n 9 || die "Another Báº¿p Sá»‰ production deployment is running."
 
-log "Pulling Bếp Sỉ source from origin/main"
+log "Pulling Báº¿p Sá»‰ source from origin/main"
 git -C "$SOURCE_DIR" switch main
 git -C "$SOURCE_DIR" pull --ff-only origin main
 [[ -z "$(git -C "$SOURCE_DIR" status --porcelain)" ]] || die "Source checkout is not clean after pull."
@@ -94,7 +94,7 @@ trap rollback_code ERR
 
 log "Creating production database backup: ${DB_BACKUP}"
 umask 077
-pg_dump \
+/usr/lib/postgresql/17/bin/pg_dump \\
   --dbname="$DATABASE_URL_VALUE" \
   --format=custom \
   --no-owner \
@@ -161,7 +161,7 @@ corepack pnpm catalog:import
 log "Auditing production database after migration and import"
 corepack pnpm --filter @fb-order/backend db:audit:schema > "${BACKUP_DIR}/schema-after-${TIMESTAMP}-${TARGET_SHA:0:12}.json"
 
-log "Switching Bếp Sỉ current release"
+log "Switching Báº¿p Sá»‰ current release"
 sudo ln -sfn "$RELEASE_DIR" "${CURRENT_LINK}.next"
 sudo mv -Tf "${CURRENT_LINK}.next" "$CURRENT_LINK"
 SWITCHED=1
@@ -182,3 +182,4 @@ trap - ERR
 log "Backend production deployment completed at ${TARGET_SHA}."
 log "Database backup: ${DB_BACKUP}"
 log "Previous code release retained at: ${PREVIOUS_TARGET}"
+
