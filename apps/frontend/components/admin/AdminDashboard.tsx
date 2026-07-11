@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useAuth, UserButton } from "@clerk/nextjs";
 import Link from "next/link";
@@ -132,18 +132,18 @@ const orderTransitions: Record<OrderStatus, OrderStatus[]> = {
 };
 
 const statusLabels: Record<string, string> = {
-  pending: "Chờ xử lý",
-  approved: "Đã duyệt",
-  rejected: "Từ chối",
-  confirmed: "Đã xác nhận",
-  processing: "Đang xử lý",
-  shipping: "Đang giao",
-  completed: "Hoàn tất",
-  cancelled: "Đã hủy",
+  pending: "Chá» xá»­ lÃ½",
+  approved: "ÄÃ£ duyá»‡t",
+  rejected: "Tá»« chá»‘i",
+  confirmed: "ÄÃ£ xÃ¡c nháº­n",
+  processing: "Äang xá»­ lÃ½",
+  shipping: "Äang giao",
+  completed: "HoÃ n táº¥t",
+  cancelled: "ÄÃ£ há»§y",
 };
 
 function formatDate(value: string | null | undefined) {
-  if (!value) return "—";
+  if (!value) return "â€”";
   return new Intl.DateTimeFormat("vi-VN", {
     dateStyle: "short",
     timeStyle: "short",
@@ -168,10 +168,10 @@ function statusClass(status: string) {
 
 function errorText(error: unknown) {
   if (error instanceof AdminApiError) {
-    if (error.code === "ADMIN_ACCESS_REQUIRED") return "Tài khoản này không có quyền admin.";
+    if (error.code === "ADMIN_ACCESS_REQUIRED") return "TÃ i khoáº£n nÃ y khÃ´ng cÃ³ quyá»n admin.";
     return `${error.message} (${error.code})`;
   }
-  return error instanceof Error ? error.message : "Có lỗi không xác định.";
+  return error instanceof Error ? error.message : "CÃ³ lá»—i khÃ´ng xÃ¡c Ä‘á»‹nh.";
 }
 
 function StatusBadge({ status }: { status: string }) {
@@ -210,7 +210,7 @@ export function AdminDashboard() {
 
   const token = useCallback(async () => {
     const value = await getToken();
-    if (!value) throw new Error("Không lấy được Clerk token.");
+    if (!value) throw new Error("KhÃ´ng láº¥y Ä‘Æ°á»£c Clerk token.");
     return value;
   }, [getToken]);
 
@@ -265,7 +265,7 @@ export function AdminDashboard() {
     async (status: "approved" | "rejected") => {
       if (!selectedCustomerId) return;
       if (status === "rejected" && !approvalNote.trim()) {
-        setError("Từ chối khách hàng bắt buộc phải có lý do.");
+        setError("Tá»« chá»‘i khÃ¡ch hÃ ng báº¯t buá»™c pháº£i cÃ³ lÃ½ do.");
         return;
       }
       setCustomerSaving(true);
@@ -396,11 +396,11 @@ export function AdminDashboard() {
   );
 
   if (!isLoaded) {
-    return <main className="min-h-screen p-8">Đang tải phiên đăng nhập…</main>;
+    return <main className="min-h-screen p-8">Äang táº£i phiÃªn Ä‘Äƒng nháº­pâ€¦</main>;
   }
 
   if (!isSignedIn) {
-    return <main className="min-h-screen p-8">Bạn cần đăng nhập để mở khu vực quản trị.</main>;
+    return <main className="min-h-screen p-8">Báº¡n cáº§n Ä‘Äƒng nháº­p Ä‘á»ƒ má»Ÿ khu vá»±c quáº£n trá»‹.</main>;
   }
 
   return (
@@ -408,12 +408,12 @@ export function AdminDashboard() {
       <header className="border-b border-slate-200 bg-white px-4 py-4 shadow-sm md:px-8">
         <div className="mx-auto flex max-w-[1600px] items-center justify-between gap-4">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-700">Bếp Sỉ</p>
-            <h1 className="text-2xl font-bold">Admin vận hành</h1>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-700">Báº¿p Sá»‰</p>
+            <h1 className="text-2xl font-bold">Admin váº­n hÃ nh</h1>
           </div>
           <div className="flex items-center gap-3">
-            <a className="text-sm font-medium text-slate-600 hover:text-slate-950" href="/">
-              Về trang bán hàng
+            <NotificationBell />`r`n            <a className="text-sm font-medium text-slate-600 hover:text-slate-950" href="/">
+              Vá» trang bÃ¡n hÃ ng
             </a>
             <UserButton afterSignOutUrl="/" />
           </div>
@@ -439,7 +439,7 @@ export function AdminDashboard() {
             Orders
           </button>
           <Link className="rounded-lg bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50" href="/admin/recipes">
-            Công thức
+            CÃ´ng thá»©c
           </Link>
         </div>
 
@@ -453,23 +453,23 @@ export function AdminDashboard() {
           <section>
             <div className="mb-4 flex flex-wrap items-end gap-3 rounded-xl border border-slate-200 bg-white p-4">
               <label className="grid gap-1 text-sm font-medium">
-                Trạng thái duyệt
+                Tráº¡ng thÃ¡i duyá»‡t
                 <select
                   className="rounded-lg border border-slate-300 bg-white px-3 py-2"
                   value={customerFilter}
                   onChange={(event) => setCustomerFilter(event.target.value as "all" | ApprovalStatus)}
                 >
-                  <option value="all">Tất cả</option>
+                  <option value="all">Táº¥t cáº£</option>
                   <option value="pending">Pending</option>
                   <option value="approved">Approved</option>
                   <option value="rejected">Rejected</option>
                 </select>
               </label>
               <label className="grid min-w-[260px] flex-1 gap-1 text-sm font-medium">
-                Tìm khách hàng
+                TÃ¬m khÃ¡ch hÃ ng
                 <input
                   className="rounded-lg border border-slate-300 px-3 py-2"
-                  placeholder="Tên, cửa hàng, người liên hệ, số điện thoại"
+                  placeholder="TÃªn, cá»­a hÃ ng, ngÆ°á»i liÃªn há»‡, sá»‘ Ä‘iá»‡n thoáº¡i"
                   value={customerSearch}
                   onChange={(event) => setCustomerSearch(event.target.value)}
                   onKeyDown={(event) => {
@@ -482,16 +482,16 @@ export function AdminDashboard() {
                 disabled={customerLoading}
                 onClick={() => void loadCustomers()}
               >
-                Làm mới
+                LÃ m má»›i
               </button>
-              <span className="pb-2 text-sm text-slate-500">{customerTotal} khách hàng</span>
+              <span className="pb-2 text-sm text-slate-500">{customerTotal} khÃ¡ch hÃ ng</span>
             </div>
 
             <div className="grid gap-5 xl:grid-cols-[minmax(420px,0.9fr)_minmax(560px,1.1fr)]">
               <div className="overflow-hidden rounded-xl border border-slate-200 bg-white">
                 <div className="max-h-[72vh] divide-y divide-slate-100 overflow-y-auto">
                   {customers.length === 0 ? (
-                    <p className="p-6 text-sm text-slate-500">Không có khách hàng phù hợp.</p>
+                    <p className="p-6 text-sm text-slate-500">KhÃ´ng cÃ³ khÃ¡ch hÃ ng phÃ¹ há»£p.</p>
                   ) : (
                     customers.map((customer) => (
                       <button
@@ -505,14 +505,14 @@ export function AdminDashboard() {
                           <div>
                             <p className="font-semibold">{customer.shopName || customer.name}</p>
                             <p className="mt-1 text-sm text-slate-600">
-                              {customer.contactName || customer.name} · {customer.phone || "Chưa có SĐT"}
+                              {customer.contactName || customer.name} Â· {customer.phone || "ChÆ°a cÃ³ SÄT"}
                             </p>
                           </div>
                           <StatusBadge status={customer.approvalStatus} />
                         </div>
                         <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-500">
-                          <span>{customer.area || "Chưa có khu vực"}</span>
-                          <span>{customer.userCount} tài khoản</span>
+                          <span>{customer.area || "ChÆ°a cÃ³ khu vá»±c"}</span>
+                          <span>{customer.userCount} tÃ i khoáº£n</span>
                           <span>{formatDate(customer.createdAt)}</span>
                         </div>
                       </button>
@@ -523,7 +523,7 @@ export function AdminDashboard() {
 
               <div className="rounded-xl border border-slate-200 bg-white p-5">
                 {!customerDetail ? (
-                  <p className="text-sm text-slate-500">Chọn một khách hàng để xem và duyệt hồ sơ.</p>
+                  <p className="text-sm text-slate-500">Chá»n má»™t khÃ¡ch hÃ ng Ä‘á»ƒ xem vÃ  duyá»‡t há»“ sÆ¡.</p>
                 ) : (
                   <div className="space-y-6">
                     <div className="flex flex-wrap items-start justify-between gap-3">
@@ -535,24 +535,24 @@ export function AdminDashboard() {
                     </div>
 
                     <dl className="grid gap-3 text-sm sm:grid-cols-2">
-                      <div><dt className="text-slate-500">Người liên hệ</dt><dd className="font-medium">{customerDetail.contactName || customerDetail.name}</dd></div>
-                      <div><dt className="text-slate-500">Điện thoại</dt><dd className="font-medium">{customerDetail.phone || "—"}</dd></div>
-                      <div><dt className="text-slate-500">Địa chỉ</dt><dd className="font-medium">{customerDetail.address || "—"}</dd></div>
-                      <div><dt className="text-slate-500">Khu vực</dt><dd className="font-medium">{customerDetail.area || "—"}</dd></div>
-                      <div><dt className="text-slate-500">Loại hình</dt><dd className="font-medium">{customerDetail.businessType || "—"}</dd></div>
-                      <div><dt className="text-slate-500">Nhóm giá</dt><dd className="font-medium">{customerDetail.priceGroupName || "Chưa gán"}</dd></div>
-                      <div><dt className="text-slate-500">Người duyệt gần nhất</dt><dd className="font-medium">{customerDetail.approvalActorId || "—"}</dd></div>
-                      <div><dt className="text-slate-500">Thời điểm duyệt</dt><dd className="font-medium">{formatDate(customerDetail.approvalDecidedAt)}</dd></div>
+                      <div><dt className="text-slate-500">NgÆ°á»i liÃªn há»‡</dt><dd className="font-medium">{customerDetail.contactName || customerDetail.name}</dd></div>
+                      <div><dt className="text-slate-500">Äiá»‡n thoáº¡i</dt><dd className="font-medium">{customerDetail.phone || "â€”"}</dd></div>
+                      <div><dt className="text-slate-500">Äá»‹a chá»‰</dt><dd className="font-medium">{customerDetail.address || "â€”"}</dd></div>
+                      <div><dt className="text-slate-500">Khu vá»±c</dt><dd className="font-medium">{customerDetail.area || "â€”"}</dd></div>
+                      <div><dt className="text-slate-500">Loáº¡i hÃ¬nh</dt><dd className="font-medium">{customerDetail.businessType || "â€”"}</dd></div>
+                      <div><dt className="text-slate-500">NhÃ³m giÃ¡</dt><dd className="font-medium">{customerDetail.priceGroupName || "ChÆ°a gÃ¡n"}</dd></div>
+                      <div><dt className="text-slate-500">NgÆ°á»i duyá»‡t gáº§n nháº¥t</dt><dd className="font-medium">{customerDetail.approvalActorId || "â€”"}</dd></div>
+                      <div><dt className="text-slate-500">Thá»i Ä‘iá»ƒm duyá»‡t</dt><dd className="font-medium">{formatDate(customerDetail.approvalDecidedAt)}</dd></div>
                     </dl>
 
                     <div className="rounded-xl bg-slate-50 p-4">
                       <label className="grid gap-2 text-sm font-semibold">
-                        Lý do / ghi chú duyệt
+                        LÃ½ do / ghi chÃº duyá»‡t
                         <textarea
                           className="min-h-24 rounded-lg border border-slate-300 bg-white px-3 py-2 font-normal"
                           value={approvalNote}
                           onChange={(event) => setApprovalNote(event.target.value)}
-                          placeholder="Bắt buộc khi từ chối"
+                          placeholder="Báº¯t buá»™c khi tá»« chá»‘i"
                         />
                       </label>
                       <div className="mt-3 flex flex-wrap gap-2">
@@ -574,21 +574,21 @@ export function AdminDashboard() {
                     </div>
 
                     <div>
-                      <h3 className="mb-3 font-bold">Lịch sử duyệt</h3>
+                      <h3 className="mb-3 font-bold">Lá»‹ch sá»­ duyá»‡t</h3>
                       <div className="space-y-3">
                         {customerDetail.approvalLogs.length === 0 ? (
-                          <p className="text-sm text-slate-500">Chưa có thao tác duyệt.</p>
+                          <p className="text-sm text-slate-500">ChÆ°a cÃ³ thao tÃ¡c duyá»‡t.</p>
                         ) : (
                           customerDetail.approvalLogs.map((log) => (
                             <div key={log.id} className="rounded-lg border border-slate-200 p-3 text-sm">
                               <div className="flex flex-wrap items-center gap-2">
-                                <span>{log.fromStatus ? statusLabels[log.fromStatus] : "Khởi tạo"}</span>
-                                <span>→</span>
+                                <span>{log.fromStatus ? statusLabels[log.fromStatus] : "Khá»Ÿi táº¡o"}</span>
+                                <span>â†’</span>
                                 <StatusBadge status={log.toStatus} />
                               </div>
-                              <p className="mt-2 text-slate-700">{log.note || "Không có ghi chú"}</p>
+                              <p className="mt-2 text-slate-700">{log.note || "KhÃ´ng cÃ³ ghi chÃº"}</p>
                               <p className="mt-2 text-xs text-slate-500">
-                                {log.actorName || log.actorId} · {formatDate(log.createdAt)}
+                                {log.actorName || log.actorId} Â· {formatDate(log.createdAt)}
                               </p>
                             </div>
                           ))
@@ -604,13 +604,13 @@ export function AdminDashboard() {
           <section>
             <div className="mb-4 flex flex-wrap items-end gap-3 rounded-xl border border-slate-200 bg-white p-4">
               <label className="grid gap-1 text-sm font-medium">
-                Trạng thái đơn
+                Tráº¡ng thÃ¡i Ä‘Æ¡n
                 <select
                   className="rounded-lg border border-slate-300 bg-white px-3 py-2"
                   value={orderFilter}
                   onChange={(event) => setOrderFilter(event.target.value as "all" | OrderStatus)}
                 >
-                  <option value="all">Tất cả</option>
+                  <option value="all">Táº¥t cáº£</option>
                   {Object.keys(orderTransitions).map((status) => (
                     <option key={status} value={status}>{statusLabels[status] || status}</option>
                   ))}
@@ -621,16 +621,16 @@ export function AdminDashboard() {
                 disabled={orderLoading}
                 onClick={() => void loadOrders()}
               >
-                Làm mới
+                LÃ m má»›i
               </button>
-              <span className="pb-2 text-sm text-slate-500">{orderTotal} đơn hàng</span>
+              <span className="pb-2 text-sm text-slate-500">{orderTotal} Ä‘Æ¡n hÃ ng</span>
             </div>
 
             <div className="grid gap-5 xl:grid-cols-[minmax(420px,0.85fr)_minmax(640px,1.15fr)]">
               <div className="overflow-hidden rounded-xl border border-slate-200 bg-white">
                 <div className="max-h-[72vh] divide-y divide-slate-100 overflow-y-auto">
                   {orders.length === 0 ? (
-                    <p className="p-6 text-sm text-slate-500">Chưa có đơn hàng phù hợp.</p>
+                    <p className="p-6 text-sm text-slate-500">ChÆ°a cÃ³ Ä‘Æ¡n hÃ ng phÃ¹ há»£p.</p>
                   ) : (
                     orders.map((order) => (
                       <button
@@ -648,7 +648,7 @@ export function AdminDashboard() {
                           <StatusBadge status={order.status} />
                         </div>
                         <div className="mt-3 flex items-center justify-between text-sm">
-                          <span className="text-slate-500">{order.itemCount} dòng · {formatDate(order.createdAt)}</span>
+                          <span className="text-slate-500">{order.itemCount} dÃ²ng Â· {formatDate(order.createdAt)}</span>
                           <strong>{formatMoney(order.totalAmount, order.currency)}</strong>
                         </div>
                       </button>
@@ -659,28 +659,28 @@ export function AdminDashboard() {
 
               <div className="rounded-xl border border-slate-200 bg-white p-5">
                 {!orderDetail ? (
-                  <p className="text-sm text-slate-500">Chọn một đơn hàng để xử lý.</p>
+                  <p className="text-sm text-slate-500">Chá»n má»™t Ä‘Æ¡n hÃ ng Ä‘á»ƒ xá»­ lÃ½.</p>
                 ) : (
                   <div className="space-y-6">
                     <div className="flex flex-wrap items-start justify-between gap-3">
                       <div>
                         <h2 className="text-xl font-bold">{orderDetail.orderCode}</h2>
-                        <p className="mt-1 text-sm text-slate-500">Tạo lúc {formatDate(orderDetail.createdAt)}</p>
+                        <p className="mt-1 text-sm text-slate-500">Táº¡o lÃºc {formatDate(orderDetail.createdAt)}</p>
                       </div>
                       <StatusBadge status={orderDetail.status} />
                     </div>
 
                     <div className="grid gap-3 rounded-xl bg-slate-50 p-4 text-sm sm:grid-cols-2">
-                      <div><span className="text-slate-500">Khách hàng</span><p className="font-semibold">{orderDetail.shopName || orderDetail.customerName}</p></div>
-                      <div><span className="text-slate-500">Liên hệ</span><p className="font-semibold">{orderDetail.contactName || orderDetail.customerName} · {orderDetail.customerPhone || "—"}</p></div>
-                      <div><span className="text-slate-500">Tổng tiền</span><p className="font-semibold">{formatMoney(orderDetail.totalAmount, orderDetail.currency)}</p></div>
-                      <div><span className="text-slate-500">Địa chỉ giao</span><p className="font-semibold">{orderDetail.shippingAddress || "Chưa có"}</p></div>
+                      <div><span className="text-slate-500">KhÃ¡ch hÃ ng</span><p className="font-semibold">{orderDetail.shopName || orderDetail.customerName}</p></div>
+                      <div><span className="text-slate-500">LiÃªn há»‡</span><p className="font-semibold">{orderDetail.contactName || orderDetail.customerName} Â· {orderDetail.customerPhone || "â€”"}</p></div>
+                      <div><span className="text-slate-500">Tá»•ng tiá»n</span><p className="font-semibold">{formatMoney(orderDetail.totalAmount, orderDetail.currency)}</p></div>
+                      <div><span className="text-slate-500">Äá»‹a chá»‰ giao</span><p className="font-semibold">{orderDetail.shippingAddress || "ChÆ°a cÃ³"}</p></div>
                     </div>
 
                     <div className="overflow-x-auto">
                       <table className="w-full min-w-[640px] text-sm">
                         <thead className="border-b border-slate-200 text-left text-slate-500">
-                          <tr><th className="py-2">SKU</th><th>Tên</th><th>ĐVT</th><th className="text-right">SL</th><th className="text-right">Đơn giá</th><th className="text-right">Thành tiền</th></tr>
+                          <tr><th className="py-2">SKU</th><th>TÃªn</th><th>ÄVT</th><th className="text-right">SL</th><th className="text-right">ÄÆ¡n giÃ¡</th><th className="text-right">ThÃ nh tiá»n</th></tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100">
                           {orderDetail.items.map((item) => (
@@ -699,9 +699,9 @@ export function AdminDashboard() {
 
                     <div className="grid gap-4 lg:grid-cols-2">
                       <div className="rounded-xl border border-slate-200 p-4">
-                        <h3 className="font-bold">Chuyển trạng thái</h3>
+                        <h3 className="font-bold">Chuyá»ƒn tráº¡ng thÃ¡i</h3>
                         {allowedTransitions.length === 0 ? (
-                          <p className="mt-3 text-sm text-slate-500">Đơn đã ở trạng thái kết thúc.</p>
+                          <p className="mt-3 text-sm text-slate-500">ÄÆ¡n Ä‘Ã£ á»Ÿ tráº¡ng thÃ¡i káº¿t thÃºc.</p>
                         ) : (
                           <div className="mt-3 grid gap-3">
                             <select
@@ -709,14 +709,14 @@ export function AdminDashboard() {
                               value={nextStatus}
                               onChange={(event) => setNextStatus(event.target.value as OrderStatus | "")}
                             >
-                              <option value="">Chọn trạng thái mới</option>
+                              <option value="">Chá»n tráº¡ng thÃ¡i má»›i</option>
                               {allowedTransitions.map((status) => (
                                 <option key={status} value={status}>{statusLabels[status]}</option>
                               ))}
                             </select>
                             <textarea
                               className="min-h-20 rounded-lg border border-slate-300 px-3 py-2"
-                              placeholder="Ghi chú chuyển trạng thái"
+                              placeholder="Ghi chÃº chuyá»ƒn tráº¡ng thÃ¡i"
                               value={statusNote}
                               onChange={(event) => setStatusNote(event.target.value)}
                             />
@@ -725,26 +725,26 @@ export function AdminDashboard() {
                               disabled={orderSaving || !nextStatus}
                               onClick={() => void updateStatus()}
                             >
-                              Cập nhật trạng thái
+                              Cáº­p nháº­t tráº¡ng thÃ¡i
                             </button>
                           </div>
                         )}
                       </div>
 
                       <div className="rounded-xl border border-slate-200 p-4">
-                        <h3 className="font-bold">Ghi chú nội bộ</h3>
+                        <h3 className="font-bold">Ghi chÃº ná»™i bá»™</h3>
                         <textarea
                           className="mt-3 min-h-28 w-full rounded-lg border border-slate-300 px-3 py-2"
                           value={internalNote}
                           onChange={(event) => setInternalNote(event.target.value)}
-                          placeholder="Chỉ admin/staff nội bộ nhìn thấy"
+                          placeholder="Chá»‰ admin/staff ná»™i bá»™ nhÃ¬n tháº¥y"
                         />
                         <button
                           className="mt-3 rounded-lg bg-emerald-700 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
                           disabled={orderSaving}
                           onClick={() => void saveInternalNote()}
                         >
-                          Lưu ghi chú
+                          LÆ°u ghi chÃº
                         </button>
                       </div>
                     </div>
@@ -755,13 +755,13 @@ export function AdminDashboard() {
                         {orderDetail.statusLogs.map((log) => (
                           <div key={log.id} className="rounded-lg border border-slate-200 p-3 text-sm">
                             <div className="flex flex-wrap items-center gap-2">
-                              <span>{log.fromStatus ? statusLabels[log.fromStatus] : "Khởi tạo"}</span>
-                              <span>→</span>
+                              <span>{log.fromStatus ? statusLabels[log.fromStatus] : "Khá»Ÿi táº¡o"}</span>
+                              <span>â†’</span>
                               <StatusBadge status={log.toStatus} />
                             </div>
-                            <p className="mt-2 text-slate-700">{log.note || "Không có ghi chú"}</p>
+                            <p className="mt-2 text-slate-700">{log.note || "KhÃ´ng cÃ³ ghi chÃº"}</p>
                             <p className="mt-2 text-xs text-slate-500">
-                              {log.actorName || log.actorId} ({log.actorType}) · {formatDate(log.createdAt)}
+                              {log.actorName || log.actorId} ({log.actorType}) Â· {formatDate(log.createdAt)}
                             </p>
                           </div>
                         ))}
@@ -770,13 +770,13 @@ export function AdminDashboard() {
 
                     {orderDetail.internalNoteLogs.length > 0 ? (
                       <div>
-                        <h3 className="mb-3 font-bold">Lịch sử ghi chú nội bộ</h3>
+                        <h3 className="mb-3 font-bold">Lá»‹ch sá»­ ghi chÃº ná»™i bá»™</h3>
                         <div className="space-y-2 text-sm">
                           {orderDetail.internalNoteLogs.map((log) => (
                             <div key={log.id} className="rounded-lg bg-slate-50 p-3">
-                              <p>{log.newNote || "Đã xóa ghi chú"}</p>
+                              <p>{log.newNote || "ÄÃ£ xÃ³a ghi chÃº"}</p>
                               <p className="mt-1 text-xs text-slate-500">
-                                {log.actorName || log.actorId} · {formatDate(log.createdAt)}
+                                {log.actorName || log.actorId} Â· {formatDate(log.createdAt)}
                               </p>
                             </div>
                           ))}
@@ -793,3 +793,4 @@ export function AdminDashboard() {
     </main>
   );
 }
+
