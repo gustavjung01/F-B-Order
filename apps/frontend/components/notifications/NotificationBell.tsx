@@ -33,9 +33,7 @@ export function NotificationBell({ compact = false }: { compact?: boolean }) {
   }, []);
 
   async function enable() {
-    if (!user) return;
-
-    if (window.OneSignal?.login) {
+    if (window.OneSignal?.login && user?.id) {
       await window.OneSignal.login(user.id);
     }
 

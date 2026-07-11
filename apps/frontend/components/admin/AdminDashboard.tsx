@@ -4,6 +4,7 @@ import { useAuth, UserButton } from "@clerk/nextjs";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { AdminApiError, adminApiFetch } from "@/lib/admin-api";
+import { NotificationBell } from "@/components/notifications/NotificationBell";
 
 type ApprovalStatus = "pending" | "approved" | "rejected";
 type OrderStatus =
