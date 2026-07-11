@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { NotificationBell } from "@/components/notifications/NotificationBell";
 
 const adminLinks = [
   { href: "/admin/orders", label: "Đơn hàng", icon: "📋" },
@@ -28,6 +29,7 @@ export function AdminShell({ title, subtitle, children }: AdminShellProps) {
               <h1 className="mt-4 text-[28px] font-black leading-tight tracking-tight md:text-5xl">{title}</h1>
               {subtitle ? <p className="mt-2 max-w-2xl text-[14px] font-bold leading-6 text-slate-300 md:text-base">{subtitle}</p> : null}
             </div>
+            <NotificationBell />
             <nav className="flex gap-2 overflow-x-auto [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               {adminLinks.map((link) => (
                 <Link key={link.href} href={link.href} className="inline-flex shrink-0 items-center gap-2 rounded-[16px] bg-white px-4 py-3 text-[13px] font-black text-slate-950 shadow-[0_12px_26px_rgba(0,0,0,0.16)] ring-1 ring-white/70 active:translate-y-px">

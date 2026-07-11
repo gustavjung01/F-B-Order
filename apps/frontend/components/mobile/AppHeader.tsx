@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import { NotificationBell } from "@/components/notifications/NotificationBell";
 
 export function AppHeader() {
   const [hidden, setHidden] = useState(false);

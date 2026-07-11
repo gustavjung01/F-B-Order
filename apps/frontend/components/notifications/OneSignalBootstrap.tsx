@@ -1,6 +1,7 @@
-"use client";
+﻿"use client";
 
 import { useEffect } from "react";
+import { useUser } from "@clerk/nextjs";
 
 type NotificationPermissionState = "default" | "denied" | "granted" | "unsupported";
 
@@ -16,6 +17,7 @@ type OneSignalNotifications = {
 };
 
 type OneSignalClient = {
+  login?: (externalId: string) => Promise<void> | void;
   init: (options: {
     appId: string;
     serviceWorkerPath?: string;
@@ -58,6 +60,7 @@ async function logOneSignalState(OneSignal: OneSignalClient, label: string) {
 }
 
 export function OneSignalBootstrap({ appId, enabled }: OneSignalBootstrapProps) {
+  const { user } = useUser();
   useEffect(() => {
     if (!enabled || !appId) return;
 
@@ -99,6 +102,10 @@ export function OneSignalBootstrap({ appId, enabled }: OneSignalBootstrapProps) 
 
             return Notification.permission;
           };
+
+          if (user?.id && OneSignal.login) {
+            await OneSignal.login(user.id);
+          }
 
           if (!cancelled) {
             await logOneSignalState(OneSignal, "initialized");
@@ -143,7 +150,10 @@ export function OneSignalBootstrap({ appId, enabled }: OneSignalBootstrapProps) 
         script.parentNode.removeChild(script);
       }
     };
-  }, [appId, enabled]);
+  }, [appId, enabled, user?.id]);
 
   return null;
 }
+
+
+

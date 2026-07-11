@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { AuthControls } from "@/components/auth/AuthControls";
+import { NotificationBell } from "@/components/notifications/NotificationBell";
 import { BrandLogo } from "@/components/brand/BrandLogo";
 import { APP_NAV_ITEMS, type AppNavKey } from "@/components/navigation/app-navigation";
 
@@ -26,7 +27,7 @@ export function DesktopHeader({ active }: { active: AppNavKey }) {
           })}
         </nav>
 
-        <AuthControls />
+        <div className="flex items-center gap-3"><NotificationBell /><AuthControls /></div>
       </div>
     </header>
   );
