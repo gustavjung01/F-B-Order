@@ -3,6 +3,7 @@ import type { Pool, PoolClient } from "pg";
 import { getDb } from "../../db/pool";
 import type { CustomerIdentity, StaffIdentity } from "../auth/auth.identity";
 import { validateOrderProductAccess } from "../catalog/order-access";
+import { notifyOrderStatusChanged, notifyStaffNewOrder, runPushTask } from "../notifications/onesignal.service";
 import { OrderEngineError } from "./order-errors";
 import {
   assertOrderStatusTransition,
@@ -64,6 +65,8 @@ type ExistingOrderRow = {
 
 type LockedOrderRow = {
   id: string;
+  customer_id: string;
+  order_code: string | null;
   status: string;
 };
 
@@ -484,6 +487,7 @@ export async function createOrder(
 
     const order = await loadOrder(client, orderId);
     await client.query("COMMIT");
+    runPushTask("new order", () => notifyStaffNewOrder({ orderId }));
     return { order, replayed: false };
   } catch (error) {
     await client.query("ROLLBACK").catch(() => undefined);
@@ -569,7 +573,7 @@ export async function transitionOrderStatus(
     }
 
     const orderResult = await client.query<LockedOrderRow>(
-      "SELECT id::text, status FROM orders WHERE id = $1 FOR UPDATE",
+      "SELECT id::text, customer_id::text, order_code, status FROM orders WHERE id = $1 FOR UPDATE",
       [input.orderId],
     );
     const order = orderResult.rows[0];
@@ -606,6 +610,12 @@ export async function transitionOrderStatus(
 
     const updatedOrder = await loadOrder(client, input.orderId);
     await client.query("COMMIT");
+    runPushTask("order status", () => notifyOrderStatusChanged({
+      customerId: order.customer_id,
+      orderId: input.orderId,
+      orderCode: order.order_code,
+      status: input.status,
+    }));
     return { order: updatedOrder };
   } catch (error) {
     await client.query("ROLLBACK").catch(() => undefined);

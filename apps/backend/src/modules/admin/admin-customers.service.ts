@@ -1,3 +1,4 @@
+import { notifyCustomerApprovalChanged, runPushTask } from "../notifications/onesignal.service";
 import type { Pool, PoolClient } from "pg";
 import { getDb } from "../../db/pool";
 import type { StaffIdentity } from "../auth/auth.identity";
@@ -293,6 +294,13 @@ export async function decideCustomerApproval(
     );
 
     await client.query("COMMIT");
+
+    runPushTask("customer approval", () => notifyCustomerApprovalChanged({
+      customerId,
+      status,
+      note,
+    }));
+
     return getAdminCustomerDetail(identity, customerId, db);
   } catch (error) {
     await client.query("ROLLBACK").catch(() => undefined);
