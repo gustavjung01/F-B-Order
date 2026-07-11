@@ -1,6 +1,7 @@
 "use client";
 
 import { useAuth, UserButton } from "@clerk/nextjs";
+import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { AdminApiError, adminApiFetch } from "@/lib/admin-api";
 
@@ -436,6 +437,9 @@ export function AdminDashboard() {
           >
             Orders
           </button>
+          <Link className="rounded-lg bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50" href="/admin/recipes">
+            Công thức
+          </Link>
         </div>
 
         {error ? (
