@@ -94,7 +94,7 @@ trap rollback_code ERR
 
 log "Creating production database backup: ${DB_BACKUP}"
 umask 077
-${PG_DUMP_BIN:-/usr/lib/postgresql/17/bin/pg_dump} \\
+${PG_DUMP_BIN:-/usr/lib/postgresql/17/bin/pg_dump} \
   --dbname="$DATABASE_URL_VALUE" \
   --format=custom \
   --no-owner \
