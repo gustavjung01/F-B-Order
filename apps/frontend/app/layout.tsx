@@ -43,6 +43,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             signUpUrl="/sign-up"
           >
             {children}
+            {oneSignalEnabled ? (
+              <OneSignalBootstrap appId={oneSignalAppId ?? ""} enabled={oneSignalEnabled} />
+            ) : null}
           </ClerkProvider>
         </ClerkConfigGuard>
         <Script id="runtime-flags" strategy="beforeInteractive">
@@ -55,7 +58,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Script src="/open-external-browser.js" strategy="afterInteractive" />
         <Script src="/pwa-install-button.js" strategy="afterInteractive" />
         <Script src="/pwa-register.js" strategy="afterInteractive" />
-        {oneSignalEnabled ? <OneSignalBootstrap appId={oneSignalAppId ?? ""} enabled={oneSignalEnabled} /> : null}
       </body>
     </html>
   );
