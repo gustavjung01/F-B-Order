@@ -1,2 +1,0 @@
-Temporary harmless write-permission check.
-Created by ChatGPT on 2026-07-12 and intended for immediate deletion.
