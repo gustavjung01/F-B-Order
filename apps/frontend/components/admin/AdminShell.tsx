@@ -48,3 +48,4 @@ export function AdminShell({ title, subtitle, children }: AdminShellProps) {
     </main>
   );
 }
+
