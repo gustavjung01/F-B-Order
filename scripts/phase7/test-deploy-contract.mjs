@@ -14,6 +14,11 @@ const workflow = read(".github/workflows/phase7-production-deploy.yml");
 const backend = read("scripts/phase7/deploy-bepsi-backend.sh");
 const vercel = read("scripts/phase7/deploy-bepsi-vercel.sh");
 const smoke = read("scripts/phase7/smoke-production.mjs");
+const app = read("apps/backend/src/app.ts");
+
+const backendVersionMatch = app.match(/version:\s*"([^"]+)"/);
+assert.ok(backendVersionMatch, "backend version payload is missing");
+const expectedBackendVersion = backendVersionMatch[1];
 
 assert.match(workflow, /workflow_dispatch:/, "production workflow must be manual-only");
 assert.doesNotMatch(workflow, /^\s{2}(push|pull_request|schedule):/m, "production workflow must not have automatic triggers");
@@ -26,13 +31,24 @@ assert.match(workflow, /id:\s*validate-inputs/, "manual input normalization step
 assert.match(workflow, /target_sha=\$TARGET_SHA.*GITHUB_OUTPUT/, "normalized target SHA output is missing");
 assert.match(workflow, /needs\.total-gate\.outputs\.target_sha/, "normalized target SHA is not propagated to deploy jobs");
 assert.match(workflow, /Invalid target_sha/, "explicit invalid SHA annotation is missing");
-assert.match(workflow, /Invalid confirmation/, "explicit confirmation annotation is missing");
+assert.match(workflow, /Invalid confirmation/, "explicit invalid confirmation annotation is missing");
 assert.match(workflow, /Outdated target_sha/, "explicit outdated SHA annotation is missing");
+assert.ok(
+  workflow.includes('git -C "$SOURCE_DIR" fetch --prune origin main'),
+  "remote deploy must fetch without switching the dirty source checkout",
+);
+assert.ok(
+  workflow.includes('git -C "$SOURCE_DIR" show "${TARGET_SHA}:scripts/phase7/deploy-bepsi-backend.sh"'),
+  "remote deploy must load the script from the exact target commit",
+);
+assert.doesNotMatch(workflow, /git switch main/, "production workflow must not switch the dirty VPS source checkout");
+assert.doesNotMatch(workflow, /git pull --ff-only origin main/, "production workflow must not pull into the dirty VPS source checkout");
 
 for (const expected of [
   "/srv/apps/bepsi/source",
   "/srv/apps/bepsi/current",
   "/srv/apps/bepsi/releases",
+  "/srv/apps/bepsi/worktrees",
   "/srv/apps/bepsi/backups",
   "/etc/app-env/bepsi.env",
   "bepsi-api.service",
@@ -45,10 +61,15 @@ for (const expected of [
   "sudo install -d",
   "sudo ln -sfn",
   "schema_migrations",
+  "worktree add",
+  "worktree remove",
+  "refs/remotes/origin/main",
 ]) {
   assert.ok(backend.includes(expected), `backend deploy contract is missing ${expected}`);
 }
 
+assert.doesNotMatch(backend, /git\s+-C\s+"\$SOURCE_DIR"\s+switch/, "backend deploy must not switch the dirty source checkout");
+assert.doesNotMatch(backend, /git\s+-C\s+"\$SOURCE_DIR"\s+pull/, "backend deploy must not pull into the dirty source checkout");
 assert.doesNotMatch(backend, /pm2\s+restart\s+all/i, "broad PM2 restart is forbidden");
 assert.doesNotMatch(backend, /systemctl\s+restart\s+(vlgn|tocviet)/i, "other backend restart is forbidden");
 assert.doesNotMatch(backend, /systemctl\s+restart\s+all/i, "broad systemd restart is forbidden");
@@ -57,8 +78,13 @@ assert.match(backend, /Database changes are forward-only/, "forward-only migrati
 assert.match(backend, /LEDGER_ROW_COUNT/, "migration ledger detection is missing");
 assert.match(backend, /missing.*0/s, "empty or missing ledger baseline condition is missing");
 assert.match(backend, /sudo install -d[\s\S]*RELEASES_DIR/, "release directory ownership preparation is missing");
+assert.match(backend, /sudo install -d[\s\S]*WORKTREES_DIR/, "worktree directory ownership preparation is missing");
 assert.match(backend, /sudo install -d[\s\S]*BACKUP_DIR/, "backup directory ownership preparation is missing");
 assert.match(backend, /sudo chown[\s\S]*LOCK_FILE/, "deploy lock ownership preparation is missing");
+assert.ok(
+  backend.includes(`BEPSI_EXPECTED_BACKEND_VERSION:-${expectedBackendVersion}`),
+  "backend deploy version expectation must match the API payload",
+);
 
 for (const expected of [
   "NEXT_PUBLIC_DATA_MODE",
@@ -69,7 +95,7 @@ for (const expected of [
   "--prebuilt",
   "--prod",
 ]) {
-  assert.ok(vercel.includes(expected), `Vercel deploy contract is missing ${expected}`);
+  assert.ok(vercel.includes(expected), `backend deploy contract is missing ${expected}`);
 }
 
 for (const expected of [
@@ -83,5 +109,9 @@ for (const expected of [
 ]) {
   assert.ok(smoke.includes(expected), `production smoke contract is missing ${expected}`);
 }
+assert.ok(
+  smoke.includes(`BEPSI_EXPECTED_BACKEND_VERSION || "${expectedBackendVersion}"`),
+  "production smoke version expectation must match the API payload",
+);
 
 console.log("Phase 7 deploy contract tests passed.");
