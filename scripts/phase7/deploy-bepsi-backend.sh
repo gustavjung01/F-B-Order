@@ -28,7 +28,7 @@ die() {
 
 [[ "$TARGET_SHA" =~ ^[0-9a-f]{40}$ ]] || die "Target commit must be a full 40-character SHA."
 
-for command in git flock rsync corepack node curl pg_dump sudo; do
+for command in git flock rsync corepack node curl pg_dump sudo find; do
   command -v "$command" >/dev/null 2>&1 || die "Required command is missing: $command"
 done
 
@@ -49,9 +49,13 @@ REMOTE_URL="$(git -C "$SOURCE_DIR" remote get-url origin)"
 SERVICE_UNIT="$(sudo systemctl cat "$SERVICE_NAME")"
 printf '%s' "$SERVICE_UNIT" | grep -Fq "$CURRENT_LINK" || die "${SERVICE_NAME} is not configured to run from ${CURRENT_LINK}."
 printf '%s' "$SERVICE_UNIT" | grep -Eiq 'vlgn|tocviet' && die "Service unit contains another application path."
+SERVICE_USER="$(sudo systemctl show -p User --value "$SERVICE_NAME")"
+SERVICE_GROUP="$(sudo systemctl show -p Group --value "$SERVICE_NAME")"
+[[ -n "$SERVICE_USER" ]] || SERVICE_USER=root
+[[ -n "$SERVICE_GROUP" ]] || SERVICE_GROUP="$SERVICE_USER"
 
 log "Preparing writable Bếp Sỉ deployment directories"
-sudo install -d -o "$DEPLOY_USER" -g "$DEPLOY_GROUP" -m 0750 "$RELEASES_DIR"
+sudo install -d -o "$DEPLOY_USER" -g "$SERVICE_GROUP" -m 0750 "$RELEASES_DIR"
 sudo install -d -o "$DEPLOY_USER" -g "$DEPLOY_GROUP" -m 0750 "$WORKTREES_DIR"
 sudo install -d -o "$DEPLOY_USER" -g "$DEPLOY_GROUP" -m 0700 "$BACKUP_DIR"
 sudo touch "$LOCK_FILE"
@@ -114,13 +118,15 @@ rollback_code() {
 trap rollback_code ERR
 
 log "Creating production database backup: ${DB_BACKUP}"
-umask 077
-${PG_DUMP_BIN:-/usr/lib/postgresql/17/bin/pg_dump} \
-  --dbname="$DATABASE_URL_VALUE" \
-  --format=custom \
-  --no-owner \
-  --no-acl \
-  --file="$DB_BACKUP"
+(
+  umask 077
+  ${PG_DUMP_BIN:-/usr/lib/postgresql/17/bin/pg_dump} \
+    --dbname="$DATABASE_URL_VALUE" \
+    --format=custom \
+    --no-owner \
+    --no-acl \
+    --file="$DB_BACKUP"
+)
 [[ -s "$DB_BACKUP" ]] || die "Database backup is empty."
 
 log "Preparing immutable release ${RELEASE_DIR}"
@@ -137,6 +143,13 @@ mv "$TEMP_RELEASE" "$RELEASE_DIR"
 cd "$RELEASE_DIR"
 corepack pnpm install --frozen-lockfile
 corepack pnpm build:backend
+
+log "Granting ${SERVICE_USER}:${SERVICE_GROUP} access to the immutable release"
+sudo chgrp -R "$SERVICE_GROUP" "$RELEASE_DIR"
+sudo find "$RELEASE_DIR" -type d -exec chmod g+rx {} +
+sudo find "$RELEASE_DIR" -type f -exec chmod g+r {} +
+sudo -u "$SERVICE_USER" test -x "$RELEASE_DIR/apps/backend"
+sudo -u "$SERVICE_USER" test -r "$RELEASE_DIR/apps/backend/dist/main.js"
 
 log "Auditing production database before migration"
 corepack pnpm --filter @fb-order/backend db:audit:schema > "${BACKUP_DIR}/schema-before-${TIMESTAMP}-${TARGET_SHA:0:12}.json"
