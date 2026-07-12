@@ -57,7 +57,7 @@ export function AppHeader() {
         </Link>
 
         <div className="flex shrink-0 items-center gap-1">
-          <span aria-label="Thông báo" className="grid h-9 w-9 place-items-center rounded-full bg-white text-[17px] font-black text-[#ff5a00] shadow-sm ring-1 ring-[#eee7dc]">🔔</span>
+          <NotificationBell compact />
           <SignedIn>
             <div className="grid h-9 w-9 place-items-center rounded-full bg-white shadow-sm ring-1 ring-[#eee7dc]">
               <UserButton afterSignOutUrl="/" userProfileMode="modal" />
