@@ -3,7 +3,8 @@
 import { useAuth, UserButton } from "@clerk/nextjs";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { AdminApiError, adminApiFetch } from "@/lib/admin-api";
-import { NotificationBell } from "@/components/notifications/NotificationBell";`nimport { AdminRecipesPanel } from "@/components/admin/AdminRecipesPanel";
+import { NotificationBell } from "@/components/notifications/NotificationBell";
+import { AdminRecipesPanel } from "@/components/admin/AdminRecipesPanel";
 
 type ApprovalStatus = "pending" | "approved" | "rejected";
 type OrderStatus =
@@ -790,4 +791,5 @@ export function AdminDashboard() {
     </main>
   );
 }
+
 
