@@ -94,16 +94,13 @@ for (const [key, expected] of Object.entries(required)) {
 }
 NODE
 
-log "Building Vercel production artifact"
-pnpm dlx vercel@latest build \
-  --prod \
-  --token="$VERCEL_TOKEN" \
-  --cwd "$REPO_ROOT"
-
-log "Deploying Vercel production artifact"
+# Build inside Vercel so production-only and sensitive project variables are
+# injected by Vercel instead of being materialized in the GitHub runner.
+log "Deploying Vercel production from exact checkout"
 DEPLOYMENT_URL="$(pnpm dlx vercel@latest deploy \
-  --prebuilt \
   --prod \
+  --yes \
+  --force \
   --token="$VERCEL_TOKEN" \
   --cwd "$REPO_ROOT")"
 

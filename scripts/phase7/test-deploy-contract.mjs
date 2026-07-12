@@ -106,7 +106,7 @@ assert.match(backend, /Database changes are forward-only/, "forward-only migrati
 assert.match(backend, /LEDGER_ROW_COUNT/, "migration ledger detection is missing");
 assert.match(backend, /missing.*0/s, "empty or missing ledger baseline condition is missing");
 assert.match(backend, /sudo install -d[\s\S]*RELEASES_DIR/, "release directory ownership preparation is missing");
-assert.match(backend, /sudo install -d[\s\S]*WORKTREES_DIR/, "worktree directory ownership preparation is missing");
+assert.match(backend, /sudo install -d[\s\S]*WORKTREES_DIR/, "release directory ownership preparation is missing");
 assert.match(backend, /sudo install -d[\s\S]*BACKUP_DIR/, "backup directory ownership preparation is missing");
 assert.match(backend, /sudo chown[\s\S]*LOCK_FILE/, "deploy lock ownership preparation is missing");
 assert.match(
@@ -134,9 +134,9 @@ for (const expected of [
   "--force",
   "--no-sensitive",
   "Refreshing Vercel production environment after synchronization",
-  "vercel@latest build",
+  "Deploying Vercel production from exact checkout",
   "vercel@latest deploy",
-  "--prebuilt",
+  "--yes",
   "--prod",
 ]) {
   assert.ok(vercel.includes(expected), `Vercel deploy contract is missing ${expected}`);
@@ -151,20 +151,30 @@ assert.equal(vercelConfig.buildCommand, "pnpm run build", "Vercel frontend build
 assert.doesNotMatch(vercel, /--cwd "\$FRONTEND_DIR"/, "Vercel CLI must not double-apply the frontend root directory");
 assert.equal(
   (vercel.match(/--cwd "\$REPO_ROOT"/g) || []).length,
-  5,
+  4,
   "every Vercel CLI operation must run from the monorepo root",
 );
 assert.ok(
   vercel.includes('PRODUCTION_ENV_FILE="${REPO_ROOT}/.vercel/.env.production.local"'),
   "Vercel production environment must be read from the monorepo root link directory",
 );
+assert.doesNotMatch(
+  vercel,
+  /vercel@latest build|--prebuilt/,
+  "production frontend must build inside Vercel so Vercel-managed runtime variables are available",
+);
+assert.match(
+  vercel,
+  /vercel@latest deploy[\s\S]*--prod[\s\S]*--yes[\s\S]*--force/,
+  "Vercel production deploy must remotely rebuild the exact checkout without stale build cache",
+);
 
 const vercelSyncIndex = vercel.indexOf('sync_production_env "NEXT_PUBLIC_DATA_MODE" "backend"');
 const vercelRefreshIndex = vercel.indexOf('log "Refreshing Vercel production environment after synchronization"');
-const vercelBuildIndex = vercel.indexOf('log "Building Vercel production artifact"');
+const vercelDeployIndex = vercel.indexOf('log "Deploying Vercel production from exact checkout"');
 assert.ok(vercelSyncIndex >= 0, "Vercel deploy must synchronize production variables");
 assert.ok(vercelRefreshIndex > vercelSyncIndex, "Vercel deploy must refresh settings after synchronizing variables");
-assert.ok(vercelBuildIndex > vercelRefreshIndex, "Vercel build must run after refreshed production settings are validated");
+assert.ok(vercelDeployIndex > vercelRefreshIndex, "Vercel deploy must run after refreshed production settings are validated");
 assert.ok(
   vercel.includes('sync_production_env "BACKEND_API_URL" "$EXPECTED_API_URL"') &&
     vercel.includes('sync_production_env "NEXT_PUBLIC_API_URL" "$EXPECTED_API_URL"'),
