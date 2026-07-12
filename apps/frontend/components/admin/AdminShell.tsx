@@ -1,12 +1,13 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import type { ReactNode } from "react";
 import { NotificationBell } from "@/components/notifications/NotificationBell";
 
 const adminLinks = [
-  { href: "/admin/orders", label: "Đơn hàng", icon: "📋" },
+  { href: "/admin/orders", label: "Đơn hàng", icon: "📦" },
   { href: "/admin/customers", label: "Khách sỉ", icon: "🏪" },
-  { href: "/admin/recipes", label: "Công thức", icon: "🧪" },
-  { href: "/admin/recipes/scale", label: "Scale công thức", icon: "⚖️" },
+  { href: "/admin/products", label: "Duyệt quán", icon: "🏬" },
+  { href: "/admin/recipes", label: "Công thức", icon: "🍜" },
+  { href: "/admin/recipes/scale", label: "Scale công thức", icon: "📐" },
 ];
 
 type AdminShellProps = {
@@ -23,8 +24,8 @@ export function AdminShell({ title, subtitle, children }: AdminShellProps) {
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div>
               <Link href="/admin/orders" className="inline-flex items-center gap-2 rounded-full bg-orange-500 px-3 py-1.5 text-[12px] font-black uppercase tracking-[0.16em] text-white shadow-[0_10px_24px_rgba(249,115,22,0.22)]">
-                <span>⚙</span>
-                <span>Bếp Sỉ Admin</span>
+                <span>âš™</span>
+                <span>Báº¿p Sá»‰ Admin</span>
               </Link>
               <h1 className="mt-4 text-[28px] font-black leading-tight tracking-tight md:text-5xl">{title}</h1>
               {subtitle ? <p className="mt-2 max-w-2xl text-[14px] font-bold leading-6 text-slate-300 md:text-base">{subtitle}</p> : null}
@@ -48,4 +49,5 @@ export function AdminShell({ title, subtitle, children }: AdminShellProps) {
     </main>
   );
 }
+
 
