@@ -64,6 +64,12 @@ for (const expected of [
   "worktree add",
   "worktree remove",
   "refs/remotes/origin/main",
+  "systemctl show -p User",
+  "systemctl show -p Group",
+  'sudo chgrp -R "$SERVICE_GROUP" "$RELEASE_DIR"',
+  'sudo find "$RELEASE_DIR" -type d -exec chmod g+rx',
+  'sudo find "$RELEASE_DIR" -type f -exec chmod g+r',
+  'sudo -u "$SERVICE_USER" test -r "$RELEASE_DIR/apps/backend/dist/main.js"',
 ]) {
   assert.ok(backend.includes(expected), `backend deploy contract is missing ${expected}`);
 }
@@ -81,6 +87,11 @@ assert.match(backend, /sudo install -d[\s\S]*RELEASES_DIR/, "release directory o
 assert.match(backend, /sudo install -d[\s\S]*WORKTREES_DIR/, "worktree directory ownership preparation is missing");
 assert.match(backend, /sudo install -d[\s\S]*BACKUP_DIR/, "backup directory ownership preparation is missing");
 assert.match(backend, /sudo chown[\s\S]*LOCK_FILE/, "deploy lock ownership preparation is missing");
+assert.match(
+  backend,
+  /\(\s*umask 077[\s\S]*pg_dump[\s\S]*\)/,
+  "restrictive backup umask must be scoped so it cannot poison release permissions",
+);
 assert.ok(
   backend.includes(`BEPSI_EXPECTED_BACKEND_VERSION:-${expectedBackendVersion}`),
   "backend deploy version expectation must match the API payload",
