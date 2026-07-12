@@ -100,7 +100,7 @@ export function RecipeDetailClient({ slug }: RecipeDetailClientProps) {
       try {
         setLoading(true);
         setError("");
-        const response = await fetch(`/api/recipes/${encodeURIComponent(slug)}`, { cache: "no-store" });
+        const response = await fetch(`/api/public/recipes/${encodeURIComponent(slug)}`, { cache: "no-store" });
         if (response.status === 404) throw new Error("Không tìm thấy công thức");
         if (!response.ok) throw new Error("Không tải được công thức");
         const data = (await response.json()) as RecipeDetailResponse;
