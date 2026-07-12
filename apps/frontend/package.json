@@ -3,13 +3,14 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "prebuild": "node scripts/write-app-version.mjs && node --test scripts/write-app-version.test.mjs",
+    "prebuild": "node scripts/check-admin-encoding.mjs && node scripts/write-app-version.mjs && node --test scripts/write-app-version.test.mjs",
     "icons:gen": "node scripts/generate-pwa-icons.cjs",
     "catalog:normalize": "node scripts/import-hung-phat-catalog.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
+    "check:admin-encoding": "node scripts/check-admin-encoding.mjs",
     "test:pwa-release": "node --test scripts/write-app-version.test.mjs"
   },
   "dependencies": {
