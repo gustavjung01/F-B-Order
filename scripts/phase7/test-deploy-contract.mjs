@@ -13,6 +13,7 @@ function read(relativePath) {
 const workflow = read(".github/workflows/phase7-production-deploy.yml");
 const backend = read("scripts/phase7/deploy-bepsi-backend.sh");
 const vercel = read("scripts/phase7/deploy-bepsi-vercel.sh");
+const vercelConfig = JSON.parse(read("apps/frontend/vercel.json"));
 const smoke = read("scripts/phase7/smoke-production.mjs");
 const app = read("apps/backend/src/app.ts");
 
@@ -140,6 +141,23 @@ for (const expected of [
 ]) {
   assert.ok(vercel.includes(expected), `Vercel deploy contract is missing ${expected}`);
 }
+
+assert.equal(
+  vercelConfig.installCommand,
+  "pnpm install --frozen-lockfile",
+  "Vercel frontend install command must use the pinned pnpm workspace lockfile",
+);
+assert.equal(vercelConfig.buildCommand, "pnpm run build", "Vercel frontend build command must use pnpm");
+assert.doesNotMatch(vercel, /--cwd "\$FRONTEND_DIR"/, "Vercel CLI must not double-apply the frontend root directory");
+assert.equal(
+  (vercel.match(/--cwd "\$REPO_ROOT"/g) || []).length,
+  5,
+  "every Vercel CLI operation must run from the monorepo root",
+);
+assert.ok(
+  vercel.includes('PRODUCTION_ENV_FILE="${REPO_ROOT}/.vercel/.env.production.local"'),
+  "Vercel production environment must be read from the monorepo root link directory",
+);
 
 const vercelSyncIndex = vercel.indexOf('sync_production_env "NEXT_PUBLIC_DATA_MODE" "backend"');
 const vercelRefreshIndex = vercel.indexOf('log "Refreshing Vercel production environment after synchronization"');
