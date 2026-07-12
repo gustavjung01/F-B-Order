@@ -56,7 +56,7 @@ export function NotificationBell({ compact = false }: { compact?: boolean }) {
       onClick={() => void enable()}
       title={status}
       aria-label={`Thông báo: ${status}`}
-      disabled={requesting || permission === "unsupported"}
+      disabled={requesting}
       className={compact
         ? "grid h-9 w-9 place-items-center rounded-full bg-white text-[17px] font-black text-[#ff5a00] shadow-sm ring-1 ring-[#eee7dc] disabled:cursor-not-allowed disabled:opacity-60"
         : "inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 disabled:cursor-not-allowed disabled:opacity-60"}
