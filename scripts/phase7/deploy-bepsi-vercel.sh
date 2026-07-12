@@ -15,6 +15,19 @@ die() {
   exit 1
 }
 
+sync_production_env() {
+  local key="$1"
+  local value="$2"
+
+  log "Syncing Vercel production variable ${key}"
+  printf '%s\n' "$value" | pnpm dlx vercel@latest env add "$key" production \
+    --force \
+    --no-sensitive \
+    --token="$VERCEL_TOKEN" \
+    --cwd "$FRONTEND_DIR" \
+    >/dev/null
+}
+
 [[ "$TARGET_SHA" =~ ^[0-9a-f]{40}$ ]] || die "Target commit must be a full 40-character SHA."
 for command in git corepack node; do
   command -v "$command" >/dev/null 2>&1 || die "Required command is missing: $command"
@@ -31,6 +44,17 @@ ACTUAL_SHA="$(git -C "$REPO_ROOT" rev-parse HEAD)"
 corepack enable
 
 log "Pulling Vercel production project settings"
+pnpm dlx vercel@latest pull \
+  --yes \
+  --environment=production \
+  --token="$VERCEL_TOKEN" \
+  --cwd "$FRONTEND_DIR"
+
+sync_production_env "NEXT_PUBLIC_DATA_MODE" "backend"
+sync_production_env "BACKEND_API_URL" "$EXPECTED_API_URL"
+sync_production_env "NEXT_PUBLIC_API_URL" "$EXPECTED_API_URL"
+
+log "Refreshing Vercel production environment after synchronization"
 pnpm dlx vercel@latest pull \
   --yes \
   --environment=production \
