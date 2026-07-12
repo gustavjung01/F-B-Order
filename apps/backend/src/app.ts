@@ -66,6 +66,7 @@ export function createApp(config: AppConfig) {
   app.use("/api/catalog-v2", createCatalogV2DetailRouter(identityResolver));
   app.use("/api/catalog", createCatalogRouter(identityResolver));
   app.use("/api/recipes", createPublicRecipesRouter());
+  app.use("/api/public/recipes", createPublicRecipesRouter());
 
   if (clerkEnabled) {
     app.use("/catalog/cart", createCatalogV2ChoiceCartRouter(resolveRequestIdentity));
