@@ -164,7 +164,7 @@ jobs:
           printf '%s\n' "$KNOWN_HOSTS" > "$HOME/.ssh/known_hosts"
           chmod 600 "$HOME/.ssh/known_hosts"
 
-      - name: Pull, migrate, import and restart Bếp Sỉ only
+      - name: Fetch exact deploy script and release Bếp Sỉ only
         env:
           TARGET_SHA: ${{ needs.total-gate.outputs.target_sha }}
         run: |
@@ -177,11 +177,18 @@ jobs:
             "bash -s -- '$TARGET_SHA'" <<'REMOTE'
           set -Eeuo pipefail
           TARGET_SHA="$1"
-          cd /srv/apps/bepsi/source
-          git switch main
-          git pull --ff-only origin main
-          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
-          bash scripts/phase7/deploy-bepsi-backend.sh "$TARGET_SHA"
+          SOURCE_DIR="/srv/apps/bepsi/source"
+          DEPLOY_SCRIPT="$(mktemp "/tmp/bepsi-deploy-${TARGET_SHA}.XXXXXX.sh")"
+          cleanup() {
+            rm -f "$DEPLOY_SCRIPT"
+          }
+          trap cleanup EXIT
+
+          git -C "$SOURCE_DIR" fetch --prune origin main
+          test "$(git -C "$SOURCE_DIR" rev-parse refs/remotes/origin/main)" = "$TARGET_SHA"
+          git -C "$SOURCE_DIR" show "${TARGET_SHA}:scripts/phase7/deploy-bepsi-backend.sh" > "$DEPLOY_SCRIPT"
+          chmod 700 "$DEPLOY_SCRIPT"
+          bash "$DEPLOY_SCRIPT" "$TARGET_SHA"
           REMOTE
 
   deploy-vercel:
@@ -235,6 +242,7 @@ jobs:
         env:
           API_BASE_URL: https://api.bepsi.click
           WEB_BASE_URL: https://bepsi.click
+          BEPSI_EXPECTED_BACKEND_VERSION: catalog-v2-backend
           PHASE7_REQUIRE_AUTH_SMOKE: "true"
           PHASE7_APPROVED_CUSTOMER_TOKEN: ${{ secrets.PHASE7_APPROVED_CUSTOMER_TOKEN }}
           PHASE7_ADMIN_TOKEN: ${{ secrets.PHASE7_ADMIN_TOKEN }}
