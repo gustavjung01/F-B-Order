@@ -70,6 +70,8 @@ for (const expected of [
   'sudo find "$RELEASE_DIR" -type d -exec chmod g+rx',
   'sudo find "$RELEASE_DIR" -type f -exec chmod g+r',
   'sudo -u "$SERVICE_USER" test -r "$RELEASE_DIR/apps/backend/dist/main.js"',
+  "fetch_with_retry()",
+  'LOCAL_API_BASE_URL="${BEPSI_LOCAL_API_BASE_URL:-http://127.0.0.1:${PORT:-5100}}"',
 ]) {
   assert.ok(backend.includes(expected), `backend deploy contract is missing ${expected}`);
 }
@@ -96,6 +98,12 @@ assert.ok(
   backend.includes(`BEPSI_EXPECTED_BACKEND_VERSION:-${expectedBackendVersion}`),
   "backend deploy version expectation must match the API payload",
 );
+
+const localReadinessIndex = backend.indexOf('fetch_with_retry "${LOCAL_API_BASE_URL}/api/health"');
+const publicSmokeIndex = backend.indexOf('fetch_with_retry "${API_BASE_URL}/api/health"');
+assert.ok(localReadinessIndex >= 0, "backend deploy must wait for local readiness after restart");
+assert.ok(publicSmokeIndex > localReadinessIndex, "public smoke must run after local readiness succeeds");
+assert.match(backend, /fetch_with_retry[\s\S]*attempts[\s\S]*sleep/, "backend smoke retries must be bounded and delayed");
 
 for (const expected of [
   "NEXT_PUBLIC_DATA_MODE",
