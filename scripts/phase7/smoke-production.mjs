@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 
 const apiBaseUrl = (process.env.API_BASE_URL || "https://api.bepsi.click").replace(/\/+$/, "");
 const webBaseUrl = (process.env.WEB_BASE_URL || "https://bepsi.click").replace(/\/+$/, "");
+const expectedBackendVersion = process.env.BEPSI_EXPECTED_BACKEND_VERSION || "catalog-v2-backend";
 const requireAuthSmoke = process.env.PHASE7_REQUIRE_AUTH_SMOKE === "true";
 const approvedToken = process.env.PHASE7_APPROVED_CUSTOMER_TOKEN || "";
 const adminToken = process.env.PHASE7_ADMIN_TOKEN || "";
@@ -46,7 +47,7 @@ async function publicSmoke() {
 
   const version = await requestJson(`${apiBaseUrl}/api/version`);
   requireStatus(version, 200, "backend version");
-  assert.equal(version.body?.version, "frontend-cutover-v6", "unexpected backend version");
+  assert.equal(version.body?.version, expectedBackendVersion, "unexpected backend version");
 
   const categories = await requestJson(`${apiBaseUrl}/api/catalog/categories`);
   requireStatus(categories, 200, "backend categories");
