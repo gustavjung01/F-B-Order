@@ -41,7 +41,7 @@ export function AppHeader() {
   }, []);
 
   return (
-    <header className={`fixed inset-x-0 top-0 z-40 border-b border-[#eee7dc]/70 bg-[#f7f3eb]/95 px-3 pb-1.5 pt-[calc(env(safe-area-inset-top)+6px)] backdrop-blur-xl transition-transform duration-200 ease-out will-change-transform ${hidden ? "-translate-y-full" : "translate-y-0"}`}>
+    <header className={`fixed inset-x-0 top-0 z-[60] border-b border-[#eee7dc]/70 bg-[#f7f3eb]/95 px-3 pb-1.5 pt-[calc(env(safe-area-inset-top)+6px)] backdrop-blur-xl transition-transform duration-200 ease-out will-change-transform ${hidden ? "-translate-y-full" : "translate-y-0"}`}>
       <div className="mx-auto flex max-w-md items-center justify-between gap-1.5">
         <Link href="/" prefetch={false} aria-label="Bếp Sỉ F&B" className="block h-[48px] w-[194px] min-[375px]:w-[204px] min-[390px]:w-[210px] shrink-0 overflow-hidden rounded-[10px]">
           <span
@@ -73,3 +73,4 @@ export function AppHeader() {
     </header>
   );
 }
+
