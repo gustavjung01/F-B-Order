@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { AccountAction } from "@/components/auth/AccountAction";
-import { RECIPES_PUBLIC_ENABLED } from "@/data/recipes/public-status";
 
 type ApiRecipe = {
   id: string;
@@ -91,19 +90,17 @@ function RecipeCard({ recipe, index, approved }: { recipe: ApiRecipe; index: num
 export function RecipeListClient() {
   const [approved, setApproved] = useState(false);
   const [recipes, setRecipes] = useState<ApiRecipe[]>([]);
-  const [loading, setLoading] = useState(RECIPES_PUBLIC_ENABLED);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    if (!RECIPES_PUBLIC_ENABLED) return;
-
     let activeRequest = true;
 
     async function loadRecipes() {
       try {
         setLoading(true);
         setError("");
-        const response = await fetch("/api/recipes?limit=80", { cache: "no-store" });
+        const response = await fetch("/api/public/recipes?limit=80", { cache: "no-store" });
         if (!response.ok) throw new Error("RECIPE_REQUEST_FAILED");
         const data = (await response.json()) as RecipesResponse;
         if (!activeRequest) return;
@@ -125,28 +122,10 @@ export function RecipeListClient() {
   }, []);
 
   const subtitle = useMemo(() => {
-    if (!RECIPES_PUBLIC_ENABLED) return "Nội dung đang được cập nhật";
     if (loading) return "Đang tải công thức";
     if (approved) return "Công thức chi tiết đã mở";
     return "Đăng ký khách hàng để xem định lượng chi tiết";
   }, [approved, loading]);
-
-  if (!RECIPES_PUBLIC_ENABLED) {
-    return (
-      <div className="space-y-4">
-        <section className="overflow-hidden rounded-[26px] bg-white shadow-[0_14px_30px_rgba(15,23,42,0.085)] ring-1 ring-white/80">
-          <img src="/home/home-cong-thuc.png" alt="Công thức pha chế" className="block h-auto w-full object-contain" draggable={false} />
-        </section>
-        <div className="rounded-[28px] border border-dashed border-[#dccbff] bg-white/80 px-6 py-12 text-center shadow-sm">
-          <p className="text-sm font-black uppercase tracking-[0.16em] text-[#7c3aed]">Nội dung pha chế</p>
-          <h2 className="mt-3 text-2xl font-black text-[#0b1220]">Công thức đang được cập nhật</h2>
-          <p className="mx-auto mt-3 max-w-2xl text-sm font-semibold leading-7 text-slate-500">
-            Hướng dẫn pha chế và định lượng dành cho khách hàng sẽ được cập nhật tại đây.
-          </p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="space-y-4">
