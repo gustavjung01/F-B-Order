@@ -3,12 +3,19 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-const adminLinks = [
+type AdminLink = {
+  href: string;
+  label: string;
+  icon: string;
+  exact?: boolean;
+};
+
+const adminLinks: readonly AdminLink[] = [
   { href: "/admin", label: "Vận hành", icon: "⚙️", exact: true },
   { href: "/admin/products", label: "Sản phẩm", icon: "🏬" },
   { href: "/admin/recipes", label: "Công thức", icon: "🍜" },
   { href: "/admin/recipes/scale", label: "Scale công thức", icon: "📐" },
-] as const;
+];
 
 type AdminModuleNavProps = {
   variant?: "light" | "dark";
@@ -24,7 +31,7 @@ export function AdminModuleNav({ variant = "light", className = "" }: AdminModul
       className={`flex gap-2 overflow-x-auto [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${className}`}
     >
       {adminLinks.map((link) => {
-        const active = link.exact ? pathname === link.href : pathname.startsWith(link.href);
+        const active = link.exact === true ? pathname === link.href : pathname.startsWith(link.href);
         const baseClass = "inline-flex shrink-0 items-center gap-2 rounded-[16px] px-4 py-3 text-[13px] font-black transition active:translate-y-px";
         const toneClass = variant === "dark"
           ? active
