@@ -6,10 +6,12 @@ APP_ROOT="/srv/apps/bepsi"
 SOURCE_DIR="/srv/apps/bepsi/source"
 CURRENT_LINK="/srv/apps/bepsi/current"
 RELEASES_DIR="/srv/apps/bepsi/releases"
+WORKTREES_DIR="/srv/apps/bepsi/worktrees"
 BACKUP_DIR="/srv/apps/bepsi/backups"
 ENV_FILE="/etc/app-env/bepsi.env"
 SERVICE_NAME="bepsi-api.service"
 API_BASE_URL="${API_BASE_URL:-https://api.bepsi.click}"
+EXPECTED_BACKEND_VERSION="${BEPSI_EXPECTED_BACKEND_VERSION:-catalog-v2-backend}"
 LOCK_FILE="/var/lock/bepsi-phase7-deploy.lock"
 REPO_URL_PATTERN='github\.com[:/]gustavjung01/F-B-Order(\.git)?$'
 DEPLOY_USER="$(id -un)"
@@ -30,14 +32,14 @@ for command in git flock rsync corepack node curl pg_dump sudo; do
   command -v "$command" >/dev/null 2>&1 || die "Required command is missing: $command"
 done
 
-[[ -d "${SOURCE_DIR}/.git" ]] || die "Báº¿p Sá»‰ source repository is missing: ${SOURCE_DIR}"
-[[ -f "$ENV_FILE" ]] || die "Báº¿p Sá»‰ environment file is missing: ${ENV_FILE}"
+[[ -d "${SOURCE_DIR}/.git" ]] || die "Bếp Sỉ source repository is missing: ${SOURCE_DIR}"
+[[ -f "$ENV_FILE" ]] || die "Bếp Sỉ environment file is missing: ${ENV_FILE}"
 [[ -L "$CURRENT_LINK" ]] || die "${CURRENT_LINK} must be a release symlink before production deployment."
 
 SOURCE_REAL="$(readlink -f "$SOURCE_DIR")"
 CURRENT_REAL="$(readlink -f "$CURRENT_LINK")"
-[[ "$SOURCE_REAL" == "$APP_ROOT"/* ]] || die "Source path escaped Báº¿p Sá»‰ root."
-[[ "$CURRENT_REAL" == "$APP_ROOT"/* ]] || die "Current release escaped Báº¿p Sá»‰ root."
+[[ "$SOURCE_REAL" == "$APP_ROOT"/* ]] || die "Source path escaped Bếp Sỉ root."
+[[ "$CURRENT_REAL" == "$APP_ROOT"/* ]] || die "Current release escaped Bếp Sỉ root."
 [[ "$SOURCE_REAL" != *"/vlgn"* && "$SOURCE_REAL" != *"/tocviet"* ]] || die "Refusing to touch another application."
 [[ "$CURRENT_REAL" != *"/vlgn"* && "$CURRENT_REAL" != *"/tocviet"* ]] || die "Refusing to touch another application."
 
@@ -48,22 +50,41 @@ SERVICE_UNIT="$(sudo systemctl cat "$SERVICE_NAME")"
 printf '%s' "$SERVICE_UNIT" | grep -Fq "$CURRENT_LINK" || die "${SERVICE_NAME} is not configured to run from ${CURRENT_LINK}."
 printf '%s' "$SERVICE_UNIT" | grep -Eiq 'vlgn|tocviet' && die "Service unit contains another application path."
 
-log "Preparing writable Báº¿p Sá»‰ deployment directories"
+log "Preparing writable Bếp Sỉ deployment directories"
 sudo install -d -o "$DEPLOY_USER" -g "$DEPLOY_GROUP" -m 0750 "$RELEASES_DIR"
+sudo install -d -o "$DEPLOY_USER" -g "$DEPLOY_GROUP" -m 0750 "$WORKTREES_DIR"
 sudo install -d -o "$DEPLOY_USER" -g "$DEPLOY_GROUP" -m 0700 "$BACKUP_DIR"
 sudo touch "$LOCK_FILE"
 sudo chown "$DEPLOY_USER:$DEPLOY_GROUP" "$LOCK_FILE"
 sudo chmod 0600 "$LOCK_FILE"
 
 exec 9>"$LOCK_FILE"
-flock -n 9 || die "Another Báº¿p Sá»‰ production deployment is running."
+flock -n 9 || die "Another Bếp Sỉ production deployment is running."
 
-log "Pulling Báº¿p Sá»‰ source from origin/main"
-git -C "$SOURCE_DIR" switch main
-git -C "$SOURCE_DIR" pull --ff-only origin main
-[[ -z "$(git -C "$SOURCE_DIR" status --porcelain)" ]] || die "Source checkout is not clean after pull."
-ACTUAL_SHA="$(git -C "$SOURCE_DIR" rev-parse HEAD)"
-[[ "$ACTUAL_SHA" == "$TARGET_SHA" ]] || die "VPS source is ${ACTUAL_SHA}, expected ${TARGET_SHA}."
+DEPLOY_WORKTREE="${WORKTREES_DIR}/${TARGET_SHA}"
+WORKTREE_READY=0
+
+cleanup_worktree() {
+  if [[ "$WORKTREE_READY" -eq 1 ]]; then
+    git -C "$SOURCE_DIR" worktree remove --force "$DEPLOY_WORKTREE" >/dev/null 2>&1 || true
+  fi
+  git -C "$SOURCE_DIR" worktree prune >/dev/null 2>&1 || true
+}
+trap cleanup_worktree EXIT
+
+log "Fetching origin/main without modifying the dirty source checkout"
+git -C "$SOURCE_DIR" fetch --prune origin main
+ACTUAL_SHA="$(git -C "$SOURCE_DIR" rev-parse refs/remotes/origin/main)"
+[[ "$ACTUAL_SHA" == "$TARGET_SHA" ]] || die "origin/main is ${ACTUAL_SHA}, expected ${TARGET_SHA}."
+
+git -C "$SOURCE_DIR" worktree remove --force "$DEPLOY_WORKTREE" >/dev/null 2>&1 || true
+rm -rf "$DEPLOY_WORKTREE"
+git -C "$SOURCE_DIR" worktree prune
+log "Creating clean detached worktree for ${TARGET_SHA}"
+git -C "$SOURCE_DIR" worktree add --force --detach "$DEPLOY_WORKTREE" "$TARGET_SHA"
+WORKTREE_READY=1
+[[ "$(git -C "$DEPLOY_WORKTREE" rev-parse HEAD)" == "$TARGET_SHA" ]] || die "Deploy worktree resolved the wrong commit."
+[[ -z "$(git -C "$DEPLOY_WORKTREE" status --porcelain)" ]] || die "Deploy worktree is not clean."
 
 set -a
 # shellcheck disable=SC1090
@@ -109,7 +130,7 @@ rsync -a --delete \
   --exclude='.git/' \
   --exclude='node_modules/' \
   --exclude='.next/' \
-  "$SOURCE_DIR/" "$TEMP_RELEASE/"
+  "$DEPLOY_WORKTREE/" "$TEMP_RELEASE/"
 rm -rf "$RELEASE_DIR"
 mv "$TEMP_RELEASE" "$RELEASE_DIR"
 
@@ -161,7 +182,7 @@ corepack pnpm catalog:import
 log "Auditing production database after migration and import"
 corepack pnpm --filter @fb-order/backend db:audit:schema > "${BACKUP_DIR}/schema-after-${TIMESTAMP}-${TARGET_SHA:0:12}.json"
 
-log "Switching Báº¿p Sá»‰ current release"
+log "Switching Bếp Sỉ current release"
 sudo ln -sfn "$RELEASE_DIR" "${CURRENT_LINK}.next"
 sudo mv -Tf "${CURRENT_LINK}.next" "$CURRENT_LINK"
 SWITCHED=1
@@ -173,7 +194,8 @@ sudo systemctl is-active --quiet "$SERVICE_NAME"
 log "Running backend smoke checks"
 curl --fail --silent --show-error --max-time 15 "${API_BASE_URL}/api/health" >/dev/null
 VERSION_PAYLOAD="$(curl --fail --silent --show-error --max-time 15 "${API_BASE_URL}/api/version")"
-printf '%s' "$VERSION_PAYLOAD" | grep -Fq 'frontend-cutover-v6' || die "Unexpected backend version payload."
+VERSION_VALUE="$(node -e 'const body = JSON.parse(process.argv[1]); process.stdout.write(String(body.version ?? ""));' "$VERSION_PAYLOAD")"
+[[ "$VERSION_VALUE" == "$EXPECTED_BACKEND_VERSION" ]] || die "Unexpected backend version: ${VERSION_VALUE}; expected ${EXPECTED_BACKEND_VERSION}."
 curl --fail --silent --show-error --max-time 20 "${API_BASE_URL}/api/catalog/categories" >/dev/null
 curl --fail --silent --show-error --max-time 20 "${API_BASE_URL}/api/catalog/products?limit=1" >/dev/null
 
@@ -182,4 +204,3 @@ trap - ERR
 log "Backend production deployment completed at ${TARGET_SHA}."
 log "Database backup: ${DB_BACKUP}"
 log "Previous code release retained at: ${PREVIOUS_TARGET}"
-
