@@ -41,6 +41,25 @@ assert.ok(
   workflow.includes('git -C "$SOURCE_DIR" show "${TARGET_SHA}:scripts/phase7/deploy-bepsi-backend.sh"'),
   "remote deploy must load the script from the exact target commit",
 );
+for (const expected of [
+  'rev-parse --path-format=absolute --git-common-dir',
+  'EXPECTED_GIT_DIR="${SOURCE_DIR}/.git"',
+  'test "$GIT_COMMON_DIR" = "$EXPECTED_GIT_DIR"',
+  'sudo chown -R "$(id -un):$(id -gn)" "$GIT_COMMON_DIR"',
+  'sudo chmod -R u+rwX "$GIT_COMMON_DIR"',
+  'test -w "${GIT_COMMON_DIR}/objects"',
+]) {
+  assert.ok(workflow.includes(expected), `production workflow is missing VPS Git permission guard: ${expected}`);
+}
+const gitPermissionRepairIndex = workflow.indexOf('sudo chown -R "$(id -un):$(id -gn)" "$GIT_COMMON_DIR"');
+const remoteFetchIndex = workflow.indexOf('git -C "$SOURCE_DIR" fetch --prune origin main');
+assert.ok(gitPermissionRepairIndex >= 0, "VPS Git metadata ownership repair is missing");
+assert.ok(remoteFetchIndex > gitPermissionRepairIndex, "VPS Git metadata must be writable before remote fetch");
+assert.doesNotMatch(
+  workflow,
+  /sudo chown -R[^\n]*"\$SOURCE_DIR"/,
+  "permission repair must not change ownership of the dirty working tree",
+);
 assert.doesNotMatch(workflow, /git switch main/, "production workflow must not switch the dirty VPS source checkout");
 assert.doesNotMatch(workflow, /git pull --ff-only origin main/, "production workflow must not pull into the dirty VPS source checkout");
 
