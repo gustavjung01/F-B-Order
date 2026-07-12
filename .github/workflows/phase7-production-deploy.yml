@@ -184,6 +184,13 @@ jobs:
           }
           trap cleanup EXIT
 
+          GIT_COMMON_DIR="$(git -C "$SOURCE_DIR" rev-parse --path-format=absolute --git-common-dir)"
+          EXPECTED_GIT_DIR="${SOURCE_DIR}/.git"
+          test "$GIT_COMMON_DIR" = "$EXPECTED_GIT_DIR"
+          sudo chown -R "$(id -un):$(id -gn)" "$GIT_COMMON_DIR"
+          sudo chmod -R u+rwX "$GIT_COMMON_DIR"
+          test -w "${GIT_COMMON_DIR}/objects"
+
           git -C "$SOURCE_DIR" fetch --prune origin main
           test "$(git -C "$SOURCE_DIR" rev-parse refs/remotes/origin/main)" = "$TARGET_SHA"
           git -C "$SOURCE_DIR" show "${TARGET_SHA}:scripts/phase7/deploy-bepsi-backend.sh" > "$DEPLOY_SCRIPT"
