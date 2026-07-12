@@ -3,7 +3,6 @@ set -Eeuo pipefail
 
 TARGET_SHA="${1:-}"
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-FRONTEND_DIR="${REPO_ROOT}/apps/frontend"
 EXPECTED_API_URL="https://api.bepsi.click"
 
 log() {
@@ -24,7 +23,7 @@ sync_production_env() {
     --force \
     --no-sensitive \
     --token="$VERCEL_TOKEN" \
-    --cwd "$FRONTEND_DIR" \
+    --cwd "$REPO_ROOT" \
     >/dev/null
 }
 
@@ -48,7 +47,7 @@ pnpm dlx vercel@latest pull \
   --yes \
   --environment=production \
   --token="$VERCEL_TOKEN" \
-  --cwd "$FRONTEND_DIR"
+  --cwd "$REPO_ROOT"
 
 sync_production_env "NEXT_PUBLIC_DATA_MODE" "backend"
 sync_production_env "BACKEND_API_URL" "$EXPECTED_API_URL"
@@ -59,9 +58,9 @@ pnpm dlx vercel@latest pull \
   --yes \
   --environment=production \
   --token="$VERCEL_TOKEN" \
-  --cwd "$FRONTEND_DIR"
+  --cwd "$REPO_ROOT"
 
-PRODUCTION_ENV_FILE="${FRONTEND_DIR}/.vercel/.env.production.local"
+PRODUCTION_ENV_FILE="${REPO_ROOT}/.vercel/.env.production.local"
 [[ -f "$PRODUCTION_ENV_FILE" ]] || die "Vercel production environment file was not generated."
 
 node --input-type=module - "$PRODUCTION_ENV_FILE" "$EXPECTED_API_URL" <<'NODE'
@@ -99,14 +98,14 @@ log "Building Vercel production artifact"
 pnpm dlx vercel@latest build \
   --prod \
   --token="$VERCEL_TOKEN" \
-  --cwd "$FRONTEND_DIR"
+  --cwd "$REPO_ROOT"
 
 log "Deploying Vercel production artifact"
 DEPLOYMENT_URL="$(pnpm dlx vercel@latest deploy \
   --prebuilt \
   --prod \
   --token="$VERCEL_TOKEN" \
-  --cwd "$FRONTEND_DIR")"
+  --cwd "$REPO_ROOT")"
 
 [[ "$DEPLOYMENT_URL" == https://* ]] || die "Vercel did not return a deployment URL."
 log "Vercel production deployment completed: ${DEPLOYMENT_URL}"
