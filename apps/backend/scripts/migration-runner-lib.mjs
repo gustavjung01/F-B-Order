@@ -18,7 +18,7 @@ const LEDGER_TABLE_SQL = `
   )
 `;
 
-const ACCEPTED_LEGACY_CHECKSUMS = new Map([
+export const ACCEPTED_LEGACY_CHECKSUMS = new Map([
   [
     "db/migrations/011_recipe_review_publish_versioning.sql",
     new Set(["6bd6ecf469081cba4112ee30c9e7dcb7c25655dda00f2c53b368b8e03f1cb91f"]),
@@ -93,7 +93,7 @@ async function readLedger(client) {
   return new Map(result.rows.map((row) => [row.filename, row]));
 }
 
-function validateChecksums(migrations, applied) {
+export function validateChecksums(migrations, applied) {
   for (const migration of migrations) {
     const ledgerRow = applied.get(migration.filename);
     if (!ledgerRow) continue;
