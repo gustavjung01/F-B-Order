@@ -109,13 +109,30 @@ for (const expected of [
   "NEXT_PUBLIC_DATA_MODE",
   "BACKEND_API_URL",
   "NEXT_PUBLIC_API_URL",
+  "sync_production_env()",
+  'env add "$key" production',
+  "--force",
+  "--no-sensitive",
+  "Refreshing Vercel production environment after synchronization",
   "vercel@latest build",
   "vercel@latest deploy",
   "--prebuilt",
   "--prod",
 ]) {
-  assert.ok(vercel.includes(expected), `backend deploy contract is missing ${expected}`);
+  assert.ok(vercel.includes(expected), `Vercel deploy contract is missing ${expected}`);
 }
+
+const vercelSyncIndex = vercel.indexOf('sync_production_env "NEXT_PUBLIC_DATA_MODE" "backend"');
+const vercelRefreshIndex = vercel.indexOf('log "Refreshing Vercel production environment after synchronization"');
+const vercelBuildIndex = vercel.indexOf('log "Building Vercel production artifact"');
+assert.ok(vercelSyncIndex >= 0, "Vercel deploy must synchronize production variables");
+assert.ok(vercelRefreshIndex > vercelSyncIndex, "Vercel deploy must refresh settings after synchronizing variables");
+assert.ok(vercelBuildIndex > vercelRefreshIndex, "Vercel build must run after refreshed production settings are validated");
+assert.ok(
+  vercel.includes('sync_production_env "BACKEND_API_URL" "$EXPECTED_API_URL"') &&
+    vercel.includes('sync_production_env "NEXT_PUBLIC_API_URL" "$EXPECTED_API_URL"'),
+  "Vercel deploy must synchronize both backend API URL variables",
+);
 
 for (const expected of [
   "/api/health",
