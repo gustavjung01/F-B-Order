@@ -33,9 +33,31 @@ ALTER TABLE recipe_versions
   ADD COLUMN IF NOT EXISTS published_at TIMESTAMPTZ,
   ADD COLUMN IF NOT EXISTS created_at TIMESTAMPTZ NOT NULL DEFAULT now();
 
-UPDATE recipe_versions
-SET version_no = COALESCE(version_no, version_number, 1)
-WHERE version_no IS NULL;
+-- Legacy databases may have version_number. Fresh databases do not, so only
+-- reference that compatibility column when it is actually present.
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1
+    FROM information_schema.columns
+    WHERE table_schema = 'public'
+      AND table_name = 'recipe_versions'
+      AND column_name = 'version_number'
+  ) THEN
+    EXECUTE '
+      UPDATE recipe_versions
+      SET version_no = COALESCE(version_no, version_number, 1)
+      WHERE version_no IS NULL
+    ';
+  ELSE
+    UPDATE recipe_versions
+    SET version_no = COALESCE(version_no, 1)
+    WHERE version_no IS NULL;
+  END IF;
+END $$;
+
+ALTER TABLE recipe_versions
+  ALTER COLUMN version_no SET NOT NULL;
 
 ALTER TABLE recipes
   ADD COLUMN IF NOT EXISTS current_version_id UUID REFERENCES recipe_versions(id) ON DELETE SET NULL,
