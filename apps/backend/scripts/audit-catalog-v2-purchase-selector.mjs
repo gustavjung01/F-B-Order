@@ -13,7 +13,8 @@ const selectorSource = fs.readFileSync(selectorPath, "utf8");
 
 assert.equal(selectorSource.includes("<select"), false, "Purchase selector must not use dropdowns.");
 assert.equal(selectorSource.includes('<option value="">Chọn</option>'), false, "Purchase selector must not show an empty Chọn option.");
-assert.ok(selectorSource.includes("ChoiceButtons"), "Purchase selector must render visible direct-choice buttons.");
+assert.ok(selectorSource.includes("function ChoiceControl"), "Purchase selector must define the visible choice control.");
+assert.ok(selectorSource.includes("aria-pressed={active}"), "Purchase selector must render visible direct-choice buttons.");
 
 const result = finalizeParentMap(applyParentFixes(loadInputs()));
 const membersByParent = new Map();

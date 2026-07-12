@@ -18,6 +18,13 @@ const LEDGER_TABLE_SQL = `
   )
 `;
 
+export const ACCEPTED_LEGACY_CHECKSUMS = new Map([
+  [
+    "db/migrations/011_recipe_review_publish_versioning.sql",
+    new Set(["6bd6ecf469081cba4112ee30c9e7dcb7c25655dda00f2c53b368b8e03f1cb91f"]),
+  ],
+]);
+
 function normalizeSql(rawSql) {
   return rawSql.replace(/^\uFEFF/, "").replace(/\r\n/g, "\n");
 }
@@ -86,16 +93,19 @@ async function readLedger(client) {
   return new Map(result.rows.map((row) => [row.filename, row]));
 }
 
-function validateChecksums(migrations, applied) {
+export function validateChecksums(migrations, applied) {
   for (const migration of migrations) {
     const ledgerRow = applied.get(migration.filename);
     if (!ledgerRow) continue;
-    if (ledgerRow.checksum !== migration.checksum) {
-      throw new Error(
-        `Checksum mismatch for applied migration ${migration.filename}: ` +
-          `database=${ledgerRow.checksum} file=${migration.checksum}`,
-      );
-    }
+    if (ledgerRow.checksum === migration.checksum) continue;
+
+    const acceptedLegacyChecksums = ACCEPTED_LEGACY_CHECKSUMS.get(migration.filename);
+    if (acceptedLegacyChecksums?.has(ledgerRow.checksum)) continue;
+
+    throw new Error(
+      `Checksum mismatch for applied migration ${migration.filename}: ` +
+        `database=${ledgerRow.checksum} file=${migration.checksum}`,
+    );
   }
 }
 

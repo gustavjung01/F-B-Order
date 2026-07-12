@@ -88,10 +88,16 @@ export function AdminRecipeScalePanel() {
   useEffect(() => { void loadRecipes(); }, [isLoaded]);
 
   function chooseRecipe(nextRecipeId: string) {
+    const nextRecipe = recipes.find((recipe) => recipe.id === nextRecipeId) || null;
+
     setRecipeId(nextRecipeId);
     setResult(null);
-    const nextRecipe = recipes.find((recipe) => recipe.id === nextRecipeId);
-    if (nextRecipe?.yieldQuantity) setTargetYieldQuantity(nextRecipe.yieldQuantity);
+    setError("");
+    setTargetYieldQuantity(nextRecipe?.yieldQuantity || "");
+
+    if (!nextRecipe?.publishedVersionId) {
+      setSource("current");
+    }
   }
 
   async function scale() {

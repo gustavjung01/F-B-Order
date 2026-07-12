@@ -33,7 +33,17 @@ jobs:
         run: pnpm catalog:audit
 
       - name: Validate catalog v2 image and parent shape
-        run: pnpm catalog:audit:content:v2
+        run: |
+          set -o pipefail
+          pnpm catalog:audit:content:v2 2>&1 | tee catalog-content-audit.log
+
+      - name: Upload catalog content audit log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: catalog-content-audit-log
+          path: catalog-content-audit.log
+          if-no-files-found: error
 
       - name: Audit customer copy
         run: pnpm frontend:audit:copy
