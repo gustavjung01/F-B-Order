@@ -26,6 +26,28 @@ die() {
   exit 1
 }
 
+fetch_with_retry() {
+  local url="$1"
+  local label="$2"
+  local attempts="${3:-30}"
+  local delay_seconds="${4:-2}"
+  local attempt
+  local body
+
+  for ((attempt = 1; attempt <= attempts; attempt++)); do
+    if body="$(curl --fail --silent --show-error --max-time 15 "$url")"; then
+      printf '%s' "$body"
+      return 0
+    fi
+    if ((attempt < attempts)); then
+      log "${label} not ready (attempt ${attempt}/${attempts}); retrying in ${delay_seconds}s"
+      sleep "$delay_seconds"
+    fi
+  done
+
+  die "${label} did not become ready after ${attempts} attempts: ${url}"
+}
+
 [[ "$TARGET_SHA" =~ ^[0-9a-f]{40}$ ]] || die "Target commit must be a full 40-character SHA."
 
 for command in git flock rsync corepack node curl pg_dump sudo find; do
@@ -96,6 +118,7 @@ source "$ENV_FILE"
 set +a
 DATABASE_URL_VALUE="${BEPSI_DATABASE_URL:-${DATABASE_URL:-}}"
 [[ -n "$DATABASE_URL_VALUE" ]] || die "BEPSI_DATABASE_URL or DATABASE_URL is missing from ${ENV_FILE}."
+LOCAL_API_BASE_URL="${BEPSI_LOCAL_API_BASE_URL:-http://127.0.0.1:${PORT:-5100}}"
 
 TIMESTAMP="$(date -u +%Y%m%dT%H%M%SZ)"
 DB_BACKUP="${BACKUP_DIR}/bepsi-${TIMESTAMP}-${TARGET_SHA:0:12}.dump"
@@ -204,13 +227,16 @@ log "Restarting only ${SERVICE_NAME}"
 sudo systemctl restart "$SERVICE_NAME"
 sudo systemctl is-active --quiet "$SERVICE_NAME"
 
-log "Running backend smoke checks"
-curl --fail --silent --show-error --max-time 15 "${API_BASE_URL}/api/health" >/dev/null
-VERSION_PAYLOAD="$(curl --fail --silent --show-error --max-time 15 "${API_BASE_URL}/api/version")"
+log "Waiting for local backend readiness"
+fetch_with_retry "${LOCAL_API_BASE_URL}/api/health" "local backend health" 30 2 >/dev/null
+
+log "Running backend smoke checks through the public endpoint"
+fetch_with_retry "${API_BASE_URL}/api/health" "public backend health" 30 2 >/dev/null
+VERSION_PAYLOAD="$(fetch_with_retry "${API_BASE_URL}/api/version" "public backend version" 15 2)"
 VERSION_VALUE="$(node -e 'const body = JSON.parse(process.argv[1]); process.stdout.write(String(body.version ?? ""));' "$VERSION_PAYLOAD")"
 [[ "$VERSION_VALUE" == "$EXPECTED_BACKEND_VERSION" ]] || die "Unexpected backend version: ${VERSION_VALUE}; expected ${EXPECTED_BACKEND_VERSION}."
-curl --fail --silent --show-error --max-time 20 "${API_BASE_URL}/api/catalog/categories" >/dev/null
-curl --fail --silent --show-error --max-time 20 "${API_BASE_URL}/api/catalog/products?limit=1" >/dev/null
+fetch_with_retry "${API_BASE_URL}/api/catalog/categories" "public catalog categories" 15 2 >/dev/null
+fetch_with_retry "${API_BASE_URL}/api/catalog/products?limit=1" "public catalog products" 15 2 >/dev/null
 
 SWITCHED=0
 trap - ERR
