@@ -10,6 +10,7 @@
     "test:auth-pricing": "tsx scripts/test-auth-pricing.ts",
     "test:catalog-contract": "tsx scripts/test-catalog-contract.ts",
     "test:catalog-v2": "tsx scripts/test-catalog-v2.ts",
+    "test:admin-products": "tsx scripts/test-admin-products-contract.ts",
     "test:order-engine": "tsx scripts/test-order-engine.ts",
     "test:recipe-scale": "tsx scripts/test-recipe-scale.ts",
     "db:migrate": "node scripts/run-migrations.mjs",
