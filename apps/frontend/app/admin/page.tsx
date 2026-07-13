@@ -1,4 +1,4 @@
-import { AdminDashboard } from "@/components/admin/AdminDashboard";
+import { AdminOperationsDashboard } from "@/components/admin/AdminOperationsDashboard";
 import { AdminModuleNav } from "@/components/admin/AdminModuleNav";
 
 export const dynamic = "force-dynamic";
@@ -11,7 +11,7 @@ export default function AdminPage() {
           <AdminModuleNav />
         </div>
       </div>
-      <AdminDashboard />
+      <AdminOperationsDashboard />
     </>
   );
 }
