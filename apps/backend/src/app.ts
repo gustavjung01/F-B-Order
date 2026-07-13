@@ -3,6 +3,7 @@ import cors from "cors";
 import express from "express";
 import helmet from "helmet";
 import { createAdminCustomersRouter } from "./modules/admin/admin-customers.routes";
+import { createAdminProductsRouter } from "./modules/admin/admin-products.routes";
 import { anonymousIdentity, resolveRequestIdentity } from "./modules/auth/auth.identity";
 import { createAuthRouter } from "./modules/auth/auth.routes";
 import { createCatalogV2ChoiceCartRouter } from "./modules/catalog-v2/catalog-v2-choice-cart.routes";
@@ -76,6 +77,7 @@ export function createApp(config: AppConfig) {
     app.use("/api/orders", createOrderEntryRouter(resolveRequestIdentity));
     app.use("/api/customer/orders", createCustomerOrdersRouter(resolveRequestIdentity));
     app.use("/api/admin/customers", createAdminCustomersRouter(resolveRequestIdentity));
+    app.use("/api/admin/products", createAdminProductsRouter(resolveRequestIdentity));
     app.use("/api/admin/orders", createAdminOrdersRouter(resolveRequestIdentity));
     app.use("/api/admin/recipes", createAdminRecipesRouter(resolveRequestIdentity));
   } else {
@@ -89,6 +91,7 @@ export function createApp(config: AppConfig) {
     app.use("/api/orders", clerkUnavailable);
     app.use("/api/customer/orders", clerkUnavailable);
     app.use("/api/admin/customers", clerkUnavailable);
+    app.use("/api/admin/products", clerkUnavailable);
     app.use("/api/admin/orders", clerkUnavailable);
     app.use("/api/admin/recipes", clerkUnavailable);
   }
