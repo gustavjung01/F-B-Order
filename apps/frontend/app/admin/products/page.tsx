@@ -5,7 +5,10 @@ export const dynamic = "force-dynamic";
 
 export default function AdminProductsPage() {
   return (
-    <AdminShell title="Quản lý sản phẩm" subtitle="Lọc sản phẩm thiếu quy cách, đơn vị, giá và ảnh.">
+    <AdminShell
+      title="Quản lý sản phẩm"
+      subtitle="Điền dữ liệu vận hành, đặt giá, bật bán và lấy Product ID cho production smoke test."
+    >
       <AdminProductsAuditPanel />
     </AdminShell>
   );
