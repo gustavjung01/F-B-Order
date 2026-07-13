@@ -48,6 +48,9 @@ jobs:
       - name: Audit customer copy
         run: pnpm frontend:audit:copy
 
+      - name: Test admin catalog readiness
+        run: pnpm --filter @fb-order/backend test:admin-products
+
       - name: Typecheck
         run: pnpm typecheck
 
