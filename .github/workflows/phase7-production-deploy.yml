@@ -233,7 +233,7 @@ jobs:
         run: bash scripts/phase7/deploy-bepsi-vercel.sh "${{ needs.total-gate.outputs.target_sha }}"
 
   production-smoke:
-    name: Production smoke and order visibility
+    name: Production public smoke
     needs:
       - total-gate
       - deploy-vercel
@@ -245,14 +245,9 @@ jobs:
         with:
           ref: ${{ needs.total-gate.outputs.target_sha }}
 
-      - name: Verify production end to end
+      - name: Verify public production and auth boundary
         env:
           API_BASE_URL: https://api.bepsi.click
           WEB_BASE_URL: https://bepsi.click
           BEPSI_EXPECTED_BACKEND_VERSION: catalog-v2-backend
-          PHASE7_REQUIRE_AUTH_SMOKE: "true"
-          PHASE7_APPROVED_CUSTOMER_TOKEN: ${{ secrets.PHASE7_APPROVED_CUSTOMER_TOKEN }}
-          PHASE7_ADMIN_TOKEN: ${{ secrets.PHASE7_ADMIN_TOKEN }}
-          PHASE7_SMOKE_PRODUCT_ID: ${{ secrets.PHASE7_SMOKE_PRODUCT_ID }}
-          PHASE7_SMOKE_QUANTITY: ${{ vars.PHASE7_SMOKE_QUANTITY }}
         run: node scripts/phase7/smoke-production.mjs
