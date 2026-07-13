@@ -3,7 +3,6 @@ import assert from "node:assert/strict";
 const apiBaseUrl = (process.env.API_BASE_URL || "https://api.bepsi.click").replace(/\/+$/, "");
 const webBaseUrl = (process.env.WEB_BASE_URL || "https://bepsi.click").replace(/\/+$/, "");
 const expectedBackendVersion = process.env.BEPSI_EXPECTED_BACKEND_VERSION || "catalog-v2-backend";
-const requireAuthSmoke = process.env.PHASE7_REQUIRE_AUTH_SMOKE === "true";
 const approvedToken = process.env.PHASE7_APPROVED_CUSTOMER_TOKEN || "";
 const adminToken = process.env.PHASE7_ADMIN_TOKEN || "";
 const productId = process.env.PHASE7_SMOKE_PRODUCT_ID || "";
@@ -75,14 +74,17 @@ async function authenticatedOrderSmoke() {
   const hasAnyAuthInput = authInputs.some(Boolean);
   const hasAllAuthInputs = authInputs.every(Boolean);
 
-  if (!hasAllAuthInputs) {
-    if (requireAuthSmoke || hasAnyAuthInput) {
-      throw new Error(
-        "Authenticated smoke requires PHASE7_APPROVED_CUSTOMER_TOKEN, PHASE7_ADMIN_TOKEN and PHASE7_SMOKE_PRODUCT_ID.",
-      );
-    }
-    console.log("Authenticated order smoke skipped because no production smoke credentials were supplied.");
+  if (!hasAnyAuthInput) {
+    console.log(
+      "Authenticated order smoke skipped. Production deploys must not depend on copied short-lived Clerk session tokens.",
+    );
     return null;
+  }
+
+  if (!hasAllAuthInputs) {
+    throw new Error(
+      "Optional authenticated smoke requires PHASE7_APPROVED_CUSTOMER_TOKEN, PHASE7_ADMIN_TOKEN and PHASE7_SMOKE_PRODUCT_ID together.",
+    );
   }
 
   assert.ok(Number.isInteger(quantity) && quantity > 0, "PHASE7_SMOKE_QUANTITY must be a positive integer");

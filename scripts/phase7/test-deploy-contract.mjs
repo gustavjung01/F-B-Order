@@ -28,6 +28,8 @@ assert.match(workflow, /concurrency:[\s\S]*bepsi-production-deploy/, "production
 assert.match(workflow, /deploy-backend:[\s\S]*?needs:\s*total-gate/, "backend deploy must depend on total gate");
 assert.match(workflow, /deploy-vercel:[\s\S]*?needs:[\s\S]*?- deploy-backend/, "Vercel deploy must depend on backend deploy");
 assert.match(workflow, /production-smoke:[\s\S]*?needs:[\s\S]*?- deploy-vercel/, "production smoke must depend on Vercel deploy");
+assert.match(workflow, /name:\s*Production public smoke/, "production gate must clearly identify the public smoke scope");
+assert.match(workflow, /Verify public production and auth boundary/, "public production verification step is missing");
 assert.match(workflow, /id:\s*validate-inputs/, "manual input normalization step is missing");
 assert.match(workflow, /target_sha=\$TARGET_SHA.*GITHUB_OUTPUT/, "normalized target SHA output is missing");
 assert.match(workflow, /needs\.total-gate\.outputs\.target_sha/, "normalized target SHA is not propagated to deploy jobs");
@@ -181,6 +183,19 @@ assert.ok(
   "Vercel deploy must synchronize both backend API URL variables",
 );
 
+for (const forbidden of [
+  "PHASE7_REQUIRE_AUTH_SMOKE",
+  "PHASE7_APPROVED_CUSTOMER_TOKEN",
+  "PHASE7_ADMIN_TOKEN",
+  "PHASE7_SMOKE_PRODUCT_ID",
+]) {
+  assert.equal(
+    workflow.includes(forbidden),
+    false,
+    `production deploy must not depend on static or copied authenticated smoke input: ${forbidden}`,
+  );
+}
+
 for (const expected of [
   "/api/health",
   "/api/version",
@@ -188,10 +203,11 @@ for (const expected of [
   "/api/cart/validate",
   "/api/orders",
   "/api/admin/orders",
-  "PHASE7_REQUIRE_AUTH_SMOKE",
+  "Authenticated order smoke skipped",
 ]) {
   assert.ok(smoke.includes(expected), `production smoke contract is missing ${expected}`);
 }
+assert.doesNotMatch(smoke, /PHASE7_REQUIRE_AUTH_SMOKE/, "obsolete forced-auth smoke switch must be removed");
 assert.ok(
   smoke.includes(`BEPSI_EXPECTED_BACKEND_VERSION || "${expectedBackendVersion}"`),
   "production smoke version expectation must match the API payload",
