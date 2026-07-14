@@ -12,20 +12,6 @@ import {
   updateAdminRecipe,
 } from "../src/modules/recipes/recipe-admin.service";
 
-const RECIPE_CATALOG_GROUPS = [
-  "tra",
-  "siro",
-  "sot",
-  "sinh-to",
-  "bot-sua-kem-beo",
-  "milk-foam-kem-cheese",
-  "tran-chau",
-  "3q",
-  "thach-rau-cau",
-  "flan-pudding",
-  "bot-tao-vi",
-] as const;
-
 async function expectErrorCode(run: () => Promise<unknown>, code: string) {
   await assert.rejects(run, (error: unknown) => {
     return Boolean(error && typeof error === "object" && "code" in error && error.code === code);
@@ -38,24 +24,81 @@ async function main() {
   const clerkUserId = `recipe-workflow-${suffix}`;
   let staffId: string | null = null;
   let recipeId: string | null = null;
+  let catalogProductId: string | null = null;
+  let catalogVariantId: string | null = null;
 
   try {
-    const variant = await db.query<{ id: string }>(
-      `SELECT variant.id::text AS id
-       FROM catalog_variants variant
-       JOIN catalog_products product ON product.id = variant.product_id
-       WHERE product.catalog_version = 'hung-phat-v2'
-         AND product.status = 'active'
-         AND product.catalog_group_key = ANY($1::text[])
-         AND variant.catalog_version = 'hung-phat-v2'
-         AND variant.is_active = true
-         AND variant.is_public = true
-         AND variant.status IN ('active', 'market_price')
-       ORDER BY product.sort_order ASC, variant.sort_order ASC, variant.id ASC
-       LIMIT 1`,
-      [RECIPE_CATALOG_GROUPS],
+    const product = await db.query<{ id: string }>(
+      `INSERT INTO catalog_products (
+         catalog_version,
+         product_key,
+         name,
+         brand,
+         industry,
+         industry_key,
+         subcategory,
+         source_group,
+         option_groups,
+         status,
+         sort_order,
+         catalog_group_key
+       ) VALUES (
+         'hung-phat-v2',
+         $1,
+         'Trà fixture cho Recipe workflow',
+         'Bếp Sỉ',
+         'Nguyên liệu trà sữa',
+         'nguyen-lieu-tra-sua',
+         'Trà',
+         'recipe-workflow-test',
+         '{}'::jsonb,
+         'active',
+         999999,
+         'tra'
+       )
+       RETURNING id::text`,
+      [`recipe-workflow-product-${suffix}`],
     );
-    assert.ok(variant.rows[0]?.id, "Recipe workflow fixture requires an active public Catalog v2 variant.");
+    catalogProductId = product.rows[0].id;
+
+    const variant = await db.query<{ id: string }>(
+      `INSERT INTO catalog_variants (
+         product_id,
+         catalog_version,
+         variant_key,
+         sku,
+         name,
+         options,
+         price_mode,
+         price_label,
+         retail_price,
+         shop_price,
+         status,
+         is_active,
+         is_public,
+         is_orderable,
+         sort_order
+       ) VALUES (
+         $1::uuid,
+         'hung-phat-v2',
+         $2,
+         $3,
+         'Gói kiểm thử 1kg',
+         '{"size":"1kg","sell_unit":"gói"}'::jsonb,
+         'fixed',
+         NULL,
+         NULL,
+         100000,
+         'active',
+         true,
+         true,
+         true,
+         999999
+       )
+       RETURNING id::text`,
+      [catalogProductId, `recipe-workflow-variant-${suffix}`, `RWF-${suffix.slice(0, 20)}`],
+    );
+    catalogVariantId = variant.rows[0].id;
 
     const staff = await db.query<{ id: string }>(
       `INSERT INTO staff_users (clerk_user_id, email, name, role, is_active)
@@ -86,7 +129,7 @@ async function main() {
       changeNote: "Tạo bản nháp đầu tiên",
       ingredients: [
         {
-          catalogVariantId: variant.rows[0].id,
+          catalogVariantId,
           quantity: 100,
           unit: "ml",
           optional: false,
@@ -110,6 +153,7 @@ async function main() {
     assert.equal(created.recipe.coverImageUrl, baseDocument.coverImageUrl);
     assert.equal(created.recipe.sortOrder, 17);
     assert.equal(created.recipe.ingredients.length, 1);
+    assert.equal(created.recipe.ingredients[0]?.catalogVariantId, catalogVariantId);
     assert.equal(created.recipe.steps[0]?.imageUrl, baseDocument.steps[0].imageUrl);
 
     const updated = await updateAdminRecipe(
@@ -213,6 +257,12 @@ async function main() {
     }
     if (staffId) {
       await db.query("DELETE FROM staff_users WHERE id = $1::uuid", [staffId]).catch(() => undefined);
+    }
+    if (catalogVariantId) {
+      await db.query("DELETE FROM catalog_variants WHERE id = $1::uuid", [catalogVariantId]).catch(() => undefined);
+    }
+    if (catalogProductId) {
+      await db.query("DELETE FROM catalog_products WHERE id = $1::uuid", [catalogProductId]).catch(() => undefined);
     }
     await db.end().catch(() => undefined);
   }
