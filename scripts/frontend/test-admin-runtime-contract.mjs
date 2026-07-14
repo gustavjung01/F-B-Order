@@ -26,8 +26,15 @@ assert.match(migrationPlan, /015_customer_utf8_repair\.sql/);
 assert.match(migrationPlan, /016_recipe_title_utf8_repair\.sql/);
 assert.match(customerUtf8Repair, /Trà Sữa Hùng Trà/);
 assert.match(recipeUtf8Repair, /UPDATE recipes/);
-assert.match(recipeUtf8Repair, /UPDATE recipe_versions/);
-assert.match(recipeUtf8Repair, /snapshot ->> 'title' = 'Tr� S\?a H\?ng Tr�'/);
+assert.doesNotMatch(
+  recipeUtf8Repair,
+  /UPDATE\s+recipe_versions/i,
+  "Recipe snapshots are immutable and must never be updated in place.",
+);
+assert.match(recipeUtf8Repair, /INSERT INTO recipe_versions/);
+assert.match(recipeUtf8Repair, /source_version\.snapshot ->> 'title' = 'Tr� S\?a H\?ng Tr�'/);
+assert.match(recipeUtf8Repair, /current_version_id = corrected_current_id/);
+assert.match(recipeUtf8Repair, /published_version_id = corrected_published_id/);
 assert.match(recipeUtf8Repair, /Trà Sữa Hùng Trà/);
 
 assert.match(recipePage, /recipe-operations\.css/);
@@ -38,4 +45,4 @@ assert.match(recipeStyles, /height: 3rem/);
 assert.match(recipeStyles, /> select/);
 assert.match(recipeStyles, /grid-column: 1 \/ -1/);
 
-console.log("Admin runtime proxy, Recipe UTF-8 repair and mobile toolbar contract passed.");
+console.log("Admin runtime proxy, immutable Recipe UTF-8 repair and mobile toolbar contract passed.");
