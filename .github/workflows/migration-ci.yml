@@ -83,6 +83,19 @@ jobs:
       - name: Existing production baseline
         run: pnpm --filter @fb-order/backend db:test:migrations -- baseline
 
+      - name: Immutable Recipe UTF-8 repair
+        run: |
+          set -o pipefail
+          node apps/backend/scripts/test-recipe-utf8-migration.mjs 2>&1 | tee recipe-utf8-migration.log
+
+      - name: Upload Recipe UTF-8 repair log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: recipe-utf8-migration-log
+          path: recipe-utf8-migration.log
+          if-no-files-found: error
+
       - name: Advisory lock
         run: pnpm --filter @fb-order/backend db:test:migrations -- lock
 
