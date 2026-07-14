@@ -83,6 +83,9 @@ jobs:
       - name: Existing production baseline
         run: pnpm --filter @fb-order/backend db:test:migrations -- baseline
 
+      - name: Immutable Recipe UTF-8 repair
+        run: node apps/backend/scripts/test-recipe-utf8-migration.mjs
+
       - name: Advisory lock
         run: pnpm --filter @fb-order/backend db:test:migrations -- lock
 
