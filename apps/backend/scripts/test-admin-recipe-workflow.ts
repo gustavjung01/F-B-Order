@@ -51,7 +51,7 @@ async function main() {
          'nguyen-lieu-tra-sua',
          'Trà',
          'recipe-workflow-test',
-         '{}'::jsonb,
+         '[]'::jsonb,
          'active',
          999999,
          'tra'
