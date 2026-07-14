@@ -13,6 +13,7 @@
     "test:admin-products": "tsx scripts/test-admin-products-contract.ts",
     "test:order-engine": "tsx scripts/test-order-engine.ts",
     "test:recipe-scale": "tsx scripts/test-recipe-scale.ts",
+    "test:recipe-workflow": "tsx scripts/test-admin-recipe-workflow.ts",
     "db:migrate": "node scripts/run-migrations.mjs",
     "db:migrate:baseline": "node scripts/run-migrations.mjs --baseline-existing",
     "db:test:migrations": "node scripts/test-migrations.mjs",
