@@ -26,6 +26,13 @@ function databaseUrl(databaseName) {
   return url.toString();
 }
 
+function readMigration(filename) {
+  return fs
+    .readFileSync(path.join(repoRoot, filename), "utf8")
+    .replace(/^\uFEFF/, "")
+    .replace(/\r\n/g, "\n");
+}
+
 const databaseName = `bepsi_recipe_utf8_${process.pid}_${Date.now()}`.toLowerCase();
 const adminPool = new Pool({ connectionString: adminConnectionString, max: 1 });
 
@@ -35,12 +42,12 @@ try {
   const pool = new Pool({ connectionString, max: 1 });
 
   try {
-    const repairIndex = MIGRATION_FILES.indexOf("db/migrations/016_recipe_title_utf8_repair.sql");
+    const repairFilename = "db/migrations/016_recipe_title_utf8_repair.sql";
+    const repairIndex = MIGRATION_FILES.indexOf(repairFilename);
     assert.ok(repairIndex > 0, "Recipe UTF-8 repair migration must be present in the migration plan.");
 
     for (const filename of MIGRATION_FILES.slice(0, repairIndex)) {
-      const sql = fs.readFileSync(path.join(repoRoot, filename), "utf8");
-      await pool.query(sql);
+      await pool.query(readMigration(filename));
     }
 
     const recipeResult = await pool.query(
@@ -81,11 +88,7 @@ try {
       FOR EACH ROW EXECUTE FUNCTION test_reject_recipe_snapshot_update();
     `);
 
-    const repairSql = fs.readFileSync(
-      path.join(repoRoot, "db/migrations/016_recipe_title_utf8_repair.sql"),
-      "utf8",
-    );
-    await pool.query(repairSql);
+    await pool.query(readMigration(repairFilename));
 
     const repairedRecipe = await pool.query(
       `SELECT title, current_version_id::text AS current_version_id, published_version_id::text AS published_version_id
