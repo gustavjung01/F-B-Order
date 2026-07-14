@@ -98,6 +98,9 @@ jobs:
           path: catalog-contract.log
           if-no-files-found: error
 
+      - name: Verify Recipe admin workflow
+        run: pnpm --filter @fb-order/backend test:recipe-workflow
+
       - name: Verify order engine
         run: pnpm --filter @fb-order/backend test:order-engine
 
