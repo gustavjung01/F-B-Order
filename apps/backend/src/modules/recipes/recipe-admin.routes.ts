@@ -3,12 +3,12 @@ import { Router } from "express";
 import { requireAdmin } from "../admin/admin-access";
 import type { RequestIdentity } from "../auth/auth.identity";
 import { isOrderEngineError } from "../orders/order-errors";
+import { listAdminRecipesStable } from "./recipe-admin-list.service";
 import {
   archiveAdminRecipe,
   createAdminRecipe,
   getAdminRecipe,
   listAdminRecipeVersions,
-  listAdminRecipes,
   publishRecipe,
   reviewRecipe,
   searchRecipeCatalogOptions,
@@ -25,7 +25,10 @@ function sendRecipeError(res: Response, error: unknown): void {
     return;
   }
   console.error("admin recipe request failed", error);
-  res.status(500).json({ error: "ADMIN_RECIPE_REQUEST_FAILED" });
+  res.status(500).json({
+    error: "ADMIN_RECIPE_REQUEST_FAILED",
+    message: "Không tải được dữ liệu công thức. Vui lòng kiểm tra migration và log backend.",
+  });
 }
 
 export function createAdminRecipesRouter(identityResolver: IdentityResolver) {
@@ -43,7 +46,7 @@ export function createAdminRecipesRouter(identityResolver: IdentityResolver) {
     try {
       const identity = requireAdmin(await identityResolver(req));
       const limit = Number.parseInt(String(req.query.limit ?? "50"), 10);
-      res.json(await listAdminRecipes(identity, {
+      res.json(await listAdminRecipesStable(identity, {
         status: req.query.status,
         search: req.query.q,
         limit: Number.isFinite(limit) ? limit : 50,
