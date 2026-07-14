@@ -111,6 +111,19 @@ jobs:
           path: recipe-workflow.log
           if-no-files-found: error
 
+      - name: Verify Recipe scale contract
+        run: |
+          set -o pipefail
+          pnpm --filter @fb-order/backend test:recipe-scale 2>&1 | tee recipe-scale.log
+
+      - name: Upload Recipe scale log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: recipe-scale-log
+          path: recipe-scale.log
+          if-no-files-found: error
+
       - name: Verify order engine
         run: pnpm --filter @fb-order/backend test:order-engine
 

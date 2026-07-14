@@ -54,6 +54,9 @@ jobs:
       - name: Test admin Recipe editor contract
         run: node scripts/frontend/test-admin-recipe-editor-contract.mjs
 
+      - name: Test admin Recipe Scale contract
+        run: node scripts/frontend/test-admin-recipe-scale-contract.mjs
+
       - name: Typecheck
         run: pnpm typecheck
 
