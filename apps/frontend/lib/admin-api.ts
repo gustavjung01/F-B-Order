@@ -14,6 +14,14 @@ export class AdminApiError extends Error {
   }
 }
 
+function adminRequestUrl(path: string): string {
+  if (!path.startsWith("/")) throw new Error("Admin API path must start with '/'.");
+
+  // Browser requests stay on bepsi.click and pass through the Next.js admin proxy.
+  // Server-side callers still use the configured backend URL directly.
+  return typeof window === "undefined" ? `${API_URL}${path}` : path;
+}
+
 export async function adminApiFetch<T>(
   path: string,
   token: string,
@@ -23,7 +31,7 @@ export async function adminApiFetch<T>(
   headers.set("Authorization", `Bearer ${token}`);
   if (options.body !== undefined) headers.set("Content-Type", "application/json");
 
-  const response = await fetch(`${API_URL}${path}`, {
+  const response = await fetch(adminRequestUrl(path), {
     ...options,
     headers,
     cache: "no-store",

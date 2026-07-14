@@ -57,6 +57,9 @@ jobs:
       - name: Test admin Recipe Scale contract
         run: node scripts/frontend/test-admin-recipe-scale-contract.mjs
 
+      - name: Test admin runtime proxy contract
+        run: node scripts/frontend/test-admin-runtime-contract.mjs
+
       - name: Typecheck
         run: pnpm typecheck
 
