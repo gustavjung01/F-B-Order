@@ -11,10 +11,10 @@ import {
   listAdminRecipeVersions,
   publishRecipe,
   reviewRecipe,
-  searchRecipeCatalogOptions,
   submitRecipeForReview,
   updateAdminRecipe,
 } from "./recipe-admin.service";
+import { searchRecipeCatalogOptionsWithImages } from "./recipe-catalog-options.service";
 import { scaleAdminRecipe } from "./recipe-scale.service";
 
 type IdentityResolver = (req: Request) => Promise<RequestIdentity>;
@@ -38,7 +38,7 @@ export function createAdminRecipesRouter(identityResolver: IdentityResolver) {
   router.get("/catalog-options", async (req, res) => {
     try {
       const identity = requireAdmin(await identityResolver(req));
-      res.json(await searchRecipeCatalogOptions(identity, { search: req.query.q, limit: req.query.limit }));
+      res.json(await searchRecipeCatalogOptionsWithImages(identity, { search: req.query.q, limit: req.query.limit }));
     } catch (error) { sendRecipeError(res, error); }
   });
 

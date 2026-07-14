@@ -1,12 +1,12 @@
-import { AdminRecipesPanel } from "@/components/admin/AdminRecipesPanel";
+import { AdminRecipeOperationsPanel } from "@/components/admin/AdminRecipeOperationsPanel";
 import { AdminShell } from "@/components/admin/AdminShell";
 
 export const dynamic = "force-dynamic";
 
 export default function AdminRecipesPage() {
   return (
-    <AdminShell title="Công thức" subtitle="Tạo và quản lý công thức nháp trước khi đưa vào quy trình duyệt/xuất bản.">
-      <AdminRecipesPanel />
+    <AdminShell title="Công thức" subtitle="Tạo, chọn ảnh, đặt đơn vị và quản lý quy trình duyệt/xuất bản công thức.">
+      <AdminRecipeOperationsPanel />
     </AdminShell>
   );
 }
