@@ -12,7 +12,8 @@ export const MIGRATION_FILES = Object.freeze([
   "db/migrations/011_recipe_review_publish_versioning.sql",
   "db/migrations/012_recipe_catalog_variant_links.sql",
   "db/migrations/013_catalog_variant_packaging_specs.sql",
-  "db/migrations/014_recipe_status_contract.sql"
+  "db/migrations/014_recipe_status_contract.sql",
+  "db/migrations/015_customer_utf8_repair.sql"
 ]);
 
 export const BASELINE_MIGRATION_FILES = Object.freeze([
