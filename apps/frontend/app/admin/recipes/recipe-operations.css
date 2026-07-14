@@ -1,0 +1,24 @@
+@media (max-width: 767px) {
+  .recipe-operations-page > div > section:first-of-type > div.mt-5.grid {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .recipe-operations-page > div > section:first-of-type > div.mt-5.grid > input {
+    grid-column: 1;
+    grid-row: 1;
+    min-width: 0;
+  }
+
+  .recipe-operations-page > div > section:first-of-type > div.mt-5.grid > button {
+    grid-column: 2;
+    grid-row: 1;
+    min-width: 4.75rem;
+    height: 3rem;
+  }
+
+  .recipe-operations-page > div > section:first-of-type > div.mt-5.grid > select {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    width: 100%;
+  }
+}
