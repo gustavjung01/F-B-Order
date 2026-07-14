@@ -39,7 +39,7 @@ export async function listAdminRecipesStable(
 
   // Counts are correlated subqueries instead of aggregate joins. Production has
   // legacy Recipe tables whose constraints may differ from a clean database;
-  // this query therefore does not depend on functional-dependency GROUP BY rules.
+  // this query therefore does not depend on inferred functional dependencies.
   const result = await db.query(
     `SELECT
        recipe.id::text,
