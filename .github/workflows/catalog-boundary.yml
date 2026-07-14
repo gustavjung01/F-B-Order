@@ -63,6 +63,9 @@ jobs:
       - name: Test admin Recipe picker contract
         run: node scripts/frontend/test-admin-recipe-picker-contract.mjs
 
+      - name: Test admin Recipe R2 media contract
+        run: node scripts/frontend/test-admin-recipe-media-contract.mjs
+
       - name: Typecheck
         run: pnpm typecheck
 
