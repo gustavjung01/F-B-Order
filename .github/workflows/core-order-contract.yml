@@ -99,7 +99,17 @@ jobs:
           if-no-files-found: error
 
       - name: Verify Recipe admin workflow
-        run: pnpm --filter @fb-order/backend test:recipe-workflow
+        run: |
+          set -o pipefail
+          pnpm --filter @fb-order/backend test:recipe-workflow 2>&1 | tee recipe-workflow.log
+
+      - name: Upload Recipe workflow log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: recipe-workflow-log
+          path: recipe-workflow.log
+          if-no-files-found: error
 
       - name: Verify order engine
         run: pnpm --filter @fb-order/backend test:order-engine
