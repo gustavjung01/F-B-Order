@@ -15,6 +15,7 @@ import {
   updateAdminRecipe,
 } from "./recipe-admin.service";
 import { searchRecipeCatalogOptionsWithImages } from "./recipe-catalog-options.service";
+import { createRecipeImageUpload, getRecipeCatalogMedia } from "./recipe-media.service";
 import { scaleAdminRecipe } from "./recipe-scale.service";
 
 type IdentityResolver = (req: Request) => Promise<RequestIdentity>;
@@ -39,6 +40,20 @@ export function createAdminRecipesRouter(identityResolver: IdentityResolver) {
     try {
       const identity = requireAdmin(await identityResolver(req));
       res.json(await searchRecipeCatalogOptionsWithImages(identity, { search: req.query.q, limit: req.query.limit }));
+    } catch (error) { sendRecipeError(res, error); }
+  });
+
+  router.get("/media/catalog", async (req, res) => {
+    try {
+      const identity = requireAdmin(await identityResolver(req));
+      res.json(await getRecipeCatalogMedia(identity, { variantIds: req.query.variantIds }));
+    } catch (error) { sendRecipeError(res, error); }
+  });
+
+  router.post("/media/presign", async (req, res) => {
+    try {
+      const identity = requireAdmin(await identityResolver(req));
+      res.status(201).json(await createRecipeImageUpload(identity, req.body ?? {}));
     } catch (error) { sendRecipeError(res, error); }
   });
 
