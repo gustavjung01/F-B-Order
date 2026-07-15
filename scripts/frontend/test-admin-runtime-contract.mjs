@@ -51,6 +51,11 @@ assert.match(recipeYieldCompatibility, /DROP CONSTRAINT IF EXISTS recipes_yield_
 assert.match(recipeYieldCompatibility, /length\(btrim\(yield_unit\)\) BETWEEN 1 AND 80/);
 assert.match(recipeYieldCompatibility, /column_name = 'version_number'/);
 assert.match(recipeYieldCompatibility, /ALTER COLUMN version_number DROP NOT NULL/);
+assert.doesNotMatch(
+  recipeYieldCompatibility,
+  /UPDATE\s+recipe_versions/i,
+  "Recipe compatibility migrations must not mutate immutable version rows.",
+);
 
 assert.match(recipePage, /recipe-operations\.css/);
 assert.match(recipePage, /className="recipe-operations-page"/);
