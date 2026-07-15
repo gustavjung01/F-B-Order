@@ -8,6 +8,7 @@ const migrationPlan = await readFile("apps/backend/scripts/migration-plan.mjs", 
 const customerUtf8Repair = await readFile("db/migrations/015_customer_utf8_repair.sql", "utf8");
 const recipeUtf8Repair = await readFile("db/migrations/016_recipe_title_utf8_repair.sql", "utf8");
 const recipeYieldCompatibility = await readFile("db/migrations/017_recipe_yield_unit_compatibility.sql", "utf8");
+const recipeIngredientCompatibility = await readFile("db/migrations/018_recipe_ingredient_legacy_name.sql", "utf8");
 const recipePage = await readFile("apps/frontend/app/admin/recipes/page.tsx", "utf8");
 const recipeSaveFeedback = await readFile("apps/frontend/components/admin/AdminRecipeSaveFeedback.tsx", "utf8");
 const recipeStyles = await readFile("apps/frontend/app/admin/recipes/recipe-operations.css", "utf8");
@@ -34,6 +35,7 @@ assert.doesNotMatch(recipeList, /GROUP BY/);
 assert.match(migrationPlan, /015_customer_utf8_repair\.sql/);
 assert.match(migrationPlan, /016_recipe_title_utf8_repair\.sql/);
 assert.match(migrationPlan, /017_recipe_yield_unit_compatibility\.sql/);
+assert.match(migrationPlan, /018_recipe_ingredient_legacy_name\.sql/);
 assert.match(customerUtf8Repair, /Trà Sữa Hùng Trà/);
 assert.match(recipeUtf8Repair, /UPDATE recipes/);
 assert.doesNotMatch(
@@ -57,6 +59,14 @@ assert.doesNotMatch(
   "Recipe compatibility migrations must not mutate immutable version rows.",
 );
 
+assert.match(recipeIngredientCompatibility, /ADD COLUMN IF NOT EXISTS name TEXT/);
+assert.match(recipeIngredientCompatibility, /CREATE OR REPLACE FUNCTION sync_recipe_ingredient_name_columns/);
+assert.match(recipeIngredientCompatibility, /NEW\.name := NEW\.product_name/);
+assert.match(recipeIngredientCompatibility, /NEW\.product_name := NEW\.name/);
+assert.match(recipeIngredientCompatibility, /BEFORE INSERT OR UPDATE OF name, product_name/);
+assert.doesNotMatch(recipeIngredientCompatibility, /ALTER COLUMN name DROP NOT NULL/);
+assert.doesNotMatch(recipeIngredientCompatibility, /DROP CONSTRAINT IF EXISTS recipe_ingredients_name_check/);
+
 assert.match(recipePage, /recipe-operations\.css/);
 assert.match(recipePage, /className="recipe-operations-page"/);
 assert.match(recipePage, /AdminRecipeSaveFeedback/);
@@ -70,4 +80,4 @@ assert.match(recipeStyles, /height: 3rem/);
 assert.match(recipeStyles, /> select/);
 assert.match(recipeStyles, /grid-column: 1 \/ -1/);
 
-console.log("Admin proxy, Recipe save compatibility, immutable UTF-8 repair and mobile toolbar contract passed.");
+console.log("Admin proxy, Recipe legacy compatibility, save feedback, immutable UTF-8 repair and mobile toolbar contract passed.");
