@@ -18,8 +18,8 @@ ALTER TABLE recipes
 
 -- Some audited production databases still contain the legacy version_number
 -- column as NOT NULL alongside the canonical version_no column. New code writes
--- version_no, so keep the legacy column readable without requiring future
--- inserts to populate both names.
+-- version_no, so keep the immutable historical rows untouched and only relax the
+-- obsolete write requirement for future inserts.
 DO $$
 BEGIN
   IF EXISTS (
@@ -29,12 +29,6 @@ BEGIN
       AND table_name = 'recipe_versions'
       AND column_name = 'version_number'
   ) THEN
-    EXECUTE '
-      UPDATE recipe_versions
-      SET version_no = COALESCE(version_no, version_number)
-      WHERE version_no IS NULL
-    ';
-
     EXECUTE '
       ALTER TABLE recipe_versions
       ALTER COLUMN version_number DROP NOT NULL
