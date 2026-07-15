@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 
 const adminApi = await readFile("apps/frontend/lib/admin-api.ts", "utf8");
-const proxyRoute = await readFile("apps/frontend/app/api/admin/[...path]/route.ts", "utf8");
+const proxyRoute = await readFile("apps/frontend/app/api/backend-admin/[...path]/route.ts", "utf8");
 const recipeList = await readFile("apps/backend/src/modules/recipes/recipe-admin-list.service.ts", "utf8");
 const migrationPlan = await readFile("apps/backend/scripts/migration-plan.mjs", "utf8");
 const customerUtf8Repair = await readFile("db/migrations/015_customer_utf8_repair.sql", "utf8");
@@ -10,11 +10,16 @@ const recipeUtf8Repair = await readFile("db/migrations/016_recipe_title_utf8_rep
 const recipePage = await readFile("apps/frontend/app/admin/recipes/page.tsx", "utf8");
 const recipeStyles = await readFile("apps/frontend/app/admin/recipes/recipe-operations.css", "utf8");
 
-assert.match(adminApi, /typeof window === "undefined" \? `\$\{API_URL\}\$\{path\}` : path/);
-assert.doesNotMatch(adminApi, /fetch\(`\$\{API_URL\}\$\{path\}`/);
+assert.match(adminApi, /function browserAdminProxyPath/);
+assert.match(adminApi, /path === "\/api\/admin"/);
+assert.match(adminApi, /path\.startsWith\("\/api\/admin\/"\)/);
+assert.match(adminApi, /`\/api\/backend-admin\/\$\{path\.slice\("\/api\/admin\/"\.length\)\}`/);
+assert.match(adminApi, /typeof window === "undefined"[\s\S]*`\$\{API_URL\}\$\{path\}`[\s\S]*browserAdminProxyPath\(path\)/);
+assert.doesNotMatch(adminApi, /typeof window === "undefined" \? `\$\{API_URL\}\$\{path\}` : path/);
 
-assert.match(proxyRoute, /\/api\/admin\/\$\{suffix\}\$\{search\}/);
+assert.match(proxyRoute, /`\/api\/admin\/\$\{suffix\}\$\{request\.nextUrl\.search \|\| ""\}`/);
 assert.match(proxyRoute, /headers: \{ authorization \}/);
+assert.match(proxyRoute, /ALLOWED_METHODS/);
 assert.match(proxyRoute, /export const PATCH = proxyAdminRequest/);
 assert.match(proxyRoute, /export const DELETE = proxyAdminRequest/);
 
@@ -45,4 +50,4 @@ assert.match(recipeStyles, /height: 3rem/);
 assert.match(recipeStyles, /> select/);
 assert.match(recipeStyles, /grid-column: 1 \/ -1/);
 
-console.log("Admin runtime proxy, immutable Recipe UTF-8 repair and mobile toolbar contract passed.");
+console.log("Isolated admin proxy, immutable Recipe UTF-8 repair and mobile toolbar contract passed.");
