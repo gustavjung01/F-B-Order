@@ -1,5 +1,13 @@
 import { API_URL } from "./api";
 
+export const ADMIN_API_SUCCESS_EVENT = "bepsi:admin-api-success";
+
+export type AdminApiSuccessDetail = {
+  path: string;
+  method: string;
+  status: number;
+};
+
 export class AdminApiError extends Error {
   readonly status: number;
   readonly code: string;
@@ -41,9 +49,11 @@ export async function adminApiFetch<T>(
   const headers = new Headers(options.headers);
   headers.set("Authorization", `Bearer ${token}`);
   if (options.body !== undefined) headers.set("Content-Type", "application/json");
+  const method = String(options.method || "GET").toUpperCase();
 
   const response = await fetch(adminRequestUrl(path), {
     ...options,
+    method,
     headers,
     cache: "no-store",
   });
@@ -62,6 +72,11 @@ export async function adminApiFetch<T>(
       payload?.message || `Admin API request failed with status ${response.status}.`,
       payload?.details,
     );
+  }
+
+  if (typeof window !== "undefined") {
+    const detail: AdminApiSuccessDetail = { path, method, status: response.status };
+    window.dispatchEvent(new CustomEvent<AdminApiSuccessDetail>(ADMIN_API_SUCCESS_EVENT, { detail }));
   }
 
   return payload as T;

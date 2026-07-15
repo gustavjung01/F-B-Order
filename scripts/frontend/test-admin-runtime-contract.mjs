@@ -7,7 +7,9 @@ const recipeList = await readFile("apps/backend/src/modules/recipes/recipe-admin
 const migrationPlan = await readFile("apps/backend/scripts/migration-plan.mjs", "utf8");
 const customerUtf8Repair = await readFile("db/migrations/015_customer_utf8_repair.sql", "utf8");
 const recipeUtf8Repair = await readFile("db/migrations/016_recipe_title_utf8_repair.sql", "utf8");
+const recipeYieldCompatibility = await readFile("db/migrations/017_recipe_yield_unit_compatibility.sql", "utf8");
 const recipePage = await readFile("apps/frontend/app/admin/recipes/page.tsx", "utf8");
+const recipeSaveFeedback = await readFile("apps/frontend/components/admin/AdminRecipeSaveFeedback.tsx", "utf8");
 const recipeStyles = await readFile("apps/frontend/app/admin/recipes/recipe-operations.css", "utf8");
 
 assert.match(adminApi, /function browserAdminProxyPath/);
@@ -16,6 +18,8 @@ assert.match(adminApi, /path\.startsWith\("\/api\/admin\/"\)/);
 assert.match(adminApi, /`\/api\/backend-admin\/\$\{path\.slice\("\/api\/admin\/"\.length\)\}`/);
 assert.match(adminApi, /typeof window === "undefined"[\s\S]*`\$\{API_URL\}\$\{path\}`[\s\S]*browserAdminProxyPath\(path\)/);
 assert.doesNotMatch(adminApi, /typeof window === "undefined" \? `\$\{API_URL\}\$\{path\}` : path/);
+assert.match(adminApi, /ADMIN_API_SUCCESS_EVENT/);
+assert.match(adminApi, /window\.dispatchEvent\(new CustomEvent/);
 
 assert.match(proxyRoute, /`\/api\/admin\/\$\{suffix\}\$\{request\.nextUrl\.search \|\| ""\}`/);
 assert.match(proxyRoute, /headers: \{ authorization \}/);
@@ -29,6 +33,7 @@ assert.doesNotMatch(recipeList, /GROUP BY/);
 
 assert.match(migrationPlan, /015_customer_utf8_repair\.sql/);
 assert.match(migrationPlan, /016_recipe_title_utf8_repair\.sql/);
+assert.match(migrationPlan, /017_recipe_yield_unit_compatibility\.sql/);
 assert.match(customerUtf8Repair, /Trà Sữa Hùng Trà/);
 assert.match(recipeUtf8Repair, /UPDATE recipes/);
 assert.doesNotMatch(
@@ -42,12 +47,27 @@ assert.match(recipeUtf8Repair, /current_version_id = corrected_current_id/);
 assert.match(recipeUtf8Repair, /published_version_id = corrected_published_id/);
 assert.match(recipeUtf8Repair, /Trà Sữa Hùng Trà/);
 
+assert.match(recipeYieldCompatibility, /DROP CONSTRAINT IF EXISTS recipes_yield_unit_check/);
+assert.match(recipeYieldCompatibility, /length\(btrim\(yield_unit\)\) BETWEEN 1 AND 80/);
+assert.match(recipeYieldCompatibility, /column_name = 'version_number'/);
+assert.match(recipeYieldCompatibility, /ALTER COLUMN version_number DROP NOT NULL/);
+assert.doesNotMatch(
+  recipeYieldCompatibility,
+  /UPDATE\s+recipe_versions/i,
+  "Recipe compatibility migrations must not mutate immutable version rows.",
+);
+
 assert.match(recipePage, /recipe-operations\.css/);
 assert.match(recipePage, /className="recipe-operations-page"/);
+assert.match(recipePage, /AdminRecipeSaveFeedback/);
+assert.match(recipeSaveFeedback, /Đã lưu công thức và ảnh/);
+assert.match(recipeSaveFeedback, /role="status"/);
+assert.match(recipeSaveFeedback, /detail\.method === "PATCH"/);
+assert.match(recipeSaveFeedback, /detail\.method === "POST"/);
 assert.match(recipeStyles, /grid-template-columns: minmax\(0, 1fr\) auto/);
 assert.match(recipeStyles, /> button/);
 assert.match(recipeStyles, /height: 3rem/);
 assert.match(recipeStyles, /> select/);
 assert.match(recipeStyles, /grid-column: 1 \/ -1/);
 
-console.log("Isolated admin proxy, immutable Recipe UTF-8 repair and mobile toolbar contract passed.");
+console.log("Admin proxy, Recipe save compatibility, immutable UTF-8 repair and mobile toolbar contract passed.");

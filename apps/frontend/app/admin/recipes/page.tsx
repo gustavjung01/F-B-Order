@@ -1,4 +1,5 @@
 import { AdminRecipeOperationsPanelV2 } from "@/components/admin/AdminRecipeOperationsPanelV2";
+import { AdminRecipeSaveFeedback } from "@/components/admin/AdminRecipeSaveFeedback";
 import { AdminShell } from "@/components/admin/AdminShell";
 import "./recipe-operations.css";
 
@@ -9,6 +10,7 @@ export default function AdminRecipesPage() {
     <AdminShell title="Công thức" subtitle="Tạo, chọn ảnh, đặt đơn vị và quản lý quy trình duyệt/xuất bản công thức.">
       <div className="recipe-operations-page">
         <AdminRecipeOperationsPanelV2 />
+        <AdminRecipeSaveFeedback />
       </div>
     </AdminShell>
   );
