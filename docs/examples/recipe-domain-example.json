@@ -1,0 +1,223 @@
+{
+  "id": "example-recipe-tra-dao",
+  "slug": "tra-dao-kinh-doanh",
+  "title": "Trà đào kinh doanh",
+  "aliases": [
+    "Trà đào cam sả cơ bản"
+  ],
+  "shortDescription": "Công thức nền 10 phần, có thể scale bằng engine và liên kết nguyên liệu Catalog V2.",
+  "categoryId": null,
+  "status": "draft",
+  "visibility": "internal",
+  "coverImageUrl": null,
+  "difficulty": "easy",
+  "prepMinutes": 15,
+  "cookMinutes": 10,
+  "yieldQuantity": 10,
+  "yieldUnit": "portion",
+  "ingredients": [
+    {
+      "id": "ingredient-syrup",
+      "name": "Siro đào Golden Farm",
+      "sourceType": "catalog",
+      "usageQuantity": 300,
+      "usageUnit": "ml",
+      "packageConversion": {
+        "packageContentQuantity": 700,
+        "packageContentUnit": "ml",
+        "wastePercent": 2,
+        "usableYieldPercent": 98
+      },
+      "catalog": {
+        "productId": "example-catalog-product-golden-farm",
+        "variantId": "example-catalog-variant-700ml",
+        "selections": {
+          "flavor": "Đào"
+        },
+        "selectionKey": "flavor=%C4%90%C3%A0o",
+        "cartReady": true,
+        "snapshot": {
+          "productName": "Siro Golden Farm",
+          "variantName": "Siro Golden Farm 700 ml",
+          "sku": "EXAMPLE-SKU-700ML",
+          "specification": "700 ml · ĐVT: chai",
+          "selectionKey": "flavor=%C4%90%C3%A0o"
+        }
+      },
+      "isOptional": false,
+      "sortOrder": 1,
+      "note": "ID trong file mẫu chỉ để minh họa, không phải ID production.",
+      "provenance": {
+        "source": "human",
+        "aiRunId": null,
+        "promptVersion": null,
+        "importedSource": null
+      }
+    },
+    {
+      "id": "ingredient-tea",
+      "name": "Trà đen",
+      "sourceType": "catalog",
+      "usageQuantity": 80,
+      "usageUnit": "g",
+      "packageConversion": {
+        "packageContentQuantity": 500,
+        "packageContentUnit": "g",
+        "wastePercent": 0,
+        "usableYieldPercent": 100
+      },
+      "catalog": {
+        "productId": "example-catalog-product-black-tea",
+        "variantId": "example-catalog-variant-black-tea-500g",
+        "selections": {},
+        "selectionKey": "",
+        "cartReady": true,
+        "snapshot": {
+          "productName": "Trà đen",
+          "variantName": "Trà đen 500 g",
+          "sku": "EXAMPLE-TEA-500G",
+          "specification": "500 g · ĐVT: gói",
+          "selectionKey": ""
+        }
+      },
+      "isOptional": false,
+      "sortOrder": 2,
+      "note": null,
+      "provenance": {
+        "source": "human"
+      }
+    },
+    {
+      "id": "ingredient-water",
+      "name": "Nước lọc",
+      "sourceType": "external",
+      "usageQuantity": 2500,
+      "usageUnit": "ml",
+      "packageConversion": null,
+      "catalog": null,
+      "isOptional": false,
+      "sortOrder": 3,
+      "note": "Nguyên liệu ngoài Catalog V2.",
+      "provenance": {
+        "source": "human"
+      }
+    },
+    {
+      "id": "ingredient-orange",
+      "name": "Lát cam trang trí",
+      "sourceType": "external",
+      "usageQuantity": 10,
+      "usageUnit": "piece",
+      "packageConversion": null,
+      "catalog": null,
+      "isOptional": true,
+      "sortOrder": 4,
+      "note": "Không tự thêm vào cart preview mặc định.",
+      "provenance": {
+        "source": "ai",
+        "aiRunId": "example-ai-run-001",
+        "promptVersion": "culinary-expert-v1"
+      }
+    }
+  ],
+  "steps": [
+    {
+      "id": "step-brew-tea",
+      "title": "Ủ trà",
+      "instruction": "Ủ 80 g trà đen với 2500 ml nước theo nhiệt độ phù hợp, sau đó lọc bỏ xác trà.",
+      "durationSeconds": 600,
+      "temperatureCelsius": 90,
+      "successMarker": "Nước trà thơm rõ, không có vị khét hoặc chát gắt.",
+      "warning": "Không bóp hoặc ép xác trà sau khi ủ.",
+      "mediaUrl": null,
+      "sortOrder": 1,
+      "provenance": {
+        "source": "human"
+      }
+    },
+    {
+      "id": "step-mix-syrup",
+      "title": "Phối siro",
+      "instruction": "Khi trà hạ nhiệt, cho 300 ml siro đào vào và khuấy đều.",
+      "durationSeconds": 120,
+      "temperatureCelsius": null,
+      "successMarker": "Mùi đào rõ nhưng không lấn hoàn toàn mùi trà.",
+      "warning": "Không cho siro vào lúc trà còn quá nóng nếu muốn giữ mùi trái cây.",
+      "mediaUrl": null,
+      "sortOrder": 2,
+      "provenance": {
+        "source": "human"
+      }
+    }
+  ],
+  "mistakes": [
+    {
+      "id": "mistake-bitter-tea",
+      "title": "Trà bị chát gắt",
+      "symptom": "Hậu vị khô miệng và lấn mùi đào.",
+      "likelyCauses": [
+        "Ủ quá lâu",
+        "Nhiệt nước quá cao",
+        "Ép xác trà sau khi ủ"
+      ],
+      "immediateFix": "Pha loãng theo từng lượng nhỏ và cân chỉnh lại siro, không đổ thêm siro một lần quá nhiều.",
+      "prevention": "Kiểm soát đúng thời gian, nhiệt độ và không ép xác trà.",
+      "relatedStepOrder": 1,
+      "severity": "high",
+      "sortOrder": 1,
+      "provenance": {
+        "source": "human"
+      }
+    }
+  ],
+  "businessTips": [
+    {
+      "id": "business-tip-batch",
+      "title": "Chuẩn bị theo mẻ",
+      "recommendation": "Chuẩn hóa mẻ nền 10 phần rồi scale bằng engine theo lượng bán dự kiến, không ước lượng bằng mắt.",
+      "targetCustomer": "Quán đồ uống nhỏ và vừa",
+      "sellingMoment": "Buổi trưa và chiều nóng",
+      "comboSuggestion": "Kết hợp món ăn vặt có vị mặn hoặc cay nhẹ.",
+      "packagingSuggestion": "Dùng ly trong để thấy màu trà và lát cam trang trí.",
+      "storageSuggestion": "Theo dõi thời gian pha và loại bỏ mẻ có mùi vị thay đổi.",
+      "batchPreparationSuggestion": "Chia thành nhiều mẻ nhỏ nếu lượng bán biến động để hạn chế tồn thành phẩm.",
+      "sortOrder": 1,
+      "provenance": {
+        "source": "ai",
+        "aiRunId": "example-ai-run-002",
+        "promptVersion": "business-advisor-v1"
+      }
+    }
+  ],
+  "seasonalRules": [
+    {
+      "id": "season-rule-hot-weather",
+      "type": "weather",
+      "title": "Ưu tiên ngày nóng",
+      "startMonth": null,
+      "endMonth": null,
+      "festival": null,
+      "weatherCondition": "Nắng nóng",
+      "regions": [],
+      "suitabilityReason": "Đồ uống trà trái cây lạnh dễ bán hơn khi thời tiết nóng.",
+      "marketingMessage": "Trà đào mát lạnh cho ngày nắng nóng.",
+      "priority": 100,
+      "provenance": {
+        "source": "human"
+      }
+    }
+  ],
+  "tags": [
+    {
+      "slug": "tra-trai-cay",
+      "name": "Trà trái cây"
+    },
+    {
+      "slug": "kinh-doanh",
+      "name": "Kinh doanh"
+    }
+  ],
+  "provenance": {
+    "source": "human"
+  }
+}
