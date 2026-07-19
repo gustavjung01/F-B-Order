@@ -1,4 +1,4 @@
-import { AdminProductsAuditPanel } from "@/components/admin/AdminProductsAuditPanel";
+import { AdminProductsAuditPanelV2 } from "@/components/admin/AdminProductsAuditPanelV2";
 import { AdminShell } from "@/components/admin/AdminShell";
 
 export const dynamic = "force-dynamic";
@@ -6,10 +6,10 @@ export const dynamic = "force-dynamic";
 export default function AdminProductsPage() {
   return (
     <AdminShell
-      title="Quản lý sản phẩm"
-      subtitle="Điền dữ liệu vận hành, đặt giá, bật bán và lấy Product ID cho production smoke test."
+      title="Sản phẩm"
+      subtitle="Rà dữ liệu catalog, đặt giá và bật bán bằng cùng dialog, form control và trạng thái với các module admin khác."
     >
-      <AdminProductsAuditPanel />
+      <AdminProductsAuditPanelV2 />
     </AdminShell>
   );
 }
