@@ -4,7 +4,7 @@ import { readFile } from "node:fs/promises";
 const backendService = await readFile("apps/backend/src/modules/recipes/recipe-media.service.ts", "utf8");
 const backendRoutes = await readFile("apps/backend/src/modules/recipes/recipe-admin.routes.ts", "utf8");
 const recipePage = await readFile("apps/frontend/app/admin/recipes/page.tsx", "utf8");
-const recipePanel = await readFile("apps/frontend/components/admin/AdminRecipeOperationsPanelV2.tsx", "utf8");
+const recipePanel = await readFile("apps/frontend/components/admin/AdminRecipeOperationsPanelV3.tsx", "utf8");
 const corsPolicy = await readFile("infra/cloudflare/r2-recipe-media-cors.json", "utf8");
 
 assert.match(backendService, /R2_ACCOUNT_ID/);
@@ -28,7 +28,7 @@ const dynamicRecipeIndex = backendRoutes.indexOf('router.get("/:recipeId"');
 assert.ok(mediaCatalogIndex >= 0 && mediaCatalogIndex < dynamicRecipeIndex, "Media catalog route must stay above /:recipeId.");
 assert.ok(mediaPresignIndex >= 0 && mediaPresignIndex < dynamicRecipeIndex, "Media presign route must stay above /:recipeId.");
 
-assert.match(recipePage, /AdminRecipeOperationsPanelV2/);
+assert.match(recipePage, /AdminRecipeOperationsPanelV3/);
 assert.match(recipePanel, /Tải ảnh từ máy/);
 assert.match(recipePanel, /Tải ảnh bước từ máy/);
 assert.match(recipePanel, /Dùng làm ảnh bìa/);
@@ -40,6 +40,11 @@ assert.match(recipePanel, /method: "PUT"/);
 assert.match(recipePanel, /headers: signed\.headers/);
 assert.match(recipePanel, /file\.size > MAX_IMAGE_BYTES/);
 assert.match(recipePanel, /R2 từ chối upload/);
+assert.match(recipePanel, /verifyPublicImage/);
+assert.match(recipePanel, /phase: "presigning"/);
+assert.match(recipePanel, /phase: "uploading"/);
+assert.match(recipePanel, /phase: "verifying"/);
+assert.match(recipePanel, /xác minh URL công khai/);
 
 const parsedCors = JSON.parse(corsPolicy);
 assert.ok(Array.isArray(parsedCors) && parsedCors.length > 0);
