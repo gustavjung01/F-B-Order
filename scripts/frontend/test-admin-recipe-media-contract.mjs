@@ -33,13 +33,18 @@ for (const route of [
   assert.ok(index >= 0 && index < dynamicRecipeIndex, `${route} must stay above /:recipeId.`);
 }
 assert.match(backendRoutes, /assertRecipeMediaNotReferencedByVersion/);
+assert.match(backendRoutes, /recordCurrentRecipeVersionMediaReferences/);
 
 for (const required of [
   "VERSION_MEDIA_REFERENCE_SQL",
+  "recipe_media_version_refs",
   "version.snapshot ->> 'coverImageUrl'",
   "jsonb_array_elements",
   "RECIPE_MEDIA_VERSION_REFERENCE_EXISTS",
   "protectVersionReferencedRecipeMedia",
+  "recordCurrentRecipeVersionMediaReferences",
+  "RECIPE_MEDIA_VERSION_COVER_MISMATCH",
+  "RECIPE_MEDIA_VERSION_STEP_MISMATCH",
 ]) {
   assert.ok(versionReferences.includes(required), `Immutable version media protection is missing: ${required}`);
 }
@@ -60,7 +65,22 @@ for (const required of ["createImageBitmap", "image/webp", "MAIN_MAX_DIMENSION =
   assert.ok(mediaClient.includes(required), `Recipe media client is missing: ${required}`);
 }
 
-for (const required of ["CREATE TABLE IF NOT EXISTS recipe_media_drafts", "CREATE TABLE IF NOT EXISTS recipe_media", "cover_media_id", "media_id UUID", "thumbnail_object_key", "pending", "uploaded", "attached", "detached", "deleted"]) {
+for (const required of [
+  "CREATE TABLE IF NOT EXISTS recipe_media_drafts",
+  "CREATE TABLE IF NOT EXISTS recipe_media",
+  "CREATE TABLE IF NOT EXISTS recipe_media_version_refs",
+  "REFERENCES recipe_media(id) ON DELETE RESTRICT",
+  "uq_recipe_media_version_cover",
+  "uq_recipe_media_version_step",
+  "cover_media_id",
+  "media_id UUID",
+  "thumbnail_object_key",
+  "pending",
+  "uploaded",
+  "attached",
+  "detached",
+  "deleted",
+]) {
   assert.ok(migration.includes(required), `Media lifecycle migration is missing: ${required}`);
 }
 
@@ -70,4 +90,4 @@ assert.ok(parsedCors[0].AllowedOrigins.includes("https://bepsi.click"));
 assert.ok(parsedCors[0].AllowedMethods.includes("PUT"));
 assert.ok(parsedCors[0].AllowedHeaders.includes("Content-Type"));
 
-console.log("Admin Recipe media lifecycle, version retention, and public thumbnail contract passed.");
+console.log("Admin Recipe media lifecycle, version FK retention, and public thumbnail contract passed.");
