@@ -7,17 +7,26 @@ function readInteger(name: string, fallback: number): number {
   return Number.isFinite(value) && value > 0 ? value : fallback;
 }
 
-const db = getDb();
+async function main(): Promise<void> {
+  const db = getDb();
 
-try {
-  const protectedVersionMedia = await protectVersionReferencedRecipeMedia(db);
-  const result = await cleanupOrphanRecipeMedia({
-    pendingHours: readInteger("RECIPE_MEDIA_PENDING_HOURS", 2),
-    detachedDays: readInteger("RECIPE_MEDIA_DETACHED_DAYS", 7),
-    limit: readInteger("RECIPE_MEDIA_CLEANUP_LIMIT", 100),
-  }, db);
-  console.log(JSON.stringify({ event: "recipe_media_cleanup", protectedVersionMedia, ...result }));
-  if (result.failed.length > 0) process.exitCode = 1;
-} finally {
-  await db.end();
+  try {
+    const protectedVersionMedia = await protectVersionReferencedRecipeMedia(db);
+    const result = await cleanupOrphanRecipeMedia({
+      pendingHours: readInteger("RECIPE_MEDIA_PENDING_HOURS", 2),
+      detachedDays: readInteger("RECIPE_MEDIA_DETACHED_DAYS", 7),
+      limit: readInteger("RECIPE_MEDIA_CLEANUP_LIMIT", 100),
+    }, db);
+
+    console.log(JSON.stringify({ event: "recipe_media_cleanup", protectedVersionMedia, ...result }));
+    if (result.failed.length > 0) process.exitCode = 1;
+  } finally {
+    await db.end();
+  }
 }
+
+void main().catch((error: unknown) => {
+  const message = error instanceof Error ? error.message : String(error);
+  console.error(JSON.stringify({ event: "recipe_media_cleanup_failed", message }));
+  process.exitCode = 1;
+});
