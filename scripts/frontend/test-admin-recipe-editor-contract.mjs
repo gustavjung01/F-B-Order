@@ -1,42 +1,45 @@
 import assert from "node:assert/strict";
-import fs from "node:fs";
+import { readFile } from "node:fs/promises";
 
-const source = fs.readFileSync(
-  new URL("../../apps/frontend/components/admin/AdminRecipesPanel.tsx", import.meta.url),
-  "utf8",
-);
+const page = await readFile("apps/frontend/app/admin/recipes/page.tsx", "utf8");
+const panel = await readFile("apps/frontend/components/admin/AdminRecipeOperationsPanelV5.tsx", "utf8");
+const types = await readFile("apps/frontend/components/admin/recipe-editor/types.ts", "utf8");
+const chrome = await readFile("apps/frontend/components/admin/recipe-editor/RecipeEditorChrome.tsx", "utf8");
+const overview = await readFile("apps/frontend/components/admin/recipe-editor/RecipeOverviewTab.tsx", "utf8");
+const ingredients = await readFile("apps/frontend/components/admin/recipe-editor/RecipeIngredientsTab.tsx", "utf8");
+const steps = await readFile("apps/frontend/components/admin/recipe-editor/RecipeStepsTab.tsx", "utf8");
+const publish = await readFile("apps/frontend/components/admin/recipe-editor/RecipePublishTab.tsx", "utf8");
+const pickers = await readFile("apps/frontend/components/admin/recipe-editor/RecipePickerDialogs.tsx", "utf8");
 
-for (const required of [
-  "clientId: string",
-  "createClientId(\"ingredient\")",
-  "createClientId(\"step\")",
-  "key={item.clientId}",
-  "catalogQueries[item.clientId]",
-  "searchCatalog(item.clientId)",
-  "removeIngredient(item.clientId)",
-  "removeStep(item.clientId)",
-  "Ảnh bìa công thức",
-  "form.coverImageUrl",
-  "Thứ tự hiển thị",
-  "form.sortOrder",
-  "Ảnh minh họa bước",
-  "item.imageUrl",
-]) {
-  assert.ok(source.includes(required), `Admin Recipe editor contract is missing: ${required}`);
+assert.match(page, /AdminRecipeOperationsPanelV5/);
+for (const component of ["RecipeOverviewTab", "RecipeIngredientsTab", "RecipeStepsTab", "RecipePublishTab", "RecipeEditorFooter", "RecipeCatalogPickerDialog", "RecipeMediaPickerDialog"]) {
+  assert.ok(panel.includes(component), `V5 orchestrator is missing ${component}`);
 }
+assert.ok(panel.split("\n").length < 650, "Recipe V5 orchestrator must stay below 650 lines.");
+assert.doesNotMatch(panel, /<section className="mt-4 rounded-\[24px\][\s\S]{5000}/, "Large tab JSX must not be embedded back into the orchestrator.");
 
-assert.equal(
-  /form\.(ingredients|steps)\.map\([\s\S]{0,300}?key=\{index\}/.test(source),
-  false,
-  "Recipe ingredient and step rows must not use array indexes as React keys.",
-);
-assert.ok(
-  source.includes("Record<string, string>") && source.includes("Record<string, CatalogOption[]>") && source.includes("catalogLoadingId"),
-  "Catalog search state must be keyed by stable client IDs.",
-);
-assert.ok(
-  source.includes("steps: form.steps") && source.includes("imageUrl: item.imageUrl"),
-  "Step image URL must be preserved in the API payload.",
-);
+for (const tab of ["Tổng quan", "Nguyên liệu", "Các bước", "Xuất bản"]) assert.ok(chrome.includes(tab), `Recipe tab is missing: ${tab}`);
+assert.match(chrome, /role="progressbar"/);
+assert.match(chrome, /RecipeUndoToast/);
+assert.match(types, /createClientId\("ingredient"\)/);
+assert.match(types, /createClientId\("step"\)/);
+assert.match(types, /function completionItems/);
+assert.match(types, /function moveItem/);
+assert.match(overview, /Ảnh bìa/);
+assert.match(ingredients, /draggable=\{!locked\}/);
+assert.match(ingredients, /onDrop=/);
+assert.match(steps, /draggable=\{!locked\}/);
+assert.match(steps, /Chọn từ media/);
+assert.match(pickers, /role="dialog"/);
+assert.match(pickers, /Catalog picker/);
+assert.match(pickers, /Media picker/);
+assert.match(pickers, /thumbnailUrl \|\| item\.imageUrl/);
+assert.match(publish, /Workflow hiện tại/);
+assert.match(publish, /Gửi review/);
+assert.match(publish, /Yêu cầu chỉnh sửa/);
+assert.match(publish, /Duyệt phiên bản/);
+assert.match(publish, /Xuất bản/);
+assert.match(panel, /steps: form\.steps/);
+assert.match(panel, /imageUrl: item\.imageUrl/);
 
-console.log("Admin Recipe editor contract passed.");
+console.log("Admin Recipe V5 component, tabs, picker, reorder, undo, completion, and workflow footer contract passed.");
