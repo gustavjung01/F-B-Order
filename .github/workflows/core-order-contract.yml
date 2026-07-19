@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - "feat/core-order-schema"
+      - "agent/**"
   pull_request:
     branches:
       - main
