@@ -44,6 +44,30 @@ ALTER TABLE recipes
 ALTER TABLE recipe_steps
   ADD COLUMN IF NOT EXISTS media_id UUID REFERENCES recipe_media(id) ON DELETE SET NULL;
 
+CREATE TABLE IF NOT EXISTS recipe_media_version_refs (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  version_id UUID NOT NULL REFERENCES recipe_versions(id) ON DELETE CASCADE,
+  media_id UUID NOT NULL REFERENCES recipe_media(id) ON DELETE RESTRICT,
+  usage TEXT NOT NULL CHECK (usage IN ('cover', 'step')),
+  step_no INTEGER,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  CHECK (
+    (usage = 'cover' AND step_no IS NULL)
+    OR (usage = 'step' AND step_no IS NOT NULL AND step_no > 0)
+  )
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS uq_recipe_media_version_cover
+  ON recipe_media_version_refs (version_id)
+  WHERE usage = 'cover';
+
+CREATE UNIQUE INDEX IF NOT EXISTS uq_recipe_media_version_step
+  ON recipe_media_version_refs (version_id, step_no)
+  WHERE usage = 'step';
+
+CREATE INDEX IF NOT EXISTS idx_recipe_media_version_refs_media
+  ON recipe_media_version_refs (media_id);
+
 CREATE INDEX IF NOT EXISTS idx_recipe_media_drafts_cleanup
   ON recipe_media_drafts (status, expires_at);
 
