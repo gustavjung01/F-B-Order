@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { AdminBadge } from "@/components/admin/ui/AdminUI";
 import { AdminApiError } from "@/lib/admin-api";
 
 export type ApprovalStatus = "pending" | "approved" | "rejected";
@@ -36,13 +37,7 @@ export type CustomerDetail = CustomerSummary & {
   note: string | null;
   rejectedReason: string | null;
   approvalActorType: string | null;
-  users: Array<{
-    id: string;
-    clerkUserId: string;
-    role: string;
-    isPrimary: boolean;
-    createdAt: string;
-  }>;
+  users: Array<{ id: string; clerkUserId: string; role: string; isPrimary: boolean; createdAt: string }>;
   approvalLogs: Array<{
     id: string;
     fromStatus: ApprovalStatus | null;
@@ -137,62 +132,38 @@ export const statusLabels: Record<string, string> = {
 
 export function formatDate(value: string | null | undefined) {
   if (!value) return "—";
-  return new Intl.DateTimeFormat("vi-VN", {
-    dateStyle: "short",
-    timeStyle: "short",
-  }).format(new Date(value));
+  return new Intl.DateTimeFormat("vi-VN", { dateStyle: "short", timeStyle: "short" }).format(new Date(value));
 }
 
 export function formatMoney(value: number, currency = "VND") {
-  return new Intl.NumberFormat("vi-VN", {
-    style: "currency",
-    currency,
-    maximumFractionDigits: 0,
-  }).format(value);
+  return new Intl.NumberFormat("vi-VN", { style: "currency", currency, maximumFractionDigits: 0 }).format(value);
 }
 
 export function errorText(error: unknown) {
   if (error instanceof AdminApiError) {
-    if (error.code === "ADMIN_ACCESS_REQUIRED")
-      return "Tài khoản này không có quyền admin.";
+    if (error.code === "ADMIN_ACCESS_REQUIRED") return "Tài khoản này không có quyền admin.";
     return `${error.message} (${error.code})`;
   }
   return error instanceof Error ? error.message : "Có lỗi không xác định.";
 }
 
-function statusClass(status: string) {
-  if (status === "approved" || status === "completed")
-    return "bg-emerald-100 text-emerald-800";
-  if (status === "rejected" || status === "cancelled")
-    return "bg-rose-100 text-rose-800";
-  if (status === "pending") return "bg-amber-100 text-amber-800";
-  if (status === "shipping") return "bg-sky-100 text-sky-800";
-  return "bg-indigo-100 text-indigo-800";
+function statusTone(status: string): "success" | "danger" | "warning" | "info" | "neutral" {
+  if (status === "approved" || status === "completed") return "success";
+  if (status === "rejected" || status === "cancelled") return "danger";
+  if (status === "pending") return "warning";
+  if (status === "shipping") return "info";
+  return "neutral";
 }
 
 export function StatusBadge({ status }: { status: string }) {
-  return (
-    <span
-      className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${statusClass(status)}`}
-    >
-      {statusLabels[status] || status}
-    </span>
-  );
+  return <AdminBadge tone={statusTone(status)}>{statusLabels[status] || status}</AdminBadge>;
 }
 
-export function Info({
-  label,
-  children,
-}: {
-  label: string;
-  children: ReactNode;
-}) {
+export function Info({ label, children }: { label: string; children: ReactNode }) {
   return (
     <div className="min-w-0">
-      <p className="text-xs font-medium text-slate-500">{label}</p>
-      <div className="mt-1 break-words font-semibold text-slate-900">
-        {children}
-      </div>
+      <p className="text-xs font-bold text-slate-500">{label}</p>
+      <div className="mt-1 break-words text-sm font-bold text-slate-900">{children}</div>
     </div>
   );
 }
