@@ -18,7 +18,8 @@ for (const required of [
   assert.ok(cleanupScript.includes(required), `Cleanup script is missing: ${required}`);
 }
 
-assert.match(cleanupService, /WorkingDirectory=\/srv\/apps\/bepsi\/apps\/backend/);
+assert.match(cleanupService, /WorkingDirectory=\/srv\/apps\/bepsi\/current\/apps\/backend/);
+assert.doesNotMatch(cleanupService, /WorkingDirectory=\/srv\/apps\/bepsi\/apps\/backend/);
 assert.match(cleanupService, /corepack pnpm recipe-media:cleanup/);
 assert.match(cleanupService, /Type=oneshot/);
 assert.match(cleanupTimer, /OnCalendar=\*-\*-\* 03:20:00 Asia\/Ho_Chi_Minh/);
