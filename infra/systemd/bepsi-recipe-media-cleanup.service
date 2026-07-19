@@ -6,7 +6,7 @@ Wants=network-online.target
 [Service]
 Type=oneshot
 User=ubuntu
-WorkingDirectory=/srv/apps/bepsi/apps/backend
+WorkingDirectory=/srv/apps/bepsi/current/apps/backend
 Environment=NODE_ENV=production
 ExecStart=/usr/bin/env bash -lc 'corepack pnpm recipe-media:cleanup'
 Nice=10
