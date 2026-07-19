@@ -165,10 +165,11 @@ export function AdminAlert({
     warning: "border-amber-200 bg-amber-50 text-amber-900",
     danger: "border-rose-200 bg-rose-50 text-rose-900",
   } as const;
+  const hasTitle = title !== null && title !== undefined && title !== false;
   return (
     <div role={tone === "danger" ? "alert" : "status"} className={join("rounded-2xl border px-4 py-3 text-sm", tones[tone], className)}>
-      {title ? <p className="font-black">{title}</p> : null}
-      <div className={join(title && "mt-1", "font-medium leading-6")}>{children}</div>
+      {hasTitle ? <p className="font-black">{title}</p> : null}
+      <div className={join(hasTitle && "mt-1", "font-medium leading-6")}>{children}</div>
     </div>
   );
 }
