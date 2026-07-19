@@ -1,0 +1,11 @@
+[Unit]
+Description=Run Bep Si Recipe media cleanup daily
+
+[Timer]
+OnCalendar=*-*-* 03:20:00 Asia/Ho_Chi_Minh
+Persistent=true
+RandomizedDelaySec=900
+Unit=bepsi-recipe-media-cleanup.service
+
+[Install]
+WantedBy=timers.target
