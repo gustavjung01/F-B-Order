@@ -52,6 +52,9 @@ jobs:
       - name: Test admin catalog readiness
         run: pnpm --filter @fb-order/backend test:admin-products
 
+      - name: Test admin design system contract
+        run: node scripts/frontend/test-admin-design-system-contract.mjs
+
       - name: Test admin Recipe editor contract
         run: node scripts/frontend/test-admin-recipe-editor-contract.mjs
 
