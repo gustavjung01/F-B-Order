@@ -28,3 +28,14 @@
 - `warning`: yêu cầu chỉnh sửa hoặc cảnh báo.
 - `secondary`: thao tác phụ.
 - `ghost`: thao tác chrome như đóng hoặc bỏ chọn.
+
+## Thứ tự phát hành
+
+Design system chỉ được phát hành sau khi các lớp phụ thuộc đã ổn định theo thứ tự:
+
+1. Operational guards của Recipe.
+2. Vòng đời media R2.
+3. Recipe editor V5.
+4. Chuẩn hóa design system toàn admin.
+
+Không deploy riêng design system lên production trước các nhánh phụ thuộc và không dùng đợt UI này để thay đổi API hoặc dữ liệu nghiệp vụ.
