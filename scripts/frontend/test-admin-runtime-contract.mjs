@@ -9,8 +9,9 @@ const customerUtf8Repair = await readFile("db/migrations/015_customer_utf8_repai
 const recipeUtf8Repair = await readFile("db/migrations/016_recipe_title_utf8_repair.sql", "utf8");
 const recipeYieldCompatibility = await readFile("db/migrations/017_recipe_yield_unit_compatibility.sql", "utf8");
 const recipeIngredientCompatibility = await readFile("db/migrations/018_recipe_ingredient_legacy_name.sql", "utf8");
+const recipeMediaLifecycle = await readFile("db/migrations/019_recipe_media_lifecycle.sql", "utf8");
 const recipePage = await readFile("apps/frontend/app/admin/recipes/page.tsx", "utf8");
-const guardedRecipePanel = await readFile("apps/frontend/components/admin/AdminRecipeOperationsPanelV3.tsx", "utf8");
+const guardedRecipePanel = await readFile("apps/frontend/components/admin/AdminRecipeOperationsPanelV4.tsx", "utf8");
 const recipeStyles = await readFile("apps/frontend/app/admin/recipes/recipe-operations.css", "utf8");
 
 assert.match(adminApi, /function browserAdminProxyPath/);
@@ -32,17 +33,18 @@ assert.match(recipeList, /SELECT COUNT\(\*\)::int[\s\S]*FROM recipe_ingredients/
 assert.match(recipeList, /COUNT\(\*\) OVER\(\)::int AS "totalCount"/);
 assert.doesNotMatch(recipeList, /GROUP BY/);
 
-assert.match(migrationPlan, /015_customer_utf8_repair\.sql/);
-assert.match(migrationPlan, /016_recipe_title_utf8_repair\.sql/);
-assert.match(migrationPlan, /017_recipe_yield_unit_compatibility\.sql/);
-assert.match(migrationPlan, /018_recipe_ingredient_legacy_name\.sql/);
+for (const migration of [
+  "015_customer_utf8_repair.sql",
+  "016_recipe_title_utf8_repair.sql",
+  "017_recipe_yield_unit_compatibility.sql",
+  "018_recipe_ingredient_legacy_name.sql",
+  "019_recipe_media_lifecycle.sql",
+]) {
+  assert.ok(migrationPlan.includes(migration), `Migration plan is missing ${migration}`);
+}
 assert.match(customerUtf8Repair, /Trà Sữa Hùng Trà/);
 assert.match(recipeUtf8Repair, /UPDATE recipes/);
-assert.doesNotMatch(
-  recipeUtf8Repair,
-  /UPDATE\s+recipe_versions/i,
-  "Recipe snapshots are immutable and must never be updated in place.",
-);
+assert.doesNotMatch(recipeUtf8Repair, /UPDATE\s+recipe_versions/i, "Recipe snapshots are immutable and must never be updated in place.");
 assert.match(recipeUtf8Repair, /INSERT INTO recipe_versions/);
 assert.match(recipeUtf8Repair, /source_version\.snapshot ->> 'title' = 'Tr� S\?a H\?ng Tr�'/);
 assert.match(recipeUtf8Repair, /current_version_id = corrected_current_id/);
@@ -53,11 +55,7 @@ assert.match(recipeYieldCompatibility, /DROP CONSTRAINT IF EXISTS recipes_yield_
 assert.match(recipeYieldCompatibility, /length\(btrim\(yield_unit\)\) BETWEEN 1 AND 80/);
 assert.match(recipeYieldCompatibility, /column_name = 'version_number'/);
 assert.match(recipeYieldCompatibility, /ALTER COLUMN version_number DROP NOT NULL/);
-assert.doesNotMatch(
-  recipeYieldCompatibility,
-  /UPDATE\s+recipe_versions/i,
-  "Recipe compatibility migrations must not mutate immutable version rows.",
-);
+assert.doesNotMatch(recipeYieldCompatibility, /UPDATE\s+recipe_versions/i, "Recipe compatibility migrations must not mutate immutable version rows.");
 
 assert.match(recipeIngredientCompatibility, /ADD COLUMN IF NOT EXISTS name TEXT/);
 assert.match(recipeIngredientCompatibility, /CREATE OR REPLACE FUNCTION sync_recipe_ingredient_name_columns/);
@@ -67,18 +65,22 @@ assert.match(recipeIngredientCompatibility, /BEFORE INSERT OR UPDATE OF name, pr
 assert.doesNotMatch(recipeIngredientCompatibility, /ALTER COLUMN name DROP NOT NULL/);
 assert.doesNotMatch(recipeIngredientCompatibility, /DROP CONSTRAINT IF EXISTS recipe_ingredients_name_check/);
 
+assert.match(recipeMediaLifecycle, /CREATE TABLE IF NOT EXISTS recipe_media/);
+assert.match(recipeMediaLifecycle, /CREATE TABLE IF NOT EXISTS recipe_media_version_refs/);
+assert.match(recipeMediaLifecycle, /ON DELETE RESTRICT/);
+
 assert.match(recipePage, /recipe-operations\.css/);
 assert.match(recipePage, /className="recipe-operations-page"/);
-assert.match(recipePage, /AdminRecipeOperationsPanelV3/);
+assert.match(recipePage, /AdminRecipeOperationsPanelV4/);
 assert.doesNotMatch(recipePage, /AdminRecipeSaveFeedback/);
-assert.match(guardedRecipePanel, /function EditorToast/);
-assert.match(guardedRecipePanel, /role=\{notice\.kind === "error" \? "alert" : "status"\}/);
-assert.match(guardedRecipePanel, /Đã lưu bản nháp mới của công thức/);
-assert.match(guardedRecipePanel, /Đã tạo công thức nháp thành công/);
+assert.match(guardedRecipePanel, /z-\[80\]/);
+assert.match(guardedRecipePanel, /role=\{toast\.kind === "error" \? "alert" : "status"\}/);
+assert.match(guardedRecipePanel, /Đã lưu version mới và đồng bộ vòng đời ảnh/);
+assert.match(guardedRecipePanel, /Đã tạo công thức và gắn media từ draft/);
 assert.match(recipeStyles, /grid-template-columns: minmax\(0, 1fr\) auto/);
 assert.match(recipeStyles, /> button/);
 assert.match(recipeStyles, /height: 3rem/);
 assert.match(recipeStyles, /> select/);
 assert.match(recipeStyles, /grid-column: 1 \/ -1/);
 
-console.log("Admin proxy, Recipe legacy compatibility, modal save feedback, immutable UTF-8 repair and mobile toolbar contract passed.");
+console.log("Admin proxy, Recipe V4 media lifecycle, immutable versions, and mobile toolbar contract passed.");

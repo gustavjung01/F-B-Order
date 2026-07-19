@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - "refactor/**"
+      - "agent/**"
   pull_request:
     branches:
       - main
@@ -68,6 +69,9 @@ jobs:
 
       - name: Test admin Recipe operational guards
         run: node scripts/frontend/test-admin-recipe-operational-guards.mjs
+
+      - name: Test Recipe media cleanup schedule
+        run: node scripts/frontend/test-recipe-media-cleanup-contract.mjs
 
       - name: Typecheck
         run: pnpm typecheck

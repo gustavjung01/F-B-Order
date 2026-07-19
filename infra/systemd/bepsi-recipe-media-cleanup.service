@@ -1,0 +1,15 @@
+[Unit]
+Description=Bep Si orphan Recipe media cleanup
+After=network-online.target postgresql.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=ubuntu
+WorkingDirectory=/srv/apps/bepsi/apps/backend
+Environment=NODE_ENV=production
+ExecStart=/usr/bin/env bash -lc 'corepack pnpm recipe-media:cleanup'
+Nice=10
+
+[Install]
+WantedBy=multi-user.target
