@@ -1,17 +1,15 @@
 import { AdminOperationsDashboard } from "@/components/admin/AdminOperationsDashboard";
-import { AdminModuleNav } from "@/components/admin/AdminModuleNav";
+import { AdminShell } from "@/components/admin/AdminShell";
 
 export const dynamic = "force-dynamic";
 
 export default function AdminPage() {
   return (
-    <>
-      <div className="sticky top-0 z-[70] border-b border-slate-200 bg-slate-100/95 px-4 py-3 backdrop-blur-xl md:px-8">
-        <div className="mx-auto max-w-[1600px]">
-          <AdminModuleNav />
-        </div>
-      </div>
+    <AdminShell
+      title="Vận hành"
+      subtitle="Duyệt khách hàng và xử lý đơn hàng trong cùng một hệ giao diện, cùng trạng thái và cùng cách thao tác."
+    >
       <AdminOperationsDashboard />
-    </>
+    </AdminShell>
   );
 }
