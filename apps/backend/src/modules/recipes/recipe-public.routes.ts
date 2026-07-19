@@ -1,4 +1,5 @@
 import { Router } from "express";
+import type { Pool } from "pg";
 import { getDb } from "../../db/pool";
 
 function text(value: unknown) { return typeof value === "string" ? value : ""; }
@@ -16,6 +17,7 @@ function fromSnapshot(row: any) {
     description: text(snapshot.description),
     relatedBrand: text(snapshot.relatedBrand),
     coverImageUrl: text(snapshot.coverImageUrl),
+    coverThumbnailUrl: text(snapshot.coverImageUrl),
     sourceConfidence: "published",
     status: "active",
     categoryName: row.category_name || "Công thức trà sữa",
@@ -38,15 +40,44 @@ function fromSnapshot(row: any) {
     }),
     steps: list(snapshot.steps).map((item, index) => {
       const x = record(item);
+      const imageUrl = text(x.imageUrl);
       return {
         id: `${row.id}-step-${index + 1}`,
         stepNo: index + 1,
         title: text(x.title),
         content: text(x.content),
-        imageUrl: text(x.imageUrl),
+        imageUrl,
+        thumbnailUrl: imageUrl,
       };
     }),
   };
+}
+
+type PublicRecipe = ReturnType<typeof fromSnapshot>;
+
+async function hydrateMediaThumbnails(recipes: PublicRecipe[], db: Pool): Promise<PublicRecipe[]> {
+  const urls = [...new Set(recipes.flatMap((recipe) => [
+    recipe.coverImageUrl,
+    ...recipe.steps.map((step) => step.imageUrl),
+  ]).filter(Boolean))];
+  if (urls.length === 0) return recipes;
+
+  const result = await db.query<{ publicUrl: string; thumbnailUrl: string }>(
+    `SELECT public_url AS "publicUrl", thumbnail_url AS "thumbnailUrl"
+     FROM recipe_media
+     WHERE public_url = ANY($1::text[])
+       AND status <> 'deleted'`,
+    [urls],
+  );
+  const thumbnails = new Map(result.rows.map((item) => [item.publicUrl, item.thumbnailUrl]));
+  return recipes.map((recipe) => ({
+    ...recipe,
+    coverThumbnailUrl: thumbnails.get(recipe.coverImageUrl) || recipe.coverImageUrl,
+    steps: recipe.steps.map((step) => ({
+      ...step,
+      thumbnailUrl: thumbnails.get(step.imageUrl) || step.imageUrl,
+    })),
+  }));
 }
 
 export function createPublicRecipesRouter() {
@@ -74,7 +105,8 @@ export function createPublicRecipesRouter() {
        LIMIT $2`,
       [search, limit],
     );
-    res.json({ approved: true, recipes: result.rows.map(fromSnapshot) });
+    const recipes = await hydrateMediaThumbnails(result.rows.map(fromSnapshot), db);
+    res.json({ approved: true, recipes });
   });
 
   router.get("/:slug", async (req, res) => {
@@ -97,7 +129,8 @@ export function createPublicRecipesRouter() {
       [req.params.slug],
     );
     if (!result.rowCount) return res.status(404).json({ error: "RECIPE_NOT_FOUND" });
-    res.json({ recipe: fromSnapshot(result.rows[0]) });
+    const [recipe] = await hydrateMediaThumbnails([fromSnapshot(result.rows[0])], db);
+    res.json({ recipe });
   });
 
   return router;
