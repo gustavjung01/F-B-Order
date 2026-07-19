@@ -25,6 +25,7 @@ import {
   getRecipeMediaReferences,
   syncRecipeMedia,
 } from "./recipe-media.service";
+import { assertRecipeMediaNotReferencedByVersion } from "./recipe-media-version-reference.service";
 import { scaleAdminRecipe } from "./recipe-scale.service";
 
 type IdentityResolver = (req: Request) => Promise<RequestIdentity>;
@@ -104,6 +105,7 @@ export function createAdminRecipesRouter(identityResolver: IdentityResolver) {
   router.delete("/media/:mediaId", async (req, res) => {
     try {
       const identity = requireAdmin(await identityResolver(req));
+      await assertRecipeMediaNotReferencedByVersion(req.params.mediaId);
       res.json(await deleteRecipeMedia(identity, req.params.mediaId));
     } catch (error) { sendRecipeError(res, error); }
   });
