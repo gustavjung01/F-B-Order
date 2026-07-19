@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { existsSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 
 const adminApi = await readFile("apps/frontend/lib/admin-api.ts", "utf8");
@@ -12,7 +13,7 @@ const recipeIngredientCompatibility = await readFile("db/migrations/018_recipe_i
 const recipeMediaLifecycle = await readFile("db/migrations/019_recipe_media_lifecycle.sql", "utf8");
 const recipePage = await readFile("apps/frontend/app/admin/recipes/page.tsx", "utf8");
 const guardedRecipePanel = await readFile("apps/frontend/components/admin/AdminRecipeOperationsPanelV5.tsx", "utf8");
-const recipeStyles = await readFile("apps/frontend/app/admin/recipes/recipe-operations.css", "utf8");
+const recipePickers = await readFile("apps/frontend/components/admin/recipe-editor/RecipePickerDialogs.tsx", "utf8");
 
 assert.match(adminApi, /function browserAdminProxyPath/);
 assert.match(adminApi, /path === "\/api\/admin"/);
@@ -40,18 +41,15 @@ assert.match(recipeIngredientCompatibility, /CREATE OR REPLACE FUNCTION sync_rec
 assert.match(recipeMediaLifecycle, /CREATE TABLE IF NOT EXISTS recipe_media_version_refs/);
 assert.match(recipeMediaLifecycle, /ON DELETE RESTRICT/);
 
-assert.match(recipePage, /recipe-operations\.css/);
-assert.match(recipePage, /className="recipe-operations-page"/);
+assert.match(recipePage, /AdminShell/);
 assert.match(recipePage, /AdminRecipeOperationsPanelV5/);
-assert.doesNotMatch(recipePage, /AdminRecipeSaveFeedback/);
+assert.doesNotMatch(recipePage, /recipe-operations\.css/);
+assert.equal(existsSync("apps/frontend/app/admin/recipes/recipe-operations.css"), false);
 assert.match(guardedRecipePanel, /z-\[80\]/);
 assert.match(guardedRecipePanel, /role=\{toast\.kind === "error" \? "alert" : "status"\}/);
 assert.match(guardedRecipePanel, /Đã lưu version mới và đồng bộ vòng đời ảnh/);
 assert.match(guardedRecipePanel, /Đã tạo công thức và gắn media từ draft/);
-assert.match(recipeStyles, /grid-template-columns: minmax\(0, 1fr\) auto/);
-assert.match(recipeStyles, /> button/);
-assert.match(recipeStyles, /height: 3rem/);
-assert.match(recipeStyles, /> select/);
-assert.match(recipeStyles, /grid-column: 1 \/ -1/);
+assert.match(recipePickers, /AdminDialog/);
+assert.doesNotMatch(recipePickers, /fixed inset-0 z-\[75\]/);
 
-console.log("Admin proxy, Recipe V5 lifecycle, immutable versions, and mobile toolbar contract passed.");
+console.log("Admin proxy, Recipe V5 lifecycle, shared dialog, and immutable-version runtime contract passed.");
