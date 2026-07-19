@@ -3,6 +3,9 @@ import { readFile } from "node:fs/promises";
 
 const backendService = await readFile("apps/backend/src/modules/recipes/recipe-media.service.ts", "utf8");
 const backendRoutes = await readFile("apps/backend/src/modules/recipes/recipe-admin.routes.ts", "utf8");
+const versionReferences = await readFile("apps/backend/src/modules/recipes/recipe-media-version-reference.service.ts", "utf8");
+const cleanupScript = await readFile("apps/backend/scripts/cleanup-recipe-media.ts", "utf8");
+const publicRoutes = await readFile("apps/backend/src/modules/recipes/recipe-public.routes.ts", "utf8");
 const recipePage = await readFile("apps/frontend/app/admin/recipes/page.tsx", "utf8");
 const recipePanel = await readFile("apps/frontend/components/admin/AdminRecipeOperationsPanelV4.tsx", "utf8");
 const mediaClient = await readFile("apps/frontend/lib/recipe-media-client.ts", "utf8");
@@ -29,6 +32,25 @@ for (const route of [
   const index = backendRoutes.indexOf(route);
   assert.ok(index >= 0 && index < dynamicRecipeIndex, `${route} must stay above /:recipeId.`);
 }
+assert.match(backendRoutes, /assertRecipeMediaNotReferencedByVersion/);
+
+for (const required of [
+  "VERSION_MEDIA_REFERENCE_SQL",
+  "version.snapshot ->> 'coverImageUrl'",
+  "jsonb_array_elements",
+  "RECIPE_MEDIA_VERSION_REFERENCE_EXISTS",
+  "protectVersionReferencedRecipeMedia",
+]) {
+  assert.ok(versionReferences.includes(required), `Immutable version media protection is missing: ${required}`);
+}
+assert.match(cleanupScript, /protectVersionReferencedRecipeMedia/);
+assert.match(cleanupScript, /protectedVersionMedia/);
+
+assert.match(publicRoutes, /coverThumbnailUrl/);
+assert.match(publicRoutes, /thumbnailUrl/);
+assert.match(publicRoutes, /FROM recipe_media/);
+assert.match(publicRoutes, /public_url = ANY/);
+assert.match(publicRoutes, /hydrateMediaThumbnails/);
 
 assert.match(recipePage, /AdminRecipeOperationsPanelV4/);
 for (const required of ["createRecipeMediaDraft", "uploadRecipeMedia", "syncRecipeMedia", "coverMediaId", "thumbnailUrl", "Draft media", "resize tối đa 1920px"]) {
@@ -48,4 +70,4 @@ assert.ok(parsedCors[0].AllowedOrigins.includes("https://bepsi.click"));
 assert.ok(parsedCors[0].AllowedMethods.includes("PUT"));
 assert.ok(parsedCors[0].AllowedHeaders.includes("Content-Type"));
 
-console.log("Admin Recipe media lifecycle upload contract passed.");
+console.log("Admin Recipe media lifecycle, version retention, and public thumbnail contract passed.");
