@@ -10,7 +10,7 @@ const recipeUtf8Repair = await readFile("db/migrations/016_recipe_title_utf8_rep
 const recipeYieldCompatibility = await readFile("db/migrations/017_recipe_yield_unit_compatibility.sql", "utf8");
 const recipeIngredientCompatibility = await readFile("db/migrations/018_recipe_ingredient_legacy_name.sql", "utf8");
 const recipePage = await readFile("apps/frontend/app/admin/recipes/page.tsx", "utf8");
-const recipeSaveFeedback = await readFile("apps/frontend/components/admin/AdminRecipeSaveFeedback.tsx", "utf8");
+const guardedRecipePanel = await readFile("apps/frontend/components/admin/AdminRecipeOperationsPanelV3.tsx", "utf8");
 const recipeStyles = await readFile("apps/frontend/app/admin/recipes/recipe-operations.css", "utf8");
 
 assert.match(adminApi, /function browserAdminProxyPath/);
@@ -69,15 +69,16 @@ assert.doesNotMatch(recipeIngredientCompatibility, /DROP CONSTRAINT IF EXISTS re
 
 assert.match(recipePage, /recipe-operations\.css/);
 assert.match(recipePage, /className="recipe-operations-page"/);
-assert.match(recipePage, /AdminRecipeSaveFeedback/);
-assert.match(recipeSaveFeedback, /Đã lưu công thức và ảnh/);
-assert.match(recipeSaveFeedback, /role="status"/);
-assert.match(recipeSaveFeedback, /detail\.method === "PATCH"/);
-assert.match(recipeSaveFeedback, /detail\.method === "POST"/);
+assert.match(recipePage, /AdminRecipeOperationsPanelV3/);
+assert.doesNotMatch(recipePage, /AdminRecipeSaveFeedback/);
+assert.match(guardedRecipePanel, /function EditorToast/);
+assert.match(guardedRecipePanel, /role=\{notice\.kind === "error" \? "alert" : "status"\}/);
+assert.match(guardedRecipePanel, /Đã lưu bản nháp mới của công thức/);
+assert.match(guardedRecipePanel, /Đã tạo công thức nháp thành công/);
 assert.match(recipeStyles, /grid-template-columns: minmax\(0, 1fr\) auto/);
 assert.match(recipeStyles, /> button/);
 assert.match(recipeStyles, /height: 3rem/);
 assert.match(recipeStyles, /> select/);
 assert.match(recipeStyles, /grid-column: 1 \/ -1/);
 
-console.log("Admin proxy, Recipe legacy compatibility, save feedback, immutable UTF-8 repair and mobile toolbar contract passed.");
+console.log("Admin proxy, Recipe legacy compatibility, modal save feedback, immutable UTF-8 repair and mobile toolbar contract passed.");
