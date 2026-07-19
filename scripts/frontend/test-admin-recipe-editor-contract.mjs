@@ -10,8 +10,11 @@ const ingredients = await readFile("apps/frontend/components/admin/recipe-editor
 const steps = await readFile("apps/frontend/components/admin/recipe-editor/RecipeStepsTab.tsx", "utf8");
 const publish = await readFile("apps/frontend/components/admin/recipe-editor/RecipePublishTab.tsx", "utf8");
 const pickers = await readFile("apps/frontend/components/admin/recipe-editor/RecipePickerDialogs.tsx", "utf8");
+const sharedUi = await readFile("apps/frontend/components/admin/ui/AdminUI.tsx", "utf8");
 
 assert.match(page, /AdminRecipeOperationsPanelV5/);
+assert.match(page, /AdminShell/);
+assert.doesNotMatch(page, /recipe-operations\.css/);
 for (const component of ["RecipeOverviewTab", "RecipeIngredientsTab", "RecipeStepsTab", "RecipePublishTab", "RecipeEditorFooter", "RecipeCatalogPickerDialog", "RecipeMediaPickerDialog"]) {
   assert.ok(panel.includes(component), `V5 orchestrator is missing ${component}`);
 }
@@ -21,6 +24,8 @@ assert.doesNotMatch(panel, /<section className="mt-4 rounded-\[24px\][\s\S]{5000
 for (const tab of ["Tổng quan", "Nguyên liệu", "Các bước", "Xuất bản"]) assert.ok(chrome.includes(tab), `Recipe tab is missing: ${tab}`);
 assert.match(chrome, /role="progressbar"/);
 assert.match(chrome, /RecipeUndoToast/);
+assert.match(chrome, /AdminSelect/);
+assert.match(chrome, /AdminButton/);
 assert.match(types, /createClientId\("ingredient"\)/);
 assert.match(types, /createClientId\("step"\)/);
 assert.match(types, /function completionItems/);
@@ -30,11 +35,14 @@ assert.match(ingredients, /draggable=\{!locked\}/);
 assert.match(ingredients, /onDrop=/);
 assert.match(steps, /draggable=\{!locked\}/);
 assert.match(steps, /Chọn từ media/);
-assert.match(pickers, /role="dialog"/);
+assert.match(pickers, /AdminDialog/);
+assert.doesNotMatch(pickers, /fixed inset-0 z-\[75\]/);
+assert.match(sharedUi, /role="dialog"/);
 assert.match(pickers, /Catalog picker/);
 assert.match(pickers, /Media picker/);
 assert.match(pickers, /thumbnailUrl \|\| item\.imageUrl/);
 assert.match(publish, /Workflow hiện tại/);
+assert.match(publish, /AdminButton/);
 assert.match(publish, /Gửi review/);
 assert.match(publish, /Yêu cầu chỉnh sửa/);
 assert.match(publish, /Duyệt phiên bản/);
@@ -42,4 +50,4 @@ assert.match(publish, /Xuất bản/);
 assert.match(panel, /steps: form\.steps/);
 assert.match(panel, /imageUrl: item\.imageUrl/);
 
-console.log("Admin Recipe V5 component, tabs, picker, reorder, undo, completion, and workflow footer contract passed.");
+console.log("Admin Recipe V5 tabs, shared controls, picker, reorder, undo, completion, and workflow footer contract passed.");
