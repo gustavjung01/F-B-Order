@@ -15,7 +15,16 @@ import {
   updateAdminRecipe,
 } from "./recipe-admin.service";
 import { searchRecipeCatalogOptionsWithImages } from "./recipe-catalog-options.service";
-import { createRecipeImageUpload, getRecipeCatalogMedia } from "./recipe-media.service";
+import {
+  completeRecipeMediaUpload,
+  createRecipeImageUpload,
+  createRecipeMediaDraft,
+  deleteRecipeMedia,
+  detachRecipeMedia,
+  getRecipeCatalogMedia,
+  getRecipeMediaReferences,
+  syncRecipeMedia,
+} from "./recipe-media.service";
 import { scaleAdminRecipe } from "./recipe-scale.service";
 
 type IdentityResolver = (req: Request) => Promise<RequestIdentity>;
@@ -50,10 +59,52 @@ export function createAdminRecipesRouter(identityResolver: IdentityResolver) {
     } catch (error) { sendRecipeError(res, error); }
   });
 
+  router.post("/media/drafts", async (req, res) => {
+    try {
+      const identity = requireAdmin(await identityResolver(req));
+      res.status(201).json(await createRecipeMediaDraft(identity, req.body ?? {}));
+    } catch (error) { sendRecipeError(res, error); }
+  });
+
   router.post("/media/presign", async (req, res) => {
     try {
       const identity = requireAdmin(await identityResolver(req));
       res.status(201).json(await createRecipeImageUpload(identity, req.body ?? {}));
+    } catch (error) { sendRecipeError(res, error); }
+  });
+
+  router.post("/media/sync", async (req, res) => {
+    try {
+      const identity = requireAdmin(await identityResolver(req));
+      res.json(await syncRecipeMedia(identity, req.body ?? {}));
+    } catch (error) { sendRecipeError(res, error); }
+  });
+
+  router.get("/media/recipe/:recipeId", async (req, res) => {
+    try {
+      const identity = requireAdmin(await identityResolver(req));
+      res.json(await getRecipeMediaReferences(identity, req.params.recipeId));
+    } catch (error) { sendRecipeError(res, error); }
+  });
+
+  router.post("/media/:mediaId/complete", async (req, res) => {
+    try {
+      const identity = requireAdmin(await identityResolver(req));
+      res.json(await completeRecipeMediaUpload(identity, req.params.mediaId, req.body ?? {}));
+    } catch (error) { sendRecipeError(res, error); }
+  });
+
+  router.post("/media/:mediaId/detach", async (req, res) => {
+    try {
+      const identity = requireAdmin(await identityResolver(req));
+      res.json(await detachRecipeMedia(identity, req.params.mediaId));
+    } catch (error) { sendRecipeError(res, error); }
+  });
+
+  router.delete("/media/:mediaId", async (req, res) => {
+    try {
+      const identity = requireAdmin(await identityResolver(req));
+      res.json(await deleteRecipeMedia(identity, req.params.mediaId));
     } catch (error) { sendRecipeError(res, error); }
   });
 
