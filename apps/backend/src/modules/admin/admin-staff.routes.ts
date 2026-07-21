@@ -4,6 +4,7 @@ import { z } from "zod";
 import { getDb } from "../../db/pool.js";
 import type { RequestIdentity, StaffIdentity } from "../auth/auth.identity.js";
 import { requirePermission } from "../auth/auth.permissions.js";
+import { writeAdminAuditLog } from "./admin-audit.js";
 import { isOrderEngineError, OrderEngineError } from "../orders/order-errors.js";
 
 type IdentityResolver = (req: Request) => Promise<RequestIdentity>;
@@ -115,6 +116,24 @@ export function createAdminStaffRouter(identityResolver: IdentityResolver) {
     } catch (error) { sendError(res, error); }
   });
 
+  router.get("/audit", async (req, res) => {
+    try {
+      const identity = requireStaffIdentity(await identityResolver(req));
+      await requirePermission(identity, "audit.view");
+      const result = await getDb().query(
+        `SELECT log.id::text, log.action_key, log.resource_type, log.resource_id,
+                log.outcome, log.permission_key, log.reason, log.before_data,
+                log.after_data, log.metadata, log.request_id, log.ip_address::text,
+                log.user_agent, log.created_at, actor.email AS actor_email
+         FROM admin_audit_logs log
+         LEFT JOIN staff_users actor ON actor.id = log.actor_staff_id
+         ORDER BY log.created_at DESC
+         LIMIT 200`,
+      );
+      res.json({ auditLogs: result.rows });
+    } catch (error) { sendError(res, error); }
+  });
+
   router.get("/", async (req, res) => {
     try {
       const identity = requireStaffIdentity(await identityResolver(req));
@@ -220,6 +239,19 @@ export function createAdminStaffRouter(identityResolver: IdentityResolver) {
             [staffId, role.id, identity.staffId, input.note ?? "Initial role assignment", requestMeta(req).requestId, requestMeta(req).ipAddress, JSON.stringify({ source: "staff.create" })],
           );
         }
+        await writeAdminAuditLog({
+          actorStaffId: identity.staffId,
+          actionKey: "staff.create",
+          resourceType: "staff_user",
+          resourceId: staffId,
+          outcome: "success",
+          permissionKey: "staff.manage",
+          afterData: { email: input.email.toLowerCase(), name: input.name, roleKeys: input.roleKeys },
+          reason: input.note ?? null,
+          requestId: requestMeta(req).requestId,
+          ipAddress: requestMeta(req).ipAddress,
+          userAgent: req.get("user-agent") ?? null,
+        }, client);
         await client.query("COMMIT");
         res.status(201).json({ id: staffId });
       } catch (error) {
@@ -249,6 +281,18 @@ export function createAdminStaffRouter(identityResolver: IdentityResolver) {
         [req.params.staffId, input.name ?? null, input.isActive ?? null],
       );
       if (!result.rows[0]) throw new OrderEngineError("STAFF_NOT_FOUND", 404, "Staff user not found");
+      await writeAdminAuditLog({
+        actorStaffId: identity.staffId,
+        actionKey: "staff.update",
+        resourceType: "staff_user",
+        resourceId: req.params.staffId,
+        outcome: "success",
+        permissionKey: "staff.manage",
+        afterData: result.rows[0],
+        requestId: requestMeta(req).requestId,
+        ipAddress: requestMeta(req).ipAddress,
+        userAgent: req.get("user-agent") ?? null,
+      });
       res.json({ staff: result.rows[0] });
     } catch (error) { sendError(res, error); }
   });
@@ -285,6 +329,19 @@ export function createAdminStaffRouter(identityResolver: IdentityResolver) {
            ) VALUES($1,$2,'assigned',$3,$4,$5,$6,'{}'::jsonb)`,
           [req.params.staffId, role.id, identity.staffId, input.reason, meta.requestId, meta.ipAddress],
         );
+        await writeAdminAuditLog({
+          actorStaffId: identity.staffId,
+          actionKey: "staff.role.assign",
+          resourceType: "staff_role_assignment",
+          resourceId: `${req.params.staffId}:${role.role_key}`,
+          outcome: "success",
+          permissionKey: "staff.roles.assign",
+          reason: input.reason,
+          afterData: { staffId: req.params.staffId, roleKey: role.role_key },
+          requestId: meta.requestId,
+          ipAddress: meta.ipAddress,
+          userAgent: req.get("user-agent") ?? null,
+        }, client);
         await client.query("COMMIT");
       } catch (error) {
         await client.query("ROLLBACK");
@@ -338,6 +395,19 @@ export function createAdminStaffRouter(identityResolver: IdentityResolver) {
            ) VALUES($1,$2,'revoked',$3,$4,$5,$6,'{}'::jsonb)`,
           [req.params.staffId, role.id, identity.staffId, input.reason, meta.requestId, meta.ipAddress],
         );
+        await writeAdminAuditLog({
+          actorStaffId: identity.staffId,
+          actionKey: "staff.role.revoke",
+          resourceType: "staff_role_assignment",
+          resourceId: `${req.params.staffId}:${role.role_key}`,
+          outcome: "success",
+          permissionKey: "staff.roles.assign",
+          reason: input.reason,
+          beforeData: { staffId: req.params.staffId, roleKey: role.role_key },
+          requestId: meta.requestId,
+          ipAddress: meta.ipAddress,
+          userAgent: req.get("user-agent") ?? null,
+        }, client);
         await client.query("COMMIT");
       } catch (error) {
         await client.query("ROLLBACK");

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { AdminLoginActions } from "@/components/admin/AdminLoginActions";
+import { AdminPermissionProvider } from "@/components/admin/AdminPermissionProvider";
 import { getAdminAccess } from "@/lib/admin";
 
 export const dynamic = "force-dynamic";
@@ -12,7 +13,7 @@ export const metadata: Metadata = {
     icon: [
       { url: "/favicon.ico" },
       { url: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
-      { url: "/icons/apple-touch-icon.png", sizes: "180x180", type: "image/png" }
+      { url: "/icons/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
     ],
   },
 };
@@ -28,7 +29,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           <p className="mt-5 text-[12px] font-black uppercase tracking-[0.16em] text-orange-200">Admin PWA riêng</p>
           <h1 className="mt-3 text-[28px] font-black leading-tight">Khu quản trị bị khóa</h1>
           <p className="mt-3 text-[14px] font-bold leading-6 text-slate-300">
-            Chỉ email nằm trong ADMIN_EMAILS mới mở được PWA admin. Khu này tách khỏi PWA khách và không hiện nút ngoài public.
+            Tài khoản chưa được cấp quyền quản trị phù hợp. Sếp cần nhờ người có quyền quản lý nhân viên gán role cho tài khoản này.
           </p>
           <AdminLoginActions isSignedIn={access.isSignedIn} email={access.email} />
         </section>
@@ -36,5 +37,5 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     );
   }
 
-  return <>{children}</>;
+  return <AdminPermissionProvider permissions={access.permissions}>{children}</AdminPermissionProvider>;
 }

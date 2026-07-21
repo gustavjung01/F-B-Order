@@ -74,6 +74,21 @@ export async function listEffectivePermissions(identity: StaffIdentity): Promise
   return identity.role === "admin" ? [...ALL_PERMISSIONS] : [];
 }
 
+
+export function assertPermissionSet(
+  permissions: readonly PermissionKey[],
+  permission: PermissionKey,
+): void {
+  if (!permissions.includes(permission)) {
+    throw new OrderEngineError(
+      "PERMISSION_DENIED",
+      403,
+      `Missing required permission: ${permission}`,
+      { permission },
+    );
+  }
+}
+
 export async function hasPermission(identity: StaffIdentity, permission: PermissionKey): Promise<boolean> {
   return (await listEffectivePermissions(identity)).includes(permission);
 }
@@ -82,13 +97,6 @@ export async function requirePermission(
   identity: StaffIdentity,
   permission: PermissionKey,
 ): Promise<StaffIdentity> {
-  if (!(await hasPermission(identity, permission))) {
-    throw new OrderEngineError(
-      "PERMISSION_DENIED",
-      403,
-      `Missing required permission: ${permission}`,
-      { permission },
-    );
-  }
+  assertPermissionSet(await listEffectivePermissions(identity), permission);
   return identity;
 }
