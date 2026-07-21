@@ -233,10 +233,12 @@
         "Sốt caramel"
       ],
       "occurrences": 1,
-      "catalogProductId": null,
-      "catalogVariantId": null,
-      "sku": null,
-      "status": "unmapped"
+      "catalogProductId": "9684f145-7e40-406d-b57b-ed3e0fd17950",
+      "catalogVariantId": "536c1b57-3c16-4c1f-a561-c6a09a62d162",
+      "sku": "BGKQ-0091",
+      "status": "mapped",
+      "matchedProductName": "Sốt Golden Farm",
+      "matchedVariantName": "Sốt Golden Farm Caramel"
     },
     "thach-3q": {
       "sourceNames": [
@@ -313,10 +315,12 @@
         "Trân châu trắng"
       ],
       "occurrences": 1,
-      "catalogProductId": null,
-      "catalogVariantId": null,
-      "sku": null,
-      "status": "unmapped"
+      "catalogProductId": "2b2baafe-920a-4eb3-9473-39e3b8b1d93d",
+      "catalogVariantId": "c832d043-9e6e-4681-a80e-4da9c5b7d08f",
+      "sku": "BGKQ-0070",
+      "status": "mapped",
+      "matchedProductName": "Trân châu Gia Uy",
+      "matchedVariantName": "Tc trắng Gia Uy"
     },
     "vai-ngam": {
       "sourceNames": [

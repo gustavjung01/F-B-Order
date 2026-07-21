@@ -1,7 +1,11 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
-import pg from "pg";
+import { createRequire } from "node:module";
+
+const require = createRequire(import.meta.url);
+const pgModule = require(process.env.PG_MODULE_PATH || "pg");
+const pg = pgModule.default || pgModule;
 
 const apply = process.argv.includes("--apply");
 const root = path.resolve(import.meta.dirname, "../../..");
@@ -17,7 +21,36 @@ const local = connectionString.includes("localhost") || connectionString.include
 const pool = new pg.Pool({connectionString,ssl:local?false:{rejectUnauthorized:process.env.DB_SSL_REJECT_UNAUTHORIZED!=="false"}});
 const client = await pool.connect();
 try {
-  await client.query("BEGIN");
+  if (!apply) {
+    const mappedEntries = Object.entries(catalogDoc.entries || {}).filter(([, entry]) => entry.catalogVariantId);
+    const unmappedEntries = Object.entries(catalogDoc.entries || {}).filter(([, entry]) => !entry.catalogVariantId);
+    const invalidVariants = [];
+    for (const [key, entry] of mappedEntries) {
+      const result = await client.query(
+        `SELECT v.id::text AS variant_id, v.product_id::text AS product_id, v.sku, v.name AS variant_name, p.name AS product_name
+         FROM catalog_variants v
+         JOIN catalog_products p ON p.id = v.product_id
+         WHERE v.id = $1`,
+        [entry.catalogVariantId],
+      );
+      if (!result.rows[0]) invalidVariants.push({ key, catalogVariantId: entry.catalogVariantId });
+    }
+    const missingImages = imageDoc.entries.filter((entry) => entry.fileName && !entry.publicUrl).map((entry) => entry.recipeSlug);
+    const summary = {
+      ok: unmappedEntries.length === 0 && invalidVariants.length === 0 && missingImages.length === 0,
+      recipes: recipesDoc.recipes.length,
+      categories: recipesDoc.categories.length,
+      mappedCatalogKeys: mappedEntries.length,
+      unmappedCatalogKeys: unmappedEntries.map(([key]) => key),
+      invalidVariants,
+      uploadedImages: imageDoc.entries.filter((entry) => entry.publicUrl).length,
+      missingImages,
+      mode: "dry-run",
+    };
+    console.log(JSON.stringify(summary, null, 2));
+    if (!summary.ok) process.exitCode = 1;
+  } else {
+    await client.query("BEGIN");
   for (const c of recipesDoc.categories) {
     await client.query(`INSERT INTO recipe_categories(slug,name,sort_order,is_active) VALUES($1,$2,$3,true)
       ON CONFLICT(slug) DO UPDATE SET name=EXCLUDED.name,sort_order=EXCLUDED.sort_order,is_active=true,updated_at=now()`,[c.slug,c.name,c.sortOrder||0]);
@@ -53,7 +86,8 @@ try {
     }
     for (const s of r.steps) await client.query(`INSERT INTO recipe_steps(recipe_id,step_no,title,content) VALUES($1,$2,$3,$4)`,[recipeId,s.stepNo,s.title,s.content]);
   }
-  if (apply) { await client.query("COMMIT"); console.log(`Imported ${recipesDoc.recipes.length} recipes.`); }
-  else { await client.query("ROLLBACK"); console.log(`Dry run OK for ${recipesDoc.recipes.length} recipes. Re-run with --apply.`); }
+    await client.query("COMMIT");
+    console.log(`Imported ${recipesDoc.recipes.length} recipes.`);
+  }
 } catch (e) { await client.query("ROLLBACK"); throw e; }
 finally { client.release(); await pool.end(); }

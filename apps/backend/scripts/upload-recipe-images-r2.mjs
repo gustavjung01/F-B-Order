@@ -6,11 +6,12 @@ import process from "node:process";
 const root = path.resolve(import.meta.dirname, "../../..");
 const mapPath = path.join(root, "data/recipes/bepsi-recipes-v1/image-map.json");
 const imageDir = process.env.RECIPE_IMAGE_DIR || "F:/1_A_Disk_D/khuong-binh/bep-si/image/recipes";
-const accountId = process.env.R2_ACCOUNT_ID || process.env.CLOUDFLARE_ACCOUNT_ID;
-const bucket = process.env.R2_BUCKET_NAME || process.env.CATALOG_R2_BUCKET || process.env.R2_BUCKET;
-const accessKey = process.env.R2_ACCESS_KEY_ID || process.env.AWS_ACCESS_KEY_ID;
-const secret = process.env.R2_SECRET_ACCESS_KEY || process.env.AWS_SECRET_ACCESS_KEY;
-const publicBase = (process.env.R2_PUBLIC_BASE_URL || "").replace(/\/+$/, "");
+const accountId = process.env.R2_ACCOUNT_ID || process.env.CLOUDFLARE_ACCOUNT_ID || process.env.CLOUDFLARE_R2_ACCOUNT_ID;
+const bucket = process.env.R2_BUCKET_NAME || process.env.CATALOG_R2_BUCKET || process.env.R2_BUCKET || process.env.CLOUDFLARE_R2_BUCKET;
+const accessKey = process.env.R2_ACCESS_KEY_ID || process.env.AWS_ACCESS_KEY_ID || process.env.CLOUDFLARE_R2_ACCESS_KEY_ID || process.env.CLOUDFLARE_R2_USER_ACCESS_KEY_ID;
+const secret = process.env.R2_SECRET_ACCESS_KEY || process.env.AWS_SECRET_ACCESS_KEY || process.env.CLOUDFLARE_R2_SECRET_ACCESS_KEY || process.env.CLOUDFLARE_R2_USER_SECRET_ACCESS_KEY;
+const publicBaseRaw = process.env.R2_PUBLIC_BASE_URL || process.env.CLOUDFLARE_R2_CUSTOM_DOMAIN || process.env.CLOUDFLARE_R2_PUBLIC_DEV_URL || "";
+const publicBase = (/^https?:\/\//i.test(publicBaseRaw) ? publicBaseRaw : `https://${publicBaseRaw}`).replace(/\/+$/, "");
 if (!accountId || !bucket || !accessKey || !secret || !publicBase) throw new Error("Missing R2 configuration");
 
 const enc = (v) => encodeURIComponent(v).replace(/[!'()*]/g, c => `%${c.charCodeAt(0).toString(16).toUpperCase()}`);
