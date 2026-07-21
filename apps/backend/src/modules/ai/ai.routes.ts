@@ -12,6 +12,7 @@ type IdentityResolver = (req: Request) => Promise<RequestIdentity>;
 const querySchema = z.object({
   prompt: z.string().trim().min(3).max(4000),
   scopes: z.array(z.enum(["orders", "customers", "catalog", "recipes"])).min(1).max(4),
+  recipeId: z.string().uuid().optional(),
 });
 
 const draftSchema = z.object({
@@ -19,6 +20,7 @@ const draftSchema = z.object({
   draftType: z.enum(["recipe", "customer_reply", "catalog_copy", "operations_note"]),
   title: z.string().trim().min(1).max(200),
   scopes: z.array(z.enum(["orders", "customers", "catalog", "recipes"])).default([]),
+  recipeId: z.string().uuid().optional(),
 });
 
 const actionSchema = z.object({
@@ -60,7 +62,7 @@ function sendError(res: Response, error: unknown): void {
   res.status(500).json({ error: "AI_REQUEST_FAILED" });
 }
 
-async function buildReadOnlyContext(identity: StaffIdentity, scopes: string[]) {
+async function buildReadOnlyContext(identity: StaffIdentity, scopes: string[], recipeId?: string) {
   const db = getDb();
   const context: Record<string, unknown> = {};
 
@@ -94,11 +96,47 @@ async function buildReadOnlyContext(identity: StaffIdentity, scopes: string[]) {
   }
   if (scopes.includes("recipes")) {
     await requirePermission(identity, "recipes.view");
-    const result = await db.query(
-      `SELECT slug, title, status, visibility, recipe_kind, updated_at
-       FROM recipes ORDER BY updated_at DESC LIMIT 100`,
-    );
-    context.recipes = result.rows;
+    if (recipeId) {
+      const [recipeResult, ingredientResult, stepResult] = await Promise.all([
+        db.query(
+          `SELECT id::text, slug, title, short_description, description, related_brand,
+                  yield_quantity, yield_unit, status, visibility, recipe_kind,
+                  operational_notes, updated_at
+           FROM recipes
+           WHERE id = $1`,
+          [recipeId],
+        ),
+        db.query(
+          `SELECT product_name, quantity, unit, note, optional,
+                  catalog_variant_id::text, source_type, catalog_key, source_recipe_slug
+           FROM recipe_ingredients
+           WHERE recipe_id = $1
+           ORDER BY sort_order, created_at`,
+          [recipeId],
+        ),
+        db.query(
+          `SELECT step_no, title, COALESCE(content, instruction) AS content, image_url
+           FROM recipe_steps
+           WHERE recipe_id = $1
+           ORDER BY sort_order, step_no`,
+          [recipeId],
+        ),
+      ]);
+      if (!recipeResult.rows[0]) {
+        throw new OrderEngineError("RECIPE_NOT_FOUND", 404, "Recipe was not found");
+      }
+      context.recipe = {
+        ...recipeResult.rows[0],
+        ingredients: ingredientResult.rows,
+        steps: stepResult.rows,
+      };
+    } else {
+      const result = await db.query(
+        `SELECT slug, title, status, visibility, recipe_kind, updated_at
+         FROM recipes ORDER BY updated_at DESC LIMIT 100`,
+      );
+      context.recipes = result.rows;
+    }
   }
 
   return context;
@@ -118,7 +156,7 @@ export function createAiRouter(identityResolver: IdentityResolver) {
       const identity = requireActiveStaff(await identityResolver(req));
       await requirePermission(identity, "ai.use");
       const input = querySchema.parse(req.body ?? {});
-      const context = await buildReadOnlyContext(identity, input.scopes);
+      const context = await buildReadOnlyContext(identity, input.scopes, input.recipeId);
       const result = await getDb().query<{ id: string }>(
         `INSERT INTO ai_jobs(
            staff_user_id, job_type, prompt, context_scope, context_data
@@ -135,7 +173,7 @@ export function createAiRouter(identityResolver: IdentityResolver) {
       const identity = requireActiveStaff(await identityResolver(req));
       await requirePermission(identity, "ai.execute");
       const input = draftSchema.parse(req.body ?? {});
-      const context = await buildReadOnlyContext(identity, input.scopes);
+      const context = await buildReadOnlyContext(identity, input.scopes, input.recipeId);
       const result = await getDb().query<{ id: string }>(
         `INSERT INTO ai_jobs(
            staff_user_id, job_type, prompt, context_scope, context_data,

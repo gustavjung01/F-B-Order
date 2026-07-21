@@ -9,6 +9,7 @@ import { RecipeIngredientsTab } from "./recipe-editor/RecipeIngredientsTab";
 import { RecipeOverviewTab } from "./recipe-editor/RecipeOverviewTab";
 import { RecipeCatalogPickerDialog, RecipeMediaPickerDialog } from "./recipe-editor/RecipePickerDialogs";
 import { RecipeEditorFooter, RecipePublishTab } from "./recipe-editor/RecipePublishTab";
+import { RecipeAiAssistantPanel } from "./recipe-editor/RecipeAiAssistantPanel";
 import { RecipeStepsTab } from "./recipe-editor/RecipeStepsTab";
 import type { CatalogOption, EditorTab, FormState, Ingredient, MediaPickerItem, RecipeDetail, RecipeRow, Step, Toast, UndoDelete, UploadPhase, Version } from "./recipe-editor/types";
 import { catalogLabel, completionItems, emptyForm, emptyIngredient, emptyStep, formatDate, moveItem, serialized, toForm, validationErrors, workflowLabel } from "./recipe-editor/types";
@@ -403,6 +404,21 @@ export function AdminRecipeOperationsPanelV5() {
           <div className="flex-1 overflow-y-auto p-4 pb-40 md:p-5 md:pb-28">
             {errors.length ? <div role="alert" className="mb-4 rounded-2xl bg-red-50 p-4 text-sm font-bold text-red-700 ring-1 ring-red-200"><b className="block">Cần sửa trước khi tiếp tục:</b><ul className="mt-2 list-disc space-y-1 pl-5">{errors.map((error) => <li key={error}>{error}</li>)}</ul></div> : null}
             {locked ? <p className="mb-4 rounded-2xl bg-amber-50 p-3 text-sm font-bold text-amber-800">Phiên bản đang review hoặc đã duyệt nên nội dung được khóa. Hành động workflow nằm ở footer.</p> : null}
+
+            {form.id ? (
+              <RecipeAiAssistantPanel
+                recipeId={form.id}
+                recipeTitle={form.title}
+                dirty={dirty}
+                locked={locked}
+                onOpenSteps={() => setActiveTab("steps")}
+                onApplySteps={(steps) => {
+                  patchForm({
+                    steps: steps.map((step) => ({ ...emptyStep(), title: step.title, content: step.content })),
+                  });
+                }}
+              />
+            ) : null}
 
             {activeTab === "overview" ? <RecipeOverviewTab form={form} locked={locked} uploading={uploading} coverPhase={uploadStates.cover} onPatch={patchForm} onUploadCover={(file) => void upload(file, { kind: "cover" })} onRemoveCover={() => patchForm({ coverImageUrl: "", coverThumbnailUrl: "", coverMediaId: null })} /> : null}
             {activeTab === "ingredients" ? <RecipeIngredientsTab ingredients={form.ingredients} locked={locked} onUpdate={updateIngredient} onAdd={() => patchForm({ ingredients: [...form.ingredients, emptyIngredient()] })} onDelete={deleteIngredient} onOpenCatalog={setCatalogPickerIngredientId} onMove={(from, to) => patchForm({ ingredients: moveItem(form.ingredients, from, to) })} /> : null}
