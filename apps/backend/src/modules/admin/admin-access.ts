@@ -1,18 +1,15 @@
-import type { RequestIdentity, StaffIdentity } from "../auth/auth.identity";
-import { OrderEngineError } from "../orders/order-errors";
+import type { RequestIdentity, StaffIdentity } from "../auth/auth.identity.js";
+import { OrderEngineError } from "../orders/order-errors.js";
 
-export function requireAdmin(identity: RequestIdentity): StaffIdentity {
-  if (identity.kind === "anonymous") {
-    throw new OrderEngineError("AUTH_REQUIRED", 401, "Authentication is required.");
-  }
-  if (identity.kind !== "staff") {
-    throw new OrderEngineError("ADMIN_ACCESS_REQUIRED", 403, "Admin access is required.");
-  }
-  if (!identity.isActive) {
-    throw new OrderEngineError("STAFF_INACTIVE", 403, "Staff account is inactive.");
-  }
-  if (identity.role !== "admin") {
-    throw new OrderEngineError("ADMIN_ACCESS_REQUIRED", 403, "Admin role is required.");
+export type AdminStaffIdentity = StaffIdentity;
+
+/**
+ * @deprecated Authorization belongs at the route boundary through requirePermission().
+ * This helper now only guarantees an active staff identity for legacy services.
+ */
+export function requireAdmin(identity: RequestIdentity): AdminStaffIdentity {
+  if (identity.kind !== "staff" || !identity.isActive) {
+    throw new OrderEngineError("STAFF_ACCESS_REQUIRED", 403, "Active staff access is required");
   }
   return identity;
 }
