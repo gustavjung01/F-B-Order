@@ -148,12 +148,12 @@ jobs:
         run: pnpm --filter @fb-order/backend exec tsx scripts/test-frontend-cutover.ts
 
   deploy-backend:
-    name: Deploy Bếp Sỉ backend
+    name: Deploy Báº¿p Sá»‰ backend
     needs: total-gate
     runs-on: ubuntu-latest
     environment: production
     steps:
-      - name: Configure Bếp Sỉ SSH identity
+      - name: Configure Báº¿p Sá»‰ SSH identity
         env:
           SSH_KEY: ${{ secrets.BEPSI_VPS_SSH_KEY }}
           KNOWN_HOSTS: ${{ secrets.BEPSI_VPS_KNOWN_HOSTS }}
@@ -195,11 +195,11 @@ jobs:
           trap 'rm -f "$TMP_FILE" "$INCOMING"' EXIT
           awk '!/^(GOOGLE_CLOUD_PROJECT|GOOGLE_CLOUD_LOCATION|GOOGLE_AGENT_ENGINE_ID|GOOGLE_AGENT_ENDPOINT|GOOGLE_AGENT_TIMEOUT_MS|GOOGLE_SERVICE_ACCOUNT_JSON_BASE64)=/' "$ENV_FILE" > "$TMP_FILE"
           cat "$INCOMING" >> "$TMP_FILE"
-          install -m 600 -o root -g root "$TMP_FILE" "$ENV_FILE"
+          install -m 640 -o root -g ubuntu "$TMP_FILE" "$ENV_FILE"
           REMOTE
           rm -f "$RUNNER_TEMP/bepsi-google-agent.env"
 
-      - name: Fetch exact deploy script and release Bếp Sỉ only
+      - name: Fetch exact deploy script and release Báº¿p Sá»‰ only
         env:
           TARGET_SHA: ${{ needs.total-gate.outputs.target_sha }}
         run: |
