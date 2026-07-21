@@ -24,9 +24,12 @@ import {
   AdminToolbar,
 } from "@/components/admin/ui/AdminUI";
 import { adminApiFetch } from "@/lib/admin-api";
+import { useAdminPermissions } from "@/components/admin/AdminPermissionProvider";
 
 export function AdminCustomersPanel() {
   const { isLoaded, isSignedIn, getToken } = useAuth();
+  const { has } = useAdminPermissions();
+  const canUpdate = has("customers.update");
   const [customers, setCustomers] = useState<CustomerSummary[]>([]);
   const [total, setTotal] = useState(0);
   const [filter, setFilter] = useState<"all" | ApprovalStatus>("pending");
@@ -203,7 +206,7 @@ export function AdminCustomersPanel() {
         title={detail ? detail.shopName || detail.name : "Đang tải hồ sơ…"}
         description={detail ? `ID: ${detail.id}` : undefined}
         size="lg"
-        footer={detail ? (
+        footer={detail && canUpdate ? (
           <div className="grid gap-3 sm:grid-cols-2">
             <AdminButton tone="success" size="lg" disabled={saving || detail.approvalStatus === "approved"} onClick={() => void decide("approved")}>
               {saving ? "Đang lưu…" : "Duyệt khách hàng"}

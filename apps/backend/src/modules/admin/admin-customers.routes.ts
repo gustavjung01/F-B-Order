@@ -1,6 +1,7 @@
 import type { Request, Response } from "express";
 import { Router } from "express";
 import type { RequestIdentity } from "../auth/auth.identity";
+import { requirePermission } from "../auth/auth.permissions";
 import { isOrderEngineError } from "../orders/order-errors";
 import { requireAdmin } from "./admin-access";
 import {
@@ -30,7 +31,7 @@ export function createAdminCustomersRouter(identityResolver: IdentityResolver) {
 
   router.get("/", async (req, res) => {
     try {
-      const identity = requireAdmin(await identityResolver(req));
+      const identity = await requirePermission(requireAdmin(await identityResolver(req)), "customers.view");
       const limit = Number.parseInt(String(req.query.limit ?? "50"), 10);
       const result = await listAdminCustomers(identity, {
         approvalStatus: req.query.approvalStatus,
@@ -45,7 +46,7 @@ export function createAdminCustomersRouter(identityResolver: IdentityResolver) {
 
   router.get("/:customerId", async (req, res) => {
     try {
-      const identity = requireAdmin(await identityResolver(req));
+      const identity = await requirePermission(requireAdmin(await identityResolver(req)), "customers.view");
       const result = await getAdminCustomerDetail(identity, req.params.customerId);
       res.json(result);
     } catch (error) {
@@ -55,7 +56,7 @@ export function createAdminCustomersRouter(identityResolver: IdentityResolver) {
 
   router.patch("/:customerId/approval", async (req, res) => {
     try {
-      const identity = requireAdmin(await identityResolver(req));
+      const identity = await requirePermission(requireAdmin(await identityResolver(req)), "customers.update");
       const result = await decideCustomerApproval(identity, {
         customerId: req.params.customerId,
         status: req.body?.status,

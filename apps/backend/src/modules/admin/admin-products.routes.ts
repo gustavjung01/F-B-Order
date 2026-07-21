@@ -1,6 +1,7 @@
 import type { Request, Response } from "express";
 import { Router } from "express";
 import type { RequestIdentity } from "../auth/auth.identity";
+import { requirePermission } from "../auth/auth.permissions";
 import { isOrderEngineError } from "../orders/order-errors";
 import { requireAdmin } from "./admin-access";
 import {
@@ -30,7 +31,7 @@ export function createAdminProductsRouter(identityResolver: IdentityResolver) {
 
   router.get("/", async (req, res) => {
     try {
-      const identity = requireAdmin(await identityResolver(req));
+      const identity = await requirePermission(requireAdmin(await identityResolver(req)), "catalog.view");
       const limit = Number.parseInt(String(req.query.limit ?? "100"), 10);
       const result = await listAdminProducts(identity, {
         search: req.query.q,
@@ -45,7 +46,7 @@ export function createAdminProductsRouter(identityResolver: IdentityResolver) {
 
   router.get("/:productId", async (req, res) => {
     try {
-      const identity = requireAdmin(await identityResolver(req));
+      const identity = await requirePermission(requireAdmin(await identityResolver(req)), "catalog.view");
       const result = await getAdminProductDetail(identity, req.params.productId);
       res.json(result);
     } catch (error) {
@@ -55,8 +56,14 @@ export function createAdminProductsRouter(identityResolver: IdentityResolver) {
 
   router.patch("/:productId", async (req, res) => {
     try {
-      const identity = requireAdmin(await identityResolver(req));
-      const body = req.body && typeof req.body === "object" ? req.body : {};
+      const identity = await requirePermission(requireAdmin(await identityResolver(req)), "catalog.edit");
+      const body = req.body && typeof req.body === "object" ? req.body as Record<string, unknown> : {};
+      if (["basePrice", "wholesalePrice", "minOrderQty"].some((key) => key in body)) {
+        await requirePermission(identity, "catalog.pricing");
+      }
+      if (["status", "isPublic", "isActive", "isOrderable"].some((key) => key in body)) {
+        await requirePermission(identity, "catalog.publish");
+      }
       const result = await updateAdminProduct(identity, {
         productId: req.params.productId,
         ...body,

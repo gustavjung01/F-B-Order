@@ -5,7 +5,7 @@ import Link from "next/link";
 
 type AdminLoginActionsProps = {
   isSignedIn: boolean;
-  email: string;
+  email: string | null;
 };
 
 export function AdminLoginActions({ isSignedIn, email }: AdminLoginActionsProps) {

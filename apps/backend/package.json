@@ -27,21 +27,24 @@
     "catalog:v2:apply": "node scripts/import-catalog-v2.mjs --apply",
     "recipe:images:upload": "node scripts/upload-recipe-images-r2.mjs",
     "recipe:content:import": "node scripts/import-recipes-v1.mjs",
-    "recipe:content:validate": "node scripts/validate-recipes-v1.mjs"
+    "recipe:content:validate": "node scripts/validate-recipes-v1.mjs",
+    "test:rbac": "tsx --test test/auth.permissions.test.ts"
   },
   "dependencies": {
     "@clerk/express": "2.1.28",
     "cors": "2.8.6",
     "dotenv": "17.4.2",
     "express": "5.2.1",
+    "google-auth-library": "9.15.1",
     "helmet": "8.2.0",
-    "pg": "8.21.0"
+    "pg": "8.21.0",
+    "zod": "3.23.8"
   },
   "devDependencies": {
     "@types/cors": "2.8.19",
     "@types/express": "5.0.6",
     "@types/node": "25.9.3",
-    "tsx": "4.22.4",
+    "tsx": "4.19.2",
     "typescript": "6.0.3"
   }
 }

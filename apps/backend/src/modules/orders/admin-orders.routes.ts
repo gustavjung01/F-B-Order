@@ -6,6 +6,7 @@ import {
   updateOrderInternalNote,
 } from "../admin/admin-orders.service";
 import type { RequestIdentity } from "../auth/auth.identity";
+import { requirePermission } from "../auth/auth.permissions";
 import { isOrderEngineError, OrderEngineError } from "./order-errors";
 import { isOrderStatus } from "./order-status";
 import { listAdminOrders, transitionOrderStatus } from "./orders.service";
@@ -31,7 +32,7 @@ export function createAdminOrdersRouter(identityResolver: IdentityResolver) {
 
   router.get("/", async (req, res) => {
     try {
-      const identity = requireAdmin(await identityResolver(req));
+      const identity = await requirePermission(requireAdmin(await identityResolver(req)), "orders.view");
       const status = typeof req.query.status === "string" ? req.query.status : null;
       const limit = Number.parseInt(String(req.query.limit ?? "50"), 10);
       const result = await listAdminOrders(identity, {
@@ -46,7 +47,7 @@ export function createAdminOrdersRouter(identityResolver: IdentityResolver) {
 
   router.get("/:orderId", async (req, res) => {
     try {
-      const identity = requireAdmin(await identityResolver(req));
+      const identity = await requirePermission(requireAdmin(await identityResolver(req)), "orders.view");
       const result = await getAdminOrderDetail(identity, req.params.orderId);
       res.json(result);
     } catch (error) {
@@ -56,7 +57,7 @@ export function createAdminOrdersRouter(identityResolver: IdentityResolver) {
 
   router.patch("/:orderId/status", async (req, res) => {
     try {
-      const identity = requireAdmin(await identityResolver(req));
+      const identity = await requirePermission(requireAdmin(await identityResolver(req)), "orders.update");
       const status = req.body?.status;
       if (!isOrderStatus(status)) {
         throw new OrderEngineError("INVALID_ORDER_STATUS", 400, "Unknown order status.");
@@ -76,7 +77,7 @@ export function createAdminOrdersRouter(identityResolver: IdentityResolver) {
 
   router.patch("/:orderId/internal-note", async (req, res) => {
     try {
-      const identity = requireAdmin(await identityResolver(req));
+      const identity = await requirePermission(requireAdmin(await identityResolver(req)), "orders.internal_notes");
       const result = await updateOrderInternalNote(identity, {
         orderId: req.params.orderId,
         note: req.body?.note,

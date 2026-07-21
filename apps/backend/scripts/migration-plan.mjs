@@ -18,7 +18,10 @@ export const MIGRATION_FILES = Object.freeze([
   "db/migrations/017_recipe_yield_unit_compatibility.sql",
   "db/migrations/018_recipe_ingredient_legacy_name.sql",
   "db/migrations/019_recipe_media_lifecycle.sql",
-  "db/migrations/020_recipe_content_source_links.sql"
+  "db/migrations/020_recipe_content_source_links.sql",
+  "db/migrations/021_rbac_foundation.sql",
+  "db/migrations/022_admin_audit_log.sql",
+  "db/migrations/023_ai_workflow_foundation.sql"
 ]);
 
 export const BASELINE_MIGRATION_FILES = Object.freeze([

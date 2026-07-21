@@ -4,6 +4,8 @@ import express from "express";
 import helmet from "helmet";
 import { createAdminCustomersRouter } from "./modules/admin/admin-customers.routes";
 import { createAdminProductsRouter } from "./modules/admin/admin-products.routes";
+import { createAdminStaffRouter } from "./modules/admin/admin-staff.routes";
+import { createAiRouter } from "./modules/ai/ai.routes";
 import { anonymousIdentity, resolveRequestIdentity } from "./modules/auth/auth.identity";
 import { createAuthRouter } from "./modules/auth/auth.routes";
 import { createCatalogV2ChoiceCartRouter } from "./modules/catalog-v2/catalog-v2-choice-cart.routes";
@@ -80,6 +82,8 @@ export function createApp(config: AppConfig) {
     app.use("/api/admin/products", createAdminProductsRouter(resolveRequestIdentity));
     app.use("/api/admin/orders", createAdminOrdersRouter(resolveRequestIdentity));
     app.use("/api/admin/recipes", createAdminRecipesRouter(resolveRequestIdentity));
+    app.use("/api/admin/staff", createAdminStaffRouter(resolveRequestIdentity));
+    app.use("/api/admin/ai", createAiRouter(resolveRequestIdentity));
   } else {
     const clerkUnavailable = (_req: express.Request, res: express.Response) => {
       res.status(503).json({ error: "CLERK_NOT_CONFIGURED" });
@@ -94,6 +98,8 @@ export function createApp(config: AppConfig) {
     app.use("/api/admin/products", clerkUnavailable);
     app.use("/api/admin/orders", clerkUnavailable);
     app.use("/api/admin/recipes", clerkUnavailable);
+    app.use("/api/admin/staff", clerkUnavailable);
+    app.use("/api/admin/ai", clerkUnavailable);
   }
 
   app.use((_req, res) => res.status(404).json({ error: "NOT_FOUND" }));

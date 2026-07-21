@@ -5,9 +5,9 @@ import { OrderEngineError } from "../orders/order-errors";
 
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
-function assertAdmin(identity: StaffIdentity): void {
-  if (!identity.isActive || identity.role !== "admin") {
-    throw new OrderEngineError("ADMIN_ACCESS_REQUIRED", 403, "Admin role is required.");
+function assertActiveStaff(identity: StaffIdentity): void {
+  if (!identity.isActive) {
+    throw new OrderEngineError("STAFF_ACCESS_REQUIRED", 403, "Active staff access is required.");
   }
 }
 
@@ -28,8 +28,8 @@ async function assertStoredAdmin(client: PoolClient, identity: StaffIdentity): P
     [identity.staffId],
   );
   const staff = result.rows[0];
-  if (!staff || staff.role !== "admin" || staff.is_active !== true) {
-    throw new OrderEngineError("ADMIN_ACCESS_REQUIRED", 403, "Admin role is required.");
+  if (!staff || staff.is_active !== true) {
+    throw new OrderEngineError("STAFF_ACCESS_REQUIRED", 403, "Active staff access is required.");
   }
 }
 
@@ -38,7 +38,7 @@ export async function getAdminOrderDetail(
   orderId: string,
   db: Pool | PoolClient = getDb(),
 ) {
-  assertAdmin(identity);
+  assertActiveStaff(identity);
   const id = normalizeOrderId(orderId);
 
   const orderResult = await db.query(
@@ -147,7 +147,7 @@ export async function updateOrderInternalNote(
   input: { orderId: string; note: unknown },
   db: Pool = getDb(),
 ) {
-  assertAdmin(identity);
+  assertActiveStaff(identity);
   const orderId = normalizeOrderId(input.orderId);
   const note = typeof input.note === "string" ? input.note.trim() : "";
   if (note.length > 4000) {

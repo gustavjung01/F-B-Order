@@ -5,6 +5,7 @@ import {
   resolveRequestIdentity,
   type RequestIdentity,
 } from "./auth.identity";
+import { listEffectivePermissions } from "./auth.permissions";
 
 type IdentityResolver = (req: Request) => Promise<RequestIdentity>;
 
@@ -81,12 +82,14 @@ export function createAuthRouter(identityResolver: IdentityResolver = resolveReq
       }
 
       if (identity.kind === "staff") {
+        const permissions = await listEffectivePermissions(identity);
         res.json({
           identityKind: identity.kind,
           clerkUserId: identity.clerkUserId,
           staffId: identity.staffId,
           role: identity.role,
           isActive: identity.isActive,
+          permissions,
           canViewWholesalePrice: false,
           canPlaceOrder: false,
         });
