@@ -10,10 +10,14 @@ function buildSslConfig(connectionString: string): PoolConfig["ssl"] {
     return false;
   }
 
-  const allowInsecure = process.env.DB_SSL_REJECT_UNAUTHORIZED === "false";
-  const ca = process.env.DB_SSL_CA?.replace(/\n/g, "\n");
+  const ca = process.env.DB_SSL_CA?.replace(/\\n/g, "\n");
+  const configuredRejectUnauthorized = process.env.DB_SSL_REJECT_UNAUTHORIZED;
+  const rejectUnauthorized = configuredRejectUnauthorized
+    ? configuredRejectUnauthorized !== "false"
+    : Boolean(ca);
+
   return {
-    rejectUnauthorized: !allowInsecure,
+    rejectUnauthorized,
     ...(ca ? { ca } : {}),
   };
 }
