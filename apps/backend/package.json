@@ -26,7 +26,8 @@
     "catalog:v2:dry-run": "node scripts/import-catalog-v2.mjs",
     "catalog:v2:apply": "node scripts/import-catalog-v2.mjs --apply",
     "recipe:images:upload": "node scripts/upload-recipe-images-r2.mjs",
-    "recipe:content:import": "node scripts/import-recipes-v1.mjs"
+    "recipe:content:import": "node scripts/import-recipes-v1.mjs",
+    "recipe:content:validate": "node scripts/validate-recipes-v1.mjs"
   },
   "dependencies": {
     "@clerk/express": "2.1.28",
