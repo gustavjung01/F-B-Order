@@ -167,6 +167,38 @@ jobs:
           printf '%s\n' "$KNOWN_HOSTS" > "$HOME/.ssh/known_hosts"
           chmod 600 "$HOME/.ssh/known_hosts"
 
+      - name: Configure Google Agent Runtime production secret
+        env:
+          GOOGLE_SERVICE_ACCOUNT_JSON_BASE64: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON_BASE64 }}
+        run: |
+          set -Eeuo pipefail
+          test -n "$GOOGLE_SERVICE_ACCOUNT_JSON_BASE64"
+          umask 077
+          cat > "$RUNNER_TEMP/bepsi-google-agent.env" <<EOF
+          GOOGLE_CLOUD_PROJECT=bep-si-image-worker
+          GOOGLE_CLOUD_LOCATION=us-west1
+          GOOGLE_AGENT_ENGINE_ID=710557190426984448
+          GOOGLE_AGENT_ENDPOINT=https://us-west1-aiplatform.googleapis.com/v1/projects/bep-si-image-worker/locations/us-west1/reasoningEngines/710557190426984448:streamQuery
+          GOOGLE_AGENT_TIMEOUT_MS=90000
+          GOOGLE_SERVICE_ACCOUNT_JSON_BASE64=$GOOGLE_SERVICE_ACCOUNT_JSON_BASE64
+          EOF
+          scp -i "$HOME/.ssh/bepsi-production.key" -o BatchMode=yes -o IdentitiesOnly=yes \
+            "$RUNNER_TEMP/bepsi-google-agent.env" ubuntu@40.233.83.234:/tmp/bepsi-google-agent.env
+          ssh -i "$HOME/.ssh/bepsi-production.key" -o BatchMode=yes -o IdentitiesOnly=yes \
+            ubuntu@40.233.83.234 'sudo bash -s' <<'REMOTE'
+          set -Eeuo pipefail
+          ENV_FILE=/etc/app-env/bepsi.env
+          INCOMING=/tmp/bepsi-google-agent.env
+          test -f "$ENV_FILE"
+          test -f "$INCOMING"
+          TMP_FILE="$(mktemp)"
+          trap 'rm -f "$TMP_FILE" "$INCOMING"' EXIT
+          awk '!/^(GOOGLE_CLOUD_PROJECT|GOOGLE_CLOUD_LOCATION|GOOGLE_AGENT_ENGINE_ID|GOOGLE_AGENT_ENDPOINT|GOOGLE_AGENT_TIMEOUT_MS|GOOGLE_SERVICE_ACCOUNT_JSON_BASE64)=/' "$ENV_FILE" > "$TMP_FILE"
+          cat "$INCOMING" >> "$TMP_FILE"
+          install -m 600 -o root -g root "$TMP_FILE" "$ENV_FILE"
+          REMOTE
+          rm -f "$RUNNER_TEMP/bepsi-google-agent.env"
+
       - name: Fetch exact deploy script and release Bếp Sỉ only
         env:
           TARGET_SHA: ${{ needs.total-gate.outputs.target_sha }}
