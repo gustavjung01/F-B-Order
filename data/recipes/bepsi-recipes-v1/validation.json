@@ -1,0 +1,35 @@
+{
+  "schemaVersion": "bepsi.recipe-content.validation.v1",
+  "sourceFile": "bo-cong-thuc-bepsi-v1.md",
+  "generatedOn": "2026-07-21",
+  "summary": {
+    "recipeCount": 64,
+    "publicDrinkCount": 48,
+    "internalRecipeCount": 16,
+    "categoryCount": 12,
+    "ingredientCount": 304,
+    "stepCount": 201,
+    "optionalIngredientCount": 5,
+    "recipeReferenceCount": 83,
+    "catalogCandidateCount": 71,
+    "manualIngredientCount": 150
+  },
+  "checks": {
+    "sourceRecipeCountIs64": true,
+    "allSourceNumbersUnique": true,
+    "allSlugsUnique": true,
+    "allTitlesUnique": true,
+    "allOriginalSlugsPreserved": true,
+    "allOriginalTitlesPreserved": true,
+    "missingRecipeReferences": [],
+    "dependencyCycles": [],
+    "mediaFieldsOmittedFromImport": true,
+    "preserveExistingMediaRequired": true
+  },
+  "warnings": [
+    {
+      "recipeSlug": "tra-sua-tran-chau-trang-500ml",
+      "message": "The source says 'Nền trà sữa lài' can use recipe 5 without ice. The normalized reference therefore points to 'tra-sua-lai-500ml' without changing the original ingredient name."
+    }
+  ]
+}

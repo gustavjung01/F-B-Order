@@ -1,0 +1,1839 @@
+[
+  {
+    "key": "banh-quy-chocolate",
+    "sourceNames": [
+      "Bánh quy chocolate"
+    ],
+    "candidates": []
+  },
+  {
+    "key": "bot-cacao",
+    "sourceNames": [
+      "Bột cacao"
+    ],
+    "candidates": [
+      {
+        "product_id": "a6e0e898-f334-4904-94b3-b8b727ba638b",
+        "product_key": "bot-cacao-luave-bgkq-0136",
+        "product_name": "Bột Cacao Luave",
+        "brand": "Luave",
+        "product_status": "active",
+        "variant_id": "b2a70641-897c-4e5e-9ddc-363d1c5f497e",
+        "variant_key": "bot-cacao-luave-bgkq-0136-default",
+        "sku": "BGKQ-0136",
+        "variant_name": "Bột Cacao Luave",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 80
+      },
+      {
+        "product_id": "ad7e6e22-0a1b-43bb-b02e-b0dc39d70205",
+        "product_key": "bot-cacao-maly-bgkq-0138",
+        "product_name": "Bột Cacao Maly",
+        "brand": null,
+        "product_status": "active",
+        "variant_id": "bd0c14a9-f37f-4fe5-9db2-0a4f2e33e84d",
+        "variant_key": "bot-cacao-maly-bgkq-0138-default",
+        "sku": "BGKQ-0138",
+        "variant_name": "Bột Cacao Maly",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 80
+      }
+    ]
+  },
+  {
+    "key": "bot-chocolate",
+    "sourceNames": [
+      "Bột chocolate"
+    ],
+    "candidates": []
+  },
+  {
+    "key": "bot-khoai-mon",
+    "sourceNames": [
+      "Bột khoai môn"
+    ],
+    "candidates": [
+      {
+        "product_id": "6ab09f92-ce02-4b3a-9b05-8ee7cffe23b2",
+        "product_key": "bot-gtp",
+        "product_name": "Bột GTP",
+        "brand": "GTP",
+        "product_status": "active",
+        "variant_id": "a4bdb586-4e71-4342-83ee-cf7e7b1b2b61",
+        "variant_key": "bot-gtp--mon",
+        "sku": "BGKQ-0143",
+        "variant_name": "Bột môn GTP",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 40
+      },
+      {
+        "product_id": "88fed807-872d-4f79-9e11-058df4522473",
+        "product_key": "bot-king",
+        "product_name": "Bột King",
+        "brand": "King",
+        "product_status": "active",
+        "variant_id": "c06aef9d-8d95-4688-81e2-ab1aa2ba87fc",
+        "variant_key": "bot-king--mon",
+        "sku": "BGKQ-0139",
+        "variant_name": "Bột môn King",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 40
+      },
+      {
+        "product_id": "7f0c76ec-3800-43b5-9643-5bc49b4d80f9",
+        "product_key": "bot-mon-bkb-bgkq-0128",
+        "product_name": "Bột môn bkb",
+        "brand": "BKB",
+        "product_status": "active",
+        "variant_id": "de7f3bc4-292a-4a55-b900-8007c177b436",
+        "variant_key": "bot-mon-bkb-bgkq-0128-default",
+        "sku": "BGKQ-0128",
+        "variant_name": "Bột môn bkb",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 40
+      }
+    ]
+  },
+  {
+    "key": "bot-matcha",
+    "sourceNames": [
+      "Bột matcha"
+    ],
+    "candidates": [
+      {
+        "product_id": "2f32750b-f330-4a9d-a766-e2438da6ddf0",
+        "product_key": "bot-matcha",
+        "product_name": "Bột matcha",
+        "brand": null,
+        "product_status": "active",
+        "variant_id": "51aa32f3-2282-402b-ab15-0f49922e93f8",
+        "variant_key": "bot-matcha--cozy",
+        "sku": "BGKQ-0187",
+        "variant_name": "Bot matcha cozy",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 100
+      },
+      {
+        "product_id": "2f32750b-f330-4a9d-a766-e2438da6ddf0",
+        "product_key": "bot-matcha",
+        "product_name": "Bột matcha",
+        "brand": null,
+        "product_status": "active",
+        "variant_id": "2302f1bb-3f37-466c-88b2-77b6041143f2",
+        "variant_key": "bot-matcha--dai-loan",
+        "sku": "BGKQ-0186",
+        "variant_name": "Bột Matcha đai loan",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 100
+      },
+      {
+        "product_id": "2f32750b-f330-4a9d-a766-e2438da6ddf0",
+        "product_key": "bot-matcha",
+        "product_name": "Bột matcha",
+        "brand": null,
+        "product_status": "active",
+        "variant_id": "6ad13ab0-5a8f-42be-95e6-180a524e7e4b",
+        "variant_key": "bot-matcha--seoul",
+        "sku": "BGKQ-0188",
+        "variant_name": "Bot matcha SEOUL",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 100
+      }
+    ]
+  },
+  {
+    "key": "bot-pudding-trung",
+    "sourceNames": [
+      "Bột pudding trứng"
+    ],
+    "candidates": [
+      {
+        "product_id": "38f45013-f3b3-4069-baea-0c8e3bd6ad4c",
+        "product_key": "bot-kem-trung-dai-loan-bgkq-0122",
+        "product_name": "Bột kem trứng Đài loan",
+        "brand": null,
+        "product_status": "active",
+        "variant_id": "b856aa6c-7409-4a53-855a-835a65fc695d",
+        "variant_key": "bot-kem-trung-dai-loan-bgkq-0122-default",
+        "sku": "BGKQ-0122",
+        "variant_name": "Bột kem trứng Đài loan",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 40
+      }
+    ]
+  },
+  {
+    "key": "bot-rau-cau",
+    "sourceNames": [
+      "Bột rau câu"
+    ],
+    "candidates": [
+      {
+        "product_id": "6e0af399-5b0a-47f8-8510-e8f8d7091f04",
+        "product_key": "rau-cau-ca-deo-bgkq-0106",
+        "product_name": "RAU CÂU CÁ DẺO",
+        "brand": null,
+        "product_status": "active",
+        "variant_id": "7fa38288-3434-4235-8bb4-7dbda34e41d5",
+        "variant_key": "rau-cau-ca-deo-bgkq-0106-default",
+        "sku": "BGKQ-0106",
+        "variant_name": "RAU CÂU CÁ DẺO",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 40
+      },
+      {
+        "product_id": "b37b657d-9329-450d-908a-de22437717da",
+        "product_key": "rau-cau-gion-agar-bgkq-0105",
+        "product_name": "RAU CÂU GIÒN AGAR",
+        "brand": null,
+        "product_status": "active",
+        "variant_id": "a5cba2bb-7736-4739-a3b4-d3e77960299d",
+        "variant_key": "rau-cau-gion-agar-bgkq-0105-default",
+        "sku": "BGKQ-0105",
+        "variant_name": "RAU CÂU GIÒN AGAR",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 40
+      },
+      {
+        "product_id": "d4d43fb9-b654-4bad-b7c5-44a9c937f8de",
+        "product_key": "rau-cau-soc-vang-bgkq-0103",
+        "product_name": "Rau câu Sóc Vàng",
+        "brand": null,
+        "product_status": "active",
+        "variant_id": "3d9d3956-86cf-44f2-8440-e6c4e2d6a051",
+        "variant_key": "rau-cau-soc-vang-bgkq-0103-default",
+        "sku": "BGKQ-0103",
+        "variant_name": "Rau câu Sóc Vàng",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 40
+      },
+      {
+        "product_id": "cf6bc090-3192-454b-8d53-424929acf9da",
+        "product_key": "rau-cau-thao-van-bgkq-0104",
+        "product_name": "Rau câu Thảo Vân",
+        "brand": null,
+        "product_status": "active",
+        "variant_id": "bd6e8e14-881f-4189-939c-39d205f9f10f",
+        "variant_key": "rau-cau-thao-van-bgkq-0104-default",
+        "sku": "BGKQ-0104",
+        "variant_name": "Rau câu Thảo Vân",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 40
+      }
+    ]
+  },
+  {
+    "key": "bot-sua-pha-che",
+    "sourceNames": [
+      "Bột sữa",
+      "Bột sữa pha chế"
+    ],
+    "candidates": [
+      {
+        "product_id": "2969dae1-1a86-49c1-8848-ab823a67d6c7",
+        "product_key": "bot-sua-b-one-bgkq-0116",
+        "product_name": "Bột sữa B one",
+        "brand": null,
+        "product_status": "active",
+        "variant_id": "51eec439-2703-418a-a90a-6951fed3cf63",
+        "variant_key": "bot-sua-b-one-bgkq-0116-default",
+        "sku": "BGKQ-0116",
+        "variant_name": "Bột sữa B one",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 80
+      },
+      {
+        "product_id": "4485eef5-4824-4b86-89b5-08497faaf188",
+        "product_key": "bot-sua-frima",
+        "product_name": "Bột sữa Frima",
+        "brand": "Frima",
+        "product_status": "active",
+        "variant_id": "143d208e-8fa5-43c0-aec6-09d682fa0e47",
+        "variant_key": "bot-sua-frima--bao",
+        "sku": "BGKQ-0123",
+        "variant_name": "Bot sua Frima",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 80
+      },
+      {
+        "product_id": "4485eef5-4824-4b86-89b5-08497faaf188",
+        "product_key": "bot-sua-frima",
+        "product_name": "Bột sữa Frima",
+        "brand": "Frima",
+        "product_status": "active",
+        "variant_id": "639b0123-e98a-4f9e-a836-9b57f50ea66c",
+        "variant_key": "bot-sua-frima--1kg",
+        "sku": "BGKQ-0124",
+        "variant_name": "Bot sua Frima 1KG",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 80
+      },
+      {
+        "product_id": "2e90b549-e481-4794-a8fa-5d2e6875c560",
+        "product_key": "bot-sua-hp-bgkq-0115",
+        "product_name": "Bột sữa HP",
+        "brand": null,
+        "product_status": "active",
+        "variant_id": "4d05a636-0495-4267-9dd7-c1aad1b2491a",
+        "variant_key": "bot-sua-hp-bgkq-0115-default",
+        "sku": "BGKQ-0115",
+        "variant_name": "Bột sữa HP",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 80
+      },
+      {
+        "product_id": "ea091aa4-11c1-4bee-9f4d-41159daa8d63",
+        "product_key": "bot-sua-kievit-bgkq-0126",
+        "product_name": "Bot sua Kievit",
+        "brand": null,
+        "product_status": "active",
+        "variant_id": "43e07daa-1ee2-4a49-9966-d0b988009a63",
+        "variant_key": "bot-sua-kievit-bgkq-0126-default",
+        "sku": "BGKQ-0126",
+        "variant_name": "Bot sua Kievit",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 80
+      },
+      {
+        "product_id": "f3d8d3fb-8898-4d38-bbcb-bd4ffe60924e",
+        "product_key": "bot-sua-mt35-bgkq-0117",
+        "product_name": "Bột sữa MT35",
+        "brand": null,
+        "product_status": "active",
+        "variant_id": "603e8da7-a127-491c-871d-9d0b0038da5b",
+        "variant_key": "bot-sua-mt35-bgkq-0117-default",
+        "sku": "BGKQ-0117",
+        "variant_name": "Bột sữa MT35",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 80
+      },
+      {
+        "product_id": "44c7777f-8822-4a14-99c9-14db2ba83b4f",
+        "product_key": "bot-sua-thai-bgkq-0125",
+        "product_name": "Bot Sữa Thái",
+        "brand": null,
+        "product_status": "active",
+        "variant_id": "63792267-50c1-4a92-8b47-e3a7cf1a7a6b",
+        "variant_key": "bot-sua-thai-bgkq-0125-default",
+        "sku": "BGKQ-0125",
+        "variant_name": "Bot Sữa Thái",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 80
+      }
+    ]
+  },
+  {
+    "key": "cream-cheese",
+    "sourceNames": [
+      "Cream cheese"
+    ],
+    "candidates": []
+  },
+  {
+    "key": "dao-ngam",
+    "sourceNames": [
+      "Đào ngâm"
+    ],
+    "candidates": []
+  },
+  {
+    "key": "kem-topping",
+    "sourceNames": [
+      "Kem topping"
+    ],
+    "candidates": []
+  },
+  {
+    "key": "mut-dau",
+    "sourceNames": [
+      "Mứt dâu"
+    ],
+    "candidates": []
+  },
+  {
+    "key": "sinh-to-chanh-day",
+    "sourceNames": [
+      "Sinh tố chanh dây"
+    ],
+    "candidates": [
+      {
+        "product_id": "8f310935-0e90-4462-8d89-fe2578a2721d",
+        "product_key": "sinh-to-berrino",
+        "product_name": "Sinh tố Berrino",
+        "brand": "Berrino",
+        "product_status": "active",
+        "variant_id": "3a814df8-23d8-4112-9ae7-150f34413da9",
+        "variant_key": "sinh-to-berrino--chanh-day",
+        "sku": "BGKQ-0019",
+        "variant_name": "Sinh Tố Berrino Chanh Dây",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 60
+      },
+      {
+        "product_id": "904bf2d8-30e1-44b4-899a-991a920a085d",
+        "product_key": "sinh-to-mama-gold",
+        "product_name": "Sinh tố Mama Gold",
+        "brand": "Mama Gold",
+        "product_status": "active",
+        "variant_id": "2231d69b-efd2-49ed-8061-fb59b96f7a1f",
+        "variant_key": "sinh-to-mama-gold--chanh-day",
+        "sku": "BGKQ-0030",
+        "variant_name": "Sinh Tố Gold Chanh Dây",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 60
+      },
+      {
+        "product_id": "77a22a79-2db1-4c5f-84f6-bc6f53661f91",
+        "product_key": "sinh-to-vina",
+        "product_name": "Sinh tố Vina",
+        "brand": "Vina",
+        "product_status": "active",
+        "variant_id": "e465d630-6473-4d3e-9bc9-037c81d5c852",
+        "variant_key": "sinh-to-vina--1l-chanh-day",
+        "sku": "BGKQ-0045",
+        "variant_name": "SINH TỐ VINA CHANH DÂY",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 60
+      }
+    ]
+  },
+  {
+    "key": "sinh-to-dau",
+    "sourceNames": [
+      "Sinh tố dâu"
+    ],
+    "candidates": [
+      {
+        "product_id": "8f310935-0e90-4462-8d89-fe2578a2721d",
+        "product_key": "sinh-to-berrino",
+        "product_name": "Sinh tố Berrino",
+        "brand": "Berrino",
+        "product_status": "active",
+        "variant_id": "feaab067-bfa1-40dc-b31d-3b2a5e33f8f2",
+        "variant_key": "sinh-to-berrino--dau",
+        "sku": "BGKQ-0015",
+        "variant_name": "Sinh Tố Berrino Dâu",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 60
+      },
+      {
+        "product_id": "8f310935-0e90-4462-8d89-fe2578a2721d",
+        "product_key": "sinh-to-berrino",
+        "product_name": "Sinh tố Berrino",
+        "brand": "Berrino",
+        "product_status": "active",
+        "variant_id": "99605cab-8514-4d67-9141-09199eb156af",
+        "variant_key": "sinh-to-berrino--dau-tam",
+        "sku": "BGKQ-0025",
+        "variant_name": "Sinh Tố Berrino dâu tằm",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 60
+      },
+      {
+        "product_id": "904bf2d8-30e1-44b4-899a-991a920a085d",
+        "product_key": "sinh-to-mama-gold",
+        "product_name": "Sinh tố Mama Gold",
+        "brand": "Mama Gold",
+        "product_status": "active",
+        "variant_id": "5e855fff-37f3-46a8-821a-c5b08471b289",
+        "variant_key": "sinh-to-mama-gold--dau",
+        "sku": "BGKQ-0027",
+        "variant_name": "Sinh Tố Gold Dâu",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 60
+      },
+      {
+        "product_id": "904bf2d8-30e1-44b4-899a-991a920a085d",
+        "product_key": "sinh-to-mama-gold",
+        "product_name": "Sinh tố Mama Gold",
+        "brand": "Mama Gold",
+        "product_status": "active",
+        "variant_id": "8dbea39b-72d8-46c1-9f16-41da3c7b0be9",
+        "variant_key": "sinh-to-mama-gold--dau-tam",
+        "sku": "BGKQ-0035",
+        "variant_name": "Sinh Tố Gold dâu tằm",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 60
+      },
+      {
+        "product_id": "77a22a79-2db1-4c5f-84f6-bc6f53661f91",
+        "product_key": "sinh-to-vina",
+        "product_name": "Sinh tố Vina",
+        "brand": "Vina",
+        "product_status": "active",
+        "variant_id": "ebff684a-41b7-44de-885f-24622d21720b",
+        "variant_key": "sinh-to-vina--650g-dau",
+        "sku": "BGKQ-0049",
+        "variant_name": "SINH TỐ VINA DÂU",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 60
+      },
+      {
+        "product_id": "77a22a79-2db1-4c5f-84f6-bc6f53661f91",
+        "product_key": "sinh-to-vina",
+        "product_name": "Sinh tố Vina",
+        "brand": "Vina",
+        "product_status": "active",
+        "variant_id": "354c50d2-80d2-464d-aaa4-e17bcf19e480",
+        "variant_key": "sinh-to-vina--1l-dau",
+        "sku": "BGKQ-0042",
+        "variant_name": "SINH TỐ VINA DÂU",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 60
+      },
+      {
+        "product_id": "8f310935-0e90-4462-8d89-fe2578a2721d",
+        "product_key": "sinh-to-berrino",
+        "product_name": "Sinh tố Berrino",
+        "brand": "Berrino",
+        "product_status": "active",
+        "variant_id": "299f0b8e-c23c-40c7-a049-06349a4076ab",
+        "variant_key": "sinh-to-berrino--khom",
+        "sku": "BGKQ-0026",
+        "variant_name": "Sinh Tô berino khom",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 40
+      },
+      {
+        "product_id": "8f310935-0e90-4462-8d89-fe2578a2721d",
+        "product_key": "sinh-to-berrino",
+        "product_name": "Sinh tố Berrino",
+        "brand": "Berrino",
+        "product_status": "active",
+        "variant_id": "3a814df8-23d8-4112-9ae7-150f34413da9",
+        "variant_key": "sinh-to-berrino--chanh-day",
+        "sku": "BGKQ-0019",
+        "variant_name": "Sinh Tố Berrino Chanh Dây",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 40
+      }
+    ]
+  },
+  {
+    "key": "sinh-to-oi",
+    "sourceNames": [
+      "Sinh tố ổi"
+    ],
+    "candidates": [
+      {
+        "product_id": "8f310935-0e90-4462-8d89-fe2578a2721d",
+        "product_key": "sinh-to-berrino",
+        "product_name": "Sinh tố Berrino",
+        "brand": "Berrino",
+        "product_status": "active",
+        "variant_id": "c653519b-c245-46cf-bfb8-0aee8598d2d9",
+        "variant_key": "sinh-to-berrino--oi",
+        "sku": "BGKQ-0017",
+        "variant_name": "Sinh tố Berrino ổi",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 60
+      },
+      {
+        "product_id": "904bf2d8-30e1-44b4-899a-991a920a085d",
+        "product_key": "sinh-to-mama-gold",
+        "product_name": "Sinh tố Mama Gold",
+        "brand": "Mama Gold",
+        "product_status": "active",
+        "variant_id": "6c5c6e6f-de42-46e9-9ece-6ff32177f784",
+        "variant_key": "sinh-to-mama-gold--oi",
+        "sku": "BGKQ-0034",
+        "variant_name": "Sinh Tố Gold ổi",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 60
+      },
+      {
+        "product_id": "77a22a79-2db1-4c5f-84f6-bc6f53661f91",
+        "product_key": "sinh-to-vina",
+        "product_name": "Sinh tố Vina",
+        "brand": "Vina",
+        "product_status": "active",
+        "variant_id": "76219912-12b5-4bc9-b075-2d7ccb7079cb",
+        "variant_key": "sinh-to-vina--650g-oi",
+        "sku": "BGKQ-0050",
+        "variant_name": "SINH TỐ VINA ỔI",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 60
+      },
+      {
+        "product_id": "77a22a79-2db1-4c5f-84f6-bc6f53661f91",
+        "product_key": "sinh-to-vina",
+        "product_name": "Sinh tố Vina",
+        "brand": "Vina",
+        "product_status": "active",
+        "variant_id": "ab3a859d-2d69-4afd-8eda-d5006b8d4c40",
+        "variant_key": "sinh-to-vina--1l-oi",
+        "sku": "BGKQ-0046",
+        "variant_name": "SINH TỐ VINA ỔI",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 60
+      },
+      {
+        "product_id": "8f310935-0e90-4462-8d89-fe2578a2721d",
+        "product_key": "sinh-to-berrino",
+        "product_name": "Sinh tố Berrino",
+        "brand": "Berrino",
+        "product_status": "active",
+        "variant_id": "299f0b8e-c23c-40c7-a049-06349a4076ab",
+        "variant_key": "sinh-to-berrino--khom",
+        "sku": "BGKQ-0026",
+        "variant_name": "Sinh Tô berino khom",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 40
+      },
+      {
+        "product_id": "8f310935-0e90-4462-8d89-fe2578a2721d",
+        "product_key": "sinh-to-berrino",
+        "product_name": "Sinh tố Berrino",
+        "brand": "Berrino",
+        "product_status": "active",
+        "variant_id": "3a814df8-23d8-4112-9ae7-150f34413da9",
+        "variant_key": "sinh-to-berrino--chanh-day",
+        "sku": "BGKQ-0019",
+        "variant_name": "Sinh Tố Berrino Chanh Dây",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 40
+      },
+      {
+        "product_id": "8f310935-0e90-4462-8d89-fe2578a2721d",
+        "product_key": "sinh-to-berrino",
+        "product_name": "Sinh tố Berrino",
+        "brand": "Berrino",
+        "product_status": "active",
+        "variant_id": "c465d993-d89c-4d40-a66d-6e93c0b1b090",
+        "variant_key": "sinh-to-berrino--dao",
+        "sku": "BGKQ-0016",
+        "variant_name": "Sinh Tố Berrino Đào",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 40
+      },
+      {
+        "product_id": "8f310935-0e90-4462-8d89-fe2578a2721d",
+        "product_key": "sinh-to-berrino",
+        "product_name": "Sinh tố Berrino",
+        "brand": "Berrino",
+        "product_status": "active",
+        "variant_id": "feaab067-bfa1-40dc-b31d-3b2a5e33f8f2",
+        "variant_key": "sinh-to-berrino--dau",
+        "sku": "BGKQ-0015",
+        "variant_name": "Sinh Tố Berrino Dâu",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 40
+      }
+    ]
+  },
+  {
+    "key": "sinh-to-viet-quat",
+    "sourceNames": [
+      "Sinh tố việt quất"
+    ],
+    "candidates": [
+      {
+        "product_id": "8f310935-0e90-4462-8d89-fe2578a2721d",
+        "product_key": "sinh-to-berrino",
+        "product_name": "Sinh tố Berrino",
+        "brand": "Berrino",
+        "product_status": "active",
+        "variant_id": "876e0a5e-c860-4870-b788-49890c35c48d",
+        "variant_key": "sinh-to-berrino--viet-quoc",
+        "sku": "BGKQ-0018",
+        "variant_name": "Sinh Tố Berrino Việt Quốc",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 45
+      },
+      {
+        "product_id": "904bf2d8-30e1-44b4-899a-991a920a085d",
+        "product_key": "sinh-to-mama-gold",
+        "product_name": "Sinh tố Mama Gold",
+        "brand": "Mama Gold",
+        "product_status": "active",
+        "variant_id": "988622c5-481f-47f6-bec1-d30063e0425b",
+        "variant_key": "sinh-to-mama-gold--viet-quoc",
+        "sku": "BGKQ-0029",
+        "variant_name": "Sinh Tố Gold Việt Quốc",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 45
+      },
+      {
+        "product_id": "77a22a79-2db1-4c5f-84f6-bc6f53661f91",
+        "product_key": "sinh-to-vina",
+        "product_name": "Sinh tố Vina",
+        "brand": "Vina",
+        "product_status": "active",
+        "variant_id": "ee4ef7b0-cf39-4bb4-81fa-5ed4376858ae",
+        "variant_key": "sinh-to-vina--1l-viet-quoc",
+        "sku": "BGKQ-0041",
+        "variant_name": "SINH TỐ VINA VIỆT QUỐC",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 45
+      },
+      {
+        "product_id": "77a22a79-2db1-4c5f-84f6-bc6f53661f91",
+        "product_key": "sinh-to-vina",
+        "product_name": "Sinh tố Vina",
+        "brand": "Vina",
+        "product_status": "active",
+        "variant_id": "9da17ef2-19a2-4bf7-b749-afea91c249cf",
+        "variant_key": "sinh-to-vina--650g-viet-quoc",
+        "sku": "BGKQ-0048",
+        "variant_name": "SINH TỐ VINA VIỆT QUỐC",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 45
+      }
+    ]
+  },
+  {
+    "key": "sinh-to-xoai",
+    "sourceNames": [
+      "Sinh tố xoài"
+    ],
+    "candidates": [
+      {
+        "product_id": "8f310935-0e90-4462-8d89-fe2578a2721d",
+        "product_key": "sinh-to-berrino",
+        "product_name": "Sinh tố Berrino",
+        "brand": "Berrino",
+        "product_status": "active",
+        "variant_id": "68e08e4c-c5b2-48eb-9122-a1f47af1237c",
+        "variant_key": "sinh-to-berrino--xoai",
+        "sku": "BGKQ-0023",
+        "variant_name": "Sinh Tố Berrino Xoài",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 60
+      },
+      {
+        "product_id": "904bf2d8-30e1-44b4-899a-991a920a085d",
+        "product_key": "sinh-to-mama-gold",
+        "product_name": "Sinh tố Mama Gold",
+        "brand": "Mama Gold",
+        "product_status": "active",
+        "variant_id": "58d0e53c-b686-4be7-b6d2-47ce12179654",
+        "variant_key": "sinh-to-mama-gold--xoai",
+        "sku": "BGKQ-0033",
+        "variant_name": "Sinh Tố Gold Xoài",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 60
+      },
+      {
+        "product_id": "8f310935-0e90-4462-8d89-fe2578a2721d",
+        "product_key": "sinh-to-berrino",
+        "product_name": "Sinh tố Berrino",
+        "brand": "Berrino",
+        "product_status": "active",
+        "variant_id": "299f0b8e-c23c-40c7-a049-06349a4076ab",
+        "variant_key": "sinh-to-berrino--khom",
+        "sku": "BGKQ-0026",
+        "variant_name": "Sinh Tô berino khom",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 40
+      },
+      {
+        "product_id": "8f310935-0e90-4462-8d89-fe2578a2721d",
+        "product_key": "sinh-to-berrino",
+        "product_name": "Sinh tố Berrino",
+        "brand": "Berrino",
+        "product_status": "active",
+        "variant_id": "3a814df8-23d8-4112-9ae7-150f34413da9",
+        "variant_key": "sinh-to-berrino--chanh-day",
+        "sku": "BGKQ-0019",
+        "variant_name": "Sinh Tố Berrino Chanh Dây",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 40
+      },
+      {
+        "product_id": "8f310935-0e90-4462-8d89-fe2578a2721d",
+        "product_key": "sinh-to-berrino",
+        "product_name": "Sinh tố Berrino",
+        "brand": "Berrino",
+        "product_status": "active",
+        "variant_id": "c465d993-d89c-4d40-a66d-6e93c0b1b090",
+        "variant_key": "sinh-to-berrino--dao",
+        "sku": "BGKQ-0016",
+        "variant_name": "Sinh Tố Berrino Đào",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 40
+      },
+      {
+        "product_id": "8f310935-0e90-4462-8d89-fe2578a2721d",
+        "product_key": "sinh-to-berrino",
+        "product_name": "Sinh tố Berrino",
+        "brand": "Berrino",
+        "product_status": "active",
+        "variant_id": "feaab067-bfa1-40dc-b31d-3b2a5e33f8f2",
+        "variant_key": "sinh-to-berrino--dau",
+        "sku": "BGKQ-0015",
+        "variant_name": "Sinh Tố Berrino Dâu",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 40
+      },
+      {
+        "product_id": "8f310935-0e90-4462-8d89-fe2578a2721d",
+        "product_key": "sinh-to-berrino",
+        "product_name": "Sinh tố Berrino",
+        "brand": "Berrino",
+        "product_status": "active",
+        "variant_id": "99605cab-8514-4d67-9141-09199eb156af",
+        "variant_key": "sinh-to-berrino--dau-tam",
+        "sku": "BGKQ-0025",
+        "variant_name": "Sinh Tố Berrino dâu tằm",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 40
+      },
+      {
+        "product_id": "8f310935-0e90-4462-8d89-fe2578a2721d",
+        "product_key": "sinh-to-berrino",
+        "product_name": "Sinh tố Berrino",
+        "brand": "Berrino",
+        "product_status": "active",
+        "variant_id": "1469ba43-43c7-4d89-9114-91cd085ffb5c",
+        "variant_key": "sinh-to-berrino--kiwi",
+        "sku": "BGKQ-0021",
+        "variant_name": "Sinh Tố Berrino  Kiwi",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 40
+      }
+    ]
+  },
+  {
+    "key": "siro-dao",
+    "sourceNames": [
+      "Siro đào"
+    ],
+    "candidates": []
+  },
+  {
+    "key": "siro-dau",
+    "sourceNames": [
+      "Siro dâu"
+    ],
+    "candidates": [
+      {
+        "product_id": "edc51b8c-665b-418d-8caa-1f79da4fa6aa",
+        "product_key": "siro-gtp",
+        "product_name": "Siro GTP",
+        "brand": "GTP",
+        "product_status": "active",
+        "variant_id": "617f4fff-fecd-4e08-ab21-a2a45749809b",
+        "variant_key": "siro-gtp--dau-duong-den",
+        "sku": "BGKQ-0007",
+        "variant_name": "Siro GTP dâu , duong den",
+        "variant_status": "inactive",
+        "is_active": false,
+        "is_public": false,
+        "is_orderable": false,
+        "score": 60
+      }
+    ]
+  },
+  {
+    "key": "siro-oi-hong",
+    "sourceNames": [
+      "Siro ổi hồng"
+    ],
+    "candidates": []
+  },
+  {
+    "key": "siro-vai",
+    "sourceNames": [
+      "Siro vải"
+    ],
+    "candidates": []
+  },
+  {
+    "key": "siro-xoai",
+    "sourceNames": [
+      "Siro xoài"
+    ],
+    "candidates": []
+  },
+  {
+    "key": "sot-caramel",
+    "sourceNames": [
+      "Sốt caramel"
+    ],
+    "candidates": [
+      {
+        "product_id": "9684f145-7e40-406d-b57b-ed3e0fd17950",
+        "product_key": "sot-gold",
+        "product_name": "Sốt Golden Farm",
+        "brand": "Golden Farm",
+        "product_status": "active",
+        "variant_id": "536c1b57-3c16-4c1f-a561-c6a09a62d162",
+        "variant_key": "sot-gold--khac",
+        "sku": "BGKQ-0091",
+        "variant_name": "Sốt Golden Farm Caramel",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 60
+      }
+    ]
+  },
+  {
+    "key": "thach-3q",
+    "sourceNames": [
+      "Thạch 3Q"
+    ],
+    "candidates": [
+      {
+        "product_id": "1d0f03b7-65e0-43b5-b953-c25735b6e240",
+        "product_key": "3q-bibi",
+        "product_name": "Thạch 3Q Bibi",
+        "brand": "Bibi",
+        "product_status": "active",
+        "variant_id": "59a1f983-ab13-44f4-ab41-977a2c666ef2",
+        "variant_key": "3q-bibi--den",
+        "sku": "BGKQ-0076",
+        "variant_name": "3Q Bibi đen",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 80
+      },
+      {
+        "product_id": "1d0f03b7-65e0-43b5-b953-c25735b6e240",
+        "product_key": "3q-bibi",
+        "product_name": "Thạch 3Q Bibi",
+        "brand": "Bibi",
+        "product_status": "active",
+        "variant_id": "95c630fc-65bb-477d-a88b-b6390a62d6b9",
+        "variant_key": "3q-bibi--trang",
+        "sku": "BGKQ-0075",
+        "variant_name": "3Q Bibi TRĂNG",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 80
+      },
+      {
+        "product_id": "1f4d9aa3-c950-40bb-975d-53a83e267df0",
+        "product_key": "3q-ok",
+        "product_name": "Thạch 3Q OK",
+        "brand": "OK",
+        "product_status": "active",
+        "variant_id": "8075fdb2-cf63-427a-91cb-07ceb78b94e9",
+        "variant_key": "3q-ok--olong",
+        "sku": "BGKQ-0081",
+        "variant_name": "3Q ok olong",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 80
+      },
+      {
+        "product_id": "1f4d9aa3-c950-40bb-975d-53a83e267df0",
+        "product_key": "3q-ok",
+        "product_name": "Thạch 3Q OK",
+        "brand": "OK",
+        "product_status": "active",
+        "variant_id": "f05094fd-406b-44f0-85c2-936cbb343e5f",
+        "variant_key": "3q-ok--trang",
+        "sku": "BGKQ-0080",
+        "variant_name": "3Q Ok trang",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 80
+      },
+      {
+        "product_id": "4b37ba66-19a4-4b28-9c0c-0127ae4b6cac",
+        "product_key": "3q-sea",
+        "product_name": "Thạch 3Q Sea",
+        "brand": "Sea",
+        "product_status": "active",
+        "variant_id": "7b2529ee-dad4-4831-b66d-0594793530b1",
+        "variant_key": "3q-sea--den",
+        "sku": "BGKQ-0078",
+        "variant_name": "3Q sea đen",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 80
+      },
+      {
+        "product_id": "4b37ba66-19a4-4b28-9c0c-0127ae4b6cac",
+        "product_key": "3q-sea",
+        "product_name": "Thạch 3Q Sea",
+        "brand": "Sea",
+        "product_status": "active",
+        "variant_id": "301fcfb3-f8ca-4675-b199-e6e832c08d77",
+        "variant_key": "3q-sea--trang",
+        "sku": "BGKQ-0077",
+        "variant_name": "3Q Sea Trắng",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 80
+      }
+    ]
+  },
+  {
+    "key": "tra-den",
+    "sourceNames": [
+      "Trà đen"
+    ],
+    "candidates": [
+      {
+        "product_id": "6ff9a4b9-f439-4caf-8ab1-939a525b60c9",
+        "product_key": "tra-co-gai",
+        "product_name": "Trà Cô Gái",
+        "brand": "Cô Gái",
+        "product_status": "active",
+        "variant_id": "f6717df1-b60f-4e08-9f71-9530e579b2dd",
+        "variant_key": "tra-co-gai--den",
+        "sku": "BGKQ-0174",
+        "variant_name": "TRÀ ĐEN CÔ GÁI",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 80
+      },
+      {
+        "product_id": "787baf85-ef02-4336-9197-909e9c92e7fa",
+        "product_key": "tra-den-so-9",
+        "product_name": "Trà đen số 9",
+        "brand": null,
+        "product_status": "active",
+        "variant_id": "edc192bd-bfb4-4b65-8831-7381958bb62f",
+        "variant_key": "tra-den-so-9--douxian",
+        "sku": "BGKQ-0151",
+        "variant_name": "Trà đen 9 Douxian",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 80
+      },
+      {
+        "product_id": "787baf85-ef02-4336-9197-909e9c92e7fa",
+        "product_key": "tra-den-so-9",
+        "product_name": "Trà đen số 9",
+        "brand": null,
+        "product_status": "active",
+        "variant_id": "924145df-51dd-4239-b1d6-15bb146bf2b8",
+        "variant_key": "tra-den-so-9--bong",
+        "sku": "BGKQ-0152",
+        "variant_name": "Trà đen HT 9 bóng",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 80
+      },
+      {
+        "product_id": "787baf85-ef02-4336-9197-909e9c92e7fa",
+        "product_key": "tra-den-so-9",
+        "product_name": "Trà đen số 9",
+        "brand": null,
+        "product_status": "active",
+        "variant_id": "eba76afc-684b-4e47-9173-bbec4203b53f",
+        "variant_key": "tra-den-so-9--luave",
+        "sku": "BGKQ-0153",
+        "variant_name": "Trà đen HT 9 Luave",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 80
+      },
+      {
+        "product_id": "72ef4394-16c1-4e4e-baf9-39991c84a10f",
+        "product_key": "tra-hoang-gia",
+        "product_name": "Trà Hoàng Gia",
+        "brand": "Hoàng Gia",
+        "product_status": "active",
+        "variant_id": "d7dc0fef-2aeb-4e09-af9c-374552146025",
+        "variant_key": "tra-hoang-gia--den",
+        "sku": "BGKQ-0154",
+        "variant_name": "Trà đen Hoàng Gia",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 80
+      },
+      {
+        "product_id": "62da25bb-476d-48c6-9e01-0cdcec94f711",
+        "product_key": "tra-loc-phat",
+        "product_name": "Trà Lộc Phát",
+        "brand": "Lộc Phát",
+        "product_status": "active",
+        "variant_id": "445ede38-f56a-44df-a6c3-b76cf925a26a",
+        "variant_key": "tra-loc-phat--den",
+        "sku": "BGKQ-0149",
+        "variant_name": "Trà đen Lộc Phát",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 80
+      },
+      {
+        "product_id": "5dbe0534-90f0-42f4-a4bd-db2a572fba6b",
+        "product_key": "tra-novia",
+        "product_name": "Trà Novia",
+        "brand": "Novia",
+        "product_status": "active",
+        "variant_id": "a3adc2c4-28dd-43b9-9c4f-8df8ec49861d",
+        "variant_key": "tra-novia--den",
+        "sku": "BGKQ-0171",
+        "variant_name": "Trà đen novia",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 80
+      },
+      {
+        "product_id": "6b044039-4207-4ac6-974d-174ee82421e2",
+        "product_key": "tra-phuc-long",
+        "product_name": "Trà Phúc Long",
+        "brand": "Phúc Long",
+        "product_status": "active",
+        "variant_id": "308881d7-0eb9-4636-abf3-29670673004f",
+        "variant_key": "tra-phuc-long--den",
+        "sku": "BGKQ-0161",
+        "variant_name": "Tra den phuc long",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 80
+      }
+    ]
+  },
+  {
+    "key": "tra-lai",
+    "sourceNames": [
+      "Trà lài"
+    ],
+    "candidates": [
+      {
+        "product_id": "6ff9a4b9-f439-4caf-8ab1-939a525b60c9",
+        "product_key": "tra-co-gai",
+        "product_name": "Trà Cô Gái",
+        "brand": "Cô Gái",
+        "product_status": "active",
+        "variant_id": "9494e65d-0539-49fd-aa05-48a946d16196",
+        "variant_key": "tra-co-gai--lai",
+        "sku": "BGKQ-0175",
+        "variant_name": "TRÀ LÀI CÔ GÁI",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 80
+      },
+      {
+        "product_id": "72ef4394-16c1-4e4e-baf9-39991c84a10f",
+        "product_key": "tra-hoang-gia",
+        "product_name": "Trà Hoàng Gia",
+        "brand": "Hoàng Gia",
+        "product_status": "active",
+        "variant_id": "8db3ca8c-f6fc-4b03-8328-2b5ca3677d2e",
+        "variant_key": "tra-hoang-gia--lai",
+        "sku": "BGKQ-0155",
+        "variant_name": "Trà lài Hoàng Gia",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 80
+      },
+      {
+        "product_id": "3679cba4-45d1-4277-b280-8bfae87cf58c",
+        "product_key": "tra-king",
+        "product_name": "Trà King",
+        "brand": "King",
+        "product_status": "active",
+        "variant_id": "066458b9-4102-439a-a3c1-bc1fac9e3fc1",
+        "variant_key": "tra-king--lai",
+        "sku": "BGKQ-0146",
+        "variant_name": "Trà lài King",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 80
+      },
+      {
+        "product_id": "83691f8f-1fd2-4fd0-9620-cfcad4686f3b",
+        "product_key": "tra-lai-nhu-y-bgkq-0176",
+        "product_name": "TRÀ LÀI NHƯ Ý",
+        "brand": null,
+        "product_status": "active",
+        "variant_id": "2c0b4833-0043-4c06-a988-cacea10537b7",
+        "variant_key": "tra-lai-nhu-y-bgkq-0176-default",
+        "sku": "BGKQ-0176",
+        "variant_name": "TRÀ LÀI NHƯ Ý",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 80
+      },
+      {
+        "product_id": "62da25bb-476d-48c6-9e01-0cdcec94f711",
+        "product_key": "tra-loc-phat",
+        "product_name": "Trà Lộc Phát",
+        "brand": "Lộc Phát",
+        "product_status": "active",
+        "variant_id": "3ce51e80-f797-4dcb-bda0-489ec4f3eb8e",
+        "variant_key": "tra-loc-phat--lai",
+        "sku": "BGKQ-0148",
+        "variant_name": "Trà lài Lộc Phát",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 80
+      },
+      {
+        "product_id": "5dbe0534-90f0-42f4-a4bd-db2a572fba6b",
+        "product_key": "tra-novia",
+        "product_name": "Trà Novia",
+        "brand": "Novia",
+        "product_status": "active",
+        "variant_id": "371ab071-5fd4-4555-8da2-cd7db692282b",
+        "variant_key": "tra-novia--lai",
+        "sku": "BGKQ-0172",
+        "variant_name": "Trà  lài novia",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 80
+      },
+      {
+        "product_id": "ac4e2601-4b78-491a-8f76-24d075cc88cb",
+        "product_key": "tra-tui-loc-tnb",
+        "product_name": "Trà túi lọc TNB",
+        "brand": "TNB",
+        "product_status": "active",
+        "variant_id": "b946c65a-820d-4ed6-8cff-bdd4f4f12b82",
+        "variant_key": "tra-tui-loc-tnb--lai",
+        "sku": "BGKQ-0160",
+        "variant_name": "Trà lài túi lọc TNB",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 80
+      },
+      {
+        "product_id": "6b044039-4207-4ac6-974d-174ee82421e2",
+        "product_key": "tra-phuc-long",
+        "product_name": "Trà Phúc Long",
+        "brand": "Phúc Long",
+        "product_status": "active",
+        "variant_id": "c9794c8c-2b0a-4a79-b5a9-c629e8218cbf",
+        "variant_key": "tra-phuc-long--sen-lai",
+        "sku": "BGKQ-0162",
+        "variant_name": "Trà sen/LÀI Phúc Long",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 60
+      }
+    ]
+  },
+  {
+    "key": "tra-o-long",
+    "sourceNames": [
+      "Trà ô long"
+    ],
+    "candidates": [
+      {
+        "product_id": "6b044039-4207-4ac6-974d-174ee82421e2",
+        "product_key": "tra-phuc-long",
+        "product_name": "Trà Phúc Long",
+        "brand": "Phúc Long",
+        "product_status": "active",
+        "variant_id": "308881d7-0eb9-4636-abf3-29670673004f",
+        "variant_key": "tra-phuc-long--den",
+        "sku": "BGKQ-0161",
+        "variant_name": "Tra den phuc long",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 40
+      },
+      {
+        "product_id": "6b044039-4207-4ac6-974d-174ee82421e2",
+        "product_key": "tra-phuc-long",
+        "product_name": "Trà Phúc Long",
+        "brand": "Phúc Long",
+        "product_status": "active",
+        "variant_id": "525468dd-d4a9-4663-aa5e-97e40082dc7c",
+        "variant_key": "tra-phuc-long--olong",
+        "sku": "BGKQ-0163",
+        "variant_name": "tra olong phuc long",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 40
+      },
+      {
+        "product_id": "6b044039-4207-4ac6-974d-174ee82421e2",
+        "product_key": "tra-phuc-long",
+        "product_name": "Trà Phúc Long",
+        "brand": "Phúc Long",
+        "product_status": "active",
+        "variant_id": "c9794c8c-2b0a-4a79-b5a9-c629e8218cbf",
+        "variant_key": "tra-phuc-long--sen-lai",
+        "sku": "BGKQ-0162",
+        "variant_name": "Trà sen/LÀI Phúc Long",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 40
+      },
+      {
+        "product_id": "261bfcbd-2a18-4dcb-a60a-dcfda4456572",
+        "product_key": "tra-thai",
+        "product_name": "Trà Thái",
+        "brand": null,
+        "product_status": "active",
+        "variant_id": "781d9597-d2c1-47e9-a23b-9663c629602e",
+        "variant_key": "tra-thai--xanh-do",
+        "sku": "BGKQ-0168",
+        "variant_name": "Trà Thái xanh/đỏ Cty",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 40
+      }
+    ]
+  },
+  {
+    "key": "tra-thai-do",
+    "sourceNames": [
+      "Trà Thái đỏ"
+    ],
+    "candidates": [
+      {
+        "product_id": "261bfcbd-2a18-4dcb-a60a-dcfda4456572",
+        "product_key": "tra-thai",
+        "product_name": "Trà Thái",
+        "brand": null,
+        "product_status": "active",
+        "variant_id": "781d9597-d2c1-47e9-a23b-9663c629602e",
+        "variant_key": "tra-thai--xanh-do",
+        "sku": "BGKQ-0168",
+        "variant_name": "Trà Thái xanh/đỏ Cty",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 80
+      },
+      {
+        "product_id": "261bfcbd-2a18-4dcb-a60a-dcfda4456572",
+        "product_key": "tra-thai",
+        "product_name": "Trà Thái",
+        "brand": null,
+        "product_status": "active",
+        "variant_id": "912652ef-e25e-4cbf-b5a8-bea3470a87cb",
+        "variant_key": "tra-thai--xanh",
+        "sku": "BGKQ-0169",
+        "variant_name": "Trà Thái xanh thường",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 80
+      },
+      {
+        "product_id": "f3852a28-00c4-4d0f-b25e-038e9a908714",
+        "product_key": "tra-sen-lai-thai-nguyen-bgkq-0164",
+        "product_name": "Trà sen/LÀI Thái Nguyên",
+        "brand": null,
+        "product_status": "active",
+        "variant_id": "56b5fa67-96f2-478d-b9f1-18d208f4eda5",
+        "variant_key": "tra-sen-lai-thai-nguyen-bgkq-0164-default",
+        "sku": "BGKQ-0164",
+        "variant_name": "Trà sen/LÀI Thái Nguyên",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 40
+      }
+    ]
+  },
+  {
+    "key": "tra-thai-xanh",
+    "sourceNames": [
+      "Trà Thái xanh"
+    ],
+    "candidates": [
+      {
+        "product_id": "261bfcbd-2a18-4dcb-a60a-dcfda4456572",
+        "product_key": "tra-thai",
+        "product_name": "Trà Thái",
+        "brand": null,
+        "product_status": "active",
+        "variant_id": "912652ef-e25e-4cbf-b5a8-bea3470a87cb",
+        "variant_key": "tra-thai--xanh",
+        "sku": "BGKQ-0169",
+        "variant_name": "Trà Thái xanh thường",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 100
+      },
+      {
+        "product_id": "261bfcbd-2a18-4dcb-a60a-dcfda4456572",
+        "product_key": "tra-thai",
+        "product_name": "Trà Thái",
+        "brand": null,
+        "product_status": "active",
+        "variant_id": "781d9597-d2c1-47e9-a23b-9663c629602e",
+        "variant_key": "tra-thai--xanh-do",
+        "sku": "BGKQ-0168",
+        "variant_name": "Trà Thái xanh/đỏ Cty",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 80
+      },
+      {
+        "product_id": "f3852a28-00c4-4d0f-b25e-038e9a908714",
+        "product_key": "tra-sen-lai-thai-nguyen-bgkq-0164",
+        "product_name": "Trà sen/LÀI Thái Nguyên",
+        "brand": null,
+        "product_status": "active",
+        "variant_id": "56b5fa67-96f2-478d-b9f1-18d208f4eda5",
+        "variant_key": "tra-sen-lai-thai-nguyen-bgkq-0164-default",
+        "sku": "BGKQ-0164",
+        "variant_name": "Trà sen/LÀI Thái Nguyên",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 40
+      }
+    ]
+  },
+  {
+    "key": "tran-chau-den-kho",
+    "sourceNames": [
+      "Trân châu đen khô"
+    ],
+    "candidates": [
+      {
+        "product_id": "1483f69d-f929-45eb-9d21-1fdd47c269e5",
+        "product_key": "tran-chau-douxian",
+        "product_name": "Trân châu Douxian",
+        "brand": "Douxian",
+        "product_status": "active",
+        "variant_id": "45dc6499-24ad-4ebe-adbf-cf9ef5bfb835",
+        "variant_key": "tran-chau-douxian--duong-den-1kg",
+        "sku": "BGKQ-0063",
+        "variant_name": "TC đường đen Duoxian 1kg",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 45
+      },
+      {
+        "product_id": "1483f69d-f929-45eb-9d21-1fdd47c269e5",
+        "product_key": "tran-chau-douxian",
+        "product_name": "Trân châu Douxian",
+        "brand": "Douxian",
+        "product_status": "active",
+        "variant_id": "61021900-5165-4112-9256-b0b391b1d553",
+        "variant_key": "tran-chau-douxian--duong-den-2kg",
+        "sku": "BGKQ-0064",
+        "variant_name": "TC đường đen Duoxian 2kg",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 45
+      },
+      {
+        "product_id": "1483f69d-f929-45eb-9d21-1fdd47c269e5",
+        "product_key": "tran-chau-douxian",
+        "product_name": "Trân châu Douxian",
+        "brand": "Douxian",
+        "product_status": "active",
+        "variant_id": "5b3c1e3e-336a-41bb-9b34-3e25fd64b89b",
+        "variant_key": "tran-chau-douxian--duong-den-3kg",
+        "sku": "BGKQ-0065",
+        "variant_name": "TC đường đen Duoxian 3kg",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 45
+      },
+      {
+        "product_id": "2b2baafe-920a-4eb3-9473-39e3b8b1d93d",
+        "product_key": "tran-chau-gia-uy",
+        "product_name": "Trân châu Gia Uy",
+        "brand": "Gia Uy",
+        "product_status": "active",
+        "variant_id": "e95f7b0c-2a55-4761-9082-06a7ad788bb7",
+        "variant_key": "tran-chau-gia-uy--duong-den",
+        "sku": "BGKQ-0069",
+        "variant_name": "Tc đường đen Gia Uy",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 45
+      },
+      {
+        "product_id": "62838171-7cdb-4e4a-bca7-dc6a38d9ebcb",
+        "product_key": "tran-chau-kuhan",
+        "product_name": "Trân châu Kuhan",
+        "brand": "Kuhan",
+        "product_status": "active",
+        "variant_id": "d0556a3d-5ec5-4e55-beb4-ad7af54264bb",
+        "variant_key": "tran-chau-kuhan--duong-den-2kg",
+        "sku": "BGKQ-0073",
+        "variant_name": "TC đđ Kuhan 2kG",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 45
+      },
+      {
+        "product_id": "62838171-7cdb-4e4a-bca7-dc6a38d9ebcb",
+        "product_key": "tran-chau-kuhan",
+        "product_name": "Trân châu Kuhan",
+        "brand": "Kuhan",
+        "product_status": "active",
+        "variant_id": "e4064e69-269f-40a4-91ff-384dab1583fa",
+        "variant_key": "tran-chau-kuhan--duong-den-3kg",
+        "sku": "BGKQ-0074",
+        "variant_name": "TC đđ kuhan 3KG",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 45
+      }
+    ]
+  },
+  {
+    "key": "tran-chau-trang",
+    "sourceNames": [
+      "Trân châu trắng"
+    ],
+    "candidates": [
+      {
+        "product_id": "2b2baafe-920a-4eb3-9473-39e3b8b1d93d",
+        "product_key": "tran-chau-gia-uy",
+        "product_name": "Trân châu Gia Uy",
+        "brand": "Gia Uy",
+        "product_status": "active",
+        "variant_id": "c832d043-9e6e-4681-a80e-4da9c5b7d08f",
+        "variant_key": "tran-chau-gia-uy--trang",
+        "sku": "BGKQ-0070",
+        "variant_name": "Tc trắng Gia Uy",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 60
+      },
+      {
+        "product_id": "a4617ef0-d2e6-48da-8279-c4d725d3dc7a",
+        "product_key": "banh-trang",
+        "product_name": "Bánh tráng",
+        "brand": null,
+        "product_status": "active",
+        "variant_id": "7e790206-eeab-443a-9f08-9742d0ddcbd6",
+        "variant_key": "banh-trang--nuong-trang-vang",
+        "sku": "BGKQ-0269",
+        "variant_name": "bánh trán nướng trắng+vàng",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 40
+      },
+      {
+        "product_id": "1483f69d-f929-45eb-9d21-1fdd47c269e5",
+        "product_key": "tran-chau-douxian",
+        "product_name": "Trân châu Douxian",
+        "brand": "Douxian",
+        "product_status": "active",
+        "variant_id": "45dc6499-24ad-4ebe-adbf-cf9ef5bfb835",
+        "variant_key": "tran-chau-douxian--duong-den-1kg",
+        "sku": "BGKQ-0063",
+        "variant_name": "TC đường đen Duoxian 1kg",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 40
+      },
+      {
+        "product_id": "1483f69d-f929-45eb-9d21-1fdd47c269e5",
+        "product_key": "tran-chau-douxian",
+        "product_name": "Trân châu Douxian",
+        "brand": "Douxian",
+        "product_status": "active",
+        "variant_id": "61021900-5165-4112-9256-b0b391b1d553",
+        "variant_key": "tran-chau-douxian--duong-den-2kg",
+        "sku": "BGKQ-0064",
+        "variant_name": "TC đường đen Duoxian 2kg",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 40
+      },
+      {
+        "product_id": "1483f69d-f929-45eb-9d21-1fdd47c269e5",
+        "product_key": "tran-chau-douxian",
+        "product_name": "Trân châu Douxian",
+        "brand": "Douxian",
+        "product_status": "active",
+        "variant_id": "5b3c1e3e-336a-41bb-9b34-3e25fd64b89b",
+        "variant_key": "tran-chau-douxian--duong-den-3kg",
+        "sku": "BGKQ-0065",
+        "variant_name": "TC đường đen Duoxian 3kg",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 40
+      },
+      {
+        "product_id": "1483f69d-f929-45eb-9d21-1fdd47c269e5",
+        "product_key": "tran-chau-douxian",
+        "product_name": "Trân châu Douxian",
+        "brand": "Douxian",
+        "product_status": "active",
+        "variant_id": "7ae71ab4-3841-4641-93a7-152785a3661e",
+        "variant_key": "tran-chau-douxian--hoang-kim-1kg",
+        "sku": "BGKQ-0066",
+        "variant_name": "TC hoàng kim Duoxian 1kg",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 40
+      },
+      {
+        "product_id": "1483f69d-f929-45eb-9d21-1fdd47c269e5",
+        "product_key": "tran-chau-douxian",
+        "product_name": "Trân châu Douxian",
+        "brand": "Douxian",
+        "product_status": "active",
+        "variant_id": "7136d2a3-2605-41ea-bd0c-92d606efb8f0",
+        "variant_key": "tran-chau-douxian--hoang-kim-3kg",
+        "sku": "BGKQ-0067",
+        "variant_name": "TC hoàng kim Duoxian 3kg",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 40
+      },
+      {
+        "product_id": "2b2baafe-920a-4eb3-9473-39e3b8b1d93d",
+        "product_key": "tran-chau-gia-uy",
+        "product_name": "Trân châu Gia Uy",
+        "brand": "Gia Uy",
+        "product_status": "active",
+        "variant_id": "7c7bd92a-439f-4233-b662-51810d588d28",
+        "variant_key": "tran-chau-gia-uy--cafe",
+        "sku": "BGKQ-0071",
+        "variant_name": "Tc Cafe Gia Uy",
+        "variant_status": "active",
+        "is_active": true,
+        "is_public": true,
+        "is_orderable": true,
+        "score": 40
+      }
+    ]
+  },
+  {
+    "key": "vai-ngam",
+    "sourceNames": [
+      "Vải ngâm"
+    ],
+    "candidates": []
+  },
+  {
+    "key": "whipping-cream",
+    "sourceNames": [
+      "Whipping cream"
+    ],
+    "candidates": []
+  }
+]

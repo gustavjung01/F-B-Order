@@ -1,0 +1,369 @@
+{
+  "schemaVersion": "bepsi.recipe-catalog-map.v1",
+  "generatedOn": "2026-07-21",
+  "rules": {
+    "matchExactCatalogVariantOnly": true,
+    "doNotGuessVariantId": true,
+    "preserveIngredientDisplayName": true
+  },
+  "entries": {
+    "banh-quy-chocolate": {
+      "sourceNames": [
+        "Bánh quy chocolate"
+      ],
+      "occurrences": 1,
+      "catalogProductId": null,
+      "catalogVariantId": null,
+      "sku": null,
+      "status": "manual"
+    },
+    "bot-cacao": {
+      "sourceNames": [
+        "Bột cacao"
+      ],
+      "occurrences": 2,
+      "catalogProductId": null,
+      "catalogVariantId": "b2a70641-897c-4e5e-9ddc-363d1c5f497e",
+      "sku": "BGKQ-0136",
+      "status": "mapped",
+      "matchedVariantName": "B?t Cacao Luave"
+    },
+    "bot-chocolate": {
+      "sourceNames": [
+        "Bột chocolate"
+      ],
+      "occurrences": 2,
+      "catalogProductId": null,
+      "catalogVariantId": null,
+      "sku": null,
+      "status": "manual"
+    },
+    "bot-khoai-mon": {
+      "sourceNames": [
+        "Bột khoai môn"
+      ],
+      "occurrences": 3,
+      "catalogProductId": null,
+      "catalogVariantId": "c06aef9d-8d95-4688-81e2-ab1aa2ba87fc",
+      "sku": "BGKQ-0139",
+      "status": "mapped",
+      "matchedVariantName": "B?t m?n King"
+    },
+    "bot-matcha": {
+      "sourceNames": [
+        "Bột matcha"
+      ],
+      "occurrences": 5,
+      "catalogProductId": null,
+      "catalogVariantId": "51aa32f3-2282-402b-ab15-0f49922e93f8",
+      "sku": "BGKQ-0187",
+      "status": "mapped",
+      "matchedVariantName": "B?t matcha Cozy"
+    },
+    "bot-pudding-trung": {
+      "sourceNames": [
+        "Bột pudding trứng"
+      ],
+      "occurrences": 1,
+      "catalogProductId": null,
+      "catalogVariantId": "b856aa6c-7409-4a53-855a-835a65fc695d",
+      "sku": "BGKQ-0122",
+      "status": "mapped",
+      "matchedVariantName": "B?t kem tr?ng ??i Loan"
+    },
+    "bot-rau-cau": {
+      "sourceNames": [
+        "Bột rau câu"
+      ],
+      "occurrences": 2,
+      "catalogProductId": null,
+      "catalogVariantId": "a5cba2bb-7736-4739-a3b4-d3e77960299d",
+      "sku": "BGKQ-0105",
+      "status": "mapped",
+      "matchedVariantName": "Rau c?u gi?n Agar"
+    },
+    "bot-sua-pha-che": {
+      "sourceNames": [
+        "Bột sữa",
+        "Bột sữa pha chế"
+      ],
+      "occurrences": 14,
+      "catalogProductId": null,
+      "catalogVariantId": "639b0123-e98a-4f9e-a836-9b57f50ea66c",
+      "sku": "BGKQ-0124",
+      "status": "mapped",
+      "matchedVariantName": "B?t s?a Frima 1KG"
+    },
+    "cream-cheese": {
+      "sourceNames": [
+        "Cream cheese"
+      ],
+      "occurrences": 1,
+      "catalogProductId": null,
+      "catalogVariantId": null,
+      "sku": null,
+      "status": "manual"
+    },
+    "dao-ngam": {
+      "sourceNames": [
+        "Đào ngâm"
+      ],
+      "occurrences": 3,
+      "catalogProductId": null,
+      "catalogVariantId": null,
+      "sku": null,
+      "status": "manual"
+    },
+    "kem-topping": {
+      "sourceNames": [
+        "Kem topping"
+      ],
+      "occurrences": 3,
+      "catalogProductId": null,
+      "catalogVariantId": null,
+      "sku": null,
+      "status": "manual"
+    },
+    "mut-dau": {
+      "sourceNames": [
+        "Mứt dâu"
+      ],
+      "occurrences": 3,
+      "catalogProductId": null,
+      "catalogVariantId": null,
+      "sku": null,
+      "status": "manual"
+    },
+    "sinh-to-chanh-day": {
+      "sourceNames": [
+        "Sinh tố chanh dây"
+      ],
+      "occurrences": 3,
+      "catalogProductId": null,
+      "catalogVariantId": "3a814df8-23d8-4112-9ae7-150f34413da9",
+      "sku": "BGKQ-0019",
+      "status": "mapped",
+      "matchedVariantName": "Sinh t? Berrino Chanh D?y"
+    },
+    "sinh-to-dau": {
+      "sourceNames": [
+        "Sinh tố dâu"
+      ],
+      "occurrences": 1,
+      "catalogProductId": null,
+      "catalogVariantId": "feaab067-bfa1-40dc-b31d-3b2a5e33f8f2",
+      "sku": "BGKQ-0015",
+      "status": "mapped",
+      "matchedVariantName": "Sinh t? Berrino D?u"
+    },
+    "sinh-to-oi": {
+      "sourceNames": [
+        "Sinh tố ổi"
+      ],
+      "occurrences": 1,
+      "catalogProductId": null,
+      "catalogVariantId": "c653519b-c245-46cf-bfb8-0aee8598d2d9",
+      "sku": "BGKQ-0017",
+      "status": "mapped",
+      "matchedVariantName": "Sinh t? Berrino ?i"
+    },
+    "sinh-to-viet-quat": {
+      "sourceNames": [
+        "Sinh tố việt quất"
+      ],
+      "occurrences": 1,
+      "catalogProductId": null,
+      "catalogVariantId": "876e0a5e-c860-4870-b788-49890c35c48d",
+      "sku": "BGKQ-0018",
+      "status": "mapped",
+      "matchedVariantName": "Sinh t? Berrino Vi?t Qu?t"
+    },
+    "sinh-to-xoai": {
+      "sourceNames": [
+        "Sinh tố xoài"
+      ],
+      "occurrences": 3,
+      "catalogProductId": null,
+      "catalogVariantId": "68e08e4c-c5b2-48eb-9122-a1f47af1237c",
+      "sku": "BGKQ-0023",
+      "status": "mapped",
+      "matchedVariantName": "Sinh t? Berrino Xo?i"
+    },
+    "siro-dao": {
+      "sourceNames": [
+        "Siro đào"
+      ],
+      "occurrences": 4,
+      "catalogProductId": null,
+      "catalogVariantId": null,
+      "sku": null,
+      "status": "manual"
+    },
+    "siro-dau": {
+      "sourceNames": [
+        "Siro dâu"
+      ],
+      "occurrences": 2,
+      "catalogProductId": null,
+      "catalogVariantId": null,
+      "sku": null,
+      "status": "manual"
+    },
+    "siro-oi-hong": {
+      "sourceNames": [
+        "Siro ổi hồng"
+      ],
+      "occurrences": 1,
+      "catalogProductId": null,
+      "catalogVariantId": null,
+      "sku": null,
+      "status": "manual"
+    },
+    "siro-vai": {
+      "sourceNames": [
+        "Siro vải"
+      ],
+      "occurrences": 1,
+      "catalogProductId": null,
+      "catalogVariantId": null,
+      "sku": null,
+      "status": "manual"
+    },
+    "siro-xoai": {
+      "sourceNames": [
+        "Siro xoài"
+      ],
+      "occurrences": 1,
+      "catalogProductId": null,
+      "catalogVariantId": null,
+      "sku": null,
+      "status": "manual"
+    },
+    "sot-caramel": {
+      "sourceNames": [
+        "Sốt caramel"
+      ],
+      "occurrences": 1,
+      "catalogProductId": "9684f145-7e40-406d-b57b-ed3e0fd17950",
+      "catalogVariantId": "536c1b57-3c16-4c1f-a561-c6a09a62d162",
+      "sku": "BGKQ-0091",
+      "status": "mapped",
+      "matchedProductName": "Sốt Golden Farm",
+      "matchedVariantName": "S?t Golden Farm Caramel"
+    },
+    "thach-3q": {
+      "sourceNames": [
+        "Thạch 3Q"
+      ],
+      "occurrences": 2,
+      "catalogProductId": null,
+      "catalogVariantId": "95c630fc-65bb-477d-a88b-b6390a62d6b9",
+      "sku": "BGKQ-0075",
+      "status": "mapped",
+      "matchedVariantName": "3Q Bibi Tr?ng"
+    },
+    "tra-den": {
+      "sourceNames": [
+        "Trà đen"
+      ],
+      "occurrences": 1,
+      "catalogProductId": null,
+      "catalogVariantId": "445ede38-f56a-44df-a6c3-b76cf925a26a",
+      "sku": "BGKQ-0149",
+      "status": "mapped",
+      "matchedVariantName": "Tr? ?en L?c Ph?t"
+    },
+    "tra-lai": {
+      "sourceNames": [
+        "Trà lài"
+      ],
+      "occurrences": 1,
+      "catalogProductId": null,
+      "catalogVariantId": "3ce51e80-f797-4dcb-bda0-489ec4f3eb8e",
+      "sku": "BGKQ-0148",
+      "status": "mapped",
+      "matchedVariantName": "Tr? l?i L?c Ph?t"
+    },
+    "tra-o-long": {
+      "sourceNames": [
+        "Trà ô long"
+      ],
+      "occurrences": 1,
+      "catalogProductId": null,
+      "catalogVariantId": "525468dd-d4a9-4663-aa5e-97e40082dc7c",
+      "sku": "BGKQ-0163",
+      "status": "mapped",
+      "matchedVariantName": "Tr? ? long Ph?c Long"
+    },
+    "tra-thai-do": {
+      "sourceNames": [
+        "Trà Thái đỏ"
+      ],
+      "occurrences": 1,
+      "catalogProductId": null,
+      "catalogVariantId": "781d9597-d2c1-47e9-a23b-9663c629602e",
+      "sku": "BGKQ-0168",
+      "status": "mapped",
+      "matchedVariantName": "Tr? Th?i xanh/?? Cty"
+    },
+    "tra-thai-xanh": {
+      "sourceNames": [
+        "Trà Thái xanh"
+      ],
+      "occurrences": 1,
+      "catalogProductId": null,
+      "catalogVariantId": "912652ef-e25e-4cbf-b5a8-bea3470a87cb",
+      "sku": "BGKQ-0169",
+      "status": "mapped",
+      "matchedVariantName": "Tr? Th?i xanh th??ng"
+    },
+    "tran-chau-den-kho": {
+      "sourceNames": [
+        "Trân châu đen khô"
+      ],
+      "occurrences": 1,
+      "catalogProductId": null,
+      "catalogVariantId": "45dc6499-24ad-4ebe-adbf-cf9ef5bfb835",
+      "sku": "BGKQ-0063",
+      "status": "mapped",
+      "matchedVariantName": "Tr?n ch?u ???ng ?en Douxian 1kg"
+    },
+    "tran-chau-trang": {
+      "sourceNames": [
+        "Trân châu trắng"
+      ],
+      "occurrences": 1,
+      "catalogProductId": "2b2baafe-920a-4eb3-9473-39e3b8b1d93d",
+      "catalogVariantId": "c832d043-9e6e-4681-a80e-4da9c5b7d08f",
+      "sku": "BGKQ-0070",
+      "status": "mapped",
+      "matchedProductName": "Trân châu Gia Uy",
+      "matchedVariantName": "Tr?n ch?u tr?ng Gia Uy"
+    },
+    "vai-ngam": {
+      "sourceNames": [
+        "Vải ngâm"
+      ],
+      "occurrences": 1,
+      "catalogProductId": null,
+      "catalogVariantId": null,
+      "sku": null,
+      "status": "manual"
+    },
+    "whipping-cream": {
+      "sourceNames": [
+        "Whipping cream"
+      ],
+      "occurrences": 2,
+      "catalogProductId": null,
+      "catalogVariantId": null,
+      "sku": null,
+      "status": "manual"
+    }
+  },
+  "summary": {
+    "mapped": 20,
+    "manual": 13,
+    "total": 33
+  }
+}

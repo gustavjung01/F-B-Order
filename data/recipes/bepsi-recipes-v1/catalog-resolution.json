@@ -1,0 +1,40 @@
+{
+  "policy": "Map only active exact/closest operational variants; downgrade unavailable catalog items to manual.",
+  "mapped": [
+    "bot-cacao",
+    "bot-khoai-mon",
+    "bot-matcha",
+    "bot-pudding-trung",
+    "bot-rau-cau",
+    "bot-sua-pha-che",
+    "sinh-to-chanh-day",
+    "sinh-to-dau",
+    "sinh-to-oi",
+    "sinh-to-viet-quat",
+    "sinh-to-xoai",
+    "sot-caramel",
+    "thach-3q",
+    "tra-den",
+    "tra-lai",
+    "tra-o-long",
+    "tra-thai-do",
+    "tra-thai-xanh",
+    "tran-chau-den-kho",
+    "tran-chau-trang"
+  ],
+  "manual": [
+    "banh-quy-chocolate",
+    "bot-chocolate",
+    "cream-cheese",
+    "dao-ngam",
+    "kem-topping",
+    "mut-dau",
+    "siro-dao",
+    "siro-dau",
+    "siro-oi-hong",
+    "siro-vai",
+    "siro-xoai",
+    "vai-ngam",
+    "whipping-cream"
+  ]
+}
