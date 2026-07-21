@@ -6,7 +6,6 @@ import type { RequestIdentity, StaffIdentity } from "../auth/auth.identity.js";
 import { requirePermission, type PermissionKey } from "../auth/auth.permissions.js";
 import { writeAdminAuditLog } from "../admin/admin-audit.js";
 import { isOrderEngineError, OrderEngineError } from "../orders/order-errors.js";
-import { generateWithGoogleAgent } from "./google-agent.provider.js";
 
 type IdentityResolver = (req: Request) => Promise<RequestIdentity>;
 
@@ -105,15 +104,6 @@ async function buildReadOnlyContext(identity: StaffIdentity, scopes: string[]) {
   return context;
 }
 
-async function generateText(
-  prompt: string,
-  context: unknown,
-  mode: "read_only" | "draft",
-  userId: string,
-) {
-  return generateWithGoogleAgent({ prompt, context, mode, userId });
-}
-
 export function assertDifferentApprover(requesterStaffId: string, approverStaffId: string): void {
   if (requesterStaffId === approverStaffId) {
     throw new OrderEngineError("SELF_APPROVAL_FORBIDDEN", 409, "Requester cannot approve their own AI action");
@@ -129,13 +119,14 @@ export function createAiRouter(identityResolver: IdentityResolver) {
       await requirePermission(identity, "ai.use");
       const input = querySchema.parse(req.body ?? {});
       const context = await buildReadOnlyContext(identity, input.scopes);
-      const generated = await generateText(input.prompt, context, "read_only", identity.staffId);
       const result = await getDb().query<{ id: string }>(
-        `INSERT INTO ai_interactions(staff_user_id,mode,prompt,context_scope,provider,model,response_text,response_data,token_usage)
-         VALUES($1,'read_only',$2,$3,$4,$5,$6,$7::jsonb,$8::jsonb) RETURNING id::text`,
-        [identity.staffId, input.prompt, input.scopes, generated.provider, generated.model, generated.text, JSON.stringify(generated.data), JSON.stringify(generated.usage)],
+        `INSERT INTO ai_jobs(
+           staff_user_id, job_type, prompt, context_scope, context_data
+         ) VALUES($1,'read_only',$2,$3,$4::jsonb)
+         RETURNING id::text`,
+        [identity.staffId, input.prompt, input.scopes, JSON.stringify(context)],
       );
-      res.json({ interactionId: result.rows[0].id, response: generated.text, provider: generated.provider });
+      res.status(202).json({ jobId: result.rows[0].id, status: "pending" });
     } catch (error) { sendError(res, error); }
   });
 
@@ -145,25 +136,52 @@ export function createAiRouter(identityResolver: IdentityResolver) {
       await requirePermission(identity, "ai.execute");
       const input = draftSchema.parse(req.body ?? {});
       const context = await buildReadOnlyContext(identity, input.scopes);
-      const generated = await generateText(input.prompt, context, "draft", identity.staffId);
-      const client = await getDb().connect();
-      try {
-        await client.query("BEGIN");
-        const interaction = await client.query<{ id: string }>(
-          `INSERT INTO ai_interactions(staff_user_id,mode,prompt,context_scope,provider,model,response_text,response_data,token_usage)
-           VALUES($1,'draft',$2,$3,$4,$5,$6,$7::jsonb,$8::jsonb) RETURNING id::text`,
-          [identity.staffId, input.prompt, input.scopes, generated.provider, generated.model, generated.text, JSON.stringify(generated.data), JSON.stringify(generated.usage)],
-        );
-        const draft = await client.query<{ id: string }>(
-          `INSERT INTO ai_drafts(created_by_staff_id,draft_type,title,content,source_interaction_id)
-           VALUES($1,$2,$3,$4::jsonb,$5) RETURNING id::text`,
-          [identity.staffId, input.draftType, input.title, JSON.stringify({ text: generated.text, context }), interaction.rows[0].id],
-        );
-        await client.query("COMMIT");
-        res.status(201).json({ draftId: draft.rows[0].id, interactionId: interaction.rows[0].id, content: generated.text });
-      } catch (error) {
-        await client.query("ROLLBACK"); throw error;
-      } finally { client.release(); }
+      const result = await getDb().query<{ id: string }>(
+        `INSERT INTO ai_jobs(
+           staff_user_id, job_type, prompt, context_scope, context_data,
+           draft_type, draft_title
+         ) VALUES($1,'draft',$2,$3,$4::jsonb,$5,$6)
+         RETURNING id::text`,
+        [identity.staffId, input.prompt, input.scopes, JSON.stringify(context), input.draftType, input.title],
+      );
+      res.status(202).json({ jobId: result.rows[0].id, status: "pending" });
+    } catch (error) { sendError(res, error); }
+  });
+
+  router.get("/jobs", async (req, res) => {
+    try {
+      const identity = requireActiveStaff(await identityResolver(req));
+      await requirePermission(identity, "ai.use");
+      const result = await getDb().query(
+        `SELECT id::text, job_type, status, attempt_count, max_attempts,
+                draft_type, draft_title, interaction_id::text, draft_id::text,
+                response_text, provider, model, error_code, error_message,
+                created_at, started_at, completed_at, updated_at
+         FROM ai_jobs
+         WHERE staff_user_id = $1
+         ORDER BY created_at DESC
+         LIMIT 100`,
+        [identity.staffId],
+      );
+      res.json({ jobs: result.rows });
+    } catch (error) { sendError(res, error); }
+  });
+
+  router.get("/jobs/:jobId", async (req, res) => {
+    try {
+      const identity = requireActiveStaff(await identityResolver(req));
+      await requirePermission(identity, "ai.use");
+      const result = await getDb().query(
+        `SELECT id::text, job_type, status, attempt_count, max_attempts,
+                draft_type, draft_title, interaction_id::text, draft_id::text,
+                response_text, provider, model, error_code, error_message,
+                created_at, started_at, completed_at, updated_at
+         FROM ai_jobs
+         WHERE id = $1 AND staff_user_id = $2`,
+        [req.params.jobId, identity.staffId],
+      );
+      if (!result.rows[0]) throw new OrderEngineError("AI_JOB_NOT_FOUND", 404, "AI job not found");
+      res.json({ job: result.rows[0] });
     } catch (error) { sendError(res, error); }
   });
 

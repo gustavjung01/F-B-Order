@@ -123,3 +123,15 @@ UI tự ẩn/hiện theo:
 - `ai.execute`
 - `ai.audit`
 - `orders.internal_notes`
+
+## Durable job queue
+
+AI read-only v? AI draft kh?ng g?i Google trong request HTTP. Backend ch?p context theo permission r?i ghi `ai_jobs` v?i tr?ng th?i `pending`. Worker ch?y trong ti?n tr?nh backend VPS claim job b?ng `FOR UPDATE SKIP LOCKED`, g?i Google Agent Runtime v? l?u k?t qu? v?o `ai_interactions`/`ai_drafts`.
+
+Tr?ng th?i:
+
+```text
+pending -> processing -> completed | failed | cancelled
+```
+
+Worker retry t?i ?a 3 l?n v?i exponential backoff, t? ph?c h?i job `processing` b? treo sau restart v? kh?ng ?? m?t job v? to?n b? tr?ng th?i n?m trong PostgreSQL. Frontend Vercel ch? enqueue v? polling `GET /api/admin/ai/jobs`; Vercel kh?ng gi? Google credential v? kh?ng ch?y AI.

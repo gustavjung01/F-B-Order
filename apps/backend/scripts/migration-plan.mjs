@@ -21,7 +21,8 @@ export const MIGRATION_FILES = Object.freeze([
   "db/migrations/020_recipe_content_source_links.sql",
   "db/migrations/021_rbac_foundation.sql",
   "db/migrations/022_admin_audit_log.sql",
-  "db/migrations/023_ai_workflow_foundation.sql"
+  "db/migrations/023_ai_workflow_foundation.sql",
+  "db/migrations/024_ai_job_queue.sql"
 ]);
 
 export const BASELINE_MIGRATION_FILES = Object.freeze([
