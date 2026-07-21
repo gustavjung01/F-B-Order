@@ -108,6 +108,9 @@ jobs:
           node --check scripts/phase7/smoke-production.mjs
           node scripts/phase7/test-deploy-contract.mjs
 
+      - name: Lint all workspaces
+        run: pnpm lint
+
       - name: Typecheck all workspaces
         run: pnpm typecheck
 

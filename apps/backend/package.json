@@ -5,7 +5,7 @@
     "dev": "tsx watch src/main.ts",
     "build": "tsc -p tsconfig.json",
     "start": "node dist/main.js",
-    "lint": "echo \"lint backend later\"",
+    "lint": "tsc --noEmit",
     "typecheck": "tsc --noEmit",
     "test:auth-pricing": "tsx scripts/test-auth-pricing.ts",
     "test:catalog-contract": "tsx scripts/test-catalog-contract.ts",
@@ -27,18 +27,18 @@
     "catalog:v2:apply": "node scripts/import-catalog-v2.mjs --apply"
   },
   "dependencies": {
-    "@clerk/express": "latest",
-    "cors": "latest",
-    "dotenv": "latest",
-    "express": "latest",
-    "helmet": "latest",
-    "pg": "latest"
+    "@clerk/express": "2.1.28",
+    "cors": "2.8.6",
+    "dotenv": "17.4.2",
+    "express": "5.2.1",
+    "helmet": "8.2.0",
+    "pg": "8.21.0"
   },
   "devDependencies": {
-    "@types/cors": "latest",
-    "@types/express": "latest",
-    "@types/node": "latest",
-    "tsx": "latest",
-    "typescript": "latest"
+    "@types/cors": "2.8.19",
+    "@types/express": "5.0.6",
+    "@types/node": "25.9.3",
+    "tsx": "4.22.4",
+    "typescript": "6.0.3"
   }
 }

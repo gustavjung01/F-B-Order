@@ -1,22 +1,13 @@
-FROM node:22-alpine AS base
+FROM node:22-alpine
 WORKDIR /app
 RUN corepack enable
-
-FROM base AS deps
-COPY package.json pnpm-workspace.yaml ./
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY apps/backend/package.json apps/backend/package.json
-RUN pnpm install --filter @fb-order/backend --frozen-lockfile=false
-
-FROM deps AS build
+RUN pnpm install --filter @fb-order/backend --frozen-lockfile
 COPY apps/backend apps/backend
-RUN pnpm --filter @fb-order/backend build
-
-FROM node:22-alpine AS runner
-WORKDIR /app
+WORKDIR /app/apps/backend
+RUN pnpm build
 ENV NODE_ENV=production
-RUN corepack enable
-COPY --from=deps /app/node_modules ./node_modules
-COPY --from=deps /app/apps/backend/node_modules ./apps/backend/node_modules
-COPY --from=build /app/apps/backend/dist ./apps/backend/dist
-COPY apps/backend/package.json ./apps/backend/package.json
-CMD ["node", "apps/backend/dist/main.js"]
+ENV PORT=4000
+EXPOSE 4000
+CMD ["pnpm", "start"]

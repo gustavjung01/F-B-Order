@@ -1,9 +1,22 @@
 import dotenv from "dotenv";
-import { Pool } from "pg";
+import { Pool, type PoolConfig } from "pg";
 
 dotenv.config();
 
 let pool: Pool | null = null;
+
+function buildSslConfig(connectionString: string): PoolConfig["ssl"] {
+  if (connectionString.includes("localhost") || connectionString.includes("127.0.0.1")) {
+    return false;
+  }
+
+  const allowInsecure = process.env.DB_SSL_REJECT_UNAUTHORIZED === "false";
+  const ca = process.env.DB_SSL_CA?.replace(/\n/g, "\n");
+  return {
+    rejectUnauthorized: !allowInsecure,
+    ...(ca ? { ca } : {}),
+  };
+}
 
 export function getDb(): Pool {
   if (pool) return pool;
@@ -15,10 +28,7 @@ export function getDb(): Pool {
 
   pool = new Pool({
     connectionString,
-    ssl:
-      connectionString.includes("localhost") || connectionString.includes("127.0.0.1")
-        ? false
-        : { rejectUnauthorized: false },
+    ssl: buildSslConfig(connectionString),
     max: Number(process.env.DB_POOL_MAX || 10),
   });
 
