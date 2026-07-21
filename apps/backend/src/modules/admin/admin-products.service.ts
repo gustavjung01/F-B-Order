@@ -120,9 +120,9 @@ const ADMIN_PRODUCT_SELECT = `
   ) bundle_stats ON true
 `;
 
-function assertAdmin(identity: StaffIdentity): void {
-  if (!identity.isActive || identity.role !== "admin") {
-    throw new OrderEngineError("ADMIN_ACCESS_REQUIRED", 403, "Admin role is required.");
+function assertActiveStaff(identity: StaffIdentity): void {
+  if (!identity.isActive) {
+    throw new OrderEngineError("STAFF_ACCESS_REQUIRED", 403, "Active staff access is required.");
   }
 }
 
@@ -259,7 +259,7 @@ export async function listAdminProducts(
   input: { search?: unknown; issue?: unknown; limit?: number } = {},
   db: Pool = getDb(),
 ) {
-  assertAdmin(identity);
+  assertActiveStaff(identity);
   const search = typeof input.search === "string" ? input.search.trim() : "";
   const issue = typeof input.issue === "string" ? input.issue.trim() : "";
   const limit = Math.min(Math.max(Math.floor(input.limit ?? 100), 1), 200);
@@ -297,7 +297,7 @@ export async function getAdminProductDetail(
   productId: string,
   db: Pool | PoolClient = getDb(),
 ) {
-  assertAdmin(identity);
+  assertActiveStaff(identity);
   return { product: await findAdminProduct(db, normalizeProductId(productId)) };
 }
 
@@ -306,7 +306,7 @@ export async function updateAdminProduct(
   input: ProductUpdateInput,
   db: Pool = getDb(),
 ) {
-  assertAdmin(identity);
+  assertActiveStaff(identity);
   const productId = normalizeProductId(input.productId);
   const assignments: string[] = [];
   const values: unknown[] = [];

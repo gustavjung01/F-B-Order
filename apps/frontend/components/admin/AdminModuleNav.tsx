@@ -29,7 +29,7 @@ export function AdminModuleNav({
   const pathname = usePathname();
   const { hasAny } = useAdminPermissions();
   const visibleModules = modules.filter((item) => hasAny(item.permissions));
-  const layoutClass = orientation === "vertical" ? "grid gap-2" : "grid gap-2 sm:grid-cols-2 xl:grid-cols-5";
+  const layoutClass = orientation === "vertical" ? "grid gap-2" : "grid gap-2 sm:grid-cols-2 xl:grid-cols-6";
 
   return (
     <nav className={`${layoutClass} ${className}`.trim()} aria-label="Điều hướng quản trị">

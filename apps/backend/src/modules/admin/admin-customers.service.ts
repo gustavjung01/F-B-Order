@@ -14,9 +14,9 @@ type CustomerLockRow = {
   approval_status: ApprovalStatus;
 };
 
-function assertAdmin(identity: StaffIdentity): void {
-  if (!identity.isActive || identity.role !== "admin") {
-    throw new OrderEngineError("ADMIN_ACCESS_REQUIRED", 403, "Admin role is required.");
+function assertActiveStaff(identity: StaffIdentity): void {
+  if (!identity.isActive) {
+    throw new OrderEngineError("STAFF_ACCESS_REQUIRED", 403, "Active staff access is required.");
   }
 }
 
@@ -62,8 +62,8 @@ async function assertStoredAdmin(client: PoolClient, identity: StaffIdentity): P
     [identity.staffId],
   );
   const staff = result.rows[0];
-  if (!staff || staff.role !== "admin" || staff.is_active !== true) {
-    throw new OrderEngineError("ADMIN_ACCESS_REQUIRED", 403, "Admin role is required.");
+  if (!staff || staff.is_active !== true) {
+    throw new OrderEngineError("STAFF_ACCESS_REQUIRED", 403, "Active staff access is required.");
   }
 }
 
@@ -72,7 +72,7 @@ export async function listAdminCustomers(
   input: { approvalStatus?: unknown; search?: unknown; limit?: number } = {},
   db: Pool = getDb(),
 ) {
-  assertAdmin(identity);
+  assertActiveStaff(identity);
   const approvalStatus = input.approvalStatus
     ? normalizeApprovalStatus(input.approvalStatus)
     : null;
@@ -148,7 +148,7 @@ export async function getAdminCustomerDetail(
   customerId: string,
   db: Pool | PoolClient = getDb(),
 ) {
-  assertAdmin(identity);
+  assertActiveStaff(identity);
   const id = normalizeCustomerId(customerId);
 
   const customerResult = await db.query(
@@ -231,7 +231,7 @@ export async function decideCustomerApproval(
   input: { customerId: string; status: unknown; note?: unknown },
   db: Pool = getDb(),
 ) {
-  assertAdmin(identity);
+  assertActiveStaff(identity);
   const customerId = normalizeCustomerId(input.customerId);
   const status = normalizeApprovalStatus(input.status);
   if (status !== "approved" && status !== "rejected") {

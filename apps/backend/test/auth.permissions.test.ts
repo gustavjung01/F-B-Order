@@ -1,6 +1,7 @@
 ﻿import test from "node:test";
 import assert from "node:assert/strict";
 import { assertPermissionSet } from "../src/modules/auth/auth.permissions.ts";
+import { assertDifferentApprover } from "../src/modules/ai/ai.routes.ts";
 
 const operations = [
   "orders.view",
@@ -34,4 +35,19 @@ test("recipe publisher cannot edit catalog pricing", () => {
 
 test("granted permission passes", () => {
   assert.doesNotThrow(() => assertPermissionSet(operations, "orders.update"));
+});
+
+
+test("AI requester cannot approve own action", () => {
+  assert.throws(
+    () => assertDifferentApprover("staff-1", "staff-1"),
+    (error: unknown) => {
+      const value = error as { code?: string; status?: number };
+      return value.code === "SELF_APPROVAL_FORBIDDEN" && value.status === 409;
+    },
+  );
+});
+
+test("different approver is accepted", () => {
+  assert.doesNotThrow(() => assertDifferentApprover("staff-1", "staff-2"));
 });
