@@ -1,0 +1,342 @@
+{
+  "schemaVersion": "bepsi.recipe-catalog-map.v1",
+  "generatedOn": "2026-07-21",
+  "rules": {
+    "matchExactCatalogVariantOnly": true,
+    "doNotGuessVariantId": true,
+    "preserveIngredientDisplayName": true
+  },
+  "entries": {
+    "banh-quy-chocolate": {
+      "sourceNames": [
+        "Bánh quy chocolate"
+      ],
+      "occurrences": 1,
+      "catalogProductId": null,
+      "catalogVariantId": null,
+      "sku": null,
+      "status": "unmapped"
+    },
+    "bot-cacao": {
+      "sourceNames": [
+        "Bột cacao"
+      ],
+      "occurrences": 2,
+      "catalogProductId": null,
+      "catalogVariantId": null,
+      "sku": null,
+      "status": "unmapped"
+    },
+    "bot-chocolate": {
+      "sourceNames": [
+        "Bột chocolate"
+      ],
+      "occurrences": 2,
+      "catalogProductId": null,
+      "catalogVariantId": null,
+      "sku": null,
+      "status": "unmapped"
+    },
+    "bot-khoai-mon": {
+      "sourceNames": [
+        "Bột khoai môn"
+      ],
+      "occurrences": 3,
+      "catalogProductId": null,
+      "catalogVariantId": null,
+      "sku": null,
+      "status": "unmapped"
+    },
+    "bot-matcha": {
+      "sourceNames": [
+        "Bột matcha"
+      ],
+      "occurrences": 5,
+      "catalogProductId": null,
+      "catalogVariantId": null,
+      "sku": null,
+      "status": "unmapped"
+    },
+    "bot-pudding-trung": {
+      "sourceNames": [
+        "Bột pudding trứng"
+      ],
+      "occurrences": 1,
+      "catalogProductId": null,
+      "catalogVariantId": null,
+      "sku": null,
+      "status": "unmapped"
+    },
+    "bot-rau-cau": {
+      "sourceNames": [
+        "Bột rau câu"
+      ],
+      "occurrences": 2,
+      "catalogProductId": null,
+      "catalogVariantId": null,
+      "sku": null,
+      "status": "unmapped"
+    },
+    "bot-sua-pha-che": {
+      "sourceNames": [
+        "Bột sữa",
+        "Bột sữa pha chế"
+      ],
+      "occurrences": 14,
+      "catalogProductId": null,
+      "catalogVariantId": null,
+      "sku": null,
+      "status": "unmapped"
+    },
+    "cream-cheese": {
+      "sourceNames": [
+        "Cream cheese"
+      ],
+      "occurrences": 1,
+      "catalogProductId": null,
+      "catalogVariantId": null,
+      "sku": null,
+      "status": "unmapped"
+    },
+    "dao-ngam": {
+      "sourceNames": [
+        "Đào ngâm"
+      ],
+      "occurrences": 3,
+      "catalogProductId": null,
+      "catalogVariantId": null,
+      "sku": null,
+      "status": "unmapped"
+    },
+    "kem-topping": {
+      "sourceNames": [
+        "Kem topping"
+      ],
+      "occurrences": 3,
+      "catalogProductId": null,
+      "catalogVariantId": null,
+      "sku": null,
+      "status": "unmapped"
+    },
+    "mut-dau": {
+      "sourceNames": [
+        "Mứt dâu"
+      ],
+      "occurrences": 3,
+      "catalogProductId": null,
+      "catalogVariantId": null,
+      "sku": null,
+      "status": "unmapped"
+    },
+    "sinh-to-chanh-day": {
+      "sourceNames": [
+        "Sinh tố chanh dây"
+      ],
+      "occurrences": 3,
+      "catalogProductId": null,
+      "catalogVariantId": null,
+      "sku": null,
+      "status": "unmapped"
+    },
+    "sinh-to-dau": {
+      "sourceNames": [
+        "Sinh tố dâu"
+      ],
+      "occurrences": 1,
+      "catalogProductId": null,
+      "catalogVariantId": null,
+      "sku": null,
+      "status": "unmapped"
+    },
+    "sinh-to-oi": {
+      "sourceNames": [
+        "Sinh tố ổi"
+      ],
+      "occurrences": 1,
+      "catalogProductId": null,
+      "catalogVariantId": null,
+      "sku": null,
+      "status": "unmapped"
+    },
+    "sinh-to-viet-quat": {
+      "sourceNames": [
+        "Sinh tố việt quất"
+      ],
+      "occurrences": 1,
+      "catalogProductId": null,
+      "catalogVariantId": null,
+      "sku": null,
+      "status": "unmapped"
+    },
+    "sinh-to-xoai": {
+      "sourceNames": [
+        "Sinh tố xoài"
+      ],
+      "occurrences": 3,
+      "catalogProductId": null,
+      "catalogVariantId": null,
+      "sku": null,
+      "status": "unmapped"
+    },
+    "siro-dao": {
+      "sourceNames": [
+        "Siro đào"
+      ],
+      "occurrences": 4,
+      "catalogProductId": null,
+      "catalogVariantId": null,
+      "sku": null,
+      "status": "unmapped"
+    },
+    "siro-dau": {
+      "sourceNames": [
+        "Siro dâu"
+      ],
+      "occurrences": 2,
+      "catalogProductId": null,
+      "catalogVariantId": null,
+      "sku": null,
+      "status": "unmapped"
+    },
+    "siro-oi-hong": {
+      "sourceNames": [
+        "Siro ổi hồng"
+      ],
+      "occurrences": 1,
+      "catalogProductId": null,
+      "catalogVariantId": null,
+      "sku": null,
+      "status": "unmapped"
+    },
+    "siro-vai": {
+      "sourceNames": [
+        "Siro vải"
+      ],
+      "occurrences": 1,
+      "catalogProductId": null,
+      "catalogVariantId": null,
+      "sku": null,
+      "status": "unmapped"
+    },
+    "siro-xoai": {
+      "sourceNames": [
+        "Siro xoài"
+      ],
+      "occurrences": 1,
+      "catalogProductId": null,
+      "catalogVariantId": null,
+      "sku": null,
+      "status": "unmapped"
+    },
+    "sot-caramel": {
+      "sourceNames": [
+        "Sốt caramel"
+      ],
+      "occurrences": 1,
+      "catalogProductId": null,
+      "catalogVariantId": null,
+      "sku": null,
+      "status": "unmapped"
+    },
+    "thach-3q": {
+      "sourceNames": [
+        "Thạch 3Q"
+      ],
+      "occurrences": 2,
+      "catalogProductId": null,
+      "catalogVariantId": null,
+      "sku": null,
+      "status": "unmapped"
+    },
+    "tra-den": {
+      "sourceNames": [
+        "Trà đen"
+      ],
+      "occurrences": 1,
+      "catalogProductId": null,
+      "catalogVariantId": null,
+      "sku": null,
+      "status": "unmapped"
+    },
+    "tra-lai": {
+      "sourceNames": [
+        "Trà lài"
+      ],
+      "occurrences": 1,
+      "catalogProductId": null,
+      "catalogVariantId": null,
+      "sku": null,
+      "status": "unmapped"
+    },
+    "tra-o-long": {
+      "sourceNames": [
+        "Trà ô long"
+      ],
+      "occurrences": 1,
+      "catalogProductId": null,
+      "catalogVariantId": null,
+      "sku": null,
+      "status": "unmapped"
+    },
+    "tra-thai-do": {
+      "sourceNames": [
+        "Trà Thái đỏ"
+      ],
+      "occurrences": 1,
+      "catalogProductId": null,
+      "catalogVariantId": null,
+      "sku": null,
+      "status": "unmapped"
+    },
+    "tra-thai-xanh": {
+      "sourceNames": [
+        "Trà Thái xanh"
+      ],
+      "occurrences": 1,
+      "catalogProductId": null,
+      "catalogVariantId": null,
+      "sku": null,
+      "status": "unmapped"
+    },
+    "tran-chau-den-kho": {
+      "sourceNames": [
+        "Trân châu đen khô"
+      ],
+      "occurrences": 1,
+      "catalogProductId": null,
+      "catalogVariantId": null,
+      "sku": null,
+      "status": "unmapped"
+    },
+    "tran-chau-trang": {
+      "sourceNames": [
+        "Trân châu trắng"
+      ],
+      "occurrences": 1,
+      "catalogProductId": null,
+      "catalogVariantId": null,
+      "sku": null,
+      "status": "unmapped"
+    },
+    "vai-ngam": {
+      "sourceNames": [
+        "Vải ngâm"
+      ],
+      "occurrences": 1,
+      "catalogProductId": null,
+      "catalogVariantId": null,
+      "sku": null,
+      "status": "unmapped"
+    },
+    "whipping-cream": {
+      "sourceNames": [
+        "Whipping cream"
+      ],
+      "occurrences": 2,
+      "catalogProductId": null,
+      "catalogVariantId": null,
+      "sku": null,
+      "status": "unmapped"
+    }
+  }
+}

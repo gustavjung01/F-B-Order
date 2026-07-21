@@ -1,0 +1,5919 @@
+{
+  "schemaVersion": "bepsi.recipe-content.v1",
+  "generatedOn": "2026-07-21",
+  "sourceFile": "bo-cong-thuc-bepsi-v1.md",
+  "contentSourceKey": "bepsi-recipes-v1",
+  "importPolicy": {
+    "mode": "upsert-draft-by-slug",
+    "createWorkflowStatus": "draft",
+    "neverAutoReviewApproveOrPublish": true,
+    "preserveOriginalTitle": true,
+    "preserveOriginalSlug": true,
+    "preserveExistingMedia": true,
+    "neverOverwriteImageNames": true,
+    "neverClearCoverMedia": true,
+    "neverClearStepMedia": true,
+    "omitAllMediaFieldsFromPayload": true
+  },
+  "unitDictionary": {
+    "g": "Gram (g)",
+    "kg": "Kilôgam (kg)",
+    "ml": "Mililít (ml)",
+    "l": "Lít (l)",
+    "piece": "Cái",
+    "portion": "Phần",
+    "slice": "Lát",
+    "stem": "Cây",
+    "fruit": "Trái"
+  },
+  "categories": [
+    {
+      "slug": "tra-sua",
+      "name": "Trà sữa",
+      "sortOrder": 10
+    },
+    {
+      "slug": "tra-trai-cay",
+      "name": "Trà trái cây",
+      "sortOrder": 20
+    },
+    {
+      "slug": "da-xay",
+      "name": "Đá xay",
+      "sortOrder": 30
+    },
+    {
+      "slug": "ca-phe",
+      "name": "Cà phê",
+      "sortOrder": 40
+    },
+    {
+      "slug": "cacao",
+      "name": "Cacao",
+      "sortOrder": 50
+    },
+    {
+      "slug": "matcha",
+      "name": "Matcha",
+      "sortOrder": 60
+    },
+    {
+      "slug": "sua-tuoi",
+      "name": "Sữa tươi",
+      "sortOrder": 70
+    },
+    {
+      "slug": "tra-kem-cheese",
+      "name": "Trà kem cheese",
+      "sortOrder": 80
+    },
+    {
+      "slug": "tra-sua-topping",
+      "name": "Trà sữa topping",
+      "sortOrder": 90
+    },
+    {
+      "slug": "cong-thuc-nen",
+      "name": "Công thức nền",
+      "sortOrder": 100
+    },
+    {
+      "slug": "topping",
+      "name": "Topping",
+      "sortOrder": 110
+    },
+    {
+      "slug": "sot",
+      "name": "Sốt",
+      "sortOrder": 120
+    }
+  ],
+  "recipes": [
+    {
+      "sourceNumber": 1,
+      "slug": "tra-sua-truyen-thong-500ml",
+      "title": "Trà sữa truyền thống",
+      "recipeCategory": {
+        "slug": "tra-sua",
+        "name": "Trà sữa"
+      },
+      "recipeKind": "drink",
+      "visibility": "public",
+      "shortDescription": "Vị trà đậm vừa, béo cân bằng, phù hợp làm món nền bán đại trà.",
+      "description": null,
+      "yieldQuantity": 1,
+      "yieldUnit": "ly",
+      "servingSizeMl": 500,
+      "sortOrder": 10,
+      "contentSourceKey": "bepsi-recipes-v1",
+      "ingredients": [
+        {
+          "sortOrder": 10,
+          "productName": "Nền trà đen",
+          "quantity": 150,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": "Dùng công thức nền số 49",
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "nen-tra-den"
+        },
+        {
+          "sortOrder": 20,
+          "productName": "Bột sữa pha chế",
+          "quantity": 30,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "bot-sua-pha-che",
+          "catalogVariantId": null
+        },
+        {
+          "sortOrder": 30,
+          "productName": "Sữa đặc",
+          "quantity": 20,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 40,
+          "productName": "Nước đường",
+          "quantity": 15,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": "Điều chỉnh theo khẩu vị",
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "nuoc-duong-tieu-chuan"
+        },
+        {
+          "sortOrder": 50,
+          "productName": "Đá viên",
+          "quantity": 180,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        }
+      ],
+      "steps": [
+        {
+          "stepNo": 1,
+          "title": "Hòa nền sữa",
+          "content": "Cho bột sữa và sữa đặc vào ca, rót nền trà đen còn ấm rồi khuấy tan hoàn toàn."
+        },
+        {
+          "stepNo": 2,
+          "title": "Cân vị",
+          "content": "Thêm nước đường, khuấy 10 giây và nếm lại."
+        },
+        {
+          "stepNo": 3,
+          "title": "Hoàn thiện",
+          "content": "Cho đá vào bình lắc, rót hỗn hợp trà sữa và lắc mạnh 10–12 giây. Rót ra ly 500 ml."
+        }
+      ],
+      "operationalNotes": [
+        "Chuẩn vị mục tiêu: ngọt 70%, đá 100%."
+      ],
+      "workflowStatus": "draft"
+    },
+    {
+      "sourceNumber": 2,
+      "slug": "tra-sua-thai-xanh-500ml",
+      "title": "Trà sữa Thái xanh",
+      "recipeCategory": {
+        "slug": "tra-sua",
+        "name": "Trà sữa"
+      },
+      "recipeKind": "drink",
+      "visibility": "public",
+      "shortDescription": "Mùi trà Thái xanh rõ, màu tươi, béo và ngọt vừa.",
+      "description": null,
+      "yieldQuantity": 1,
+      "yieldUnit": "ly",
+      "servingSizeMl": 500,
+      "sortOrder": 20,
+      "contentSourceKey": "bepsi-recipes-v1",
+      "ingredients": [
+        {
+          "sortOrder": 10,
+          "productName": "Nền trà Thái xanh",
+          "quantity": 160,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": "Dùng công thức nền số 52",
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "nen-tra-thai-xanh"
+        },
+        {
+          "sortOrder": 20,
+          "productName": "Bột sữa pha chế",
+          "quantity": 25,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "bot-sua-pha-che",
+          "catalogVariantId": null
+        },
+        {
+          "sortOrder": 30,
+          "productName": "Sữa đặc",
+          "quantity": 25,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 40,
+          "productName": "Nước đường",
+          "quantity": 10,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "nuoc-duong-tieu-chuan"
+        },
+        {
+          "sortOrder": 50,
+          "productName": "Đá viên",
+          "quantity": 180,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        }
+      ],
+      "steps": [
+        {
+          "stepNo": 1,
+          "title": "Pha sữa",
+          "content": "Cho bột sữa và sữa đặc vào nền trà Thái xanh còn ấm, khuấy đến khi mịn."
+        },
+        {
+          "stepNo": 2,
+          "title": "Cân vị",
+          "content": "Thêm nước đường và khuấy đều."
+        },
+        {
+          "stepNo": 3,
+          "title": "Hoàn thiện",
+          "content": "Lắc với đá 10 giây rồi rót ra ly."
+        }
+      ],
+      "operationalNotes": [],
+      "workflowStatus": "draft"
+    },
+    {
+      "sourceNumber": 3,
+      "slug": "tra-sua-thai-do-500ml",
+      "title": "Trà sữa Thái đỏ",
+      "recipeCategory": {
+        "slug": "tra-sua",
+        "name": "Trà sữa"
+      },
+      "recipeKind": "drink",
+      "visibility": "public",
+      "shortDescription": "Vị trà Thái đỏ thơm đậm, hậu ngọt và béo rõ.",
+      "description": null,
+      "yieldQuantity": 1,
+      "yieldUnit": "ly",
+      "servingSizeMl": 500,
+      "sortOrder": 30,
+      "contentSourceKey": "bepsi-recipes-v1",
+      "ingredients": [
+        {
+          "sortOrder": 10,
+          "productName": "Nền trà Thái đỏ",
+          "quantity": 160,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": "Dùng công thức nền số 53",
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "nen-tra-thai-do"
+        },
+        {
+          "sortOrder": 20,
+          "productName": "Bột sữa pha chế",
+          "quantity": 25,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "bot-sua-pha-che",
+          "catalogVariantId": null
+        },
+        {
+          "sortOrder": 30,
+          "productName": "Sữa đặc",
+          "quantity": 25,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 40,
+          "productName": "Nước đường",
+          "quantity": 10,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "nuoc-duong-tieu-chuan"
+        },
+        {
+          "sortOrder": 50,
+          "productName": "Đá viên",
+          "quantity": 180,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        }
+      ],
+      "steps": [
+        {
+          "stepNo": 1,
+          "title": "Pha nền",
+          "content": "Khuấy bột sữa và sữa đặc với nền trà Thái đỏ còn ấm."
+        },
+        {
+          "stepNo": 2,
+          "title": "Làm lạnh",
+          "content": "Cho nước đường và đá vào bình lắc."
+        },
+        {
+          "stepNo": 3,
+          "title": "Hoàn thiện",
+          "content": "Lắc mạnh 10–12 giây, rót ra ly 500 ml."
+        }
+      ],
+      "operationalNotes": [],
+      "workflowStatus": "draft"
+    },
+    {
+      "sourceNumber": 4,
+      "slug": "tra-sua-o-long-500ml",
+      "title": "Trà sữa ô long",
+      "recipeCategory": {
+        "slug": "tra-sua",
+        "name": "Trà sữa"
+      },
+      "recipeKind": "drink",
+      "visibility": "public",
+      "shortDescription": "Hương ô long rõ, vị thanh hơn trà sữa truyền thống.",
+      "description": null,
+      "yieldQuantity": 1,
+      "yieldUnit": "ly",
+      "servingSizeMl": 500,
+      "sortOrder": 40,
+      "contentSourceKey": "bepsi-recipes-v1",
+      "ingredients": [
+        {
+          "sortOrder": 10,
+          "productName": "Nền trà ô long",
+          "quantity": 160,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": "Dùng công thức nền số 51",
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "nen-tra-o-long"
+        },
+        {
+          "sortOrder": 20,
+          "productName": "Bột sữa pha chế",
+          "quantity": 25,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "bot-sua-pha-che",
+          "catalogVariantId": null
+        },
+        {
+          "sortOrder": 30,
+          "productName": "Sữa đặc",
+          "quantity": 18,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 40,
+          "productName": "Nước đường",
+          "quantity": 15,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "nuoc-duong-tieu-chuan"
+        },
+        {
+          "sortOrder": 50,
+          "productName": "Đá viên",
+          "quantity": 180,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        }
+      ],
+      "steps": [
+        {
+          "stepNo": 1,
+          "title": "Pha sữa",
+          "content": "Hòa bột sữa và sữa đặc với nền trà ô long còn ấm."
+        },
+        {
+          "stepNo": 2,
+          "title": "Cân vị",
+          "content": "Thêm nước đường, khuấy đều."
+        },
+        {
+          "stepNo": 3,
+          "title": "Hoàn thiện",
+          "content": "Lắc cùng đá 10 giây và rót ra ly."
+        }
+      ],
+      "operationalNotes": [],
+      "workflowStatus": "draft"
+    },
+    {
+      "sourceNumber": 5,
+      "slug": "tra-sua-lai-500ml",
+      "title": "Trà sữa lài",
+      "recipeCategory": {
+        "slug": "tra-sua",
+        "name": "Trà sữa"
+      },
+      "recipeKind": "drink",
+      "visibility": "public",
+      "shortDescription": "Hương hoa lài nhẹ, vị sữa thanh, dễ uống.",
+      "description": null,
+      "yieldQuantity": 1,
+      "yieldUnit": "ly",
+      "servingSizeMl": 500,
+      "sortOrder": 50,
+      "contentSourceKey": "bepsi-recipes-v1",
+      "ingredients": [
+        {
+          "sortOrder": 10,
+          "productName": "Nền trà lài",
+          "quantity": 160,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": "Dùng công thức nền số 50",
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "nen-tra-lai"
+        },
+        {
+          "sortOrder": 20,
+          "productName": "Bột sữa pha chế",
+          "quantity": 25,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "bot-sua-pha-che",
+          "catalogVariantId": null
+        },
+        {
+          "sortOrder": 30,
+          "productName": "Sữa đặc",
+          "quantity": 18,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 40,
+          "productName": "Nước đường",
+          "quantity": 15,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "nuoc-duong-tieu-chuan"
+        },
+        {
+          "sortOrder": 50,
+          "productName": "Đá viên",
+          "quantity": 180,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        }
+      ],
+      "steps": [
+        {
+          "stepNo": 1,
+          "title": "Pha nền",
+          "content": "Cho bột sữa và sữa đặc vào trà lài còn ấm, khuấy tan."
+        },
+        {
+          "stepNo": 2,
+          "title": "Làm lạnh",
+          "content": "Thêm nước đường và đá."
+        },
+        {
+          "stepNo": 3,
+          "title": "Hoàn thiện",
+          "content": "Lắc 10 giây, rót ra ly 500 ml."
+        }
+      ],
+      "operationalNotes": [],
+      "workflowStatus": "draft"
+    },
+    {
+      "sourceNumber": 6,
+      "slug": "tra-sua-khoai-mon-500ml",
+      "title": "Trà sữa khoai môn",
+      "recipeCategory": {
+        "slug": "tra-sua",
+        "name": "Trà sữa"
+      },
+      "recipeKind": "drink",
+      "visibility": "public",
+      "shortDescription": "Vị khoai môn béo thơm, nền trà vừa đủ để không bị ngấy.",
+      "description": null,
+      "yieldQuantity": 1,
+      "yieldUnit": "ly",
+      "servingSizeMl": 500,
+      "sortOrder": 60,
+      "contentSourceKey": "bepsi-recipes-v1",
+      "ingredients": [
+        {
+          "sortOrder": 10,
+          "productName": "Nền trà đen",
+          "quantity": 120,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "nen-tra-den"
+        },
+        {
+          "sortOrder": 20,
+          "productName": "Bột khoai môn",
+          "quantity": 25,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "bot-khoai-mon",
+          "catalogVariantId": null
+        },
+        {
+          "sortOrder": 30,
+          "productName": "Bột sữa pha chế",
+          "quantity": 20,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "bot-sua-pha-che",
+          "catalogVariantId": null
+        },
+        {
+          "sortOrder": 40,
+          "productName": "Sữa đặc",
+          "quantity": 20,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 50,
+          "productName": "Nước đường",
+          "quantity": 10,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "nuoc-duong-tieu-chuan"
+        },
+        {
+          "sortOrder": 60,
+          "productName": "Đá viên",
+          "quantity": 180,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        }
+      ],
+      "steps": [
+        {
+          "stepNo": 1,
+          "title": "Hòa bột",
+          "content": "Dùng nền trà còn ấm khuấy tan bột khoai môn và bột sữa."
+        },
+        {
+          "stepNo": 2,
+          "title": "Cân vị",
+          "content": "Thêm sữa đặc và nước đường, khuấy mịn."
+        },
+        {
+          "stepNo": 3,
+          "title": "Hoàn thiện",
+          "content": "Lắc với đá 12 giây rồi rót ra ly."
+        }
+      ],
+      "operationalNotes": [],
+      "workflowStatus": "draft"
+    },
+    {
+      "sourceNumber": 7,
+      "slug": "tra-sua-matcha-500ml",
+      "title": "Trà sữa matcha",
+      "recipeCategory": {
+        "slug": "tra-sua",
+        "name": "Trà sữa"
+      },
+      "recipeKind": "drink",
+      "visibility": "public",
+      "shortDescription": "Matcha rõ mùi, béo vừa, không quá ngọt.",
+      "description": null,
+      "yieldQuantity": 1,
+      "yieldUnit": "ly",
+      "servingSizeMl": 500,
+      "sortOrder": 70,
+      "contentSourceKey": "bepsi-recipes-v1",
+      "ingredients": [
+        {
+          "sortOrder": 10,
+          "productName": "Bột matcha",
+          "quantity": 4,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": "Rây mịn",
+          "optional": false,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "bot-matcha",
+          "catalogVariantId": null
+        },
+        {
+          "sortOrder": 20,
+          "productName": "Nước nóng 80°C",
+          "quantity": 50,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 30,
+          "productName": "Nền trà sữa truyền thống",
+          "quantity": 120,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": "Dùng công thức nền số 54",
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "nen-tra-sua-truyen-thong"
+        },
+        {
+          "sortOrder": 40,
+          "productName": "Sữa tươi",
+          "quantity": 50,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 50,
+          "productName": "Nước đường",
+          "quantity": 15,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "nuoc-duong-tieu-chuan"
+        },
+        {
+          "sortOrder": 60,
+          "productName": "Đá viên",
+          "quantity": 170,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        }
+      ],
+      "steps": [
+        {
+          "stepNo": 1,
+          "title": "Đánh matcha",
+          "content": "Rây matcha, thêm nước 80°C và đánh đến khi tan mịn."
+        },
+        {
+          "stepNo": 2,
+          "title": "Phối vị",
+          "content": "Cho nền trà sữa, sữa tươi và nước đường vào matcha."
+        },
+        {
+          "stepNo": 3,
+          "title": "Hoàn thiện",
+          "content": "Lắc với đá 10 giây, rót ra ly."
+        }
+      ],
+      "operationalNotes": [],
+      "workflowStatus": "draft"
+    },
+    {
+      "sourceNumber": 8,
+      "slug": "tra-sua-chocolate-500ml",
+      "title": "Trà sữa chocolate",
+      "recipeCategory": {
+        "slug": "tra-sua",
+        "name": "Trà sữa"
+      },
+      "recipeKind": "drink",
+      "visibility": "public",
+      "shortDescription": "Chocolate đậm vừa, nền trà sữa giúp vị không bị đơn điệu.",
+      "description": null,
+      "yieldQuantity": 1,
+      "yieldUnit": "ly",
+      "servingSizeMl": 500,
+      "sortOrder": 80,
+      "contentSourceKey": "bepsi-recipes-v1",
+      "ingredients": [
+        {
+          "sortOrder": 10,
+          "productName": "Bột chocolate",
+          "quantity": 22,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "bot-chocolate",
+          "catalogVariantId": null
+        },
+        {
+          "sortOrder": 20,
+          "productName": "Nước nóng",
+          "quantity": 40,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 30,
+          "productName": "Nền trà sữa truyền thống",
+          "quantity": 140,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "nen-tra-sua-truyen-thong"
+        },
+        {
+          "sortOrder": 40,
+          "productName": "Sữa tươi",
+          "quantity": 40,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 50,
+          "productName": "Nước đường",
+          "quantity": 10,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "nuoc-duong-tieu-chuan"
+        },
+        {
+          "sortOrder": 60,
+          "productName": "Đá viên",
+          "quantity": 180,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        }
+      ],
+      "steps": [
+        {
+          "stepNo": 1,
+          "title": "Hòa chocolate",
+          "content": "Khuấy bột chocolate với nước nóng đến mịn."
+        },
+        {
+          "stepNo": 2,
+          "title": "Phối nền",
+          "content": "Thêm nền trà sữa, sữa tươi và nước đường."
+        },
+        {
+          "stepNo": 3,
+          "title": "Hoàn thiện",
+          "content": "Lắc với đá 12 giây và rót ra ly."
+        }
+      ],
+      "operationalNotes": [],
+      "workflowStatus": "draft"
+    },
+    {
+      "sourceNumber": 9,
+      "slug": "tra-sua-caramel-500ml",
+      "title": "Trà sữa caramel",
+      "recipeCategory": {
+        "slug": "tra-sua",
+        "name": "Trà sữa"
+      },
+      "recipeKind": "drink",
+      "visibility": "public",
+      "shortDescription": "Mùi caramel rõ, hậu vị béo ngọt và dễ bán.",
+      "description": null,
+      "yieldQuantity": 1,
+      "yieldUnit": "ly",
+      "servingSizeMl": 500,
+      "sortOrder": 90,
+      "contentSourceKey": "bepsi-recipes-v1",
+      "ingredients": [
+        {
+          "sortOrder": 10,
+          "productName": "Nền trà sữa truyền thống",
+          "quantity": 170,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "nen-tra-sua-truyen-thong"
+        },
+        {
+          "sortOrder": 20,
+          "productName": "Sốt caramel",
+          "quantity": 20,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "sot-caramel",
+          "catalogVariantId": null
+        },
+        {
+          "sortOrder": 30,
+          "productName": "Sữa tươi",
+          "quantity": 30,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 40,
+          "productName": "Nước đường",
+          "quantity": 5,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "nuoc-duong-tieu-chuan"
+        },
+        {
+          "sortOrder": 50,
+          "productName": "Đá viên",
+          "quantity": 180,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        }
+      ],
+      "steps": [
+        {
+          "stepNo": 1,
+          "title": "Phối vị",
+          "content": "Khuấy nền trà sữa với sốt caramel và sữa tươi."
+        },
+        {
+          "stepNo": 2,
+          "title": "Cân ngọt",
+          "content": "Thêm nước đường nếu cần."
+        },
+        {
+          "stepNo": 3,
+          "title": "Hoàn thiện",
+          "content": "Lắc với đá 10 giây, rót ra ly và rưới nhẹ 5 ml caramel lên mặt nếu muốn."
+        }
+      ],
+      "operationalNotes": [],
+      "workflowStatus": "draft"
+    },
+    {
+      "sourceNumber": 10,
+      "slug": "tra-sua-duong-den-tran-chau-500ml",
+      "title": "Trà sữa đường đen trân châu",
+      "recipeCategory": {
+        "slug": "tra-sua",
+        "name": "Trà sữa"
+      },
+      "recipeKind": "drink",
+      "visibility": "public",
+      "shortDescription": "Trà sữa đậm vị kết hợp trân châu và sốt đường đen.",
+      "description": null,
+      "yieldQuantity": 1,
+      "yieldUnit": "ly",
+      "servingSizeMl": 500,
+      "sortOrder": 100,
+      "contentSourceKey": "bepsi-recipes-v1",
+      "ingredients": [
+        {
+          "sortOrder": 10,
+          "productName": "Trân châu đường đen",
+          "quantity": 60,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": "Dùng công thức số 57",
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "tran-chau-duong-den"
+        },
+        {
+          "sortOrder": 20,
+          "productName": "Sốt đường đen",
+          "quantity": 25,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": "Dùng công thức số 63",
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "sot-duong-den"
+        },
+        {
+          "sortOrder": 30,
+          "productName": "Nền trà sữa truyền thống",
+          "quantity": 170,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "nen-tra-sua-truyen-thong"
+        },
+        {
+          "sortOrder": 40,
+          "productName": "Sữa tươi",
+          "quantity": 40,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 50,
+          "productName": "Đá viên",
+          "quantity": 150,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        }
+      ],
+      "steps": [
+        {
+          "stepNo": 1,
+          "title": "Tạo vân ly",
+          "content": "Cho sốt đường đen quanh thành ly."
+        },
+        {
+          "stepNo": 2,
+          "title": "Thêm topping",
+          "content": "Cho trân châu đường đen vào đáy ly."
+        },
+        {
+          "stepNo": 3,
+          "title": "Hoàn thiện",
+          "content": "Lắc nền trà sữa với sữa tươi và đá, sau đó rót vào ly."
+        }
+      ],
+      "operationalNotes": [],
+      "workflowStatus": "draft"
+    },
+    {
+      "sourceNumber": 11,
+      "slug": "tra-dao-cam-sa-500ml",
+      "title": "Trà đào cam sả",
+      "recipeCategory": {
+        "slug": "tra-trai-cay",
+        "name": "Trà trái cây"
+      },
+      "recipeKind": "drink",
+      "visibility": "public",
+      "shortDescription": "Trà đào thơm, có vị cam tươi và hương sả nhẹ.",
+      "description": null,
+      "yieldQuantity": 1,
+      "yieldUnit": "ly",
+      "servingSizeMl": 500,
+      "sortOrder": 110,
+      "contentSourceKey": "bepsi-recipes-v1",
+      "ingredients": [
+        {
+          "sortOrder": 10,
+          "productName": "Nền trà lài",
+          "quantity": 150,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "nen-tra-lai"
+        },
+        {
+          "sortOrder": 20,
+          "productName": "Siro đào",
+          "quantity": 25,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "siro-dao",
+          "catalogVariantId": null
+        },
+        {
+          "sortOrder": 30,
+          "productName": "Nước cam",
+          "quantity": 35,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 40,
+          "productName": "Nước đường",
+          "quantity": 15,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "nuoc-duong-tieu-chuan"
+        },
+        {
+          "sortOrder": 50,
+          "productName": "Sả cây",
+          "quantity": 1,
+          "unit": "stem",
+          "unitLabel": "cây",
+          "note": "Đập dập",
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 60,
+          "productName": "Đào ngâm",
+          "quantity": 40,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "dao-ngam",
+          "catalogVariantId": null
+        },
+        {
+          "sortOrder": 70,
+          "productName": "Đá viên",
+          "quantity": 180,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        }
+      ],
+      "steps": [
+        {
+          "stepNo": 1,
+          "title": "Tạo hương sả",
+          "content": "Ngâm sả đập dập trong nền trà còn ấm 3 phút rồi vớt ra."
+        },
+        {
+          "stepNo": 2,
+          "title": "Phối vị",
+          "content": "Cho trà, siro đào, nước cam và nước đường vào bình lắc."
+        },
+        {
+          "stepNo": 3,
+          "title": "Hoàn thiện",
+          "content": "Lắc với đá, rót ra ly và thêm đào ngâm."
+        }
+      ],
+      "operationalNotes": [],
+      "workflowStatus": "draft"
+    },
+    {
+      "sourceNumber": 12,
+      "slug": "tra-dao-500ml",
+      "title": "Trà đào",
+      "recipeCategory": {
+        "slug": "tra-trai-cay",
+        "name": "Trà trái cây"
+      },
+      "recipeKind": "drink",
+      "visibility": "public",
+      "shortDescription": "Vị đào rõ, thanh, dễ uống.",
+      "description": null,
+      "yieldQuantity": 1,
+      "yieldUnit": "ly",
+      "servingSizeMl": 500,
+      "sortOrder": 120,
+      "contentSourceKey": "bepsi-recipes-v1",
+      "ingredients": [
+        {
+          "sortOrder": 10,
+          "productName": "Nền trà lài",
+          "quantity": 170,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "nen-tra-lai"
+        },
+        {
+          "sortOrder": 20,
+          "productName": "Siro đào",
+          "quantity": 30,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "siro-dao",
+          "catalogVariantId": null
+        },
+        {
+          "sortOrder": 30,
+          "productName": "Nước đường",
+          "quantity": 15,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "nuoc-duong-tieu-chuan"
+        },
+        {
+          "sortOrder": 40,
+          "productName": "Nước cốt chanh",
+          "quantity": 8,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 50,
+          "productName": "Đào ngâm",
+          "quantity": 50,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "dao-ngam",
+          "catalogVariantId": null
+        },
+        {
+          "sortOrder": 60,
+          "productName": "Đá viên",
+          "quantity": 180,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        }
+      ],
+      "steps": [
+        {
+          "stepNo": 1,
+          "title": "Phối vị",
+          "content": "Cho trà, siro đào, nước đường và nước cốt chanh vào bình lắc."
+        },
+        {
+          "stepNo": 2,
+          "title": "Làm lạnh",
+          "content": "Thêm đá và lắc 10 giây."
+        },
+        {
+          "stepNo": 3,
+          "title": "Hoàn thiện",
+          "content": "Rót ra ly và cho đào ngâm lên trên."
+        }
+      ],
+      "operationalNotes": [],
+      "workflowStatus": "draft"
+    },
+    {
+      "sourceNumber": 13,
+      "slug": "tra-vai-500ml",
+      "title": "Trà vải",
+      "recipeCategory": {
+        "slug": "tra-trai-cay",
+        "name": "Trà trái cây"
+      },
+      "recipeKind": "drink",
+      "visibility": "public",
+      "shortDescription": "Hương vải rõ, vị chua nhẹ và thơm trà lài.",
+      "description": null,
+      "yieldQuantity": 1,
+      "yieldUnit": "ly",
+      "servingSizeMl": 500,
+      "sortOrder": 130,
+      "contentSourceKey": "bepsi-recipes-v1",
+      "ingredients": [
+        {
+          "sortOrder": 10,
+          "productName": "Nền trà lài",
+          "quantity": 170,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "nen-tra-lai"
+        },
+        {
+          "sortOrder": 20,
+          "productName": "Siro vải",
+          "quantity": 25,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "siro-vai",
+          "catalogVariantId": null
+        },
+        {
+          "sortOrder": 30,
+          "productName": "Nước vải ngâm",
+          "quantity": 20,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 40,
+          "productName": "Nước đường",
+          "quantity": 10,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "nuoc-duong-tieu-chuan"
+        },
+        {
+          "sortOrder": 50,
+          "productName": "Nước cốt chanh",
+          "quantity": 8,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 60,
+          "productName": "Vải ngâm",
+          "quantity": 3,
+          "unit": "fruit",
+          "unitLabel": "trái",
+          "note": null,
+          "optional": false,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "vai-ngam",
+          "catalogVariantId": null
+        },
+        {
+          "sortOrder": 70,
+          "productName": "Đá viên",
+          "quantity": 180,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        }
+      ],
+      "steps": [
+        {
+          "stepNo": 1,
+          "title": "Phối vị",
+          "content": "Khuấy trà với siro vải, nước vải, nước đường và chanh."
+        },
+        {
+          "stepNo": 2,
+          "title": "Làm lạnh",
+          "content": "Lắc với đá 10 giây."
+        },
+        {
+          "stepNo": 3,
+          "title": "Hoàn thiện",
+          "content": "Rót ra ly và thêm trái vải."
+        }
+      ],
+      "operationalNotes": [],
+      "workflowStatus": "draft"
+    },
+    {
+      "sourceNumber": 14,
+      "slug": "tra-tac-500ml",
+      "title": "Trà tắc",
+      "recipeCategory": {
+        "slug": "tra-trai-cay",
+        "name": "Trà trái cây"
+      },
+      "recipeKind": "drink",
+      "visibility": "public",
+      "shortDescription": "Chua ngọt rõ, thơm tắc và trà.",
+      "description": null,
+      "yieldQuantity": 1,
+      "yieldUnit": "ly",
+      "servingSizeMl": 500,
+      "sortOrder": 140,
+      "contentSourceKey": "bepsi-recipes-v1",
+      "ingredients": [
+        {
+          "sortOrder": 10,
+          "productName": "Nền trà lài",
+          "quantity": 180,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "nen-tra-lai"
+        },
+        {
+          "sortOrder": 20,
+          "productName": "Nước cốt tắc",
+          "quantity": 35,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": "Lọc hạt",
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 30,
+          "productName": "Nước đường",
+          "quantity": 30,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "nuoc-duong-tieu-chuan"
+        },
+        {
+          "sortOrder": 40,
+          "productName": "Tắc lát",
+          "quantity": 3,
+          "unit": "slice",
+          "unitLabel": "lát",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 50,
+          "productName": "Đá viên",
+          "quantity": 190,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        }
+      ],
+      "steps": [
+        {
+          "stepNo": 1,
+          "title": "Phối vị",
+          "content": "Cho trà, nước cốt tắc và nước đường vào bình lắc."
+        },
+        {
+          "stepNo": 2,
+          "title": "Làm lạnh",
+          "content": "Thêm đá, lắc 10 giây."
+        },
+        {
+          "stepNo": 3,
+          "title": "Hoàn thiện",
+          "content": "Rót ra ly và thêm lát tắc."
+        }
+      ],
+      "operationalNotes": [],
+      "workflowStatus": "draft"
+    },
+    {
+      "sourceNumber": 15,
+      "slug": "tra-chanh-500ml",
+      "title": "Trà chanh",
+      "recipeCategory": {
+        "slug": "tra-trai-cay",
+        "name": "Trà trái cây"
+      },
+      "recipeKind": "drink",
+      "visibility": "public",
+      "shortDescription": "Vị chanh tươi sáng, trà rõ và không gắt.",
+      "description": null,
+      "yieldQuantity": 1,
+      "yieldUnit": "ly",
+      "servingSizeMl": 500,
+      "sortOrder": 150,
+      "contentSourceKey": "bepsi-recipes-v1",
+      "ingredients": [
+        {
+          "sortOrder": 10,
+          "productName": "Nền trà đen",
+          "quantity": 180,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "nen-tra-den"
+        },
+        {
+          "sortOrder": 20,
+          "productName": "Nước cốt chanh",
+          "quantity": 25,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 30,
+          "productName": "Nước đường",
+          "quantity": 30,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "nuoc-duong-tieu-chuan"
+        },
+        {
+          "sortOrder": 40,
+          "productName": "Chanh lát",
+          "quantity": 2,
+          "unit": "slice",
+          "unitLabel": "lát",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 50,
+          "productName": "Đá viên",
+          "quantity": 190,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        }
+      ],
+      "steps": [
+        {
+          "stepNo": 1,
+          "title": "Phối vị",
+          "content": "Cho trà, chanh và nước đường vào bình lắc."
+        },
+        {
+          "stepNo": 2,
+          "title": "Làm lạnh",
+          "content": "Lắc với đá 8–10 giây."
+        },
+        {
+          "stepNo": 3,
+          "title": "Hoàn thiện",
+          "content": "Rót ra ly và trang trí chanh lát."
+        }
+      ],
+      "operationalNotes": [],
+      "workflowStatus": "draft"
+    },
+    {
+      "sourceNumber": 16,
+      "slug": "tra-dau-500ml",
+      "title": "Trà dâu",
+      "recipeCategory": {
+        "slug": "tra-trai-cay",
+        "name": "Trà trái cây"
+      },
+      "recipeKind": "drink",
+      "visibility": "public",
+      "shortDescription": "Dâu thơm, màu đẹp, vị chua ngọt cân bằng.",
+      "description": null,
+      "yieldQuantity": 1,
+      "yieldUnit": "ly",
+      "servingSizeMl": 500,
+      "sortOrder": 160,
+      "contentSourceKey": "bepsi-recipes-v1",
+      "ingredients": [
+        {
+          "sortOrder": 10,
+          "productName": "Nền trà lài",
+          "quantity": 160,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "nen-tra-lai"
+        },
+        {
+          "sortOrder": 20,
+          "productName": "Siro dâu",
+          "quantity": 20,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "siro-dau",
+          "catalogVariantId": null
+        },
+        {
+          "sortOrder": 30,
+          "productName": "Mứt dâu",
+          "quantity": 25,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "mut-dau",
+          "catalogVariantId": null
+        },
+        {
+          "sortOrder": 40,
+          "productName": "Nước đường",
+          "quantity": 10,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "nuoc-duong-tieu-chuan"
+        },
+        {
+          "sortOrder": 50,
+          "productName": "Nước cốt chanh",
+          "quantity": 8,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 60,
+          "productName": "Dâu tươi",
+          "quantity": 30,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": "Tùy chọn",
+          "optional": true,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 70,
+          "productName": "Đá viên",
+          "quantity": 180,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        }
+      ],
+      "steps": [
+        {
+          "stepNo": 1,
+          "title": "Dằm dâu",
+          "content": "Dằm nhẹ mứt dâu và dâu tươi trong bình lắc."
+        },
+        {
+          "stepNo": 2,
+          "title": "Phối vị",
+          "content": "Thêm trà, siro dâu, nước đường và chanh."
+        },
+        {
+          "stepNo": 3,
+          "title": "Hoàn thiện",
+          "content": "Lắc với đá và rót ra ly."
+        }
+      ],
+      "operationalNotes": [],
+      "workflowStatus": "draft"
+    },
+    {
+      "sourceNumber": 17,
+      "slug": "tra-xoai-500ml",
+      "title": "Trà xoài",
+      "recipeCategory": {
+        "slug": "tra-trai-cay",
+        "name": "Trà trái cây"
+      },
+      "recipeKind": "drink",
+      "visibility": "public",
+      "shortDescription": "Xoài chín thơm, có độ sánh nhẹ và hậu trà thanh.",
+      "description": null,
+      "yieldQuantity": 1,
+      "yieldUnit": "ly",
+      "servingSizeMl": 500,
+      "sortOrder": 170,
+      "contentSourceKey": "bepsi-recipes-v1",
+      "ingredients": [
+        {
+          "sortOrder": 10,
+          "productName": "Nền trà lài",
+          "quantity": 150,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "nen-tra-lai"
+        },
+        {
+          "sortOrder": 20,
+          "productName": "Sinh tố xoài",
+          "quantity": 35,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "sinh-to-xoai",
+          "catalogVariantId": null
+        },
+        {
+          "sortOrder": 30,
+          "productName": "Siro xoài",
+          "quantity": 15,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "siro-xoai",
+          "catalogVariantId": null
+        },
+        {
+          "sortOrder": 40,
+          "productName": "Nước đường",
+          "quantity": 10,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "nuoc-duong-tieu-chuan"
+        },
+        {
+          "sortOrder": 50,
+          "productName": "Nước cốt chanh",
+          "quantity": 8,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 60,
+          "productName": "Xoài hạt lựu",
+          "quantity": 40,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 70,
+          "productName": "Đá viên",
+          "quantity": 180,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        }
+      ],
+      "steps": [
+        {
+          "stepNo": 1,
+          "title": "Phối vị",
+          "content": "Cho trà, sinh tố xoài, siro, nước đường và chanh vào bình lắc."
+        },
+        {
+          "stepNo": 2,
+          "title": "Làm lạnh",
+          "content": "Lắc với đá 12 giây."
+        },
+        {
+          "stepNo": 3,
+          "title": "Hoàn thiện",
+          "content": "Rót ra ly, thêm xoài hạt lựu."
+        }
+      ],
+      "operationalNotes": [],
+      "workflowStatus": "draft"
+    },
+    {
+      "sourceNumber": 18,
+      "slug": "tra-chanh-day-500ml",
+      "title": "Trà chanh dây",
+      "recipeCategory": {
+        "slug": "tra-trai-cay",
+        "name": "Trà trái cây"
+      },
+      "recipeKind": "drink",
+      "visibility": "public",
+      "shortDescription": "Chua thơm rõ, hợp thời tiết nóng.",
+      "description": null,
+      "yieldQuantity": 1,
+      "yieldUnit": "ly",
+      "servingSizeMl": 500,
+      "sortOrder": 180,
+      "contentSourceKey": "bepsi-recipes-v1",
+      "ingredients": [
+        {
+          "sortOrder": 10,
+          "productName": "Nền trà lài",
+          "quantity": 160,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "nen-tra-lai"
+        },
+        {
+          "sortOrder": 20,
+          "productName": "Sinh tố chanh dây",
+          "quantity": 30,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "sinh-to-chanh-day",
+          "catalogVariantId": null
+        },
+        {
+          "sortOrder": 30,
+          "productName": "Nước đường",
+          "quantity": 25,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "nuoc-duong-tieu-chuan"
+        },
+        {
+          "sortOrder": 40,
+          "productName": "Nước cốt chanh",
+          "quantity": 5,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 50,
+          "productName": "Hạt chanh dây",
+          "quantity": 10,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": "Tùy chọn",
+          "optional": true,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 60,
+          "productName": "Đá viên",
+          "quantity": 185,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        }
+      ],
+      "steps": [
+        {
+          "stepNo": 1,
+          "title": "Phối vị",
+          "content": "Cho trà, sinh tố chanh dây, nước đường và nước cốt chanh vào bình lắc."
+        },
+        {
+          "stepNo": 2,
+          "title": "Làm lạnh",
+          "content": "Lắc với đá 10 giây."
+        },
+        {
+          "stepNo": 3,
+          "title": "Hoàn thiện",
+          "content": "Rót ra ly và thêm hạt chanh dây."
+        }
+      ],
+      "operationalNotes": [],
+      "workflowStatus": "draft"
+    },
+    {
+      "sourceNumber": 19,
+      "slug": "tra-oi-hong-500ml",
+      "title": "Trà ổi hồng",
+      "recipeCategory": {
+        "slug": "tra-trai-cay",
+        "name": "Trà trái cây"
+      },
+      "recipeKind": "drink",
+      "visibility": "public",
+      "shortDescription": "Mùi ổi rõ, vị chua nhẹ và màu hồng đẹp.",
+      "description": null,
+      "yieldQuantity": 1,
+      "yieldUnit": "ly",
+      "servingSizeMl": 500,
+      "sortOrder": 190,
+      "contentSourceKey": "bepsi-recipes-v1",
+      "ingredients": [
+        {
+          "sortOrder": 10,
+          "productName": "Nền trà lài",
+          "quantity": 160,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "nen-tra-lai"
+        },
+        {
+          "sortOrder": 20,
+          "productName": "Siro ổi hồng",
+          "quantity": 25,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "siro-oi-hong",
+          "catalogVariantId": null
+        },
+        {
+          "sortOrder": 30,
+          "productName": "Sinh tố ổi",
+          "quantity": 20,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "sinh-to-oi",
+          "catalogVariantId": null
+        },
+        {
+          "sortOrder": 40,
+          "productName": "Nước đường",
+          "quantity": 10,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "nuoc-duong-tieu-chuan"
+        },
+        {
+          "sortOrder": 50,
+          "productName": "Nước cốt chanh",
+          "quantity": 8,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 60,
+          "productName": "Ổi lát",
+          "quantity": 40,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 70,
+          "productName": "Đá viên",
+          "quantity": 180,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        }
+      ],
+      "steps": [
+        {
+          "stepNo": 1,
+          "title": "Phối vị",
+          "content": "Cho trà, siro ổi, sinh tố ổi, nước đường và chanh vào bình lắc."
+        },
+        {
+          "stepNo": 2,
+          "title": "Làm lạnh",
+          "content": "Lắc với đá 10 giây."
+        },
+        {
+          "stepNo": 3,
+          "title": "Hoàn thiện",
+          "content": "Rót ra ly và thêm ổi lát."
+        }
+      ],
+      "operationalNotes": [],
+      "workflowStatus": "draft"
+    },
+    {
+      "sourceNumber": 20,
+      "slug": "tra-trai-cay-nhiet-doi-500ml",
+      "title": "Trà trái cây nhiệt đới",
+      "recipeCategory": {
+        "slug": "tra-trai-cay",
+        "name": "Trà trái cây"
+      },
+      "recipeKind": "drink",
+      "visibility": "public",
+      "shortDescription": "Tổng hợp đào, xoài, chanh dây và cam trên nền trà lài.",
+      "description": null,
+      "yieldQuantity": 1,
+      "yieldUnit": "ly",
+      "servingSizeMl": 500,
+      "sortOrder": 200,
+      "contentSourceKey": "bepsi-recipes-v1",
+      "ingredients": [
+        {
+          "sortOrder": 10,
+          "productName": "Nền trà lài",
+          "quantity": 150,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "nen-tra-lai"
+        },
+        {
+          "sortOrder": 20,
+          "productName": "Siro đào",
+          "quantity": 15,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "siro-dao",
+          "catalogVariantId": null
+        },
+        {
+          "sortOrder": 30,
+          "productName": "Sinh tố xoài",
+          "quantity": 20,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "sinh-to-xoai",
+          "catalogVariantId": null
+        },
+        {
+          "sortOrder": 40,
+          "productName": "Sinh tố chanh dây",
+          "quantity": 15,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "sinh-to-chanh-day",
+          "catalogVariantId": null
+        },
+        {
+          "sortOrder": 50,
+          "productName": "Nước cam",
+          "quantity": 25,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 60,
+          "productName": "Nước đường",
+          "quantity": 10,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "nuoc-duong-tieu-chuan"
+        },
+        {
+          "sortOrder": 70,
+          "productName": "Trái cây cắt hạt lựu",
+          "quantity": 60,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 80,
+          "productName": "Đá viên",
+          "quantity": 180,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        }
+      ],
+      "steps": [
+        {
+          "stepNo": 1,
+          "title": "Phối vị",
+          "content": "Cho toàn bộ phần lỏng vào bình lắc và khuấy đều."
+        },
+        {
+          "stepNo": 2,
+          "title": "Làm lạnh",
+          "content": "Thêm đá, lắc 12 giây."
+        },
+        {
+          "stepNo": 3,
+          "title": "Hoàn thiện",
+          "content": "Rót ra ly và thêm trái cây cắt nhỏ."
+        }
+      ],
+      "operationalNotes": [],
+      "workflowStatus": "draft"
+    },
+    {
+      "sourceNumber": 21,
+      "slug": "matcha-da-xay-500ml",
+      "title": "Matcha đá xay",
+      "recipeCategory": {
+        "slug": "da-xay",
+        "name": "Đá xay"
+      },
+      "recipeKind": "drink",
+      "visibility": "public",
+      "shortDescription": "Matcha béo mịn, kết cấu đặc vừa.",
+      "description": null,
+      "yieldQuantity": 1,
+      "yieldUnit": "ly",
+      "servingSizeMl": 500,
+      "sortOrder": 210,
+      "contentSourceKey": "bepsi-recipes-v1",
+      "ingredients": [
+        {
+          "sortOrder": 10,
+          "productName": "Bột matcha",
+          "quantity": 5,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "bot-matcha",
+          "catalogVariantId": null
+        },
+        {
+          "sortOrder": 20,
+          "productName": "Nước nóng 80°C",
+          "quantity": 50,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 30,
+          "productName": "Sữa tươi",
+          "quantity": 120,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 40,
+          "productName": "Bột sữa",
+          "quantity": 20,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "bot-sua-pha-che",
+          "catalogVariantId": null
+        },
+        {
+          "sortOrder": 50,
+          "productName": "Nước đường",
+          "quantity": 20,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "nuoc-duong-tieu-chuan"
+        },
+        {
+          "sortOrder": 60,
+          "productName": "Đá viên",
+          "quantity": 220,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 70,
+          "productName": "Kem topping",
+          "quantity": 30,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": "Tùy chọn",
+          "optional": true,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "kem-topping",
+          "catalogVariantId": null
+        }
+      ],
+      "steps": [
+        {
+          "stepNo": 1,
+          "title": "Hòa matcha",
+          "content": "Đánh matcha với nước nóng đến mịn."
+        },
+        {
+          "stepNo": 2,
+          "title": "Xay",
+          "content": "Cho matcha, sữa, bột sữa, nước đường và đá vào máy; xay 25–30 giây."
+        },
+        {
+          "stepNo": 3,
+          "title": "Hoàn thiện",
+          "content": "Rót ra ly và thêm kem topping nếu dùng."
+        }
+      ],
+      "operationalNotes": [],
+      "workflowStatus": "draft"
+    },
+    {
+      "sourceNumber": 22,
+      "slug": "chocolate-da-xay-500ml",
+      "title": "Chocolate đá xay",
+      "recipeCategory": {
+        "slug": "da-xay",
+        "name": "Đá xay"
+      },
+      "recipeKind": "drink",
+      "visibility": "public",
+      "shortDescription": "Chocolate đậm, béo, mịn.",
+      "description": null,
+      "yieldQuantity": 1,
+      "yieldUnit": "ly",
+      "servingSizeMl": 500,
+      "sortOrder": 220,
+      "contentSourceKey": "bepsi-recipes-v1",
+      "ingredients": [
+        {
+          "sortOrder": 10,
+          "productName": "Bột chocolate",
+          "quantity": 28,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "bot-chocolate",
+          "catalogVariantId": null
+        },
+        {
+          "sortOrder": 20,
+          "productName": "Sữa tươi",
+          "quantity": 150,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 30,
+          "productName": "Sữa đặc",
+          "quantity": 20,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 40,
+          "productName": "Nước đường",
+          "quantity": 10,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "nuoc-duong-tieu-chuan"
+        },
+        {
+          "sortOrder": 50,
+          "productName": "Đá viên",
+          "quantity": 220,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 60,
+          "productName": "Kem topping",
+          "quantity": 30,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": "Tùy chọn",
+          "optional": true,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "kem-topping",
+          "catalogVariantId": null
+        }
+      ],
+      "steps": [
+        {
+          "stepNo": 1,
+          "title": "Hòa nền",
+          "content": "Khuấy chocolate với 50 ml sữa cho mịn."
+        },
+        {
+          "stepNo": 2,
+          "title": "Xay",
+          "content": "Cho toàn bộ nguyên liệu trừ kem topping vào máy, xay 25–30 giây."
+        },
+        {
+          "stepNo": 3,
+          "title": "Hoàn thiện",
+          "content": "Rót ra ly, thêm kem topping."
+        }
+      ],
+      "operationalNotes": [],
+      "workflowStatus": "draft"
+    },
+    {
+      "sourceNumber": 23,
+      "slug": "cookies-da-xay-500ml",
+      "title": "Cookies đá xay",
+      "recipeCategory": {
+        "slug": "da-xay",
+        "name": "Đá xay"
+      },
+      "recipeKind": "drink",
+      "visibility": "public",
+      "shortDescription": "Béo, thơm bánh quy, có độ giòn nhẹ.",
+      "description": null,
+      "yieldQuantity": 1,
+      "yieldUnit": "ly",
+      "servingSizeMl": 500,
+      "sortOrder": 230,
+      "contentSourceKey": "bepsi-recipes-v1",
+      "ingredients": [
+        {
+          "sortOrder": 10,
+          "productName": "Bánh quy chocolate",
+          "quantity": 4,
+          "unit": "piece",
+          "unitLabel": "cái",
+          "note": null,
+          "optional": false,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "banh-quy-chocolate",
+          "catalogVariantId": null
+        },
+        {
+          "sortOrder": 20,
+          "productName": "Sữa tươi",
+          "quantity": 150,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 30,
+          "productName": "Bột sữa",
+          "quantity": 20,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "bot-sua-pha-che",
+          "catalogVariantId": null
+        },
+        {
+          "sortOrder": 40,
+          "productName": "Sữa đặc",
+          "quantity": 20,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 50,
+          "productName": "Đá viên",
+          "quantity": 220,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 60,
+          "productName": "Kem topping",
+          "quantity": 30,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": "Tùy chọn",
+          "optional": true,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "kem-topping",
+          "catalogVariantId": null
+        }
+      ],
+      "steps": [
+        {
+          "stepNo": 1,
+          "title": "Chuẩn bị",
+          "content": "Bẻ nhỏ bánh quy."
+        },
+        {
+          "stepNo": 2,
+          "title": "Xay",
+          "content": "Cho 3 bánh cùng sữa, bột sữa, sữa đặc và đá vào máy; xay 25 giây."
+        },
+        {
+          "stepNo": 3,
+          "title": "Hoàn thiện",
+          "content": "Rót ra ly, thêm kem và nghiền bánh còn lại lên mặt."
+        }
+      ],
+      "operationalNotes": [],
+      "workflowStatus": "draft"
+    },
+    {
+      "sourceNumber": 24,
+      "slug": "khoai-mon-da-xay-500ml",
+      "title": "Khoai môn đá xay",
+      "recipeCategory": {
+        "slug": "da-xay",
+        "name": "Đá xay"
+      },
+      "recipeKind": "drink",
+      "visibility": "public",
+      "shortDescription": "Khoai môn béo thơm, kết cấu mịn.",
+      "description": null,
+      "yieldQuantity": 1,
+      "yieldUnit": "ly",
+      "servingSizeMl": 500,
+      "sortOrder": 240,
+      "contentSourceKey": "bepsi-recipes-v1",
+      "ingredients": [
+        {
+          "sortOrder": 10,
+          "productName": "Bột khoai môn",
+          "quantity": 30,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "bot-khoai-mon",
+          "catalogVariantId": null
+        },
+        {
+          "sortOrder": 20,
+          "productName": "Sữa tươi",
+          "quantity": 150,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 30,
+          "productName": "Bột sữa",
+          "quantity": 15,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "bot-sua-pha-che",
+          "catalogVariantId": null
+        },
+        {
+          "sortOrder": 40,
+          "productName": "Sữa đặc",
+          "quantity": 15,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 50,
+          "productName": "Đá viên",
+          "quantity": 220,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        }
+      ],
+      "steps": [
+        {
+          "stepNo": 1,
+          "title": "Hòa bột",
+          "content": "Khuấy bột khoai môn và bột sữa với 50 ml sữa."
+        },
+        {
+          "stepNo": 2,
+          "title": "Xay",
+          "content": "Cho hỗn hợp cùng phần sữa còn lại, sữa đặc và đá vào máy; xay mịn."
+        },
+        {
+          "stepNo": 3,
+          "title": "Hoàn thiện",
+          "content": "Rót ra ly 500 ml."
+        }
+      ],
+      "operationalNotes": [],
+      "workflowStatus": "draft"
+    },
+    {
+      "sourceNumber": 25,
+      "slug": "viet-quat-da-xay-500ml",
+      "title": "Việt quất đá xay",
+      "recipeCategory": {
+        "slug": "da-xay",
+        "name": "Đá xay"
+      },
+      "recipeKind": "drink",
+      "visibility": "public",
+      "shortDescription": "Chua ngọt, thơm việt quất, màu tím đẹp.",
+      "description": null,
+      "yieldQuantity": 1,
+      "yieldUnit": "ly",
+      "servingSizeMl": 500,
+      "sortOrder": 250,
+      "contentSourceKey": "bepsi-recipes-v1",
+      "ingredients": [
+        {
+          "sortOrder": 10,
+          "productName": "Sinh tố việt quất",
+          "quantity": 45,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "sinh-to-viet-quat",
+          "catalogVariantId": null
+        },
+        {
+          "sortOrder": 20,
+          "productName": "Sữa tươi",
+          "quantity": 130,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 30,
+          "productName": "Bột sữa",
+          "quantity": 15,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "bot-sua-pha-che",
+          "catalogVariantId": null
+        },
+        {
+          "sortOrder": 40,
+          "productName": "Nước đường",
+          "quantity": 10,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "nuoc-duong-tieu-chuan"
+        },
+        {
+          "sortOrder": 50,
+          "productName": "Đá viên",
+          "quantity": 220,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        }
+      ],
+      "steps": [
+        {
+          "stepNo": 1,
+          "title": "Xay",
+          "content": "Cho toàn bộ nguyên liệu vào máy xay."
+        },
+        {
+          "stepNo": 2,
+          "title": "Kiểm tra",
+          "content": "Xay 25–30 giây đến khi mịn và không còn mảnh đá lớn."
+        },
+        {
+          "stepNo": 3,
+          "title": "Hoàn thiện",
+          "content": "Rót ra ly, có thể rưới 5 ml sinh tố việt quất lên mặt."
+        }
+      ],
+      "operationalNotes": [],
+      "workflowStatus": "draft"
+    },
+    {
+      "sourceNumber": 26,
+      "slug": "dau-da-xay-500ml",
+      "title": "Dâu đá xay",
+      "recipeCategory": {
+        "slug": "da-xay",
+        "name": "Đá xay"
+      },
+      "recipeKind": "drink",
+      "visibility": "public",
+      "shortDescription": "Dâu chua ngọt, màu tươi, dễ uống.",
+      "description": null,
+      "yieldQuantity": 1,
+      "yieldUnit": "ly",
+      "servingSizeMl": 500,
+      "sortOrder": 260,
+      "contentSourceKey": "bepsi-recipes-v1",
+      "ingredients": [
+        {
+          "sortOrder": 10,
+          "productName": "Sinh tố dâu",
+          "quantity": 40,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "sinh-to-dau",
+          "catalogVariantId": null
+        },
+        {
+          "sortOrder": 20,
+          "productName": "Mứt dâu",
+          "quantity": 20,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "mut-dau",
+          "catalogVariantId": null
+        },
+        {
+          "sortOrder": 30,
+          "productName": "Sữa tươi",
+          "quantity": 130,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 40,
+          "productName": "Bột sữa",
+          "quantity": 15,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "bot-sua-pha-che",
+          "catalogVariantId": null
+        },
+        {
+          "sortOrder": 50,
+          "productName": "Đá viên",
+          "quantity": 220,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        }
+      ],
+      "steps": [
+        {
+          "stepNo": 1,
+          "title": "Xay",
+          "content": "Cho toàn bộ nguyên liệu vào máy."
+        },
+        {
+          "stepNo": 2,
+          "title": "Làm mịn",
+          "content": "Xay 25–30 giây."
+        },
+        {
+          "stepNo": 3,
+          "title": "Hoàn thiện",
+          "content": "Rót ra ly và trang trí mứt dâu nếu cần."
+        }
+      ],
+      "operationalNotes": [],
+      "workflowStatus": "draft"
+    },
+    {
+      "sourceNumber": 27,
+      "slug": "chanh-tuyet-500ml",
+      "title": "Chanh tuyết",
+      "recipeCategory": {
+        "slug": "da-xay",
+        "name": "Đá xay"
+      },
+      "recipeKind": "drink",
+      "visibility": "public",
+      "shortDescription": "Chua mát, mịn và sáng vị.",
+      "description": null,
+      "yieldQuantity": 1,
+      "yieldUnit": "ly",
+      "servingSizeMl": 500,
+      "sortOrder": 270,
+      "contentSourceKey": "bepsi-recipes-v1",
+      "ingredients": [
+        {
+          "sortOrder": 10,
+          "productName": "Nước cốt chanh",
+          "quantity": 35,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 20,
+          "productName": "Nước đường",
+          "quantity": 45,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "nuoc-duong-tieu-chuan"
+        },
+        {
+          "sortOrder": 30,
+          "productName": "Nước lọc",
+          "quantity": 100,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 40,
+          "productName": "Muối",
+          "quantity": 0.5,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 50,
+          "productName": "Đá viên",
+          "quantity": 230,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        }
+      ],
+      "steps": [
+        {
+          "stepNo": 1,
+          "title": "Phối vị",
+          "content": "Cho chanh, nước đường, nước và muối vào máy xay."
+        },
+        {
+          "stepNo": 2,
+          "title": "Xay",
+          "content": "Thêm đá, xay 25 giây đến khi mịn."
+        },
+        {
+          "stepNo": 3,
+          "title": "Hoàn thiện",
+          "content": "Rót ra ly và dùng ngay."
+        }
+      ],
+      "operationalNotes": [],
+      "workflowStatus": "draft"
+    },
+    {
+      "sourceNumber": 28,
+      "slug": "chanh-day-tuyet-500ml",
+      "title": "Chanh dây tuyết",
+      "recipeCategory": {
+        "slug": "da-xay",
+        "name": "Đá xay"
+      },
+      "recipeKind": "drink",
+      "visibility": "public",
+      "shortDescription": "Chua thơm mạnh, giải khát tốt.",
+      "description": null,
+      "yieldQuantity": 1,
+      "yieldUnit": "ly",
+      "servingSizeMl": 500,
+      "sortOrder": 280,
+      "contentSourceKey": "bepsi-recipes-v1",
+      "ingredients": [
+        {
+          "sortOrder": 10,
+          "productName": "Sinh tố chanh dây",
+          "quantity": 40,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "sinh-to-chanh-day",
+          "catalogVariantId": null
+        },
+        {
+          "sortOrder": 20,
+          "productName": "Nước đường",
+          "quantity": 35,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "nuoc-duong-tieu-chuan"
+        },
+        {
+          "sortOrder": 30,
+          "productName": "Nước lọc",
+          "quantity": 100,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 40,
+          "productName": "Muối",
+          "quantity": 0.5,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 50,
+          "productName": "Đá viên",
+          "quantity": 230,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        }
+      ],
+      "steps": [
+        {
+          "stepNo": 1,
+          "title": "Phối vị",
+          "content": "Cho sinh tố chanh dây, nước đường, nước và muối vào máy."
+        },
+        {
+          "stepNo": 2,
+          "title": "Xay",
+          "content": "Thêm đá và xay 25–30 giây."
+        },
+        {
+          "stepNo": 3,
+          "title": "Hoàn thiện",
+          "content": "Rót ra ly, thêm ít hạt chanh dây nếu muốn."
+        }
+      ],
+      "operationalNotes": [],
+      "workflowStatus": "draft"
+    },
+    {
+      "sourceNumber": 29,
+      "slug": "ca-phe-sua-da-500ml",
+      "title": "Cà phê sữa đá",
+      "recipeCategory": {
+        "slug": "ca-phe",
+        "name": "Cà phê"
+      },
+      "recipeKind": "drink",
+      "visibility": "public",
+      "shortDescription": "Cà phê đậm, sữa đặc cân bằng.",
+      "description": null,
+      "yieldQuantity": 1,
+      "yieldUnit": "ly",
+      "servingSizeMl": 500,
+      "sortOrder": 290,
+      "contentSourceKey": "bepsi-recipes-v1",
+      "ingredients": [
+        {
+          "sortOrder": 10,
+          "productName": "Cà phê pha đậm",
+          "quantity": 70,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": "Phin hoặc espresso",
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 20,
+          "productName": "Sữa đặc",
+          "quantity": 35,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 30,
+          "productName": "Đá viên",
+          "quantity": 200,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        }
+      ],
+      "steps": [
+        {
+          "stepNo": 1,
+          "title": "Phối vị",
+          "content": "Khuấy cà phê nóng với sữa đặc đến đồng nhất."
+        },
+        {
+          "stepNo": 2,
+          "title": "Làm lạnh",
+          "content": "Rót vào ly đầy đá."
+        },
+        {
+          "stepNo": 3,
+          "title": "Hoàn thiện",
+          "content": "Khuấy nhẹ trước khi phục vụ."
+        }
+      ],
+      "operationalNotes": [],
+      "workflowStatus": "draft"
+    },
+    {
+      "sourceNumber": 30,
+      "slug": "bac-xiu-500ml",
+      "title": "Bạc xỉu",
+      "recipeCategory": {
+        "slug": "ca-phe",
+        "name": "Cà phê"
+      },
+      "recipeKind": "drink",
+      "visibility": "public",
+      "shortDescription": "Nhiều sữa, ít cà phê, béo và thơm.",
+      "description": null,
+      "yieldQuantity": 1,
+      "yieldUnit": "ly",
+      "servingSizeMl": 500,
+      "sortOrder": 300,
+      "contentSourceKey": "bepsi-recipes-v1",
+      "ingredients": [
+        {
+          "sortOrder": 10,
+          "productName": "Cà phê pha đậm",
+          "quantity": 35,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 20,
+          "productName": "Sữa đặc",
+          "quantity": 40,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 30,
+          "productName": "Sữa tươi",
+          "quantity": 140,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 40,
+          "productName": "Đá viên",
+          "quantity": 190,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        }
+      ],
+      "steps": [
+        {
+          "stepNo": 1,
+          "title": "Pha sữa",
+          "content": "Khuấy sữa đặc với sữa tươi."
+        },
+        {
+          "stepNo": 2,
+          "title": "Làm lạnh",
+          "content": "Cho hỗn hợp sữa vào ly đá."
+        },
+        {
+          "stepNo": 3,
+          "title": "Hoàn thiện",
+          "content": "Rót cà phê lên trên tạo hai tầng."
+        }
+      ],
+      "operationalNotes": [],
+      "workflowStatus": "draft"
+    },
+    {
+      "sourceNumber": 31,
+      "slug": "ca-phe-muoi-500ml",
+      "title": "Cà phê muối",
+      "recipeCategory": {
+        "slug": "ca-phe",
+        "name": "Cà phê"
+      },
+      "recipeKind": "drink",
+      "visibility": "public",
+      "shortDescription": "Cà phê đậm kết hợp lớp kem muối béo mặn nhẹ.",
+      "description": null,
+      "yieldQuantity": 1,
+      "yieldUnit": "ly",
+      "servingSizeMl": 500,
+      "sortOrder": 310,
+      "contentSourceKey": "bepsi-recipes-v1",
+      "ingredients": [
+        {
+          "sortOrder": 10,
+          "productName": "Cà phê pha đậm",
+          "quantity": 70,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 20,
+          "productName": "Sữa đặc",
+          "quantity": 25,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 30,
+          "productName": "Milk foam mặn",
+          "quantity": 50,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": "Dùng công thức số 59",
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "milk-foam-man"
+        },
+        {
+          "sortOrder": 40,
+          "productName": "Đá viên",
+          "quantity": 180,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        }
+      ],
+      "steps": [
+        {
+          "stepNo": 1,
+          "title": "Pha cà phê",
+          "content": "Khuấy cà phê với sữa đặc."
+        },
+        {
+          "stepNo": 2,
+          "title": "Làm lạnh",
+          "content": "Rót cà phê vào ly đá."
+        },
+        {
+          "stepNo": 3,
+          "title": "Hoàn thiện",
+          "content": "Phủ milk foam mặn lên mặt, không khuấy trước khi phục vụ."
+        }
+      ],
+      "operationalNotes": [],
+      "workflowStatus": "draft"
+    },
+    {
+      "sourceNumber": 32,
+      "slug": "ca-phe-kem-cheese-500ml",
+      "title": "Cà phê kem cheese",
+      "recipeCategory": {
+        "slug": "ca-phe",
+        "name": "Cà phê"
+      },
+      "recipeKind": "drink",
+      "visibility": "public",
+      "shortDescription": "Cà phê mạnh, lớp kem cheese dày và béo.",
+      "description": null,
+      "yieldQuantity": 1,
+      "yieldUnit": "ly",
+      "servingSizeMl": 500,
+      "sortOrder": 320,
+      "contentSourceKey": "bepsi-recipes-v1",
+      "ingredients": [
+        {
+          "sortOrder": 10,
+          "productName": "Cà phê pha đậm",
+          "quantity": 70,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 20,
+          "productName": "Sữa đặc",
+          "quantity": 20,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 30,
+          "productName": "Nước đường",
+          "quantity": 5,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "nuoc-duong-tieu-chuan"
+        },
+        {
+          "sortOrder": 40,
+          "productName": "Kem cheese",
+          "quantity": 50,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": "Dùng công thức số 58",
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "kem-cheese"
+        },
+        {
+          "sortOrder": 50,
+          "productName": "Đá viên",
+          "quantity": 180,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        }
+      ],
+      "steps": [
+        {
+          "stepNo": 1,
+          "title": "Pha cà phê",
+          "content": "Khuấy cà phê với sữa đặc và nước đường."
+        },
+        {
+          "stepNo": 2,
+          "title": "Làm lạnh",
+          "content": "Rót vào ly đá."
+        },
+        {
+          "stepNo": 3,
+          "title": "Hoàn thiện",
+          "content": "Phủ kem cheese lên trên."
+        }
+      ],
+      "operationalNotes": [],
+      "workflowStatus": "draft"
+    },
+    {
+      "sourceNumber": 33,
+      "slug": "cacao-sua-500ml",
+      "title": "Cacao sữa",
+      "recipeCategory": {
+        "slug": "cacao",
+        "name": "Cacao"
+      },
+      "recipeKind": "drink",
+      "visibility": "public",
+      "shortDescription": "Cacao đậm vừa, béo và dễ uống.",
+      "description": null,
+      "yieldQuantity": 1,
+      "yieldUnit": "ly",
+      "servingSizeMl": 500,
+      "sortOrder": 330,
+      "contentSourceKey": "bepsi-recipes-v1",
+      "ingredients": [
+        {
+          "sortOrder": 10,
+          "productName": "Bột cacao",
+          "quantity": 18,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "bot-cacao",
+          "catalogVariantId": null
+        },
+        {
+          "sortOrder": 20,
+          "productName": "Nước nóng",
+          "quantity": 50,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 30,
+          "productName": "Sữa đặc",
+          "quantity": 25,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 40,
+          "productName": "Sữa tươi",
+          "quantity": 130,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 50,
+          "productName": "Nước đường",
+          "quantity": 10,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "nuoc-duong-tieu-chuan"
+        },
+        {
+          "sortOrder": 60,
+          "productName": "Đá viên",
+          "quantity": 180,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        }
+      ],
+      "steps": [
+        {
+          "stepNo": 1,
+          "title": "Hòa cacao",
+          "content": "Khuấy cacao với nước nóng đến mịn."
+        },
+        {
+          "stepNo": 2,
+          "title": "Phối sữa",
+          "content": "Thêm sữa đặc, sữa tươi và nước đường."
+        },
+        {
+          "stepNo": 3,
+          "title": "Hoàn thiện",
+          "content": "Lắc với đá 10 giây và rót ra ly."
+        }
+      ],
+      "operationalNotes": [],
+      "workflowStatus": "draft"
+    },
+    {
+      "sourceNumber": 34,
+      "slug": "cacao-kem-cheese-500ml",
+      "title": "Cacao kem cheese",
+      "recipeCategory": {
+        "slug": "cacao",
+        "name": "Cacao"
+      },
+      "recipeKind": "drink",
+      "visibility": "public",
+      "shortDescription": "Cacao béo đậm với lớp kem cheese mặn nhẹ.",
+      "description": null,
+      "yieldQuantity": 1,
+      "yieldUnit": "ly",
+      "servingSizeMl": 500,
+      "sortOrder": 340,
+      "contentSourceKey": "bepsi-recipes-v1",
+      "ingredients": [
+        {
+          "sortOrder": 10,
+          "productName": "Bột cacao",
+          "quantity": 18,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "bot-cacao",
+          "catalogVariantId": null
+        },
+        {
+          "sortOrder": 20,
+          "productName": "Nước nóng",
+          "quantity": 50,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 30,
+          "productName": "Sữa đặc",
+          "quantity": 20,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 40,
+          "productName": "Sữa tươi",
+          "quantity": 120,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 50,
+          "productName": "Kem cheese",
+          "quantity": 50,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "kem-cheese"
+        },
+        {
+          "sortOrder": 60,
+          "productName": "Đá viên",
+          "quantity": 170,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        }
+      ],
+      "steps": [
+        {
+          "stepNo": 1,
+          "title": "Pha cacao",
+          "content": "Khuấy cacao, nước nóng và sữa đặc cho mịn."
+        },
+        {
+          "stepNo": 2,
+          "title": "Làm lạnh",
+          "content": "Thêm sữa tươi, lắc với đá."
+        },
+        {
+          "stepNo": 3,
+          "title": "Hoàn thiện",
+          "content": "Rót ra ly và phủ kem cheese."
+        }
+      ],
+      "operationalNotes": [],
+      "workflowStatus": "draft"
+    },
+    {
+      "sourceNumber": 35,
+      "slug": "matcha-latte-500ml",
+      "title": "Matcha latte",
+      "recipeCategory": {
+        "slug": "matcha",
+        "name": "Matcha"
+      },
+      "recipeKind": "drink",
+      "visibility": "public",
+      "shortDescription": "Matcha thơm, sữa thanh, hậu vị rõ.",
+      "description": null,
+      "yieldQuantity": 1,
+      "yieldUnit": "ly",
+      "servingSizeMl": 500,
+      "sortOrder": 350,
+      "contentSourceKey": "bepsi-recipes-v1",
+      "ingredients": [
+        {
+          "sortOrder": 10,
+          "productName": "Bột matcha",
+          "quantity": 4,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "bot-matcha",
+          "catalogVariantId": null
+        },
+        {
+          "sortOrder": 20,
+          "productName": "Nước nóng 80°C",
+          "quantity": 50,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 30,
+          "productName": "Sữa tươi",
+          "quantity": 150,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 40,
+          "productName": "Nước đường",
+          "quantity": 20,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "nuoc-duong-tieu-chuan"
+        },
+        {
+          "sortOrder": 50,
+          "productName": "Đá viên",
+          "quantity": 180,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        }
+      ],
+      "steps": [
+        {
+          "stepNo": 1,
+          "title": "Đánh matcha",
+          "content": "Rây matcha, đánh với nước nóng đến mịn."
+        },
+        {
+          "stepNo": 2,
+          "title": "Phối sữa",
+          "content": "Cho sữa tươi và nước đường vào ly đá."
+        },
+        {
+          "stepNo": 3,
+          "title": "Hoàn thiện",
+          "content": "Rót matcha lên trên để tạo tầng hoặc khuấy đều trước khi phục vụ."
+        }
+      ],
+      "operationalNotes": [],
+      "workflowStatus": "draft"
+    },
+    {
+      "sourceNumber": 36,
+      "slug": "matcha-kem-cheese-500ml",
+      "title": "Matcha kem cheese",
+      "recipeCategory": {
+        "slug": "matcha",
+        "name": "Matcha"
+      },
+      "recipeKind": "drink",
+      "visibility": "public",
+      "shortDescription": "Matcha đậm, lớp kem cheese béo mặn nhẹ.",
+      "description": null,
+      "yieldQuantity": 1,
+      "yieldUnit": "ly",
+      "servingSizeMl": 500,
+      "sortOrder": 360,
+      "contentSourceKey": "bepsi-recipes-v1",
+      "ingredients": [
+        {
+          "sortOrder": 10,
+          "productName": "Bột matcha",
+          "quantity": 4,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "bot-matcha",
+          "catalogVariantId": null
+        },
+        {
+          "sortOrder": 20,
+          "productName": "Nước nóng 80°C",
+          "quantity": 50,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 30,
+          "productName": "Sữa tươi",
+          "quantity": 130,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 40,
+          "productName": "Nước đường",
+          "quantity": 18,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "nuoc-duong-tieu-chuan"
+        },
+        {
+          "sortOrder": 50,
+          "productName": "Kem cheese",
+          "quantity": 50,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "kem-cheese"
+        },
+        {
+          "sortOrder": 60,
+          "productName": "Đá viên",
+          "quantity": 170,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        }
+      ],
+      "steps": [
+        {
+          "stepNo": 1,
+          "title": "Đánh matcha",
+          "content": "Đánh matcha với nước nóng."
+        },
+        {
+          "stepNo": 2,
+          "title": "Làm nền",
+          "content": "Thêm sữa tươi, nước đường và đá; lắc 8 giây."
+        },
+        {
+          "stepNo": 3,
+          "title": "Hoàn thiện",
+          "content": "Rót ra ly và phủ kem cheese."
+        }
+      ],
+      "operationalNotes": [],
+      "workflowStatus": "draft"
+    },
+    {
+      "sourceNumber": 37,
+      "slug": "sua-tuoi-tran-chau-duong-den-500ml",
+      "title": "Sữa tươi trân châu đường đen",
+      "recipeCategory": {
+        "slug": "sua-tuoi",
+        "name": "Sữa tươi"
+      },
+      "recipeKind": "drink",
+      "visibility": "public",
+      "shortDescription": "Sữa tươi béo nhẹ, đường đen thơm và trân châu dai.",
+      "description": null,
+      "yieldQuantity": 1,
+      "yieldUnit": "ly",
+      "servingSizeMl": 500,
+      "sortOrder": 370,
+      "contentSourceKey": "bepsi-recipes-v1",
+      "ingredients": [
+        {
+          "sortOrder": 10,
+          "productName": "Trân châu đường đen",
+          "quantity": 70,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "tran-chau-duong-den"
+        },
+        {
+          "sortOrder": 20,
+          "productName": "Sốt đường đen",
+          "quantity": 30,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "sot-duong-den"
+        },
+        {
+          "sortOrder": 30,
+          "productName": "Sữa tươi",
+          "quantity": 200,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 40,
+          "productName": "Đá viên",
+          "quantity": 150,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        }
+      ],
+      "steps": [
+        {
+          "stepNo": 1,
+          "title": "Tạo vân ly",
+          "content": "Rưới sốt đường đen quanh thành ly."
+        },
+        {
+          "stepNo": 2,
+          "title": "Thêm topping",
+          "content": "Cho trân châu vào đáy ly."
+        },
+        {
+          "stepNo": 3,
+          "title": "Hoàn thiện",
+          "content": "Thêm đá và rót sữa tươi vào."
+        }
+      ],
+      "operationalNotes": [],
+      "workflowStatus": "draft"
+    },
+    {
+      "sourceNumber": 38,
+      "slug": "sua-tuoi-khoai-mon-500ml",
+      "title": "Sữa tươi khoai môn",
+      "recipeCategory": {
+        "slug": "sua-tuoi",
+        "name": "Sữa tươi"
+      },
+      "recipeKind": "drink",
+      "visibility": "public",
+      "shortDescription": "Khoai môn béo thơm kết hợp sữa tươi.",
+      "description": null,
+      "yieldQuantity": 1,
+      "yieldUnit": "ly",
+      "servingSizeMl": 500,
+      "sortOrder": 380,
+      "contentSourceKey": "bepsi-recipes-v1",
+      "ingredients": [
+        {
+          "sortOrder": 10,
+          "productName": "Bột khoai môn",
+          "quantity": 25,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "bot-khoai-mon",
+          "catalogVariantId": null
+        },
+        {
+          "sortOrder": 20,
+          "productName": "Nước nóng",
+          "quantity": 50,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 30,
+          "productName": "Sữa đặc",
+          "quantity": 15,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 40,
+          "productName": "Sữa tươi",
+          "quantity": 160,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 50,
+          "productName": "Đá viên",
+          "quantity": 180,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        }
+      ],
+      "steps": [
+        {
+          "stepNo": 1,
+          "title": "Hòa khoai môn",
+          "content": "Khuấy bột khoai môn với nước nóng và sữa đặc."
+        },
+        {
+          "stepNo": 2,
+          "title": "Làm lạnh",
+          "content": "Thêm sữa tươi, lắc với đá."
+        },
+        {
+          "stepNo": 3,
+          "title": "Hoàn thiện",
+          "content": "Rót ra ly 500 ml."
+        }
+      ],
+      "operationalNotes": [],
+      "workflowStatus": "draft"
+    },
+    {
+      "sourceNumber": 39,
+      "slug": "sua-tuoi-matcha-500ml",
+      "title": "Sữa tươi matcha",
+      "recipeCategory": {
+        "slug": "sua-tuoi",
+        "name": "Sữa tươi"
+      },
+      "recipeKind": "drink",
+      "visibility": "public",
+      "shortDescription": "Sữa tươi thanh, matcha rõ, trình bày hai tầng.",
+      "description": null,
+      "yieldQuantity": 1,
+      "yieldUnit": "ly",
+      "servingSizeMl": 500,
+      "sortOrder": 390,
+      "contentSourceKey": "bepsi-recipes-v1",
+      "ingredients": [
+        {
+          "sortOrder": 10,
+          "productName": "Bột matcha",
+          "quantity": 4,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "bot-matcha",
+          "catalogVariantId": null
+        },
+        {
+          "sortOrder": 20,
+          "productName": "Nước nóng 80°C",
+          "quantity": 50,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 30,
+          "productName": "Sữa tươi",
+          "quantity": 180,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 40,
+          "productName": "Nước đường",
+          "quantity": 18,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "nuoc-duong-tieu-chuan"
+        },
+        {
+          "sortOrder": 50,
+          "productName": "Đá viên",
+          "quantity": 170,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        }
+      ],
+      "steps": [
+        {
+          "stepNo": 1,
+          "title": "Đánh matcha",
+          "content": "Rây và đánh matcha với nước nóng."
+        },
+        {
+          "stepNo": 2,
+          "title": "Làm nền sữa",
+          "content": "Cho sữa tươi, nước đường và đá vào ly."
+        },
+        {
+          "stepNo": 3,
+          "title": "Hoàn thiện",
+          "content": "Rót matcha chậm lên trên để tạo tầng."
+        }
+      ],
+      "operationalNotes": [],
+      "workflowStatus": "draft"
+    },
+    {
+      "sourceNumber": 40,
+      "slug": "tra-o-long-kem-cheese-500ml",
+      "title": "Trà ô long kem cheese",
+      "recipeCategory": {
+        "slug": "tra-kem-cheese",
+        "name": "Trà kem cheese"
+      },
+      "recipeKind": "drink",
+      "visibility": "public",
+      "shortDescription": "Ô long thanh, kem cheese béo mặn nhẹ.",
+      "description": null,
+      "yieldQuantity": 1,
+      "yieldUnit": "ly",
+      "servingSizeMl": 500,
+      "sortOrder": 400,
+      "contentSourceKey": "bepsi-recipes-v1",
+      "ingredients": [
+        {
+          "sortOrder": 10,
+          "productName": "Nền trà ô long",
+          "quantity": 200,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "nen-tra-o-long"
+        },
+        {
+          "sortOrder": 20,
+          "productName": "Nước đường",
+          "quantity": 25,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "nuoc-duong-tieu-chuan"
+        },
+        {
+          "sortOrder": 30,
+          "productName": "Kem cheese",
+          "quantity": 50,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "kem-cheese"
+        },
+        {
+          "sortOrder": 40,
+          "productName": "Đá viên",
+          "quantity": 180,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        }
+      ],
+      "steps": [
+        {
+          "stepNo": 1,
+          "title": "Cân vị trà",
+          "content": "Khuấy trà ô long với nước đường."
+        },
+        {
+          "stepNo": 2,
+          "title": "Làm lạnh",
+          "content": "Lắc cùng đá 8 giây."
+        },
+        {
+          "stepNo": 3,
+          "title": "Hoàn thiện",
+          "content": "Rót ra ly và phủ kem cheese."
+        }
+      ],
+      "operationalNotes": [],
+      "workflowStatus": "draft"
+    },
+    {
+      "sourceNumber": 41,
+      "slug": "tra-lai-kem-cheese-500ml",
+      "title": "Trà lài kem cheese",
+      "recipeCategory": {
+        "slug": "tra-kem-cheese",
+        "name": "Trà kem cheese"
+      },
+      "recipeKind": "drink",
+      "visibility": "public",
+      "shortDescription": "Trà lài thơm nhẹ, kem cheese tạo độ béo rõ.",
+      "description": null,
+      "yieldQuantity": 1,
+      "yieldUnit": "ly",
+      "servingSizeMl": 500,
+      "sortOrder": 410,
+      "contentSourceKey": "bepsi-recipes-v1",
+      "ingredients": [
+        {
+          "sortOrder": 10,
+          "productName": "Nền trà lài",
+          "quantity": 200,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "nen-tra-lai"
+        },
+        {
+          "sortOrder": 20,
+          "productName": "Nước đường",
+          "quantity": 25,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "nuoc-duong-tieu-chuan"
+        },
+        {
+          "sortOrder": 30,
+          "productName": "Kem cheese",
+          "quantity": 50,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "kem-cheese"
+        },
+        {
+          "sortOrder": 40,
+          "productName": "Đá viên",
+          "quantity": 180,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        }
+      ],
+      "steps": [
+        {
+          "stepNo": 1,
+          "title": "Cân vị",
+          "content": "Khuấy trà lài với nước đường."
+        },
+        {
+          "stepNo": 2,
+          "title": "Làm lạnh",
+          "content": "Lắc với đá."
+        },
+        {
+          "stepNo": 3,
+          "title": "Hoàn thiện",
+          "content": "Rót ra ly và phủ kem cheese."
+        }
+      ],
+      "operationalNotes": [],
+      "workflowStatus": "draft"
+    },
+    {
+      "sourceNumber": 42,
+      "slug": "tra-dao-kem-cheese-500ml",
+      "title": "Trà đào kem cheese",
+      "recipeCategory": {
+        "slug": "tra-kem-cheese",
+        "name": "Trà kem cheese"
+      },
+      "recipeKind": "drink",
+      "visibility": "public",
+      "shortDescription": "Trà đào chua ngọt kết hợp kem cheese.",
+      "description": null,
+      "yieldQuantity": 1,
+      "yieldUnit": "ly",
+      "servingSizeMl": 500,
+      "sortOrder": 420,
+      "contentSourceKey": "bepsi-recipes-v1",
+      "ingredients": [
+        {
+          "sortOrder": 10,
+          "productName": "Nền trà lài",
+          "quantity": 160,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "nen-tra-lai"
+        },
+        {
+          "sortOrder": 20,
+          "productName": "Siro đào",
+          "quantity": 25,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "siro-dao",
+          "catalogVariantId": null
+        },
+        {
+          "sortOrder": 30,
+          "productName": "Nước cốt chanh",
+          "quantity": 5,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 40,
+          "productName": "Đào ngâm",
+          "quantity": 40,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "dao-ngam",
+          "catalogVariantId": null
+        },
+        {
+          "sortOrder": 50,
+          "productName": "Kem cheese",
+          "quantity": 45,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "kem-cheese"
+        },
+        {
+          "sortOrder": 60,
+          "productName": "Đá viên",
+          "quantity": 170,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        }
+      ],
+      "steps": [
+        {
+          "stepNo": 1,
+          "title": "Phối trà",
+          "content": "Lắc trà, siro đào và chanh với đá."
+        },
+        {
+          "stepNo": 2,
+          "title": "Thêm topping",
+          "content": "Rót ra ly và cho đào ngâm."
+        },
+        {
+          "stepNo": 3,
+          "title": "Hoàn thiện",
+          "content": "Phủ kem cheese lên mặt."
+        }
+      ],
+      "operationalNotes": [],
+      "workflowStatus": "draft"
+    },
+    {
+      "sourceNumber": 43,
+      "slug": "tra-dau-kem-cheese-500ml",
+      "title": "Trà dâu kem cheese",
+      "recipeCategory": {
+        "slug": "tra-kem-cheese",
+        "name": "Trà kem cheese"
+      },
+      "recipeKind": "drink",
+      "visibility": "public",
+      "shortDescription": "Dâu chua ngọt, kem cheese cân vị.",
+      "description": null,
+      "yieldQuantity": 1,
+      "yieldUnit": "ly",
+      "servingSizeMl": 500,
+      "sortOrder": 430,
+      "contentSourceKey": "bepsi-recipes-v1",
+      "ingredients": [
+        {
+          "sortOrder": 10,
+          "productName": "Nền trà lài",
+          "quantity": 150,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "nen-tra-lai"
+        },
+        {
+          "sortOrder": 20,
+          "productName": "Siro dâu",
+          "quantity": 20,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "siro-dau",
+          "catalogVariantId": null
+        },
+        {
+          "sortOrder": 30,
+          "productName": "Mứt dâu",
+          "quantity": 25,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "mut-dau",
+          "catalogVariantId": null
+        },
+        {
+          "sortOrder": 40,
+          "productName": "Nước cốt chanh",
+          "quantity": 5,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 50,
+          "productName": "Kem cheese",
+          "quantity": 45,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "kem-cheese"
+        },
+        {
+          "sortOrder": 60,
+          "productName": "Đá viên",
+          "quantity": 170,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        }
+      ],
+      "steps": [
+        {
+          "stepNo": 1,
+          "title": "Phối trà",
+          "content": "Lắc trà, siro dâu, mứt dâu và chanh với đá."
+        },
+        {
+          "stepNo": 2,
+          "title": "Rót ly",
+          "content": "Rót hỗn hợp ra ly."
+        },
+        {
+          "stepNo": 3,
+          "title": "Hoàn thiện",
+          "content": "Phủ kem cheese."
+        }
+      ],
+      "operationalNotes": [],
+      "workflowStatus": "draft"
+    },
+    {
+      "sourceNumber": 44,
+      "slug": "tra-xoai-kem-cheese-500ml",
+      "title": "Trà xoài kem cheese",
+      "recipeCategory": {
+        "slug": "tra-kem-cheese",
+        "name": "Trà kem cheese"
+      },
+      "recipeKind": "drink",
+      "visibility": "public",
+      "shortDescription": "Xoài thơm, trà thanh, kem cheese béo.",
+      "description": null,
+      "yieldQuantity": 1,
+      "yieldUnit": "ly",
+      "servingSizeMl": 500,
+      "sortOrder": 440,
+      "contentSourceKey": "bepsi-recipes-v1",
+      "ingredients": [
+        {
+          "sortOrder": 10,
+          "productName": "Nền trà lài",
+          "quantity": 150,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "nen-tra-lai"
+        },
+        {
+          "sortOrder": 20,
+          "productName": "Sinh tố xoài",
+          "quantity": 35,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "sinh-to-xoai",
+          "catalogVariantId": null
+        },
+        {
+          "sortOrder": 30,
+          "productName": "Nước cốt chanh",
+          "quantity": 5,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 40,
+          "productName": "Xoài hạt lựu",
+          "quantity": 35,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 50,
+          "productName": "Kem cheese",
+          "quantity": 45,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "kem-cheese"
+        },
+        {
+          "sortOrder": 60,
+          "productName": "Đá viên",
+          "quantity": 170,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        }
+      ],
+      "steps": [
+        {
+          "stepNo": 1,
+          "title": "Phối trà",
+          "content": "Lắc trà, sinh tố xoài và chanh với đá."
+        },
+        {
+          "stepNo": 2,
+          "title": "Thêm xoài",
+          "content": "Rót ra ly và thêm xoài hạt lựu."
+        },
+        {
+          "stepNo": 3,
+          "title": "Hoàn thiện",
+          "content": "Phủ kem cheese."
+        }
+      ],
+      "operationalNotes": [],
+      "workflowStatus": "draft"
+    },
+    {
+      "sourceNumber": 45,
+      "slug": "tra-sua-pudding-trung-500ml",
+      "title": "Trà sữa pudding trứng",
+      "recipeCategory": {
+        "slug": "tra-sua-topping",
+        "name": "Trà sữa topping"
+      },
+      "recipeKind": "drink",
+      "visibility": "public",
+      "shortDescription": "Trà sữa truyền thống kết hợp pudding mềm.",
+      "description": null,
+      "yieldQuantity": 1,
+      "yieldUnit": "ly",
+      "servingSizeMl": 500,
+      "sortOrder": 450,
+      "contentSourceKey": "bepsi-recipes-v1",
+      "ingredients": [
+        {
+          "sortOrder": 10,
+          "productName": "Nền trà sữa truyền thống",
+          "quantity": 200,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "nen-tra-sua-truyen-thong"
+        },
+        {
+          "sortOrder": 20,
+          "productName": "Pudding trứng",
+          "quantity": 80,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "pudding-trung"
+        },
+        {
+          "sortOrder": 30,
+          "productName": "Đá viên",
+          "quantity": 170,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        }
+      ],
+      "steps": [
+        {
+          "stepNo": 1,
+          "title": "Chuẩn bị ly",
+          "content": "Cắt pudding thành miếng vừa ăn và cho vào đáy ly."
+        },
+        {
+          "stepNo": 2,
+          "title": "Làm lạnh",
+          "content": "Lắc nền trà sữa với đá."
+        },
+        {
+          "stepNo": 3,
+          "title": "Hoàn thiện",
+          "content": "Rót trà sữa vào ly."
+        }
+      ],
+      "operationalNotes": [],
+      "workflowStatus": "draft"
+    },
+    {
+      "sourceNumber": 46,
+      "slug": "tra-sua-thach-3q-500ml",
+      "title": "Trà sữa thạch 3Q",
+      "recipeCategory": {
+        "slug": "tra-sua-topping",
+        "name": "Trà sữa topping"
+      },
+      "recipeKind": "drink",
+      "visibility": "public",
+      "shortDescription": "Trà sữa béo vừa, thạch 3Q giòn dai.",
+      "description": null,
+      "yieldQuantity": 1,
+      "yieldUnit": "ly",
+      "servingSizeMl": 500,
+      "sortOrder": 460,
+      "contentSourceKey": "bepsi-recipes-v1",
+      "ingredients": [
+        {
+          "sortOrder": 10,
+          "productName": "Nền trà sữa truyền thống",
+          "quantity": 200,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "nen-tra-sua-truyen-thong"
+        },
+        {
+          "sortOrder": 20,
+          "productName": "Thạch 3Q",
+          "quantity": 70,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "thach-3q",
+          "catalogVariantId": null
+        },
+        {
+          "sortOrder": 30,
+          "productName": "Đá viên",
+          "quantity": 170,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        }
+      ],
+      "steps": [
+        {
+          "stepNo": 1,
+          "title": "Chuẩn bị ly",
+          "content": "Cho thạch 3Q vào đáy ly."
+        },
+        {
+          "stepNo": 2,
+          "title": "Làm lạnh",
+          "content": "Lắc trà sữa với đá."
+        },
+        {
+          "stepNo": 3,
+          "title": "Hoàn thiện",
+          "content": "Rót vào ly và phục vụ."
+        }
+      ],
+      "operationalNotes": [],
+      "workflowStatus": "draft"
+    },
+    {
+      "sourceNumber": 47,
+      "slug": "tra-sua-tran-chau-trang-500ml",
+      "title": "Trà sữa trân châu trắng",
+      "recipeCategory": {
+        "slug": "tra-sua-topping",
+        "name": "Trà sữa topping"
+      },
+      "recipeKind": "drink",
+      "visibility": "public",
+      "shortDescription": "Trà sữa thanh, trân châu trắng giòn.",
+      "description": null,
+      "yieldQuantity": 1,
+      "yieldUnit": "ly",
+      "servingSizeMl": 500,
+      "sortOrder": 470,
+      "contentSourceKey": "bepsi-recipes-v1",
+      "ingredients": [
+        {
+          "sortOrder": 10,
+          "productName": "Nền trà sữa lài",
+          "quantity": 200,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": "Có thể dùng công thức số 5 đã bỏ đá",
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "tra-sua-lai-500ml"
+        },
+        {
+          "sortOrder": 20,
+          "productName": "Trân châu trắng",
+          "quantity": 70,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "tran-chau-trang",
+          "catalogVariantId": null
+        },
+        {
+          "sortOrder": 30,
+          "productName": "Đá viên",
+          "quantity": 170,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        }
+      ],
+      "steps": [
+        {
+          "stepNo": 1,
+          "title": "Chuẩn bị ly",
+          "content": "Cho trân châu trắng vào đáy ly."
+        },
+        {
+          "stepNo": 2,
+          "title": "Làm lạnh",
+          "content": "Lắc trà sữa với đá."
+        },
+        {
+          "stepNo": 3,
+          "title": "Hoàn thiện",
+          "content": "Rót vào ly."
+        }
+      ],
+      "operationalNotes": [],
+      "workflowStatus": "draft"
+    },
+    {
+      "sourceNumber": 48,
+      "slug": "tra-sua-full-topping-500ml",
+      "title": "Trà sữa full topping",
+      "recipeCategory": {
+        "slug": "tra-sua-topping",
+        "name": "Trà sữa topping"
+      },
+      "recipeKind": "drink",
+      "visibility": "public",
+      "shortDescription": "Món no topping với trân châu, pudding và thạch.",
+      "description": null,
+      "yieldQuantity": 1,
+      "yieldUnit": "ly",
+      "servingSizeMl": 500,
+      "sortOrder": 480,
+      "contentSourceKey": "bepsi-recipes-v1",
+      "ingredients": [
+        {
+          "sortOrder": 10,
+          "productName": "Nền trà sữa truyền thống",
+          "quantity": 180,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "nen-tra-sua-truyen-thong"
+        },
+        {
+          "sortOrder": 20,
+          "productName": "Trân châu đen",
+          "quantity": 35,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "tran-chau-den"
+        },
+        {
+          "sortOrder": 30,
+          "productName": "Pudding trứng",
+          "quantity": 40,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "pudding-trung"
+        },
+        {
+          "sortOrder": 40,
+          "productName": "Thạch 3Q",
+          "quantity": 35,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "thach-3q",
+          "catalogVariantId": null
+        },
+        {
+          "sortOrder": 50,
+          "productName": "Đá viên",
+          "quantity": 150,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        }
+      ],
+      "steps": [
+        {
+          "stepNo": 1,
+          "title": "Chuẩn bị topping",
+          "content": "Cho lần lượt trân châu, pudding và thạch vào ly."
+        },
+        {
+          "stepNo": 2,
+          "title": "Làm lạnh",
+          "content": "Lắc trà sữa với đá."
+        },
+        {
+          "stepNo": 3,
+          "title": "Hoàn thiện",
+          "content": "Rót trà sữa vào ly, kiểm tra tổng thể tích không vượt miệng ly."
+        }
+      ],
+      "operationalNotes": [],
+      "workflowStatus": "draft"
+    },
+    {
+      "sourceNumber": 49,
+      "slug": "nen-tra-den",
+      "title": "Nền trà đen",
+      "recipeCategory": {
+        "slug": "cong-thuc-nen",
+        "name": "Công thức nền"
+      },
+      "recipeKind": "base",
+      "visibility": "internal",
+      "shortDescription": "Nền trà đậm dùng cho trà sữa và trà chanh.",
+      "description": null,
+      "yieldQuantity": 1,
+      "yieldUnit": "l",
+      "servingSizeMl": null,
+      "sortOrder": 490,
+      "contentSourceKey": "bepsi-recipes-v1",
+      "ingredients": [
+        {
+          "sortOrder": 10,
+          "productName": "Trà đen",
+          "quantity": 35,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "tra-den",
+          "catalogVariantId": null
+        },
+        {
+          "sortOrder": 20,
+          "productName": "Nước nóng 95°C",
+          "quantity": 1000,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        }
+      ],
+      "steps": [
+        {
+          "stepNo": 1,
+          "title": "Làm nóng dụng cụ",
+          "content": "Tráng bình ủ bằng nước nóng rồi đổ bỏ."
+        },
+        {
+          "stepNo": 2,
+          "title": "Ủ trà",
+          "content": "Cho trà vào bình, rót nước 95°C, đậy nắp và ủ 10 phút."
+        },
+        {
+          "stepNo": 3,
+          "title": "Lọc trà",
+          "content": "Lọc bỏ xác trà, không ép xác."
+        },
+        {
+          "stepNo": 4,
+          "title": "Làm nguội",
+          "content": "Để trà hạ dưới 40°C rồi bảo quản lạnh."
+        }
+      ],
+      "operationalNotes": [
+        "Dùng tốt nhất trong 8 giờ; tối đa 24 giờ ở 2–5°C."
+      ],
+      "workflowStatus": "draft"
+    },
+    {
+      "sourceNumber": 50,
+      "slug": "nen-tra-lai",
+      "title": "Nền trà lài",
+      "recipeCategory": {
+        "slug": "cong-thuc-nen",
+        "name": "Công thức nền"
+      },
+      "recipeKind": "base",
+      "visibility": "internal",
+      "shortDescription": "Nền trà thơm hoa lài dùng cho trà trái cây và trà sữa thanh.",
+      "description": null,
+      "yieldQuantity": 1,
+      "yieldUnit": "l",
+      "servingSizeMl": null,
+      "sortOrder": 500,
+      "contentSourceKey": "bepsi-recipes-v1",
+      "ingredients": [
+        {
+          "sortOrder": 10,
+          "productName": "Trà lài",
+          "quantity": 30,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "tra-lai",
+          "catalogVariantId": null
+        },
+        {
+          "sortOrder": 20,
+          "productName": "Nước nóng 88°C",
+          "quantity": 1000,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        }
+      ],
+      "steps": [
+        {
+          "stepNo": 1,
+          "title": "Ủ trà",
+          "content": "Cho trà vào bình, rót nước 88°C và ủ 8 phút."
+        },
+        {
+          "stepNo": 2,
+          "title": "Lọc",
+          "content": "Lọc bỏ xác trà, tránh ép xác."
+        },
+        {
+          "stepNo": 3,
+          "title": "Làm nguội",
+          "content": "Để nguội nhanh và bảo quản lạnh."
+        }
+      ],
+      "operationalNotes": [
+        "Không ủ quá 10 phút để tránh chát."
+      ],
+      "workflowStatus": "draft"
+    },
+    {
+      "sourceNumber": 51,
+      "slug": "nen-tra-o-long",
+      "title": "Nền trà ô long",
+      "recipeCategory": {
+        "slug": "cong-thuc-nen",
+        "name": "Công thức nền"
+      },
+      "recipeKind": "base",
+      "visibility": "internal",
+      "shortDescription": "Nền ô long thơm, hậu ngọt, dùng cho trà sữa và trà kem cheese.",
+      "description": null,
+      "yieldQuantity": 1,
+      "yieldUnit": "l",
+      "servingSizeMl": null,
+      "sortOrder": 510,
+      "contentSourceKey": "bepsi-recipes-v1",
+      "ingredients": [
+        {
+          "sortOrder": 10,
+          "productName": "Trà ô long",
+          "quantity": 30,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "tra-o-long",
+          "catalogVariantId": null
+        },
+        {
+          "sortOrder": 20,
+          "productName": "Nước nóng 92°C",
+          "quantity": 1000,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        }
+      ],
+      "steps": [
+        {
+          "stepNo": 1,
+          "title": "Tráng trà",
+          "content": "Rót nhanh 100 ml nước nóng qua trà rồi bỏ nước tráng."
+        },
+        {
+          "stepNo": 2,
+          "title": "Ủ",
+          "content": "Rót 1000 ml nước 92°C và ủ 9 phút."
+        },
+        {
+          "stepNo": 3,
+          "title": "Lọc",
+          "content": "Lọc trà và làm nguội nhanh."
+        }
+      ],
+      "operationalNotes": [],
+      "workflowStatus": "draft"
+    },
+    {
+      "sourceNumber": 52,
+      "slug": "nen-tra-thai-xanh",
+      "title": "Nền trà Thái xanh",
+      "recipeCategory": {
+        "slug": "cong-thuc-nen",
+        "name": "Công thức nền"
+      },
+      "recipeKind": "base",
+      "visibility": "internal",
+      "shortDescription": "Nền trà Thái xanh đậm màu, dùng pha trà sữa.",
+      "description": null,
+      "yieldQuantity": 1,
+      "yieldUnit": "l",
+      "servingSizeMl": null,
+      "sortOrder": 520,
+      "contentSourceKey": "bepsi-recipes-v1",
+      "ingredients": [
+        {
+          "sortOrder": 10,
+          "productName": "Trà Thái xanh",
+          "quantity": 30,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "tra-thai-xanh",
+          "catalogVariantId": null
+        },
+        {
+          "sortOrder": 20,
+          "productName": "Nước nóng 95°C",
+          "quantity": 1000,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        }
+      ],
+      "steps": [
+        {
+          "stepNo": 1,
+          "title": "Ủ trà",
+          "content": "Cho trà vào túi lọc, rót nước nóng và ủ 10 phút."
+        },
+        {
+          "stepNo": 2,
+          "title": "Lọc",
+          "content": "Nhấc túi lọc, để ráo tự nhiên."
+        },
+        {
+          "stepNo": 3,
+          "title": "Làm nguội",
+          "content": "Làm nguội nhanh trước khi bảo quản."
+        }
+      ],
+      "operationalNotes": [],
+      "workflowStatus": "draft"
+    },
+    {
+      "sourceNumber": 53,
+      "slug": "nen-tra-thai-do",
+      "title": "Nền trà Thái đỏ",
+      "recipeCategory": {
+        "slug": "cong-thuc-nen",
+        "name": "Công thức nền"
+      },
+      "recipeKind": "base",
+      "visibility": "internal",
+      "shortDescription": "Nền trà Thái đỏ đậm hương và màu.",
+      "description": null,
+      "yieldQuantity": 1,
+      "yieldUnit": "l",
+      "servingSizeMl": null,
+      "sortOrder": 530,
+      "contentSourceKey": "bepsi-recipes-v1",
+      "ingredients": [
+        {
+          "sortOrder": 10,
+          "productName": "Trà Thái đỏ",
+          "quantity": 30,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "tra-thai-do",
+          "catalogVariantId": null
+        },
+        {
+          "sortOrder": 20,
+          "productName": "Nước nóng 95°C",
+          "quantity": 1000,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        }
+      ],
+      "steps": [
+        {
+          "stepNo": 1,
+          "title": "Ủ trà",
+          "content": "Rót nước nóng vào trà và ủ 10 phút."
+        },
+        {
+          "stepNo": 2,
+          "title": "Lọc",
+          "content": "Lọc bỏ xác trà."
+        },
+        {
+          "stepNo": 3,
+          "title": "Làm nguội",
+          "content": "Hạ nhiệt nhanh và bảo quản lạnh."
+        }
+      ],
+      "operationalNotes": [],
+      "workflowStatus": "draft"
+    },
+    {
+      "sourceNumber": 54,
+      "slug": "nen-tra-sua-truyen-thong",
+      "title": "Nền trà sữa truyền thống",
+      "recipeCategory": {
+        "slug": "cong-thuc-nen",
+        "name": "Công thức nền"
+      },
+      "recipeKind": "base",
+      "visibility": "internal",
+      "shortDescription": "Nền trà sữa chuẩn để pha nhanh nhiều món.",
+      "description": null,
+      "yieldQuantity": 1,
+      "yieldUnit": "l",
+      "servingSizeMl": null,
+      "sortOrder": 540,
+      "contentSourceKey": "bepsi-recipes-v1",
+      "ingredients": [
+        {
+          "sortOrder": 10,
+          "productName": "Nền trà đen còn ấm",
+          "quantity": 700,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "nen-tra-den"
+        },
+        {
+          "sortOrder": 20,
+          "productName": "Bột sữa pha chế",
+          "quantity": 140,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "bot-sua-pha-che",
+          "catalogVariantId": null
+        },
+        {
+          "sortOrder": 30,
+          "productName": "Sữa đặc",
+          "quantity": 120,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 40,
+          "productName": "Nước đường",
+          "quantity": 80,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "nuoc-duong-tieu-chuan"
+        }
+      ],
+      "steps": [
+        {
+          "stepNo": 1,
+          "title": "Hòa bột",
+          "content": "Cho bột sữa vào trà còn ấm 60–70°C, khuấy tan."
+        },
+        {
+          "stepNo": 2,
+          "title": "Phối sữa",
+          "content": "Thêm sữa đặc và nước đường, khuấy 1 phút."
+        },
+        {
+          "stepNo": 3,
+          "title": "Cân thể tích",
+          "content": "Bổ sung nước lọc nếu cần để đủ 1 lít."
+        },
+        {
+          "stepNo": 4,
+          "title": "Làm nguội",
+          "content": "Làm nguội nhanh và bảo quản lạnh."
+        }
+      ],
+      "operationalNotes": [
+        "Lắc hoặc khuấy lại trước khi dùng."
+      ],
+      "workflowStatus": "draft"
+    },
+    {
+      "sourceNumber": 55,
+      "slug": "nen-tra-sua-o-long",
+      "title": "Nền trà sữa ô long",
+      "recipeCategory": {
+        "slug": "cong-thuc-nen",
+        "name": "Công thức nền"
+      },
+      "recipeKind": "base",
+      "visibility": "internal",
+      "shortDescription": "Nền trà sữa ô long thanh và thơm.",
+      "description": null,
+      "yieldQuantity": 1,
+      "yieldUnit": "l",
+      "servingSizeMl": null,
+      "sortOrder": 550,
+      "contentSourceKey": "bepsi-recipes-v1",
+      "ingredients": [
+        {
+          "sortOrder": 10,
+          "productName": "Nền trà ô long còn ấm",
+          "quantity": 720,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "nen-tra-o-long"
+        },
+        {
+          "sortOrder": 20,
+          "productName": "Bột sữa pha chế",
+          "quantity": 120,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "bot-sua-pha-che",
+          "catalogVariantId": null
+        },
+        {
+          "sortOrder": 30,
+          "productName": "Sữa đặc",
+          "quantity": 100,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 40,
+          "productName": "Nước đường",
+          "quantity": 70,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "nuoc-duong-tieu-chuan"
+        }
+      ],
+      "steps": [
+        {
+          "stepNo": 1,
+          "title": "Hòa sữa",
+          "content": "Cho bột sữa vào trà ấm, khuấy tan."
+        },
+        {
+          "stepNo": 2,
+          "title": "Cân vị",
+          "content": "Thêm sữa đặc và nước đường."
+        },
+        {
+          "stepNo": 3,
+          "title": "Hoàn thiện",
+          "content": "Cân đủ 1 lít, làm nguội nhanh và bảo quản lạnh."
+        }
+      ],
+      "operationalNotes": [],
+      "workflowStatus": "draft"
+    },
+    {
+      "sourceNumber": 56,
+      "slug": "tran-chau-den",
+      "title": "Trân châu đen",
+      "recipeCategory": {
+        "slug": "topping",
+        "name": "Topping"
+      },
+      "recipeKind": "topping",
+      "visibility": "internal",
+      "shortDescription": "Trân châu mềm dai, dùng trong ngày.",
+      "description": null,
+      "yieldQuantity": 1,
+      "yieldUnit": "kg",
+      "servingSizeMl": null,
+      "sortOrder": 560,
+      "contentSourceKey": "bepsi-recipes-v1",
+      "ingredients": [
+        {
+          "sortOrder": 10,
+          "productName": "Trân châu đen khô",
+          "quantity": 300,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "tran-chau-den-kho",
+          "catalogVariantId": null
+        },
+        {
+          "sortOrder": 20,
+          "productName": "Nước",
+          "quantity": 3000,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 30,
+          "productName": "Đường nâu",
+          "quantity": 120,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 40,
+          "productName": "Nước nóng",
+          "quantity": 120,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        }
+      ],
+      "steps": [
+        {
+          "stepNo": 1,
+          "title": "Nấu nước",
+          "content": "Đun sôi mạnh 3 lít nước."
+        },
+        {
+          "stepNo": 2,
+          "title": "Luộc trân châu",
+          "content": "Cho trân châu vào, khuấy 30 giây đầu; nấu theo thời gian nhà sản xuất, thường 25–30 phút."
+        },
+        {
+          "stepNo": 3,
+          "title": "Ủ",
+          "content": "Tắt bếp, đậy nắp và ủ 20 phút."
+        },
+        {
+          "stepNo": 4,
+          "title": "Rửa",
+          "content": "Xả nhanh bằng nước sạch đến khi bớt nhớt."
+        },
+        {
+          "stepNo": 5,
+          "title": "Ngâm đường",
+          "content": "Hòa đường nâu với nước nóng, ngâm trân châu ít nhất 15 phút."
+        }
+      ],
+      "operationalNotes": [
+        "Dùng tốt nhất trong 4 giờ ở nhiệt độ phòng."
+      ],
+      "workflowStatus": "draft"
+    },
+    {
+      "sourceNumber": 57,
+      "slug": "tran-chau-duong-den",
+      "title": "Trân châu đường đen",
+      "recipeCategory": {
+        "slug": "topping",
+        "name": "Topping"
+      },
+      "recipeKind": "topping",
+      "visibility": "internal",
+      "shortDescription": "Trân châu đen áo sốt đường đen đậm mùi.",
+      "description": null,
+      "yieldQuantity": 1,
+      "yieldUnit": "kg",
+      "servingSizeMl": null,
+      "sortOrder": 570,
+      "contentSourceKey": "bepsi-recipes-v1",
+      "ingredients": [
+        {
+          "sortOrder": 10,
+          "productName": "Trân châu đen đã nấu",
+          "quantity": 800,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "tran-chau-den"
+        },
+        {
+          "sortOrder": 20,
+          "productName": "Sốt đường đen",
+          "quantity": 250,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "sot-duong-den"
+        }
+      ],
+      "steps": [
+        {
+          "stepNo": 1,
+          "title": "Làm nóng sốt",
+          "content": "Đun sốt đường đen đến 70–80°C."
+        },
+        {
+          "stepNo": 2,
+          "title": "Áo sốt",
+          "content": "Cho trân châu vào, đảo nhẹ 3–5 phút."
+        },
+        {
+          "stepNo": 3,
+          "title": "Ủ vị",
+          "content": "Tắt bếp và ủ 15 phút trước khi dùng."
+        }
+      ],
+      "operationalNotes": [
+        "Giữ ấm nhẹ; không đun sôi lại nhiều lần."
+      ],
+      "workflowStatus": "draft"
+    },
+    {
+      "sourceNumber": 58,
+      "slug": "kem-cheese",
+      "title": "Kem cheese",
+      "recipeCategory": {
+        "slug": "topping",
+        "name": "Topping"
+      },
+      "recipeKind": "topping",
+      "visibility": "internal",
+      "shortDescription": "Kem cheese béo, mặn nhẹ, độ sánh vừa để phủ mặt đồ uống.",
+      "description": null,
+      "yieldQuantity": 500,
+      "yieldUnit": "ml",
+      "servingSizeMl": null,
+      "sortOrder": 580,
+      "contentSourceKey": "bepsi-recipes-v1",
+      "ingredients": [
+        {
+          "sortOrder": 10,
+          "productName": "Cream cheese",
+          "quantity": 150,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": "Để mềm",
+          "optional": false,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "cream-cheese",
+          "catalogVariantId": null
+        },
+        {
+          "sortOrder": 20,
+          "productName": "Whipping cream",
+          "quantity": 200,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": "Lạnh",
+          "optional": false,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "whipping-cream",
+          "catalogVariantId": null
+        },
+        {
+          "sortOrder": 30,
+          "productName": "Sữa tươi",
+          "quantity": 120,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": "Lạnh",
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 40,
+          "productName": "Đường",
+          "quantity": 30,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 50,
+          "productName": "Muối",
+          "quantity": 2,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        }
+      ],
+      "steps": [
+        {
+          "stepNo": 1,
+          "title": "Làm mềm cheese",
+          "content": "Đánh cream cheese với đường và muối đến mịn."
+        },
+        {
+          "stepNo": 2,
+          "title": "Phối sữa",
+          "content": "Cho sữa tươi từ từ, đánh đến đồng nhất."
+        },
+        {
+          "stepNo": 3,
+          "title": "Tạo độ bông",
+          "content": "Thêm whipping cream và đánh tốc độ vừa đến khi sánh chảy chậm."
+        },
+        {
+          "stepNo": 4,
+          "title": "Bảo quản",
+          "content": "Cho vào chai kín, giữ lạnh 2–5°C."
+        }
+      ],
+      "operationalNotes": [
+        "Dùng trong 24 giờ; lắc nhẹ trước khi dùng."
+      ],
+      "workflowStatus": "draft"
+    },
+    {
+      "sourceNumber": 59,
+      "slug": "milk-foam-man",
+      "title": "Milk foam mặn",
+      "recipeCategory": {
+        "slug": "topping",
+        "name": "Topping"
+      },
+      "recipeKind": "topping",
+      "visibility": "internal",
+      "shortDescription": "Milk foam mặn nhẹ, dùng cho cà phê và trà.",
+      "description": null,
+      "yieldQuantity": 500,
+      "yieldUnit": "ml",
+      "servingSizeMl": null,
+      "sortOrder": 590,
+      "contentSourceKey": "bepsi-recipes-v1",
+      "ingredients": [
+        {
+          "sortOrder": 10,
+          "productName": "Whipping cream",
+          "quantity": 220,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "whipping-cream",
+          "catalogVariantId": null
+        },
+        {
+          "sortOrder": 20,
+          "productName": "Sữa tươi",
+          "quantity": 180,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 30,
+          "productName": "Bột sữa",
+          "quantity": 35,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "bot-sua-pha-che",
+          "catalogVariantId": null
+        },
+        {
+          "sortOrder": 40,
+          "productName": "Đường",
+          "quantity": 30,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 50,
+          "productName": "Muối",
+          "quantity": 2,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        }
+      ],
+      "steps": [
+        {
+          "stepNo": 1,
+          "title": "Hòa bột",
+          "content": "Khuấy bột sữa, đường và muối với sữa tươi."
+        },
+        {
+          "stepNo": 2,
+          "title": "Đánh foam",
+          "content": "Thêm whipping cream và đánh tốc độ vừa đến khi sánh."
+        },
+        {
+          "stepNo": 3,
+          "title": "Làm lạnh",
+          "content": "Giữ lạnh ít nhất 30 phút trước khi dùng."
+        }
+      ],
+      "operationalNotes": [],
+      "workflowStatus": "draft"
+    },
+    {
+      "sourceNumber": 60,
+      "slug": "pudding-trung",
+      "title": "Pudding trứng",
+      "recipeCategory": {
+        "slug": "topping",
+        "name": "Topping"
+      },
+      "recipeKind": "topping",
+      "visibility": "internal",
+      "shortDescription": "Pudding mềm, thơm trứng sữa, cắt miếng không vỡ.",
+      "description": null,
+      "yieldQuantity": 10,
+      "yieldUnit": "portion",
+      "servingSizeMl": null,
+      "sortOrder": 600,
+      "contentSourceKey": "bepsi-recipes-v1",
+      "ingredients": [
+        {
+          "sortOrder": 10,
+          "productName": "Bột pudding trứng",
+          "quantity": 100,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "bot-pudding-trung",
+          "catalogVariantId": null
+        },
+        {
+          "sortOrder": 20,
+          "productName": "Nước",
+          "quantity": 1000,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 30,
+          "productName": "Đường",
+          "quantity": 80,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        }
+      ],
+      "steps": [
+        {
+          "stepNo": 1,
+          "title": "Hòa bột",
+          "content": "Trộn bột pudding với đường."
+        },
+        {
+          "stepNo": 2,
+          "title": "Nấu",
+          "content": "Đun nước đến sôi nhẹ, cho hỗn hợp bột vào và khuấy liên tục 2–3 phút."
+        },
+        {
+          "stepNo": 3,
+          "title": "Đổ khuôn",
+          "content": "Rót vào khuôn sạch."
+        },
+        {
+          "stepNo": 4,
+          "title": "Làm lạnh",
+          "content": "Để nguội rồi giữ lạnh ít nhất 2 giờ trước khi cắt."
+        }
+      ],
+      "operationalNotes": [
+        "Dùng trong 48 giờ ở 2–5°C."
+      ],
+      "workflowStatus": "draft"
+    },
+    {
+      "sourceNumber": 61,
+      "slug": "thach-tra",
+      "title": "Thạch trà",
+      "recipeCategory": {
+        "slug": "topping",
+        "name": "Topping"
+      },
+      "recipeKind": "topping",
+      "visibility": "internal",
+      "shortDescription": "Thạch mềm giòn có hương trà.",
+      "description": null,
+      "yieldQuantity": 1,
+      "yieldUnit": "kg",
+      "servingSizeMl": null,
+      "sortOrder": 610,
+      "contentSourceKey": "bepsi-recipes-v1",
+      "ingredients": [
+        {
+          "sortOrder": 10,
+          "productName": "Nền trà đen",
+          "quantity": 1000,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "recipe",
+          "sourceRecipeSlug": "nen-tra-den"
+        },
+        {
+          "sortOrder": 20,
+          "productName": "Bột rau câu",
+          "quantity": 10,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "bot-rau-cau",
+          "catalogVariantId": null
+        },
+        {
+          "sortOrder": 30,
+          "productName": "Đường",
+          "quantity": 120,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        }
+      ],
+      "steps": [
+        {
+          "stepNo": 1,
+          "title": "Trộn khô",
+          "content": "Trộn đều bột rau câu với đường."
+        },
+        {
+          "stepNo": 2,
+          "title": "Nấu",
+          "content": "Đun nền trà đến 85–90°C, rắc hỗn hợp bột vào và khuấy liên tục."
+        },
+        {
+          "stepNo": 3,
+          "title": "Đổ khuôn",
+          "content": "Nấu thêm 2 phút rồi đổ khuôn."
+        },
+        {
+          "stepNo": 4,
+          "title": "Làm lạnh",
+          "content": "Để nguội và giữ lạnh 2 giờ trước khi cắt."
+        }
+      ],
+      "operationalNotes": [],
+      "workflowStatus": "draft"
+    },
+    {
+      "sourceNumber": 62,
+      "slug": "thach-ca-phe",
+      "title": "Thạch cà phê",
+      "recipeCategory": {
+        "slug": "topping",
+        "name": "Topping"
+      },
+      "recipeKind": "topping",
+      "visibility": "internal",
+      "shortDescription": "Thạch cà phê thơm, vị đắng ngọt cân bằng.",
+      "description": null,
+      "yieldQuantity": 1,
+      "yieldUnit": "kg",
+      "servingSizeMl": null,
+      "sortOrder": 620,
+      "contentSourceKey": "bepsi-recipes-v1",
+      "ingredients": [
+        {
+          "sortOrder": 10,
+          "productName": "Cà phê pha đậm",
+          "quantity": 250,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 20,
+          "productName": "Nước",
+          "quantity": 750,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 30,
+          "productName": "Bột rau câu",
+          "quantity": 10,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "catalog_candidate",
+          "catalogKey": "bot-rau-cau",
+          "catalogVariantId": null
+        },
+        {
+          "sortOrder": 40,
+          "productName": "Đường",
+          "quantity": 130,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        }
+      ],
+      "steps": [
+        {
+          "stepNo": 1,
+          "title": "Trộn khô",
+          "content": "Trộn bột rau câu với đường."
+        },
+        {
+          "stepNo": 2,
+          "title": "Nấu nền",
+          "content": "Đun nước đến gần sôi, cho hỗn hợp bột vào và khuấy tan."
+        },
+        {
+          "stepNo": 3,
+          "title": "Thêm cà phê",
+          "content": "Cho cà phê vào, khuấy 1 phút."
+        },
+        {
+          "stepNo": 4,
+          "title": "Đổ khuôn",
+          "content": "Đổ khuôn, để nguội và làm lạnh trước khi cắt."
+        }
+      ],
+      "operationalNotes": [],
+      "workflowStatus": "draft"
+    },
+    {
+      "sourceNumber": 63,
+      "slug": "sot-duong-den",
+      "title": "Sốt đường đen",
+      "recipeCategory": {
+        "slug": "sot",
+        "name": "Sốt"
+      },
+      "recipeKind": "sauce",
+      "visibility": "internal",
+      "shortDescription": "Sốt sánh, thơm đường nâu dùng cho trân châu và tạo vân ly.",
+      "description": null,
+      "yieldQuantity": 500,
+      "yieldUnit": "ml",
+      "servingSizeMl": null,
+      "sortOrder": 630,
+      "contentSourceKey": "bepsi-recipes-v1",
+      "ingredients": [
+        {
+          "sortOrder": 10,
+          "productName": "Đường nâu",
+          "quantity": 350,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 20,
+          "productName": "Nước",
+          "quantity": 250,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 30,
+          "productName": "Muối",
+          "quantity": 1,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        }
+      ],
+      "steps": [
+        {
+          "stepNo": 1,
+          "title": "Hòa đường",
+          "content": "Cho đường, nước và muối vào nồi."
+        },
+        {
+          "stepNo": 2,
+          "title": "Nấu sốt",
+          "content": "Đun lửa vừa đến khi sôi, hạ nhỏ lửa và nấu 8–10 phút."
+        },
+        {
+          "stepNo": 3,
+          "title": "Kiểm tra",
+          "content": "Sốt đạt khi phủ nhẹ mặt muỗng nhưng vẫn chảy."
+        },
+        {
+          "stepNo": 4,
+          "title": "Làm nguội",
+          "content": "Để nguội hoàn toàn rồi cho vào chai."
+        }
+      ],
+      "operationalNotes": [
+        "Sốt sẽ đặc hơn khi lạnh; không nấu quá lâu."
+      ],
+      "workflowStatus": "draft"
+    },
+    {
+      "sourceNumber": 64,
+      "slug": "nuoc-duong-tieu-chuan",
+      "title": "Nước đường tiêu chuẩn",
+      "recipeCategory": {
+        "slug": "cong-thuc-nen",
+        "name": "Công thức nền"
+      },
+      "recipeKind": "base",
+      "visibility": "internal",
+      "shortDescription": "Nước đường chuẩn dùng cân vị đồ uống.",
+      "description": null,
+      "yieldQuantity": 1,
+      "yieldUnit": "l",
+      "servingSizeMl": null,
+      "sortOrder": 640,
+      "contentSourceKey": "bepsi-recipes-v1",
+      "ingredients": [
+        {
+          "sortOrder": 10,
+          "productName": "Đường cát",
+          "quantity": 700,
+          "unit": "g",
+          "unitLabel": "g",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        },
+        {
+          "sortOrder": 20,
+          "productName": "Nước",
+          "quantity": 700,
+          "unit": "ml",
+          "unitLabel": "ml",
+          "note": null,
+          "optional": false,
+          "sourceType": "manual"
+        }
+      ],
+      "steps": [
+        {
+          "stepNo": 1,
+          "title": "Nấu",
+          "content": "Cho đường và nước vào nồi, đun lửa vừa."
+        },
+        {
+          "stepNo": 2,
+          "title": "Hòa tan",
+          "content": "Khuấy đến khi đường tan hoàn toàn; khi vừa sôi nhẹ thì tắt bếp."
+        },
+        {
+          "stepNo": 3,
+          "title": "Làm nguội",
+          "content": "Để nguội, cho vào chai sạch và bảo quản lạnh."
+        }
+      ],
+      "operationalNotes": [
+        "Dùng trong 7 ngày ở 2–5°C."
+      ],
+      "workflowStatus": "draft"
+    }
+  ]
+}

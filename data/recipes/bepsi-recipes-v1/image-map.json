@@ -1,0 +1,652 @@
+{
+  "schema": "bepsi.recipe-image-map.v1",
+  "sourceDirectory": "F:\\1_A_Disk_D\\khuong-binh\\bep-si\\image\\recipes",
+  "objectPrefix": "recipes/",
+  "summary": {
+    "recipes": 64,
+    "images": 60,
+    "withoutImage": 4
+  },
+  "entries": [
+    {
+      "recipeSlug": "tra-sua-truyen-thong-500ml",
+      "recipeTitle": "Trà sữa truyền thống",
+      "visibility": "public",
+      "recipeKind": "drink",
+      "fileName": "tra-sua-truyen-thong.png",
+      "objectKey": "recipes/tra-sua-truyen-thong.png",
+      "publicUrl": null,
+      "status": "ready"
+    },
+    {
+      "recipeSlug": "tra-sua-thai-xanh-500ml",
+      "recipeTitle": "Trà sữa Thái xanh",
+      "visibility": "public",
+      "recipeKind": "drink",
+      "fileName": "tra-sua-thai-xanh.png",
+      "objectKey": "recipes/tra-sua-thai-xanh.png",
+      "publicUrl": null,
+      "status": "ready"
+    },
+    {
+      "recipeSlug": "tra-sua-thai-do-500ml",
+      "recipeTitle": "Trà sữa Thái đỏ",
+      "visibility": "public",
+      "recipeKind": "drink",
+      "fileName": "tra-sua-thai-do.png",
+      "objectKey": "recipes/tra-sua-thai-do.png",
+      "publicUrl": null,
+      "status": "ready"
+    },
+    {
+      "recipeSlug": "tra-sua-o-long-500ml",
+      "recipeTitle": "Trà sữa ô long",
+      "visibility": "public",
+      "recipeKind": "drink",
+      "fileName": "tra-sua-o-long.png",
+      "objectKey": "recipes/tra-sua-o-long.png",
+      "publicUrl": null,
+      "status": "ready"
+    },
+    {
+      "recipeSlug": "tra-sua-lai-500ml",
+      "recipeTitle": "Trà sữa lài",
+      "visibility": "public",
+      "recipeKind": "drink",
+      "fileName": "tra-sua-lai.png",
+      "objectKey": "recipes/tra-sua-lai.png",
+      "publicUrl": null,
+      "status": "ready"
+    },
+    {
+      "recipeSlug": "tra-sua-khoai-mon-500ml",
+      "recipeTitle": "Trà sữa khoai môn",
+      "visibility": "public",
+      "recipeKind": "drink",
+      "fileName": "tra-sua-khoai-mon.png",
+      "objectKey": "recipes/tra-sua-khoai-mon.png",
+      "publicUrl": null,
+      "status": "ready"
+    },
+    {
+      "recipeSlug": "tra-sua-matcha-500ml",
+      "recipeTitle": "Trà sữa matcha",
+      "visibility": "public",
+      "recipeKind": "drink",
+      "fileName": "tra-sua-matcha.png",
+      "objectKey": "recipes/tra-sua-matcha.png",
+      "publicUrl": null,
+      "status": "ready"
+    },
+    {
+      "recipeSlug": "tra-sua-chocolate-500ml",
+      "recipeTitle": "Trà sữa chocolate",
+      "visibility": "public",
+      "recipeKind": "drink",
+      "fileName": "tra-sua-chocolate.png",
+      "objectKey": "recipes/tra-sua-chocolate.png",
+      "publicUrl": null,
+      "status": "ready"
+    },
+    {
+      "recipeSlug": "tra-sua-caramel-500ml",
+      "recipeTitle": "Trà sữa caramel",
+      "visibility": "public",
+      "recipeKind": "drink",
+      "fileName": "tra-sua-caramel.png",
+      "objectKey": "recipes/tra-sua-caramel.png",
+      "publicUrl": null,
+      "status": "ready"
+    },
+    {
+      "recipeSlug": "tra-sua-duong-den-tran-chau-500ml",
+      "recipeTitle": "Trà sữa đường đen trân châu",
+      "visibility": "public",
+      "recipeKind": "drink",
+      "fileName": "tra-sua-duong-den-tran-chau.png",
+      "objectKey": "recipes/tra-sua-duong-den-tran-chau.png",
+      "publicUrl": null,
+      "status": "ready"
+    },
+    {
+      "recipeSlug": "tra-dao-cam-sa-500ml",
+      "recipeTitle": "Trà đào cam sả",
+      "visibility": "public",
+      "recipeKind": "drink",
+      "fileName": "tra-dao-cam-sa.png",
+      "objectKey": "recipes/tra-dao-cam-sa.png",
+      "publicUrl": null,
+      "status": "ready"
+    },
+    {
+      "recipeSlug": "tra-dao-500ml",
+      "recipeTitle": "Trà đào",
+      "visibility": "public",
+      "recipeKind": "drink",
+      "fileName": "tra-dao.png",
+      "objectKey": "recipes/tra-dao.png",
+      "publicUrl": null,
+      "status": "ready"
+    },
+    {
+      "recipeSlug": "tra-vai-500ml",
+      "recipeTitle": "Trà vải",
+      "visibility": "public",
+      "recipeKind": "drink",
+      "fileName": "tra-vai.png",
+      "objectKey": "recipes/tra-vai.png",
+      "publicUrl": null,
+      "status": "ready"
+    },
+    {
+      "recipeSlug": "tra-tac-500ml",
+      "recipeTitle": "Trà tắc",
+      "visibility": "public",
+      "recipeKind": "drink",
+      "fileName": "tra-tac.png",
+      "objectKey": "recipes/tra-tac.png",
+      "publicUrl": null,
+      "status": "ready"
+    },
+    {
+      "recipeSlug": "tra-chanh-500ml",
+      "recipeTitle": "Trà chanh",
+      "visibility": "public",
+      "recipeKind": "drink",
+      "fileName": "tra-chanh.png",
+      "objectKey": "recipes/tra-chanh.png",
+      "publicUrl": null,
+      "status": "ready"
+    },
+    {
+      "recipeSlug": "tra-dau-500ml",
+      "recipeTitle": "Trà dâu",
+      "visibility": "public",
+      "recipeKind": "drink",
+      "fileName": "tra-dau.png",
+      "objectKey": "recipes/tra-dau.png",
+      "publicUrl": null,
+      "status": "ready"
+    },
+    {
+      "recipeSlug": "tra-xoai-500ml",
+      "recipeTitle": "Trà xoài",
+      "visibility": "public",
+      "recipeKind": "drink",
+      "fileName": "tra-xoai.png",
+      "objectKey": "recipes/tra-xoai.png",
+      "publicUrl": null,
+      "status": "ready"
+    },
+    {
+      "recipeSlug": "tra-chanh-day-500ml",
+      "recipeTitle": "Trà chanh dây",
+      "visibility": "public",
+      "recipeKind": "drink",
+      "fileName": "tra-chanh-day.png",
+      "objectKey": "recipes/tra-chanh-day.png",
+      "publicUrl": null,
+      "status": "ready"
+    },
+    {
+      "recipeSlug": "tra-oi-hong-500ml",
+      "recipeTitle": "Trà ổi hồng",
+      "visibility": "public",
+      "recipeKind": "drink",
+      "fileName": "tra-oi-hong.png",
+      "objectKey": "recipes/tra-oi-hong.png",
+      "publicUrl": null,
+      "status": "ready"
+    },
+    {
+      "recipeSlug": "tra-trai-cay-nhiet-doi-500ml",
+      "recipeTitle": "Trà trái cây nhiệt đới",
+      "visibility": "public",
+      "recipeKind": "drink",
+      "fileName": "tra-trai-cay-nhiet-doi.png",
+      "objectKey": "recipes/tra-trai-cay-nhiet-doi.png",
+      "publicUrl": null,
+      "status": "ready"
+    },
+    {
+      "recipeSlug": "matcha-da-xay-500ml",
+      "recipeTitle": "Matcha đá xay",
+      "visibility": "public",
+      "recipeKind": "drink",
+      "fileName": "matcha-da-xay.png",
+      "objectKey": "recipes/matcha-da-xay.png",
+      "publicUrl": null,
+      "status": "ready"
+    },
+    {
+      "recipeSlug": "chocolate-da-xay-500ml",
+      "recipeTitle": "Chocolate đá xay",
+      "visibility": "public",
+      "recipeKind": "drink",
+      "fileName": "chocolate-da-xay.png",
+      "objectKey": "recipes/chocolate-da-xay.png",
+      "publicUrl": null,
+      "status": "ready"
+    },
+    {
+      "recipeSlug": "cookies-da-xay-500ml",
+      "recipeTitle": "Cookies đá xay",
+      "visibility": "public",
+      "recipeKind": "drink",
+      "fileName": "cookies-da-xay.png",
+      "objectKey": "recipes/cookies-da-xay.png",
+      "publicUrl": null,
+      "status": "ready"
+    },
+    {
+      "recipeSlug": "khoai-mon-da-xay-500ml",
+      "recipeTitle": "Khoai môn đá xay",
+      "visibility": "public",
+      "recipeKind": "drink",
+      "fileName": "khoai-mon-da-xay.png",
+      "objectKey": "recipes/khoai-mon-da-xay.png",
+      "publicUrl": null,
+      "status": "ready"
+    },
+    {
+      "recipeSlug": "viet-quat-da-xay-500ml",
+      "recipeTitle": "Việt quất đá xay",
+      "visibility": "public",
+      "recipeKind": "drink",
+      "fileName": "viet-quat-da-xay.png",
+      "objectKey": "recipes/viet-quat-da-xay.png",
+      "publicUrl": null,
+      "status": "ready"
+    },
+    {
+      "recipeSlug": "dau-da-xay-500ml",
+      "recipeTitle": "Dâu đá xay",
+      "visibility": "public",
+      "recipeKind": "drink",
+      "fileName": "dau-da-xay.png",
+      "objectKey": "recipes/dau-da-xay.png",
+      "publicUrl": null,
+      "status": "ready"
+    },
+    {
+      "recipeSlug": "chanh-tuyet-500ml",
+      "recipeTitle": "Chanh tuyết",
+      "visibility": "public",
+      "recipeKind": "drink",
+      "fileName": "chanh-tuyet.png",
+      "objectKey": "recipes/chanh-tuyet.png",
+      "publicUrl": null,
+      "status": "ready"
+    },
+    {
+      "recipeSlug": "chanh-day-tuyet-500ml",
+      "recipeTitle": "Chanh dây tuyết",
+      "visibility": "public",
+      "recipeKind": "drink",
+      "fileName": "chanh-day-tuyet.png",
+      "objectKey": "recipes/chanh-day-tuyet.png",
+      "publicUrl": null,
+      "status": "ready"
+    },
+    {
+      "recipeSlug": "ca-phe-sua-da-500ml",
+      "recipeTitle": "Cà phê sữa đá",
+      "visibility": "public",
+      "recipeKind": "drink",
+      "fileName": "ca-phe-sua-da.png",
+      "objectKey": "recipes/ca-phe-sua-da.png",
+      "publicUrl": null,
+      "status": "ready"
+    },
+    {
+      "recipeSlug": "bac-xiu-500ml",
+      "recipeTitle": "Bạc xỉu",
+      "visibility": "public",
+      "recipeKind": "drink",
+      "fileName": "bac-xiu.png",
+      "objectKey": "recipes/bac-xiu.png",
+      "publicUrl": null,
+      "status": "ready"
+    },
+    {
+      "recipeSlug": "ca-phe-muoi-500ml",
+      "recipeTitle": "Cà phê muối",
+      "visibility": "public",
+      "recipeKind": "drink",
+      "fileName": "ca-phe-muoi.png",
+      "objectKey": "recipes/ca-phe-muoi.png",
+      "publicUrl": null,
+      "status": "ready"
+    },
+    {
+      "recipeSlug": "ca-phe-kem-cheese-500ml",
+      "recipeTitle": "Cà phê kem cheese",
+      "visibility": "public",
+      "recipeKind": "drink",
+      "fileName": "ca-phe-kem-cheese.png",
+      "objectKey": "recipes/ca-phe-kem-cheese.png",
+      "publicUrl": null,
+      "status": "ready"
+    },
+    {
+      "recipeSlug": "cacao-sua-500ml",
+      "recipeTitle": "Cacao sữa",
+      "visibility": "public",
+      "recipeKind": "drink",
+      "fileName": "cacao-sua.png",
+      "objectKey": "recipes/cacao-sua.png",
+      "publicUrl": null,
+      "status": "ready"
+    },
+    {
+      "recipeSlug": "cacao-kem-cheese-500ml",
+      "recipeTitle": "Cacao kem cheese",
+      "visibility": "public",
+      "recipeKind": "drink",
+      "fileName": "cacao-kem-cheese.png",
+      "objectKey": "recipes/cacao-kem-cheese.png",
+      "publicUrl": null,
+      "status": "ready"
+    },
+    {
+      "recipeSlug": "matcha-latte-500ml",
+      "recipeTitle": "Matcha latte",
+      "visibility": "public",
+      "recipeKind": "drink",
+      "fileName": "matcha-latte.png",
+      "objectKey": "recipes/matcha-latte.png",
+      "publicUrl": null,
+      "status": "ready"
+    },
+    {
+      "recipeSlug": "matcha-kem-cheese-500ml",
+      "recipeTitle": "Matcha kem cheese",
+      "visibility": "public",
+      "recipeKind": "drink",
+      "fileName": "matcha-kem-cheese.png",
+      "objectKey": "recipes/matcha-kem-cheese.png",
+      "publicUrl": null,
+      "status": "ready"
+    },
+    {
+      "recipeSlug": "sua-tuoi-tran-chau-duong-den-500ml",
+      "recipeTitle": "Sữa tươi trân châu đường đen",
+      "visibility": "public",
+      "recipeKind": "drink",
+      "fileName": "sua-tuoi-tran-chau-duong-den.png",
+      "objectKey": "recipes/sua-tuoi-tran-chau-duong-den.png",
+      "publicUrl": null,
+      "status": "ready"
+    },
+    {
+      "recipeSlug": "sua-tuoi-khoai-mon-500ml",
+      "recipeTitle": "Sữa tươi khoai môn",
+      "visibility": "public",
+      "recipeKind": "drink",
+      "fileName": "sua-tuoi-khoai-mon.png",
+      "objectKey": "recipes/sua-tuoi-khoai-mon.png",
+      "publicUrl": null,
+      "status": "ready"
+    },
+    {
+      "recipeSlug": "sua-tuoi-matcha-500ml",
+      "recipeTitle": "Sữa tươi matcha",
+      "visibility": "public",
+      "recipeKind": "drink",
+      "fileName": "sua-tuoi-matcha.png",
+      "objectKey": "recipes/sua-tuoi-matcha.png",
+      "publicUrl": null,
+      "status": "ready"
+    },
+    {
+      "recipeSlug": "tra-o-long-kem-cheese-500ml",
+      "recipeTitle": "Trà ô long kem cheese",
+      "visibility": "public",
+      "recipeKind": "drink",
+      "fileName": "tra-o-long-kem-cheese.png",
+      "objectKey": "recipes/tra-o-long-kem-cheese.png",
+      "publicUrl": null,
+      "status": "ready"
+    },
+    {
+      "recipeSlug": "tra-lai-kem-cheese-500ml",
+      "recipeTitle": "Trà lài kem cheese",
+      "visibility": "public",
+      "recipeKind": "drink",
+      "fileName": "tra-lai-kem-cheese.png",
+      "objectKey": "recipes/tra-lai-kem-cheese.png",
+      "publicUrl": null,
+      "status": "ready"
+    },
+    {
+      "recipeSlug": "tra-dao-kem-cheese-500ml",
+      "recipeTitle": "Trà đào kem cheese",
+      "visibility": "public",
+      "recipeKind": "drink",
+      "fileName": "tra-dao-kem-cheese.png",
+      "objectKey": "recipes/tra-dao-kem-cheese.png",
+      "publicUrl": null,
+      "status": "ready"
+    },
+    {
+      "recipeSlug": "tra-dau-kem-cheese-500ml",
+      "recipeTitle": "Trà dâu kem cheese",
+      "visibility": "public",
+      "recipeKind": "drink",
+      "fileName": "tra-dau-kem-cheese.png",
+      "objectKey": "recipes/tra-dau-kem-cheese.png",
+      "publicUrl": null,
+      "status": "ready"
+    },
+    {
+      "recipeSlug": "tra-xoai-kem-cheese-500ml",
+      "recipeTitle": "Trà xoài kem cheese",
+      "visibility": "public",
+      "recipeKind": "drink",
+      "fileName": "tra-xoai-kem-cheese.png",
+      "objectKey": "recipes/tra-xoai-kem-cheese.png",
+      "publicUrl": null,
+      "status": "ready"
+    },
+    {
+      "recipeSlug": "tra-sua-pudding-trung-500ml",
+      "recipeTitle": "Trà sữa pudding trứng",
+      "visibility": "public",
+      "recipeKind": "drink",
+      "fileName": "tra-sua-pudding-trung.png",
+      "objectKey": "recipes/tra-sua-pudding-trung.png",
+      "publicUrl": null,
+      "status": "ready"
+    },
+    {
+      "recipeSlug": "tra-sua-thach-3q-500ml",
+      "recipeTitle": "Trà sữa thạch 3Q",
+      "visibility": "public",
+      "recipeKind": "drink",
+      "fileName": "tra-sua-thach-3q.png",
+      "objectKey": "recipes/tra-sua-thach-3q.png",
+      "publicUrl": null,
+      "status": "ready"
+    },
+    {
+      "recipeSlug": "tra-sua-tran-chau-trang-500ml",
+      "recipeTitle": "Trà sữa trân châu trắng",
+      "visibility": "public",
+      "recipeKind": "drink",
+      "fileName": "tra-sua-tran-chau-trang.png",
+      "objectKey": "recipes/tra-sua-tran-chau-trang.png",
+      "publicUrl": null,
+      "status": "ready"
+    },
+    {
+      "recipeSlug": "tra-sua-full-topping-500ml",
+      "recipeTitle": "Trà sữa full topping",
+      "visibility": "public",
+      "recipeKind": "drink",
+      "fileName": "tra-sua-full-topping.png",
+      "objectKey": "recipes/tra-sua-full-topping.png",
+      "publicUrl": null,
+      "status": "ready"
+    },
+    {
+      "recipeSlug": "nen-tra-den",
+      "recipeTitle": "Nền trà đen",
+      "visibility": "internal",
+      "recipeKind": "base",
+      "fileName": "nen-tra-den.png",
+      "objectKey": "recipes/nen-tra-den.png",
+      "publicUrl": null,
+      "status": "ready"
+    },
+    {
+      "recipeSlug": "nen-tra-lai",
+      "recipeTitle": "Nền trà lài",
+      "visibility": "internal",
+      "recipeKind": "base",
+      "fileName": "nen-tra-lai.png",
+      "objectKey": "recipes/nen-tra-lai.png",
+      "publicUrl": null,
+      "status": "ready"
+    },
+    {
+      "recipeSlug": "nen-tra-o-long",
+      "recipeTitle": "Nền trà ô long",
+      "visibility": "internal",
+      "recipeKind": "base",
+      "fileName": "nen-tra-o-long.png",
+      "objectKey": "recipes/nen-tra-o-long.png",
+      "publicUrl": null,
+      "status": "ready"
+    },
+    {
+      "recipeSlug": "nen-tra-thai-xanh",
+      "recipeTitle": "Nền trà Thái xanh",
+      "visibility": "internal",
+      "recipeKind": "base",
+      "fileName": "nen-tra-thai-xanh.png",
+      "objectKey": "recipes/nen-tra-thai-xanh.png",
+      "publicUrl": null,
+      "status": "ready"
+    },
+    {
+      "recipeSlug": "nen-tra-thai-do",
+      "recipeTitle": "Nền trà Thái đỏ",
+      "visibility": "internal",
+      "recipeKind": "base",
+      "fileName": "nen-tra-thai-do.png",
+      "objectKey": "recipes/nen-tra-thai-do.png",
+      "publicUrl": null,
+      "status": "ready"
+    },
+    {
+      "recipeSlug": "nen-tra-sua-truyen-thong",
+      "recipeTitle": "Nền trà sữa truyền thống",
+      "visibility": "internal",
+      "recipeKind": "base",
+      "fileName": "nen-tra-sua-truyen-thong.png",
+      "objectKey": "recipes/nen-tra-sua-truyen-thong.png",
+      "publicUrl": null,
+      "status": "ready"
+    },
+    {
+      "recipeSlug": "nen-tra-sua-o-long",
+      "recipeTitle": "Nền trà sữa ô long",
+      "visibility": "internal",
+      "recipeKind": "base",
+      "fileName": "nen-tra-sua-o-long.png",
+      "objectKey": "recipes/nen-tra-sua-o-long.png",
+      "publicUrl": null,
+      "status": "ready"
+    },
+    {
+      "recipeSlug": "tran-chau-den",
+      "recipeTitle": "Trân châu đen",
+      "visibility": "internal",
+      "recipeKind": "topping",
+      "fileName": "tran-chau-den.png",
+      "objectKey": "recipes/tran-chau-den.png",
+      "publicUrl": null,
+      "status": "ready"
+    },
+    {
+      "recipeSlug": "tran-chau-duong-den",
+      "recipeTitle": "Trân châu đường đen",
+      "visibility": "internal",
+      "recipeKind": "topping",
+      "fileName": "tran-chau-duong-den.png",
+      "objectKey": "recipes/tran-chau-duong-den.png",
+      "publicUrl": null,
+      "status": "ready"
+    },
+    {
+      "recipeSlug": "kem-cheese",
+      "recipeTitle": "Kem cheese",
+      "visibility": "internal",
+      "recipeKind": "topping",
+      "fileName": "kem-cheese.png",
+      "objectKey": "recipes/kem-cheese.png",
+      "publicUrl": null,
+      "status": "ready"
+    },
+    {
+      "recipeSlug": "milk-foam-man",
+      "recipeTitle": "Milk foam mặn",
+      "visibility": "internal",
+      "recipeKind": "topping",
+      "fileName": "milk-foam-man.png",
+      "objectKey": "recipes/milk-foam-man.png",
+      "publicUrl": null,
+      "status": "ready"
+    },
+    {
+      "recipeSlug": "pudding-trung",
+      "recipeTitle": "Pudding trứng",
+      "visibility": "internal",
+      "recipeKind": "topping",
+      "fileName": "pudding-trung.png",
+      "objectKey": "recipes/pudding-trung.png",
+      "publicUrl": null,
+      "status": "ready"
+    },
+    {
+      "recipeSlug": "thach-tra",
+      "recipeTitle": "Thạch trà",
+      "visibility": "internal",
+      "recipeKind": "topping",
+      "fileName": null,
+      "objectKey": null,
+      "publicUrl": null,
+      "status": "not_required"
+    },
+    {
+      "recipeSlug": "thach-ca-phe",
+      "recipeTitle": "Thạch cà phê",
+      "visibility": "internal",
+      "recipeKind": "topping",
+      "fileName": null,
+      "objectKey": null,
+      "publicUrl": null,
+      "status": "not_required"
+    },
+    {
+      "recipeSlug": "sot-duong-den",
+      "recipeTitle": "Sốt đường đen",
+      "visibility": "internal",
+      "recipeKind": "sauce",
+      "fileName": null,
+      "objectKey": null,
+      "publicUrl": null,
+      "status": "not_required"
+    },
+    {
+      "recipeSlug": "nuoc-duong-tieu-chuan",
+      "recipeTitle": "Nước đường tiêu chuẩn",
+      "visibility": "internal",
+      "recipeKind": "base",
+      "fileName": null,
+      "objectKey": null,
+      "publicUrl": null,
+      "status": "not_required"
+    }
+  ]
+}
