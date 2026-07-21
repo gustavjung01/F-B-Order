@@ -165,18 +165,28 @@
       "steps": [
         {
           "stepNo": 1,
-          "title": "Hòa nền sữa",
-          "content": "Cho bột sữa và sữa đặc vào ca, rót nền trà đen còn ấm rồi khuấy tan hoàn toàn."
+          "title": "Chuẩn bị và kiểm tra nguyên liệu",
+          "content": "Cân đủ nguyên liệu theo công thức, ưu tiên chuẩn bị Nền trà đen, Bột sữa pha chế, Sữa đặc, Nước đường. Kiểm tra nền pha đúng mẻ, đá khô sạch, topping còn hạn dùng và dụng cụ không có mùi lạ."
         },
         {
           "stepNo": 2,
-          "title": "Cân vị",
-          "content": "Thêm nước đường, khuấy 10 giây và nếm lại."
+          "title": "Hòa nền sữa",
+          "content": "Cho bột sữa và sữa đặc vào ca, rót nền trà đen còn ấm rồi khuấy tan hoàn toàn. Miết sát thành ca và khuấy đến khi không còn hạt bột khô hoặc cặn ở đáy."
         },
         {
           "stepNo": 3,
+          "title": "Cân vị",
+          "content": "Thêm nước đường, khuấy 10 giây và nếm lại. Khuấy theo một chiều đến khi hỗn hợp đồng nhất, không còn lớp tách hoặc cặn ở đáy ca."
+        },
+        {
+          "stepNo": 4,
           "title": "Hoàn thiện",
-          "content": "Cho đá vào bình lắc, rót hỗn hợp trà sữa và lắc mạnh 10–12 giây. Rót ra ly 500 ml."
+          "content": "Cho đá vào bình lắc, rót hỗn hợp trà sữa và lắc mạnh 10–12 giây. Rót ra ly 500 ml. Giữ kín nắp bình, lắc dứt khoát theo chiều dọc; dừng khi thành bình lạnh đều và có lớp bọt mỏng."
+        },
+        {
+          "stepNo": 5,
+          "title": "Kiểm tra thành phẩm và phục vụ",
+          "content": "Nếm một mẫu nhỏ trước khi giao: hương chính phải rõ, vị ngọt và chua cân bằng, không có cặn bột hoặc mùi lạ. Kiểm tra đúng dung tích 500 ml, lau sạch miệng ly, đậy nắp và phục vụ ngay."
         }
       ],
       "operationalNotes": [
@@ -260,18 +270,28 @@
       "steps": [
         {
           "stepNo": 1,
-          "title": "Pha sữa",
-          "content": "Cho bột sữa và sữa đặc vào nền trà Thái xanh còn ấm, khuấy đến khi mịn."
+          "title": "Chuẩn bị và kiểm tra nguyên liệu",
+          "content": "Cân đủ nguyên liệu theo công thức, ưu tiên chuẩn bị Nền trà Thái xanh, Bột sữa pha chế, Sữa đặc, Nước đường. Kiểm tra nền pha đúng mẻ, đá khô sạch, topping còn hạn dùng và dụng cụ không có mùi lạ."
         },
         {
           "stepNo": 2,
-          "title": "Cân vị",
-          "content": "Thêm nước đường và khuấy đều."
+          "title": "Pha sữa",
+          "content": "Cho bột sữa và sữa đặc vào nền trà Thái xanh còn ấm, khuấy đến khi mịn. Miết sát thành ca và khuấy đến khi không còn hạt bột khô hoặc cặn ở đáy."
         },
         {
           "stepNo": 3,
+          "title": "Cân vị",
+          "content": "Thêm nước đường và khuấy đều. Khuấy theo một chiều đến khi hỗn hợp đồng nhất, không còn lớp tách hoặc cặn ở đáy ca."
+        },
+        {
+          "stepNo": 4,
           "title": "Hoàn thiện",
-          "content": "Lắc với đá 10 giây rồi rót ra ly."
+          "content": "Lắc với đá 10 giây rồi rót ra ly. Giữ kín nắp bình, lắc dứt khoát theo chiều dọc; dừng khi thành bình lạnh đều và có lớp bọt mỏng."
+        },
+        {
+          "stepNo": 5,
+          "title": "Kiểm tra thành phẩm và phục vụ",
+          "content": "Nếm một mẫu nhỏ trước khi giao: hương chính phải rõ, vị ngọt và chua cân bằng, không có cặn bột hoặc mùi lạ. Kiểm tra đúng dung tích 500 ml, lau sạch miệng ly, đậy nắp và phục vụ ngay."
         }
       ],
       "operationalNotes": [],
@@ -353,18 +373,28 @@
       "steps": [
         {
           "stepNo": 1,
-          "title": "Pha nền",
-          "content": "Khuấy bột sữa và sữa đặc với nền trà Thái đỏ còn ấm."
+          "title": "Chuẩn bị và kiểm tra nguyên liệu",
+          "content": "Cân đủ nguyên liệu theo công thức, ưu tiên chuẩn bị Nền trà Thái đỏ, Bột sữa pha chế, Sữa đặc, Nước đường. Kiểm tra nền pha đúng mẻ, đá khô sạch, topping còn hạn dùng và dụng cụ không có mùi lạ."
         },
         {
           "stepNo": 2,
-          "title": "Làm lạnh",
-          "content": "Cho nước đường và đá vào bình lắc."
+          "title": "Pha nền",
+          "content": "Khuấy bột sữa và sữa đặc với nền trà Thái đỏ còn ấm. Miết sát thành ca và khuấy đến khi không còn hạt bột khô hoặc cặn ở đáy."
         },
         {
           "stepNo": 3,
+          "title": "Làm lạnh",
+          "content": "Cho nước đường và đá vào bình lắc. Giữ kín nắp bình, lắc dứt khoát theo chiều dọc; dừng khi thành bình lạnh đều và có lớp bọt mỏng."
+        },
+        {
+          "stepNo": 4,
           "title": "Hoàn thiện",
-          "content": "Lắc mạnh 10–12 giây, rót ra ly 500 ml."
+          "content": "Lắc mạnh 10–12 giây, rót ra ly 500 ml. Giữ kín nắp bình, lắc dứt khoát theo chiều dọc; dừng khi thành bình lạnh đều và có lớp bọt mỏng."
+        },
+        {
+          "stepNo": 5,
+          "title": "Kiểm tra thành phẩm và phục vụ",
+          "content": "Nếm một mẫu nhỏ trước khi giao: hương chính phải rõ, vị ngọt và chua cân bằng, không có cặn bột hoặc mùi lạ. Kiểm tra đúng dung tích 500 ml, lau sạch miệng ly, đậy nắp và phục vụ ngay."
         }
       ],
       "operationalNotes": [],
@@ -446,18 +476,28 @@
       "steps": [
         {
           "stepNo": 1,
-          "title": "Pha sữa",
-          "content": "Hòa bột sữa và sữa đặc với nền trà ô long còn ấm."
+          "title": "Chuẩn bị và kiểm tra nguyên liệu",
+          "content": "Cân đủ nguyên liệu theo công thức, ưu tiên chuẩn bị Nền trà ô long, Bột sữa pha chế, Sữa đặc, Nước đường. Kiểm tra nền pha đúng mẻ, đá khô sạch, topping còn hạn dùng và dụng cụ không có mùi lạ."
         },
         {
           "stepNo": 2,
-          "title": "Cân vị",
-          "content": "Thêm nước đường, khuấy đều."
+          "title": "Pha sữa",
+          "content": "Hòa bột sữa và sữa đặc với nền trà ô long còn ấm. Miết sát thành ca và khuấy đến khi không còn hạt bột khô hoặc cặn ở đáy."
         },
         {
           "stepNo": 3,
+          "title": "Cân vị",
+          "content": "Thêm nước đường, khuấy đều. Khuấy theo một chiều đến khi hỗn hợp đồng nhất, không còn lớp tách hoặc cặn ở đáy ca."
+        },
+        {
+          "stepNo": 4,
           "title": "Hoàn thiện",
-          "content": "Lắc cùng đá 10 giây và rót ra ly."
+          "content": "Lắc cùng đá 10 giây và rót ra ly. Giữ kín nắp bình, lắc dứt khoát theo chiều dọc; dừng khi thành bình lạnh đều và có lớp bọt mỏng."
+        },
+        {
+          "stepNo": 5,
+          "title": "Kiểm tra thành phẩm và phục vụ",
+          "content": "Nếm một mẫu nhỏ trước khi giao: hương chính phải rõ, vị ngọt và chua cân bằng, không có cặn bột hoặc mùi lạ. Kiểm tra đúng dung tích 500 ml, lau sạch miệng ly, đậy nắp và phục vụ ngay."
         }
       ],
       "operationalNotes": [],
@@ -539,18 +579,28 @@
       "steps": [
         {
           "stepNo": 1,
-          "title": "Pha nền",
-          "content": "Cho bột sữa và sữa đặc vào trà lài còn ấm, khuấy tan."
+          "title": "Chuẩn bị và kiểm tra nguyên liệu",
+          "content": "Cân đủ nguyên liệu theo công thức, ưu tiên chuẩn bị Nền trà lài, Bột sữa pha chế, Sữa đặc, Nước đường. Kiểm tra nền pha đúng mẻ, đá khô sạch, topping còn hạn dùng và dụng cụ không có mùi lạ."
         },
         {
           "stepNo": 2,
-          "title": "Làm lạnh",
-          "content": "Thêm nước đường và đá."
+          "title": "Pha nền",
+          "content": "Cho bột sữa và sữa đặc vào trà lài còn ấm, khuấy tan. Miết sát thành ca và khuấy đến khi không còn hạt bột khô hoặc cặn ở đáy."
         },
         {
           "stepNo": 3,
+          "title": "Làm lạnh",
+          "content": "Thêm nước đường và đá. Khuấy 8–10 giây rồi nếm một mẫu nhỏ; vị chính phải rõ nhưng không gắt ngọt hoặc chua gắt."
+        },
+        {
+          "stepNo": 4,
           "title": "Hoàn thiện",
-          "content": "Lắc 10 giây, rót ra ly 500 ml."
+          "content": "Lắc 10 giây, rót ra ly 500 ml. Giữ kín nắp bình, lắc dứt khoát theo chiều dọc; dừng khi thành bình lạnh đều và có lớp bọt mỏng."
+        },
+        {
+          "stepNo": 5,
+          "title": "Kiểm tra thành phẩm và phục vụ",
+          "content": "Nếm một mẫu nhỏ trước khi giao: hương chính phải rõ, vị ngọt và chua cân bằng, không có cặn bột hoặc mùi lạ. Kiểm tra đúng dung tích 500 ml, lau sạch miệng ly, đậy nắp và phục vụ ngay."
         }
       ],
       "operationalNotes": [],
@@ -644,18 +694,28 @@
       "steps": [
         {
           "stepNo": 1,
-          "title": "Hòa bột",
-          "content": "Dùng nền trà còn ấm khuấy tan bột khoai môn và bột sữa."
+          "title": "Chuẩn bị và kiểm tra nguyên liệu",
+          "content": "Cân đủ nguyên liệu theo công thức, ưu tiên chuẩn bị Nền trà đen, Bột khoai môn, Bột sữa pha chế, Sữa đặc. Kiểm tra nền pha đúng mẻ, đá khô sạch, topping còn hạn dùng và dụng cụ không có mùi lạ."
         },
         {
           "stepNo": 2,
-          "title": "Cân vị",
-          "content": "Thêm sữa đặc và nước đường, khuấy mịn."
+          "title": "Hòa bột",
+          "content": "Dùng nền trà còn ấm khuấy tan bột khoai môn và bột sữa. Miết sát thành ca và khuấy đến khi không còn hạt bột khô hoặc cặn ở đáy."
         },
         {
           "stepNo": 3,
+          "title": "Cân vị",
+          "content": "Thêm sữa đặc và nước đường, khuấy mịn. Khuấy theo một chiều đến khi hỗn hợp đồng nhất, không còn lớp tách hoặc cặn ở đáy ca."
+        },
+        {
+          "stepNo": 4,
           "title": "Hoàn thiện",
-          "content": "Lắc với đá 12 giây rồi rót ra ly."
+          "content": "Lắc với đá 12 giây rồi rót ra ly. Giữ kín nắp bình, lắc dứt khoát theo chiều dọc; dừng khi thành bình lạnh đều và có lớp bọt mỏng."
+        },
+        {
+          "stepNo": 5,
+          "title": "Kiểm tra thành phẩm và phục vụ",
+          "content": "Nếm một mẫu nhỏ trước khi giao: hương chính phải rõ, vị ngọt và chua cân bằng, không có cặn bột hoặc mùi lạ. Kiểm tra đúng dung tích 500 ml, lau sạch miệng ly, đậy nắp và phục vụ ngay."
         }
       ],
       "operationalNotes": [],
@@ -747,18 +807,28 @@
       "steps": [
         {
           "stepNo": 1,
-          "title": "Đánh matcha",
-          "content": "Rây matcha, thêm nước 80°C và đánh đến khi tan mịn."
+          "title": "Chuẩn bị và kiểm tra nguyên liệu",
+          "content": "Cân đủ nguyên liệu theo công thức, ưu tiên chuẩn bị Bột matcha, Nước nóng 80°C, Nền trà sữa truyền thống, Sữa tươi. Kiểm tra nền pha đúng mẻ, đá khô sạch, topping còn hạn dùng và dụng cụ không có mùi lạ."
         },
         {
           "stepNo": 2,
-          "title": "Phối vị",
-          "content": "Cho nền trà sữa, sữa tươi và nước đường vào matcha."
+          "title": "Đánh matcha",
+          "content": "Rây matcha, thêm nước 80°C và đánh đến khi tan mịn. Thực hiện đúng định lượng và kiểm tra trạng thái nguyên liệu trước khi chuyển sang bước tiếp theo."
         },
         {
           "stepNo": 3,
+          "title": "Phối vị",
+          "content": "Cho nền trà sữa, sữa tươi và nước đường vào matcha. Thực hiện đúng định lượng và kiểm tra trạng thái nguyên liệu trước khi chuyển sang bước tiếp theo."
+        },
+        {
+          "stepNo": 4,
           "title": "Hoàn thiện",
-          "content": "Lắc với đá 10 giây, rót ra ly."
+          "content": "Lắc với đá 10 giây, rót ra ly. Giữ kín nắp bình, lắc dứt khoát theo chiều dọc; dừng khi thành bình lạnh đều và có lớp bọt mỏng."
+        },
+        {
+          "stepNo": 5,
+          "title": "Kiểm tra thành phẩm và phục vụ",
+          "content": "Nếm một mẫu nhỏ trước khi giao: hương chính phải rõ, vị ngọt và chua cân bằng, không có cặn bột hoặc mùi lạ. Kiểm tra đúng dung tích 500 ml, lau sạch miệng ly, đậy nắp và phục vụ ngay."
         }
       ],
       "operationalNotes": [],
@@ -850,18 +920,28 @@
       "steps": [
         {
           "stepNo": 1,
-          "title": "Hòa chocolate",
-          "content": "Khuấy bột chocolate với nước nóng đến mịn."
+          "title": "Chuẩn bị và kiểm tra nguyên liệu",
+          "content": "Cân đủ nguyên liệu theo công thức, ưu tiên chuẩn bị Bột chocolate, Nước nóng, Nền trà sữa truyền thống, Sữa tươi. Kiểm tra nền pha đúng mẻ, đá khô sạch, topping còn hạn dùng và dụng cụ không có mùi lạ."
         },
         {
           "stepNo": 2,
-          "title": "Phối nền",
-          "content": "Thêm nền trà sữa, sữa tươi và nước đường."
+          "title": "Hòa chocolate",
+          "content": "Khuấy bột chocolate với nước nóng đến mịn. Miết sát thành ca và khuấy đến khi không còn hạt bột khô hoặc cặn ở đáy."
         },
         {
           "stepNo": 3,
+          "title": "Phối nền",
+          "content": "Thêm nền trà sữa, sữa tươi và nước đường. Thực hiện đúng định lượng và kiểm tra trạng thái nguyên liệu trước khi chuyển sang bước tiếp theo."
+        },
+        {
+          "stepNo": 4,
           "title": "Hoàn thiện",
-          "content": "Lắc với đá 12 giây và rót ra ly."
+          "content": "Lắc với đá 12 giây và rót ra ly. Giữ kín nắp bình, lắc dứt khoát theo chiều dọc; dừng khi thành bình lạnh đều và có lớp bọt mỏng."
+        },
+        {
+          "stepNo": 5,
+          "title": "Kiểm tra thành phẩm và phục vụ",
+          "content": "Nếm một mẫu nhỏ trước khi giao: hương chính phải rõ, vị ngọt và chua cân bằng, không có cặn bột hoặc mùi lạ. Kiểm tra đúng dung tích 500 ml, lau sạch miệng ly, đậy nắp và phục vụ ngay."
         }
       ],
       "operationalNotes": [],
@@ -943,18 +1023,28 @@
       "steps": [
         {
           "stepNo": 1,
-          "title": "Phối vị",
-          "content": "Khuấy nền trà sữa với sốt caramel và sữa tươi."
+          "title": "Chuẩn bị và kiểm tra nguyên liệu",
+          "content": "Cân đủ nguyên liệu theo công thức, ưu tiên chuẩn bị Nền trà sữa truyền thống, Sốt caramel, Sữa tươi, Nước đường. Kiểm tra nền pha đúng mẻ, đá khô sạch, topping còn hạn dùng và dụng cụ không có mùi lạ."
         },
         {
           "stepNo": 2,
-          "title": "Cân ngọt",
-          "content": "Thêm nước đường nếu cần."
+          "title": "Phối vị",
+          "content": "Khuấy nền trà sữa với sốt caramel và sữa tươi. Khuấy theo một chiều đến khi hỗn hợp đồng nhất, không còn lớp tách hoặc cặn ở đáy ca."
         },
         {
           "stepNo": 3,
+          "title": "Cân ngọt",
+          "content": "Thêm nước đường nếu cần. Khuấy 8–10 giây rồi nếm một mẫu nhỏ; vị chính phải rõ nhưng không gắt ngọt hoặc chua gắt."
+        },
+        {
+          "stepNo": 4,
           "title": "Hoàn thiện",
-          "content": "Lắc với đá 10 giây, rót ra ly và rưới nhẹ 5 ml caramel lên mặt nếu muốn."
+          "content": "Lắc với đá 10 giây, rót ra ly và rưới nhẹ 5 ml caramel lên mặt nếu muốn. Giữ kín nắp bình, lắc dứt khoát theo chiều dọc; dừng khi thành bình lạnh đều và có lớp bọt mỏng."
+        },
+        {
+          "stepNo": 5,
+          "title": "Kiểm tra thành phẩm và phục vụ",
+          "content": "Nếm một mẫu nhỏ trước khi giao: hương chính phải rõ, vị ngọt và chua cân bằng, không có cặn bột hoặc mùi lạ. Kiểm tra đúng dung tích 500 ml, lau sạch miệng ly, đậy nắp và phục vụ ngay."
         }
       ],
       "operationalNotes": [],
@@ -1035,18 +1125,28 @@
       "steps": [
         {
           "stepNo": 1,
-          "title": "Tạo vân ly",
-          "content": "Cho sốt đường đen quanh thành ly."
+          "title": "Chuẩn bị và kiểm tra nguyên liệu",
+          "content": "Cân đủ nguyên liệu theo công thức, ưu tiên chuẩn bị Trân châu đường đen, Sốt đường đen, Nền trà sữa truyền thống, Sữa tươi. Kiểm tra nền pha đúng mẻ, đá khô sạch, topping còn hạn dùng và dụng cụ không có mùi lạ."
         },
         {
           "stepNo": 2,
-          "title": "Thêm topping",
-          "content": "Cho trân châu đường đen vào đáy ly."
+          "title": "Tạo vân ly",
+          "content": "Cho sốt đường đen quanh thành ly. Thực hiện đúng định lượng và kiểm tra trạng thái nguyên liệu trước khi chuyển sang bước tiếp theo."
         },
         {
           "stepNo": 3,
+          "title": "Thêm topping",
+          "content": "Cho trân châu đường đen vào đáy ly. Topping phải ráo vừa, còn độ dai hoặc mềm đặc trưng và không có mùi chua hay nhớt bất thường."
+        },
+        {
+          "stepNo": 4,
           "title": "Hoàn thiện",
-          "content": "Lắc nền trà sữa với sữa tươi và đá, sau đó rót vào ly."
+          "content": "Lắc nền trà sữa với sữa tươi và đá, sau đó rót vào ly. Giữ kín nắp bình, lắc dứt khoát theo chiều dọc; dừng khi thành bình lạnh đều và có lớp bọt mỏng."
+        },
+        {
+          "stepNo": 5,
+          "title": "Kiểm tra thành phẩm và phục vụ",
+          "content": "Kiểm tra các lớp còn phân tầng rõ, topping nằm đúng vị trí và tổng thể tích đúng ly 500 ml. Đối chiếu mẫu trình bày trước khi đậy nắp và giao ngay."
         }
       ],
       "operationalNotes": [],
@@ -1150,18 +1250,28 @@
       "steps": [
         {
           "stepNo": 1,
-          "title": "Tạo hương sả",
-          "content": "Ngâm sả đập dập trong nền trà còn ấm 3 phút rồi vớt ra."
+          "title": "Chuẩn bị và kiểm tra nguyên liệu",
+          "content": "Cân đủ nguyên liệu theo công thức, ưu tiên chuẩn bị Nền trà lài, Siro đào, Nước cam, Nước đường. Kiểm tra nền pha đúng mẻ, đá khô sạch, topping còn hạn dùng và dụng cụ không có mùi lạ."
         },
         {
           "stepNo": 2,
-          "title": "Phối vị",
-          "content": "Cho trà, siro đào, nước cam và nước đường vào bình lắc."
+          "title": "Tạo hương sả",
+          "content": "Ngâm sả đập dập trong nền trà còn ấm 3 phút rồi vớt ra. Thực hiện đúng định lượng và kiểm tra trạng thái nguyên liệu trước khi chuyển sang bước tiếp theo."
         },
         {
           "stepNo": 3,
+          "title": "Phối vị",
+          "content": "Cho trà, siro đào, nước cam và nước đường vào bình lắc. Giữ kín nắp bình, lắc dứt khoát theo chiều dọc; dừng khi thành bình lạnh đều và có lớp bọt mỏng."
+        },
+        {
+          "stepNo": 4,
           "title": "Hoàn thiện",
-          "content": "Lắc với đá, rót ra ly và thêm đào ngâm."
+          "content": "Lắc với đá, rót ra ly và thêm đào ngâm. Giữ kín nắp bình, lắc dứt khoát theo chiều dọc; dừng khi thành bình lạnh đều và có lớp bọt mỏng."
+        },
+        {
+          "stepNo": 5,
+          "title": "Kiểm tra thành phẩm và phục vụ",
+          "content": "Nếm một mẫu nhỏ trước khi giao: hương chính phải rõ, vị ngọt và chua cân bằng, không có cặn bột hoặc mùi lạ. Kiểm tra đúng dung tích 500 ml, lau sạch miệng ly, đậy nắp và phục vụ ngay."
         }
       ],
       "operationalNotes": [],
@@ -1255,18 +1365,28 @@
       "steps": [
         {
           "stepNo": 1,
-          "title": "Phối vị",
-          "content": "Cho trà, siro đào, nước đường và nước cốt chanh vào bình lắc."
+          "title": "Chuẩn bị và kiểm tra nguyên liệu",
+          "content": "Cân đủ nguyên liệu theo công thức, ưu tiên chuẩn bị Nền trà lài, Siro đào, Nước đường, Nước cốt chanh. Kiểm tra nền pha đúng mẻ, đá khô sạch, topping còn hạn dùng và dụng cụ không có mùi lạ."
         },
         {
           "stepNo": 2,
-          "title": "Làm lạnh",
-          "content": "Thêm đá và lắc 10 giây."
+          "title": "Phối vị",
+          "content": "Cho trà, siro đào, nước đường và nước cốt chanh vào bình lắc. Giữ kín nắp bình, lắc dứt khoát theo chiều dọc; dừng khi thành bình lạnh đều và có lớp bọt mỏng."
         },
         {
           "stepNo": 3,
+          "title": "Làm lạnh",
+          "content": "Thêm đá và lắc 10 giây. Giữ kín nắp bình, lắc dứt khoát theo chiều dọc; dừng khi thành bình lạnh đều và có lớp bọt mỏng."
+        },
+        {
+          "stepNo": 4,
           "title": "Hoàn thiện",
-          "content": "Rót ra ly và cho đào ngâm lên trên."
+          "content": "Rót ra ly và cho đào ngâm lên trên. Rót sát thành ly để hạn chế bọt, giữ miệng ly sạch và không để nguyên liệu vượt vạch dung tích."
+        },
+        {
+          "stepNo": 5,
+          "title": "Kiểm tra thành phẩm và phục vụ",
+          "content": "Nếm một mẫu nhỏ trước khi giao: hương chính phải rõ, vị ngọt và chua cân bằng, không có cặn bột hoặc mùi lạ. Kiểm tra đúng dung tích 500 ml, lau sạch miệng ly, đậy nắp và phục vụ ngay."
         }
       ],
       "operationalNotes": [],
@@ -1370,18 +1490,28 @@
       "steps": [
         {
           "stepNo": 1,
-          "title": "Phối vị",
-          "content": "Khuấy trà với siro vải, nước vải, nước đường và chanh."
+          "title": "Chuẩn bị và kiểm tra nguyên liệu",
+          "content": "Cân đủ nguyên liệu theo công thức, ưu tiên chuẩn bị Nền trà lài, Siro vải, Nước vải ngâm, Nước đường. Kiểm tra nền pha đúng mẻ, đá khô sạch, topping còn hạn dùng và dụng cụ không có mùi lạ."
         },
         {
           "stepNo": 2,
-          "title": "Làm lạnh",
-          "content": "Lắc với đá 10 giây."
+          "title": "Phối vị",
+          "content": "Khuấy trà với siro vải, nước vải, nước đường và chanh. Khuấy theo một chiều đến khi hỗn hợp đồng nhất, không còn lớp tách hoặc cặn ở đáy ca."
         },
         {
           "stepNo": 3,
+          "title": "Làm lạnh",
+          "content": "Lắc với đá 10 giây. Giữ kín nắp bình, lắc dứt khoát theo chiều dọc; dừng khi thành bình lạnh đều và có lớp bọt mỏng."
+        },
+        {
+          "stepNo": 4,
           "title": "Hoàn thiện",
-          "content": "Rót ra ly và thêm trái vải."
+          "content": "Rót ra ly và thêm trái vải. Rót sát thành ly để hạn chế bọt, giữ miệng ly sạch và không để nguyên liệu vượt vạch dung tích."
+        },
+        {
+          "stepNo": 5,
+          "title": "Kiểm tra thành phẩm và phục vụ",
+          "content": "Nếm một mẫu nhỏ trước khi giao: hương chính phải rõ, vị ngọt và chua cân bằng, không có cặn bột hoặc mùi lạ. Kiểm tra đúng dung tích 500 ml, lau sạch miệng ly, đậy nắp và phục vụ ngay."
         }
       ],
       "operationalNotes": [],
@@ -1461,18 +1591,28 @@
       "steps": [
         {
           "stepNo": 1,
-          "title": "Phối vị",
-          "content": "Cho trà, nước cốt tắc và nước đường vào bình lắc."
+          "title": "Chuẩn bị và kiểm tra nguyên liệu",
+          "content": "Cân đủ nguyên liệu theo công thức, ưu tiên chuẩn bị Nền trà lài, Nước cốt tắc, Nước đường, Tắc lát. Kiểm tra nền pha đúng mẻ, đá khô sạch, topping còn hạn dùng và dụng cụ không có mùi lạ."
         },
         {
           "stepNo": 2,
-          "title": "Làm lạnh",
-          "content": "Thêm đá, lắc 10 giây."
+          "title": "Phối vị",
+          "content": "Cho trà, nước cốt tắc và nước đường vào bình lắc. Giữ kín nắp bình, lắc dứt khoát theo chiều dọc; dừng khi thành bình lạnh đều và có lớp bọt mỏng."
         },
         {
           "stepNo": 3,
+          "title": "Làm lạnh",
+          "content": "Thêm đá, lắc 10 giây. Giữ kín nắp bình, lắc dứt khoát theo chiều dọc; dừng khi thành bình lạnh đều và có lớp bọt mỏng."
+        },
+        {
+          "stepNo": 4,
           "title": "Hoàn thiện",
-          "content": "Rót ra ly và thêm lát tắc."
+          "content": "Rót ra ly và thêm lát tắc. Rót sát thành ly để hạn chế bọt, giữ miệng ly sạch và không để nguyên liệu vượt vạch dung tích."
+        },
+        {
+          "stepNo": 5,
+          "title": "Kiểm tra thành phẩm và phục vụ",
+          "content": "Nếm một mẫu nhỏ trước khi giao: hương chính phải rõ, vị ngọt và chua cân bằng, không có cặn bột hoặc mùi lạ. Kiểm tra đúng dung tích 500 ml, lau sạch miệng ly, đậy nắp và phục vụ ngay."
         }
       ],
       "operationalNotes": [],
@@ -1552,18 +1692,28 @@
       "steps": [
         {
           "stepNo": 1,
-          "title": "Phối vị",
-          "content": "Cho trà, chanh và nước đường vào bình lắc."
+          "title": "Chuẩn bị và kiểm tra nguyên liệu",
+          "content": "Cân đủ nguyên liệu theo công thức, ưu tiên chuẩn bị Nền trà đen, Nước cốt chanh, Nước đường, Chanh lát. Kiểm tra nền pha đúng mẻ, đá khô sạch, topping còn hạn dùng và dụng cụ không có mùi lạ."
         },
         {
           "stepNo": 2,
-          "title": "Làm lạnh",
-          "content": "Lắc với đá 8–10 giây."
+          "title": "Phối vị",
+          "content": "Cho trà, chanh và nước đường vào bình lắc. Giữ kín nắp bình, lắc dứt khoát theo chiều dọc; dừng khi thành bình lạnh đều và có lớp bọt mỏng."
         },
         {
           "stepNo": 3,
+          "title": "Làm lạnh",
+          "content": "Lắc với đá 8–10 giây. Giữ kín nắp bình, lắc dứt khoát theo chiều dọc; dừng khi thành bình lạnh đều và có lớp bọt mỏng."
+        },
+        {
+          "stepNo": 4,
           "title": "Hoàn thiện",
-          "content": "Rót ra ly và trang trí chanh lát."
+          "content": "Rót ra ly và trang trí chanh lát. Rót sát thành ly để hạn chế bọt, giữ miệng ly sạch và không để nguyên liệu vượt vạch dung tích."
+        },
+        {
+          "stepNo": 5,
+          "title": "Kiểm tra thành phẩm và phục vụ",
+          "content": "Nếm một mẫu nhỏ trước khi giao: hương chính phải rõ, vị ngọt và chua cân bằng, không có cặn bột hoặc mùi lạ. Kiểm tra đúng dung tích 500 ml, lau sạch miệng ly, đậy nắp và phục vụ ngay."
         }
       ],
       "operationalNotes": [],
@@ -1667,18 +1817,28 @@
       "steps": [
         {
           "stepNo": 1,
-          "title": "Dằm dâu",
-          "content": "Dằm nhẹ mứt dâu và dâu tươi trong bình lắc."
+          "title": "Chuẩn bị và kiểm tra nguyên liệu",
+          "content": "Cân đủ nguyên liệu theo công thức, ưu tiên chuẩn bị Nền trà lài, Siro dâu, Mứt dâu, Nước đường. Kiểm tra nền pha đúng mẻ, đá khô sạch, topping còn hạn dùng và dụng cụ không có mùi lạ."
         },
         {
           "stepNo": 2,
-          "title": "Phối vị",
-          "content": "Thêm trà, siro dâu, nước đường và chanh."
+          "title": "Dằm dâu",
+          "content": "Dằm nhẹ mứt dâu và dâu tươi trong bình lắc. Giữ kín nắp bình, lắc dứt khoát theo chiều dọc; dừng khi thành bình lạnh đều và có lớp bọt mỏng."
         },
         {
           "stepNo": 3,
+          "title": "Phối vị",
+          "content": "Thêm trà, siro dâu, nước đường và chanh. Thực hiện đúng định lượng và kiểm tra trạng thái nguyên liệu trước khi chuyển sang bước tiếp theo."
+        },
+        {
+          "stepNo": 4,
           "title": "Hoàn thiện",
-          "content": "Lắc với đá và rót ra ly."
+          "content": "Lắc với đá và rót ra ly. Giữ kín nắp bình, lắc dứt khoát theo chiều dọc; dừng khi thành bình lạnh đều và có lớp bọt mỏng."
+        },
+        {
+          "stepNo": 5,
+          "title": "Kiểm tra thành phẩm và phục vụ",
+          "content": "Nếm một mẫu nhỏ trước khi giao: hương chính phải rõ, vị ngọt và chua cân bằng, không có cặn bột hoặc mùi lạ. Kiểm tra đúng dung tích 500 ml, lau sạch miệng ly, đậy nắp và phục vụ ngay."
         }
       ],
       "operationalNotes": [],
@@ -1782,18 +1942,28 @@
       "steps": [
         {
           "stepNo": 1,
-          "title": "Phối vị",
-          "content": "Cho trà, sinh tố xoài, siro, nước đường và chanh vào bình lắc."
+          "title": "Chuẩn bị và kiểm tra nguyên liệu",
+          "content": "Cân đủ nguyên liệu theo công thức, ưu tiên chuẩn bị Nền trà lài, Sinh tố xoài, Siro xoài, Nước đường. Kiểm tra nền pha đúng mẻ, đá khô sạch, topping còn hạn dùng và dụng cụ không có mùi lạ."
         },
         {
           "stepNo": 2,
-          "title": "Làm lạnh",
-          "content": "Lắc với đá 12 giây."
+          "title": "Phối vị",
+          "content": "Cho trà, sinh tố xoài, siro, nước đường và chanh vào bình lắc. Giữ kín nắp bình, lắc dứt khoát theo chiều dọc; dừng khi thành bình lạnh đều và có lớp bọt mỏng."
         },
         {
           "stepNo": 3,
+          "title": "Làm lạnh",
+          "content": "Lắc với đá 12 giây. Giữ kín nắp bình, lắc dứt khoát theo chiều dọc; dừng khi thành bình lạnh đều và có lớp bọt mỏng."
+        },
+        {
+          "stepNo": 4,
           "title": "Hoàn thiện",
-          "content": "Rót ra ly, thêm xoài hạt lựu."
+          "content": "Rót ra ly, thêm xoài hạt lựu. Rót sát thành ly để hạn chế bọt, giữ miệng ly sạch và không để nguyên liệu vượt vạch dung tích."
+        },
+        {
+          "stepNo": 5,
+          "title": "Kiểm tra thành phẩm và phục vụ",
+          "content": "Nếm một mẫu nhỏ trước khi giao: hương chính phải rõ, vị ngọt và chua cân bằng, không có cặn bột hoặc mùi lạ. Kiểm tra đúng dung tích 500 ml, lau sạch miệng ly, đậy nắp và phục vụ ngay."
         }
       ],
       "operationalNotes": [],
@@ -1885,18 +2055,28 @@
       "steps": [
         {
           "stepNo": 1,
-          "title": "Phối vị",
-          "content": "Cho trà, sinh tố chanh dây, nước đường và nước cốt chanh vào bình lắc."
+          "title": "Chuẩn bị và kiểm tra nguyên liệu",
+          "content": "Cân đủ nguyên liệu theo công thức, ưu tiên chuẩn bị Nền trà lài, Sinh tố chanh dây, Nước đường, Nước cốt chanh. Kiểm tra nền pha đúng mẻ, đá khô sạch, topping còn hạn dùng và dụng cụ không có mùi lạ."
         },
         {
           "stepNo": 2,
-          "title": "Làm lạnh",
-          "content": "Lắc với đá 10 giây."
+          "title": "Phối vị",
+          "content": "Cho trà, sinh tố chanh dây, nước đường và nước cốt chanh vào bình lắc. Giữ kín nắp bình, lắc dứt khoát theo chiều dọc; dừng khi thành bình lạnh đều và có lớp bọt mỏng."
         },
         {
           "stepNo": 3,
+          "title": "Làm lạnh",
+          "content": "Lắc với đá 10 giây. Giữ kín nắp bình, lắc dứt khoát theo chiều dọc; dừng khi thành bình lạnh đều và có lớp bọt mỏng."
+        },
+        {
+          "stepNo": 4,
           "title": "Hoàn thiện",
-          "content": "Rót ra ly và thêm hạt chanh dây."
+          "content": "Rót ra ly và thêm hạt chanh dây. Rót sát thành ly để hạn chế bọt, giữ miệng ly sạch và không để nguyên liệu vượt vạch dung tích."
+        },
+        {
+          "stepNo": 5,
+          "title": "Kiểm tra thành phẩm và phục vụ",
+          "content": "Nếm một mẫu nhỏ trước khi giao: hương chính phải rõ, vị ngọt và chua cân bằng, không có cặn bột hoặc mùi lạ. Kiểm tra đúng dung tích 500 ml, lau sạch miệng ly, đậy nắp và phục vụ ngay."
         }
       ],
       "operationalNotes": [],
@@ -2000,18 +2180,28 @@
       "steps": [
         {
           "stepNo": 1,
-          "title": "Phối vị",
-          "content": "Cho trà, siro ổi, sinh tố ổi, nước đường và chanh vào bình lắc."
+          "title": "Chuẩn bị và kiểm tra nguyên liệu",
+          "content": "Cân đủ nguyên liệu theo công thức, ưu tiên chuẩn bị Nền trà lài, Siro ổi hồng, Sinh tố ổi, Nước đường. Kiểm tra nền pha đúng mẻ, đá khô sạch, topping còn hạn dùng và dụng cụ không có mùi lạ."
         },
         {
           "stepNo": 2,
-          "title": "Làm lạnh",
-          "content": "Lắc với đá 10 giây."
+          "title": "Phối vị",
+          "content": "Cho trà, siro ổi, sinh tố ổi, nước đường và chanh vào bình lắc. Giữ kín nắp bình, lắc dứt khoát theo chiều dọc; dừng khi thành bình lạnh đều và có lớp bọt mỏng."
         },
         {
           "stepNo": 3,
+          "title": "Làm lạnh",
+          "content": "Lắc với đá 10 giây. Giữ kín nắp bình, lắc dứt khoát theo chiều dọc; dừng khi thành bình lạnh đều và có lớp bọt mỏng."
+        },
+        {
+          "stepNo": 4,
           "title": "Hoàn thiện",
-          "content": "Rót ra ly và thêm ổi lát."
+          "content": "Rót ra ly và thêm ổi lát. Rót sát thành ly để hạn chế bọt, giữ miệng ly sạch và không để nguyên liệu vượt vạch dung tích."
+        },
+        {
+          "stepNo": 5,
+          "title": "Kiểm tra thành phẩm và phục vụ",
+          "content": "Nếm một mẫu nhỏ trước khi giao: hương chính phải rõ, vị ngọt và chua cân bằng, không có cặn bột hoặc mùi lạ. Kiểm tra đúng dung tích 500 ml, lau sạch miệng ly, đậy nắp và phục vụ ngay."
         }
       ],
       "operationalNotes": [],
@@ -2127,18 +2317,28 @@
       "steps": [
         {
           "stepNo": 1,
-          "title": "Phối vị",
-          "content": "Cho toàn bộ phần lỏng vào bình lắc và khuấy đều."
+          "title": "Chuẩn bị và kiểm tra nguyên liệu",
+          "content": "Cân đủ nguyên liệu theo công thức, ưu tiên chuẩn bị Nền trà lài, Siro đào, Sinh tố xoài, Sinh tố chanh dây. Kiểm tra nền pha đúng mẻ, đá khô sạch, topping còn hạn dùng và dụng cụ không có mùi lạ."
         },
         {
           "stepNo": 2,
-          "title": "Làm lạnh",
-          "content": "Thêm đá, lắc 12 giây."
+          "title": "Phối vị",
+          "content": "Cho toàn bộ phần lỏng vào bình lắc và khuấy đều. Khuấy theo một chiều đến khi hỗn hợp đồng nhất, không còn lớp tách hoặc cặn ở đáy ca."
         },
         {
           "stepNo": 3,
+          "title": "Làm lạnh",
+          "content": "Thêm đá, lắc 12 giây. Giữ kín nắp bình, lắc dứt khoát theo chiều dọc; dừng khi thành bình lạnh đều và có lớp bọt mỏng."
+        },
+        {
+          "stepNo": 4,
           "title": "Hoàn thiện",
-          "content": "Rót ra ly và thêm trái cây cắt nhỏ."
+          "content": "Rót ra ly và thêm trái cây cắt nhỏ. Rót sát thành ly để hạn chế bọt, giữ miệng ly sạch và không để nguyên liệu vượt vạch dung tích."
+        },
+        {
+          "stepNo": 5,
+          "title": "Kiểm tra thành phẩm và phục vụ",
+          "content": "Nếm một mẫu nhỏ trước khi giao: hương chính phải rõ, vị ngọt và chua cân bằng, không có cặn bột hoặc mùi lạ. Kiểm tra đúng dung tích 500 ml, lau sạch miệng ly, đậy nắp và phục vụ ngay."
         }
       ],
       "operationalNotes": [],
@@ -2243,18 +2443,28 @@
       "steps": [
         {
           "stepNo": 1,
-          "title": "Hòa matcha",
-          "content": "Đánh matcha với nước nóng đến mịn."
+          "title": "Chuẩn bị và kiểm tra nguyên liệu",
+          "content": "Cân đủ nguyên liệu theo công thức, ưu tiên chuẩn bị Bột matcha, Nước nóng 80°C, Sữa tươi, Bột sữa. Kiểm tra nền pha đúng mẻ, đá khô sạch, topping còn hạn dùng và dụng cụ không có mùi lạ."
         },
         {
           "stepNo": 2,
-          "title": "Xay",
-          "content": "Cho matcha, sữa, bột sữa, nước đường và đá vào máy; xay 25–30 giây."
+          "title": "Hòa matcha",
+          "content": "Đánh matcha với nước nóng đến mịn. Dừng khi hỗn hợp xanh đồng nhất, không còn vón bột hoặc bọt lớn trên mặt."
         },
         {
           "stepNo": 3,
+          "title": "Xay",
+          "content": "Cho matcha, sữa, bột sữa, nước đường và đá vào máy; xay 25–30 giây. Dừng máy khi hỗn hợp chảy thành dòng liên tục, không còn viên đá lớn và không bị tách nước."
+        },
+        {
+          "stepNo": 4,
           "title": "Hoàn thiện",
-          "content": "Rót ra ly và thêm kem topping nếu dùng."
+          "content": "Rót ra ly và thêm kem topping nếu dùng. Rót sát thành ly để hạn chế bọt, giữ miệng ly sạch và không để nguyên liệu vượt vạch dung tích."
+        },
+        {
+          "stepNo": 5,
+          "title": "Kiểm tra thành phẩm và phục vụ",
+          "content": "Kiểm tra thành phẩm phải mịn, sánh đều, không còn đá cục và không tách nước sau 1 phút. Lau sạch miệng ly, đậy nắp và giao ngay để tránh tan đá."
         }
       ],
       "operationalNotes": [],
@@ -2347,18 +2557,28 @@
       "steps": [
         {
           "stepNo": 1,
-          "title": "Hòa nền",
-          "content": "Khuấy chocolate với 50 ml sữa cho mịn."
+          "title": "Chuẩn bị và kiểm tra nguyên liệu",
+          "content": "Cân đủ nguyên liệu theo công thức, ưu tiên chuẩn bị Bột chocolate, Sữa tươi, Sữa đặc, Nước đường. Kiểm tra nền pha đúng mẻ, đá khô sạch, topping còn hạn dùng và dụng cụ không có mùi lạ."
         },
         {
           "stepNo": 2,
-          "title": "Xay",
-          "content": "Cho toàn bộ nguyên liệu trừ kem topping vào máy, xay 25–30 giây."
+          "title": "Hòa nền",
+          "content": "Khuấy chocolate với 50 ml sữa cho mịn. Miết sát thành ca và khuấy đến khi không còn hạt bột khô hoặc cặn ở đáy."
         },
         {
           "stepNo": 3,
+          "title": "Xay",
+          "content": "Cho toàn bộ nguyên liệu trừ kem topping vào máy, xay 25–30 giây. Dừng máy khi hỗn hợp chảy thành dòng liên tục, không còn viên đá lớn và không bị tách nước."
+        },
+        {
+          "stepNo": 4,
           "title": "Hoàn thiện",
-          "content": "Rót ra ly, thêm kem topping."
+          "content": "Rót ra ly, thêm kem topping. Rót sát thành ly để hạn chế bọt, giữ miệng ly sạch và không để nguyên liệu vượt vạch dung tích."
+        },
+        {
+          "stepNo": 5,
+          "title": "Kiểm tra thành phẩm và phục vụ",
+          "content": "Kiểm tra thành phẩm phải mịn, sánh đều, không còn đá cục và không tách nước sau 1 phút. Lau sạch miệng ly, đậy nắp và giao ngay để tránh tan đá."
         }
       ],
       "operationalNotes": [],
@@ -2452,18 +2672,28 @@
       "steps": [
         {
           "stepNo": 1,
-          "title": "Chuẩn bị",
-          "content": "Bẻ nhỏ bánh quy."
+          "title": "Chuẩn bị và kiểm tra nguyên liệu",
+          "content": "Cân đủ nguyên liệu theo công thức, ưu tiên chuẩn bị Bánh quy chocolate, Sữa tươi, Bột sữa, Sữa đặc. Kiểm tra nền pha đúng mẻ, đá khô sạch, topping còn hạn dùng và dụng cụ không có mùi lạ."
         },
         {
           "stepNo": 2,
-          "title": "Xay",
-          "content": "Cho 3 bánh cùng sữa, bột sữa, sữa đặc và đá vào máy; xay 25 giây."
+          "title": "Chuẩn bị",
+          "content": "Bẻ nhỏ bánh quy. Thực hiện đúng định lượng và kiểm tra trạng thái nguyên liệu trước khi chuyển sang bước tiếp theo."
         },
         {
           "stepNo": 3,
+          "title": "Xay",
+          "content": "Cho 3 bánh cùng sữa, bột sữa, sữa đặc và đá vào máy; xay 25 giây. Dừng máy khi hỗn hợp chảy thành dòng liên tục, không còn viên đá lớn và không bị tách nước."
+        },
+        {
+          "stepNo": 4,
           "title": "Hoàn thiện",
-          "content": "Rót ra ly, thêm kem và nghiền bánh còn lại lên mặt."
+          "content": "Rót ra ly, thêm kem và nghiền bánh còn lại lên mặt. Rót sát thành ly để hạn chế bọt, giữ miệng ly sạch và không để nguyên liệu vượt vạch dung tích."
+        },
+        {
+          "stepNo": 5,
+          "title": "Kiểm tra thành phẩm và phục vụ",
+          "content": "Kiểm tra thành phẩm phải mịn, sánh đều, không còn đá cục và không tách nước sau 1 phút. Lau sạch miệng ly, đậy nắp và giao ngay để tránh tan đá."
         }
       ],
       "operationalNotes": [],
@@ -2545,18 +2775,28 @@
       "steps": [
         {
           "stepNo": 1,
-          "title": "Hòa bột",
-          "content": "Khuấy bột khoai môn và bột sữa với 50 ml sữa."
+          "title": "Chuẩn bị và kiểm tra nguyên liệu",
+          "content": "Cân đủ nguyên liệu theo công thức, ưu tiên chuẩn bị Bột khoai môn, Sữa tươi, Bột sữa, Sữa đặc. Kiểm tra nền pha đúng mẻ, đá khô sạch, topping còn hạn dùng và dụng cụ không có mùi lạ."
         },
         {
           "stepNo": 2,
-          "title": "Xay",
-          "content": "Cho hỗn hợp cùng phần sữa còn lại, sữa đặc và đá vào máy; xay mịn."
+          "title": "Hòa bột",
+          "content": "Khuấy bột khoai môn và bột sữa với 50 ml sữa. Miết sát thành ca và khuấy đến khi không còn hạt bột khô hoặc cặn ở đáy."
         },
         {
           "stepNo": 3,
+          "title": "Xay",
+          "content": "Cho hỗn hợp cùng phần sữa còn lại, sữa đặc và đá vào máy; xay mịn. Dừng máy khi hỗn hợp chảy thành dòng liên tục, không còn viên đá lớn và không bị tách nước."
+        },
+        {
+          "stepNo": 4,
           "title": "Hoàn thiện",
-          "content": "Rót ra ly 500 ml."
+          "content": "Rót ra ly 500 ml. Rót sát thành ly để hạn chế bọt, giữ miệng ly sạch và không để nguyên liệu vượt vạch dung tích."
+        },
+        {
+          "stepNo": 5,
+          "title": "Kiểm tra thành phẩm và phục vụ",
+          "content": "Kiểm tra thành phẩm phải mịn, sánh đều, không còn đá cục và không tách nước sau 1 phút. Lau sạch miệng ly, đậy nắp và giao ngay để tránh tan đá."
         }
       ],
       "operationalNotes": [],
@@ -2639,18 +2879,28 @@
       "steps": [
         {
           "stepNo": 1,
-          "title": "Xay",
-          "content": "Cho toàn bộ nguyên liệu vào máy xay."
+          "title": "Chuẩn bị và kiểm tra nguyên liệu",
+          "content": "Cân đủ nguyên liệu theo công thức, ưu tiên chuẩn bị Sinh tố việt quất, Sữa tươi, Bột sữa, Nước đường. Kiểm tra nền pha đúng mẻ, đá khô sạch, topping còn hạn dùng và dụng cụ không có mùi lạ."
         },
         {
           "stepNo": 2,
-          "title": "Kiểm tra",
-          "content": "Xay 25–30 giây đến khi mịn và không còn mảnh đá lớn."
+          "title": "Xay",
+          "content": "Cho toàn bộ nguyên liệu vào máy xay. Dừng máy khi hỗn hợp chảy thành dòng liên tục, không còn viên đá lớn và không bị tách nước."
         },
         {
           "stepNo": 3,
+          "title": "Kiểm tra",
+          "content": "Xay 25–30 giây đến khi mịn và không còn mảnh đá lớn. Dừng máy khi hỗn hợp chảy thành dòng liên tục, không còn viên đá lớn và không bị tách nước."
+        },
+        {
+          "stepNo": 4,
           "title": "Hoàn thiện",
-          "content": "Rót ra ly, có thể rưới 5 ml sinh tố việt quất lên mặt."
+          "content": "Rót ra ly, có thể rưới 5 ml sinh tố việt quất lên mặt. Rót sát thành ly để hạn chế bọt, giữ miệng ly sạch và không để nguyên liệu vượt vạch dung tích."
+        },
+        {
+          "stepNo": 5,
+          "title": "Kiểm tra thành phẩm và phục vụ",
+          "content": "Kiểm tra thành phẩm phải mịn, sánh đều, không còn đá cục và không tách nước sau 1 phút. Lau sạch miệng ly, đậy nắp và giao ngay để tránh tan đá."
         }
       ],
       "operationalNotes": [],
@@ -2734,18 +2984,28 @@
       "steps": [
         {
           "stepNo": 1,
-          "title": "Xay",
-          "content": "Cho toàn bộ nguyên liệu vào máy."
+          "title": "Chuẩn bị và kiểm tra nguyên liệu",
+          "content": "Cân đủ nguyên liệu theo công thức, ưu tiên chuẩn bị Sinh tố dâu, Mứt dâu, Sữa tươi, Bột sữa. Kiểm tra nền pha đúng mẻ, đá khô sạch, topping còn hạn dùng và dụng cụ không có mùi lạ."
         },
         {
           "stepNo": 2,
-          "title": "Làm mịn",
-          "content": "Xay 25–30 giây."
+          "title": "Xay",
+          "content": "Cho toàn bộ nguyên liệu vào máy. Thực hiện đúng định lượng và kiểm tra trạng thái nguyên liệu trước khi chuyển sang bước tiếp theo."
         },
         {
           "stepNo": 3,
+          "title": "Làm mịn",
+          "content": "Xay 25–30 giây. Dừng máy khi hỗn hợp chảy thành dòng liên tục, không còn viên đá lớn và không bị tách nước."
+        },
+        {
+          "stepNo": 4,
           "title": "Hoàn thiện",
-          "content": "Rót ra ly và trang trí mứt dâu nếu cần."
+          "content": "Rót ra ly và trang trí mứt dâu nếu cần. Rót sát thành ly để hạn chế bọt, giữ miệng ly sạch và không để nguyên liệu vượt vạch dung tích."
+        },
+        {
+          "stepNo": 5,
+          "title": "Kiểm tra thành phẩm và phục vụ",
+          "content": "Kiểm tra thành phẩm phải mịn, sánh đều, không còn đá cục và không tách nước sau 1 phút. Lau sạch miệng ly, đậy nắp và giao ngay để tránh tan đá."
         }
       ],
       "operationalNotes": [],
@@ -2824,18 +3084,28 @@
       "steps": [
         {
           "stepNo": 1,
-          "title": "Phối vị",
-          "content": "Cho chanh, nước đường, nước và muối vào máy xay."
+          "title": "Chuẩn bị và kiểm tra nguyên liệu",
+          "content": "Cân đủ nguyên liệu theo công thức, ưu tiên chuẩn bị Nước cốt chanh, Nước đường, Nước lọc, Muối. Kiểm tra nền pha đúng mẻ, đá khô sạch, topping còn hạn dùng và dụng cụ không có mùi lạ."
         },
         {
           "stepNo": 2,
-          "title": "Xay",
-          "content": "Thêm đá, xay 25 giây đến khi mịn."
+          "title": "Phối vị",
+          "content": "Cho chanh, nước đường, nước và muối vào máy xay. Dừng máy khi hỗn hợp chảy thành dòng liên tục, không còn viên đá lớn và không bị tách nước."
         },
         {
           "stepNo": 3,
+          "title": "Xay",
+          "content": "Thêm đá, xay 25 giây đến khi mịn. Dừng máy khi hỗn hợp chảy thành dòng liên tục, không còn viên đá lớn và không bị tách nước."
+        },
+        {
+          "stepNo": 4,
           "title": "Hoàn thiện",
-          "content": "Rót ra ly và dùng ngay."
+          "content": "Rót ra ly và dùng ngay. Rót sát thành ly để hạn chế bọt, giữ miệng ly sạch và không để nguyên liệu vượt vạch dung tích."
+        },
+        {
+          "stepNo": 5,
+          "title": "Kiểm tra thành phẩm và phục vụ",
+          "content": "Kiểm tra thành phẩm phải mịn, sánh đều, không còn đá cục và không tách nước sau 1 phút. Lau sạch miệng ly, đậy nắp và giao ngay để tránh tan đá."
         }
       ],
       "operationalNotes": [],
@@ -2916,18 +3186,28 @@
       "steps": [
         {
           "stepNo": 1,
-          "title": "Phối vị",
-          "content": "Cho sinh tố chanh dây, nước đường, nước và muối vào máy."
+          "title": "Chuẩn bị và kiểm tra nguyên liệu",
+          "content": "Cân đủ nguyên liệu theo công thức, ưu tiên chuẩn bị Sinh tố chanh dây, Nước đường, Nước lọc, Muối. Kiểm tra nền pha đúng mẻ, đá khô sạch, topping còn hạn dùng và dụng cụ không có mùi lạ."
         },
         {
           "stepNo": 2,
-          "title": "Xay",
-          "content": "Thêm đá và xay 25–30 giây."
+          "title": "Phối vị",
+          "content": "Cho sinh tố chanh dây, nước đường, nước và muối vào máy. Thực hiện đúng định lượng và kiểm tra trạng thái nguyên liệu trước khi chuyển sang bước tiếp theo."
         },
         {
           "stepNo": 3,
+          "title": "Xay",
+          "content": "Thêm đá và xay 25–30 giây. Dừng máy khi hỗn hợp chảy thành dòng liên tục, không còn viên đá lớn và không bị tách nước."
+        },
+        {
+          "stepNo": 4,
           "title": "Hoàn thiện",
-          "content": "Rót ra ly, thêm ít hạt chanh dây nếu muốn."
+          "content": "Rót ra ly, thêm ít hạt chanh dây nếu muốn. Rót sát thành ly để hạn chế bọt, giữ miệng ly sạch và không để nguyên liệu vượt vạch dung tích."
+        },
+        {
+          "stepNo": 5,
+          "title": "Kiểm tra thành phẩm và phục vụ",
+          "content": "Kiểm tra thành phẩm phải mịn, sánh đều, không còn đá cục và không tách nước sau 1 phút. Lau sạch miệng ly, đậy nắp và giao ngay để tránh tan đá."
         }
       ],
       "operationalNotes": [],
@@ -2985,18 +3265,28 @@
       "steps": [
         {
           "stepNo": 1,
-          "title": "Phối vị",
-          "content": "Khuấy cà phê nóng với sữa đặc đến đồng nhất."
+          "title": "Chuẩn bị và kiểm tra nguyên liệu",
+          "content": "Cân đủ nguyên liệu theo công thức, ưu tiên chuẩn bị Cà phê pha đậm, Sữa đặc, Đá viên. Kiểm tra nền pha đúng mẻ, đá khô sạch, topping còn hạn dùng và dụng cụ không có mùi lạ."
         },
         {
           "stepNo": 2,
-          "title": "Làm lạnh",
-          "content": "Rót vào ly đầy đá."
+          "title": "Phối vị",
+          "content": "Khuấy cà phê nóng với sữa đặc đến đồng nhất. Khuấy theo một chiều đến khi hỗn hợp đồng nhất, không còn lớp tách hoặc cặn ở đáy ca."
         },
         {
           "stepNo": 3,
+          "title": "Làm lạnh",
+          "content": "Rót vào ly đầy đá. Rót sát thành ly để hạn chế bọt, giữ miệng ly sạch và không để nguyên liệu vượt vạch dung tích."
+        },
+        {
+          "stepNo": 4,
           "title": "Hoàn thiện",
-          "content": "Khuấy nhẹ trước khi phục vụ."
+          "content": "Khuấy nhẹ trước khi phục vụ. Khuấy theo một chiều đến khi hỗn hợp đồng nhất, không còn lớp tách hoặc cặn ở đáy ca."
+        },
+        {
+          "stepNo": 5,
+          "title": "Kiểm tra thành phẩm và phục vụ",
+          "content": "Nếm một mẫu nhỏ trước khi giao: hương chính phải rõ, vị ngọt và chua cân bằng, không có cặn bột hoặc mùi lạ. Kiểm tra đúng dung tích 500 ml, lau sạch miệng ly, đậy nắp và phục vụ ngay."
         }
       ],
       "operationalNotes": [],
@@ -3064,18 +3354,28 @@
       "steps": [
         {
           "stepNo": 1,
-          "title": "Pha sữa",
-          "content": "Khuấy sữa đặc với sữa tươi."
+          "title": "Chuẩn bị và kiểm tra nguyên liệu",
+          "content": "Cân đủ nguyên liệu theo công thức, ưu tiên chuẩn bị Cà phê pha đậm, Sữa đặc, Sữa tươi, Đá viên. Kiểm tra nền pha đúng mẻ, đá khô sạch, topping còn hạn dùng và dụng cụ không có mùi lạ."
         },
         {
           "stepNo": 2,
-          "title": "Làm lạnh",
-          "content": "Cho hỗn hợp sữa vào ly đá."
+          "title": "Pha sữa",
+          "content": "Khuấy sữa đặc với sữa tươi. Khuấy theo một chiều đến khi hỗn hợp đồng nhất, không còn lớp tách hoặc cặn ở đáy ca."
         },
         {
           "stepNo": 3,
+          "title": "Làm lạnh",
+          "content": "Cho hỗn hợp sữa vào ly đá. Thực hiện đúng định lượng và kiểm tra trạng thái nguyên liệu trước khi chuyển sang bước tiếp theo."
+        },
+        {
+          "stepNo": 4,
           "title": "Hoàn thiện",
-          "content": "Rót cà phê lên trên tạo hai tầng."
+          "content": "Rót cà phê lên trên tạo hai tầng. Rót chậm qua mặt sau muỗng hoặc sát thành ly để hai lớp tách rõ trước khi giao khách."
+        },
+        {
+          "stepNo": 5,
+          "title": "Kiểm tra thành phẩm và phục vụ",
+          "content": "Kiểm tra các lớp còn phân tầng rõ, topping nằm đúng vị trí và tổng thể tích đúng ly 500 ml. Đối chiếu mẫu trình bày trước khi đậy nắp và giao ngay."
         }
       ],
       "operationalNotes": [],
@@ -3144,18 +3444,28 @@
       "steps": [
         {
           "stepNo": 1,
-          "title": "Pha cà phê",
-          "content": "Khuấy cà phê với sữa đặc."
+          "title": "Chuẩn bị và kiểm tra nguyên liệu",
+          "content": "Cân đủ nguyên liệu theo công thức, ưu tiên chuẩn bị Cà phê pha đậm, Sữa đặc, Milk foam mặn, Đá viên. Kiểm tra nền pha đúng mẻ, đá khô sạch, topping còn hạn dùng và dụng cụ không có mùi lạ."
         },
         {
           "stepNo": 2,
-          "title": "Làm lạnh",
-          "content": "Rót cà phê vào ly đá."
+          "title": "Pha cà phê",
+          "content": "Khuấy cà phê với sữa đặc. Khuấy theo một chiều đến khi hỗn hợp đồng nhất, không còn lớp tách hoặc cặn ở đáy ca."
         },
         {
           "stepNo": 3,
+          "title": "Làm lạnh",
+          "content": "Rót cà phê vào ly đá. Thực hiện đúng định lượng và kiểm tra trạng thái nguyên liệu trước khi chuyển sang bước tiếp theo."
+        },
+        {
+          "stepNo": 4,
           "title": "Hoàn thiện",
-          "content": "Phủ milk foam mặn lên mặt, không khuấy trước khi phục vụ."
+          "content": "Phủ milk foam mặn lên mặt, không khuấy trước khi phục vụ. Khuấy theo một chiều đến khi hỗn hợp đồng nhất, không còn lớp tách hoặc cặn ở đáy ca."
+        },
+        {
+          "stepNo": 5,
+          "title": "Kiểm tra thành phẩm và phục vụ",
+          "content": "Kiểm tra nền nước đủ lạnh, lớp kem hoặc foam phủ đều và còn tách lớp. Lau sạch miệng ly, đậy nắp chắc và giao ngay; không lắc lại sau khi phủ kem."
         }
       ],
       "operationalNotes": [],
@@ -3235,18 +3545,28 @@
       "steps": [
         {
           "stepNo": 1,
-          "title": "Pha cà phê",
-          "content": "Khuấy cà phê với sữa đặc và nước đường."
+          "title": "Chuẩn bị và kiểm tra nguyên liệu",
+          "content": "Cân đủ nguyên liệu theo công thức, ưu tiên chuẩn bị Cà phê pha đậm, Sữa đặc, Nước đường, Kem cheese. Kiểm tra nền pha đúng mẻ, đá khô sạch, topping còn hạn dùng và dụng cụ không có mùi lạ."
         },
         {
           "stepNo": 2,
-          "title": "Làm lạnh",
-          "content": "Rót vào ly đá."
+          "title": "Pha cà phê",
+          "content": "Khuấy cà phê với sữa đặc và nước đường. Khuấy theo một chiều đến khi hỗn hợp đồng nhất, không còn lớp tách hoặc cặn ở đáy ca."
         },
         {
           "stepNo": 3,
+          "title": "Làm lạnh",
+          "content": "Rót vào ly đá. Rót sát thành ly để hạn chế bọt, giữ miệng ly sạch và không để nguyên liệu vượt vạch dung tích."
+        },
+        {
+          "stepNo": 4,
           "title": "Hoàn thiện",
-          "content": "Phủ kem cheese lên trên."
+          "content": "Phủ kem cheese lên trên. Rót lớp kem chậm ở giữa ly để lớp phủ dày đều, không chìm ngay xuống nền nước."
+        },
+        {
+          "stepNo": 5,
+          "title": "Kiểm tra thành phẩm và phục vụ",
+          "content": "Kiểm tra nền nước đủ lạnh, lớp kem hoặc foam phủ đều và còn tách lớp. Lau sạch miệng ly, đậy nắp chắc và giao ngay; không lắc lại sau khi phủ kem."
         }
       ],
       "operationalNotes": [],
@@ -3337,18 +3657,28 @@
       "steps": [
         {
           "stepNo": 1,
-          "title": "Hòa cacao",
-          "content": "Khuấy cacao với nước nóng đến mịn."
+          "title": "Chuẩn bị và kiểm tra nguyên liệu",
+          "content": "Cân đủ nguyên liệu theo công thức, ưu tiên chuẩn bị Bột cacao, Nước nóng, Sữa đặc, Sữa tươi. Kiểm tra nền pha đúng mẻ, đá khô sạch, topping còn hạn dùng và dụng cụ không có mùi lạ."
         },
         {
           "stepNo": 2,
-          "title": "Phối sữa",
-          "content": "Thêm sữa đặc, sữa tươi và nước đường."
+          "title": "Hòa cacao",
+          "content": "Khuấy cacao với nước nóng đến mịn. Miết sát thành ca và khuấy đến khi không còn hạt bột khô hoặc cặn ở đáy."
         },
         {
           "stepNo": 3,
+          "title": "Phối sữa",
+          "content": "Thêm sữa đặc, sữa tươi và nước đường. Thực hiện đúng định lượng và kiểm tra trạng thái nguyên liệu trước khi chuyển sang bước tiếp theo."
+        },
+        {
+          "stepNo": 4,
           "title": "Hoàn thiện",
-          "content": "Lắc với đá 10 giây và rót ra ly."
+          "content": "Lắc với đá 10 giây và rót ra ly. Giữ kín nắp bình, lắc dứt khoát theo chiều dọc; dừng khi thành bình lạnh đều và có lớp bọt mỏng."
+        },
+        {
+          "stepNo": 5,
+          "title": "Kiểm tra thành phẩm và phục vụ",
+          "content": "Nếm một mẫu nhỏ trước khi giao: hương chính phải rõ, vị ngọt và chua cân bằng, không có cặn bột hoặc mùi lạ. Kiểm tra đúng dung tích 500 ml, lau sạch miệng ly, đậy nắp và phục vụ ngay."
         }
       ],
       "operationalNotes": [],
@@ -3439,18 +3769,28 @@
       "steps": [
         {
           "stepNo": 1,
-          "title": "Pha cacao",
-          "content": "Khuấy cacao, nước nóng và sữa đặc cho mịn."
+          "title": "Chuẩn bị và kiểm tra nguyên liệu",
+          "content": "Cân đủ nguyên liệu theo công thức, ưu tiên chuẩn bị Bột cacao, Nước nóng, Sữa đặc, Sữa tươi. Kiểm tra nền pha đúng mẻ, đá khô sạch, topping còn hạn dùng và dụng cụ không có mùi lạ."
         },
         {
           "stepNo": 2,
-          "title": "Làm lạnh",
-          "content": "Thêm sữa tươi, lắc với đá."
+          "title": "Pha cacao",
+          "content": "Khuấy cacao, nước nóng và sữa đặc cho mịn. Miết sát thành ca và khuấy đến khi không còn hạt bột khô hoặc cặn ở đáy."
         },
         {
           "stepNo": 3,
+          "title": "Làm lạnh",
+          "content": "Thêm sữa tươi, lắc với đá. Giữ kín nắp bình, lắc dứt khoát theo chiều dọc; dừng khi thành bình lạnh đều và có lớp bọt mỏng."
+        },
+        {
+          "stepNo": 4,
           "title": "Hoàn thiện",
-          "content": "Rót ra ly và phủ kem cheese."
+          "content": "Rót ra ly và phủ kem cheese. Rót sát thành ly để hạn chế bọt, giữ miệng ly sạch và không để nguyên liệu vượt vạch dung tích."
+        },
+        {
+          "stepNo": 5,
+          "title": "Kiểm tra thành phẩm và phục vụ",
+          "content": "Kiểm tra nền nước đủ lạnh, lớp kem hoặc foam phủ đều và còn tách lớp. Lau sạch miệng ly, đậy nắp chắc và giao ngay; không lắc lại sau khi phủ kem."
         }
       ],
       "operationalNotes": [],
@@ -3531,18 +3871,28 @@
       "steps": [
         {
           "stepNo": 1,
-          "title": "Đánh matcha",
-          "content": "Rây matcha, đánh với nước nóng đến mịn."
+          "title": "Chuẩn bị và kiểm tra nguyên liệu",
+          "content": "Cân đủ nguyên liệu theo công thức, ưu tiên chuẩn bị Bột matcha, Nước nóng 80°C, Sữa tươi, Nước đường. Kiểm tra nền pha đúng mẻ, đá khô sạch, topping còn hạn dùng và dụng cụ không có mùi lạ."
         },
         {
           "stepNo": 2,
-          "title": "Phối sữa",
-          "content": "Cho sữa tươi và nước đường vào ly đá."
+          "title": "Đánh matcha",
+          "content": "Rây matcha, đánh với nước nóng đến mịn. Thực hiện đúng định lượng và kiểm tra trạng thái nguyên liệu trước khi chuyển sang bước tiếp theo."
         },
         {
           "stepNo": 3,
+          "title": "Phối sữa",
+          "content": "Cho sữa tươi và nước đường vào ly đá. Thực hiện đúng định lượng và kiểm tra trạng thái nguyên liệu trước khi chuyển sang bước tiếp theo."
+        },
+        {
+          "stepNo": 4,
           "title": "Hoàn thiện",
-          "content": "Rót matcha lên trên để tạo tầng hoặc khuấy đều trước khi phục vụ."
+          "content": "Rót matcha lên trên để tạo tầng hoặc khuấy đều trước khi phục vụ. Dừng khi hỗn hợp xanh đồng nhất, không còn vón bột hoặc bọt lớn trên mặt."
+        },
+        {
+          "stepNo": 5,
+          "title": "Kiểm tra thành phẩm và phục vụ",
+          "content": "Kiểm tra các lớp còn phân tầng rõ, topping nằm đúng vị trí và tổng thể tích đúng ly 500 ml. Đối chiếu mẫu trình bày trước khi đậy nắp và giao ngay."
         }
       ],
       "operationalNotes": [],
@@ -3634,18 +3984,28 @@
       "steps": [
         {
           "stepNo": 1,
-          "title": "Đánh matcha",
-          "content": "Đánh matcha với nước nóng."
+          "title": "Chuẩn bị và kiểm tra nguyên liệu",
+          "content": "Cân đủ nguyên liệu theo công thức, ưu tiên chuẩn bị Bột matcha, Nước nóng 80°C, Sữa tươi, Nước đường. Kiểm tra nền pha đúng mẻ, đá khô sạch, topping còn hạn dùng và dụng cụ không có mùi lạ."
         },
         {
           "stepNo": 2,
-          "title": "Làm nền",
-          "content": "Thêm sữa tươi, nước đường và đá; lắc 8 giây."
+          "title": "Đánh matcha",
+          "content": "Đánh matcha với nước nóng. Dừng khi hỗn hợp xanh đồng nhất, không còn vón bột hoặc bọt lớn trên mặt."
         },
         {
           "stepNo": 3,
+          "title": "Làm nền",
+          "content": "Thêm sữa tươi, nước đường và đá; lắc 8 giây. Giữ kín nắp bình, lắc dứt khoát theo chiều dọc; dừng khi thành bình lạnh đều và có lớp bọt mỏng."
+        },
+        {
+          "stepNo": 4,
           "title": "Hoàn thiện",
-          "content": "Rót ra ly và phủ kem cheese."
+          "content": "Rót ra ly và phủ kem cheese. Rót sát thành ly để hạn chế bọt, giữ miệng ly sạch và không để nguyên liệu vượt vạch dung tích."
+        },
+        {
+          "stepNo": 5,
+          "title": "Kiểm tra thành phẩm và phục vụ",
+          "content": "Kiểm tra nền nước đủ lạnh, lớp kem hoặc foam phủ đều và còn tách lớp. Lau sạch miệng ly, đậy nắp chắc và giao ngay; không lắc lại sau khi phủ kem."
         }
       ],
       "operationalNotes": [],
@@ -3715,18 +4075,28 @@
       "steps": [
         {
           "stepNo": 1,
-          "title": "Tạo vân ly",
-          "content": "Rưới sốt đường đen quanh thành ly."
+          "title": "Chuẩn bị và kiểm tra nguyên liệu",
+          "content": "Cân đủ nguyên liệu theo công thức, ưu tiên chuẩn bị Trân châu đường đen, Sốt đường đen, Sữa tươi, Đá viên. Kiểm tra nền pha đúng mẻ, đá khô sạch, topping còn hạn dùng và dụng cụ không có mùi lạ."
         },
         {
           "stepNo": 2,
-          "title": "Thêm topping",
-          "content": "Cho trân châu vào đáy ly."
+          "title": "Tạo vân ly",
+          "content": "Rưới sốt đường đen quanh thành ly. Thực hiện đúng định lượng và kiểm tra trạng thái nguyên liệu trước khi chuyển sang bước tiếp theo."
         },
         {
           "stepNo": 3,
+          "title": "Thêm topping",
+          "content": "Cho trân châu vào đáy ly. Topping phải ráo vừa, còn độ dai hoặc mềm đặc trưng và không có mùi chua hay nhớt bất thường."
+        },
+        {
+          "stepNo": 4,
           "title": "Hoàn thiện",
-          "content": "Thêm đá và rót sữa tươi vào."
+          "content": "Thêm đá và rót sữa tươi vào. Thực hiện đúng định lượng và kiểm tra trạng thái nguyên liệu trước khi chuyển sang bước tiếp theo."
+        },
+        {
+          "stepNo": 5,
+          "title": "Kiểm tra thành phẩm và phục vụ",
+          "content": "Kiểm tra các lớp còn phân tầng rõ, topping nằm đúng vị trí và tổng thể tích đúng ly 500 ml. Đối chiếu mẫu trình bày trước khi đậy nắp và giao ngay."
         }
       ],
       "operationalNotes": [],
@@ -3806,18 +4176,28 @@
       "steps": [
         {
           "stepNo": 1,
-          "title": "Hòa khoai môn",
-          "content": "Khuấy bột khoai môn với nước nóng và sữa đặc."
+          "title": "Chuẩn bị và kiểm tra nguyên liệu",
+          "content": "Cân đủ nguyên liệu theo công thức, ưu tiên chuẩn bị Bột khoai môn, Nước nóng, Sữa đặc, Sữa tươi. Kiểm tra nền pha đúng mẻ, đá khô sạch, topping còn hạn dùng và dụng cụ không có mùi lạ."
         },
         {
           "stepNo": 2,
-          "title": "Làm lạnh",
-          "content": "Thêm sữa tươi, lắc với đá."
+          "title": "Hòa khoai môn",
+          "content": "Khuấy bột khoai môn với nước nóng và sữa đặc. Miết sát thành ca và khuấy đến khi không còn hạt bột khô hoặc cặn ở đáy."
         },
         {
           "stepNo": 3,
+          "title": "Làm lạnh",
+          "content": "Thêm sữa tươi, lắc với đá. Giữ kín nắp bình, lắc dứt khoát theo chiều dọc; dừng khi thành bình lạnh đều và có lớp bọt mỏng."
+        },
+        {
+          "stepNo": 4,
           "title": "Hoàn thiện",
-          "content": "Rót ra ly 500 ml."
+          "content": "Rót ra ly 500 ml. Rót sát thành ly để hạn chế bọt, giữ miệng ly sạch và không để nguyên liệu vượt vạch dung tích."
+        },
+        {
+          "stepNo": 5,
+          "title": "Kiểm tra thành phẩm và phục vụ",
+          "content": "Nếm một mẫu nhỏ trước khi giao: hương chính phải rõ, vị ngọt và chua cân bằng, không có cặn bột hoặc mùi lạ. Kiểm tra đúng dung tích 500 ml, lau sạch miệng ly, đậy nắp và phục vụ ngay."
         }
       ],
       "operationalNotes": [],
@@ -3898,18 +4278,28 @@
       "steps": [
         {
           "stepNo": 1,
-          "title": "Đánh matcha",
-          "content": "Rây và đánh matcha với nước nóng."
+          "title": "Chuẩn bị và kiểm tra nguyên liệu",
+          "content": "Cân đủ nguyên liệu theo công thức, ưu tiên chuẩn bị Bột matcha, Nước nóng 80°C, Sữa tươi, Nước đường. Kiểm tra nền pha đúng mẻ, đá khô sạch, topping còn hạn dùng và dụng cụ không có mùi lạ."
         },
         {
           "stepNo": 2,
-          "title": "Làm nền sữa",
-          "content": "Cho sữa tươi, nước đường và đá vào ly."
+          "title": "Đánh matcha",
+          "content": "Rây và đánh matcha với nước nóng. Dừng khi hỗn hợp xanh đồng nhất, không còn vón bột hoặc bọt lớn trên mặt."
         },
         {
           "stepNo": 3,
+          "title": "Làm nền sữa",
+          "content": "Cho sữa tươi, nước đường và đá vào ly. Thực hiện đúng định lượng và kiểm tra trạng thái nguyên liệu trước khi chuyển sang bước tiếp theo."
+        },
+        {
+          "stepNo": 4,
           "title": "Hoàn thiện",
-          "content": "Rót matcha chậm lên trên để tạo tầng."
+          "content": "Rót matcha chậm lên trên để tạo tầng. Rót chậm qua mặt sau muỗng hoặc sát thành ly để hai lớp tách rõ trước khi giao khách."
+        },
+        {
+          "stepNo": 5,
+          "title": "Kiểm tra thành phẩm và phục vụ",
+          "content": "Kiểm tra các lớp còn phân tầng rõ, topping nằm đúng vị trí và tổng thể tích đúng ly 500 ml. Đối chiếu mẫu trình bày trước khi đậy nắp và giao ngay."
         }
       ],
       "operationalNotes": [],
@@ -3980,18 +4370,28 @@
       "steps": [
         {
           "stepNo": 1,
-          "title": "Cân vị trà",
-          "content": "Khuấy trà ô long với nước đường."
+          "title": "Chuẩn bị và kiểm tra nguyên liệu",
+          "content": "Cân đủ nguyên liệu theo công thức, ưu tiên chuẩn bị Nền trà ô long, Nước đường, Kem cheese, Đá viên. Kiểm tra nền pha đúng mẻ, đá khô sạch, topping còn hạn dùng và dụng cụ không có mùi lạ."
         },
         {
           "stepNo": 2,
-          "title": "Làm lạnh",
-          "content": "Lắc cùng đá 8 giây."
+          "title": "Cân vị trà",
+          "content": "Khuấy trà ô long với nước đường. Khuấy theo một chiều đến khi hỗn hợp đồng nhất, không còn lớp tách hoặc cặn ở đáy ca."
         },
         {
           "stepNo": 3,
+          "title": "Làm lạnh",
+          "content": "Lắc cùng đá 8 giây. Giữ kín nắp bình, lắc dứt khoát theo chiều dọc; dừng khi thành bình lạnh đều và có lớp bọt mỏng."
+        },
+        {
+          "stepNo": 4,
           "title": "Hoàn thiện",
-          "content": "Rót ra ly và phủ kem cheese."
+          "content": "Rót ra ly và phủ kem cheese. Rót sát thành ly để hạn chế bọt, giữ miệng ly sạch và không để nguyên liệu vượt vạch dung tích."
+        },
+        {
+          "stepNo": 5,
+          "title": "Kiểm tra thành phẩm và phục vụ",
+          "content": "Kiểm tra nền nước đủ lạnh, lớp kem hoặc foam phủ đều và còn tách lớp. Lau sạch miệng ly, đậy nắp chắc và giao ngay; không lắc lại sau khi phủ kem."
         }
       ],
       "operationalNotes": [],
@@ -4062,18 +4462,28 @@
       "steps": [
         {
           "stepNo": 1,
-          "title": "Cân vị",
-          "content": "Khuấy trà lài với nước đường."
+          "title": "Chuẩn bị và kiểm tra nguyên liệu",
+          "content": "Cân đủ nguyên liệu theo công thức, ưu tiên chuẩn bị Nền trà lài, Nước đường, Kem cheese, Đá viên. Kiểm tra nền pha đúng mẻ, đá khô sạch, topping còn hạn dùng và dụng cụ không có mùi lạ."
         },
         {
           "stepNo": 2,
-          "title": "Làm lạnh",
-          "content": "Lắc với đá."
+          "title": "Cân vị",
+          "content": "Khuấy trà lài với nước đường. Khuấy theo một chiều đến khi hỗn hợp đồng nhất, không còn lớp tách hoặc cặn ở đáy ca."
         },
         {
           "stepNo": 3,
+          "title": "Làm lạnh",
+          "content": "Lắc với đá. Giữ kín nắp bình, lắc dứt khoát theo chiều dọc; dừng khi thành bình lạnh đều và có lớp bọt mỏng."
+        },
+        {
+          "stepNo": 4,
           "title": "Hoàn thiện",
-          "content": "Rót ra ly và phủ kem cheese."
+          "content": "Rót ra ly và phủ kem cheese. Rót sát thành ly để hạn chế bọt, giữ miệng ly sạch và không để nguyên liệu vượt vạch dung tích."
+        },
+        {
+          "stepNo": 5,
+          "title": "Kiểm tra thành phẩm và phục vụ",
+          "content": "Kiểm tra nền nước đủ lạnh, lớp kem hoặc foam phủ đều và còn tách lớp. Lau sạch miệng ly, đậy nắp chắc và giao ngay; không lắc lại sau khi phủ kem."
         }
       ],
       "operationalNotes": [],
@@ -4167,18 +4577,28 @@
       "steps": [
         {
           "stepNo": 1,
-          "title": "Phối trà",
-          "content": "Lắc trà, siro đào và chanh với đá."
+          "title": "Chuẩn bị và kiểm tra nguyên liệu",
+          "content": "Cân đủ nguyên liệu theo công thức, ưu tiên chuẩn bị Nền trà lài, Siro đào, Nước cốt chanh, Đào ngâm. Kiểm tra nền pha đúng mẻ, đá khô sạch, topping còn hạn dùng và dụng cụ không có mùi lạ."
         },
         {
           "stepNo": 2,
-          "title": "Thêm topping",
-          "content": "Rót ra ly và cho đào ngâm."
+          "title": "Phối trà",
+          "content": "Lắc trà, siro đào và chanh với đá. Giữ kín nắp bình, lắc dứt khoát theo chiều dọc; dừng khi thành bình lạnh đều và có lớp bọt mỏng."
         },
         {
           "stepNo": 3,
+          "title": "Thêm topping",
+          "content": "Rót ra ly và cho đào ngâm. Rót sát thành ly để hạn chế bọt, giữ miệng ly sạch và không để nguyên liệu vượt vạch dung tích."
+        },
+        {
+          "stepNo": 4,
           "title": "Hoàn thiện",
-          "content": "Phủ kem cheese lên mặt."
+          "content": "Phủ kem cheese lên mặt. Rót lớp kem chậm ở giữa ly để lớp phủ dày đều, không chìm ngay xuống nền nước."
+        },
+        {
+          "stepNo": 5,
+          "title": "Kiểm tra thành phẩm và phục vụ",
+          "content": "Kiểm tra nền nước đủ lạnh, lớp kem hoặc foam phủ đều và còn tách lớp. Lau sạch miệng ly, đậy nắp chắc và giao ngay; không lắc lại sau khi phủ kem."
         }
       ],
       "operationalNotes": [],
@@ -4272,18 +4692,28 @@
       "steps": [
         {
           "stepNo": 1,
-          "title": "Phối trà",
-          "content": "Lắc trà, siro dâu, mứt dâu và chanh với đá."
+          "title": "Chuẩn bị và kiểm tra nguyên liệu",
+          "content": "Cân đủ nguyên liệu theo công thức, ưu tiên chuẩn bị Nền trà lài, Siro dâu, Mứt dâu, Nước cốt chanh. Kiểm tra nền pha đúng mẻ, đá khô sạch, topping còn hạn dùng và dụng cụ không có mùi lạ."
         },
         {
           "stepNo": 2,
-          "title": "Rót ly",
-          "content": "Rót hỗn hợp ra ly."
+          "title": "Phối trà",
+          "content": "Lắc trà, siro dâu, mứt dâu và chanh với đá. Giữ kín nắp bình, lắc dứt khoát theo chiều dọc; dừng khi thành bình lạnh đều và có lớp bọt mỏng."
         },
         {
           "stepNo": 3,
+          "title": "Rót ly",
+          "content": "Rót hỗn hợp ra ly. Thực hiện đúng định lượng và kiểm tra trạng thái nguyên liệu trước khi chuyển sang bước tiếp theo."
+        },
+        {
+          "stepNo": 4,
           "title": "Hoàn thiện",
-          "content": "Phủ kem cheese."
+          "content": "Phủ kem cheese. Rót lớp kem chậm ở giữa ly để lớp phủ dày đều, không chìm ngay xuống nền nước."
+        },
+        {
+          "stepNo": 5,
+          "title": "Kiểm tra thành phẩm và phục vụ",
+          "content": "Kiểm tra nền nước đủ lạnh, lớp kem hoặc foam phủ đều và còn tách lớp. Lau sạch miệng ly, đậy nắp chắc và giao ngay; không lắc lại sau khi phủ kem."
         }
       ],
       "operationalNotes": [],
@@ -4375,18 +4805,28 @@
       "steps": [
         {
           "stepNo": 1,
-          "title": "Phối trà",
-          "content": "Lắc trà, sinh tố xoài và chanh với đá."
+          "title": "Chuẩn bị và kiểm tra nguyên liệu",
+          "content": "Cân đủ nguyên liệu theo công thức, ưu tiên chuẩn bị Nền trà lài, Sinh tố xoài, Nước cốt chanh, Xoài hạt lựu. Kiểm tra nền pha đúng mẻ, đá khô sạch, topping còn hạn dùng và dụng cụ không có mùi lạ."
         },
         {
           "stepNo": 2,
-          "title": "Thêm xoài",
-          "content": "Rót ra ly và thêm xoài hạt lựu."
+          "title": "Phối trà",
+          "content": "Lắc trà, sinh tố xoài và chanh với đá. Giữ kín nắp bình, lắc dứt khoát theo chiều dọc; dừng khi thành bình lạnh đều và có lớp bọt mỏng."
         },
         {
           "stepNo": 3,
+          "title": "Thêm xoài",
+          "content": "Rót ra ly và thêm xoài hạt lựu. Rót sát thành ly để hạn chế bọt, giữ miệng ly sạch và không để nguyên liệu vượt vạch dung tích."
+        },
+        {
+          "stepNo": 4,
           "title": "Hoàn thiện",
-          "content": "Phủ kem cheese."
+          "content": "Phủ kem cheese. Rót lớp kem chậm ở giữa ly để lớp phủ dày đều, không chìm ngay xuống nền nước."
+        },
+        {
+          "stepNo": 5,
+          "title": "Kiểm tra thành phẩm và phục vụ",
+          "content": "Kiểm tra nền nước đủ lạnh, lớp kem hoặc foam phủ đều và còn tách lớp. Lau sạch miệng ly, đậy nắp chắc và giao ngay; không lắc lại sau khi phủ kem."
         }
       ],
       "operationalNotes": [],
@@ -4446,18 +4886,28 @@
       "steps": [
         {
           "stepNo": 1,
-          "title": "Chuẩn bị ly",
-          "content": "Cắt pudding thành miếng vừa ăn và cho vào đáy ly."
+          "title": "Chuẩn bị và kiểm tra nguyên liệu",
+          "content": "Cân đủ nguyên liệu theo công thức, ưu tiên chuẩn bị Nền trà sữa truyền thống, Pudding trứng, Đá viên. Kiểm tra nền pha đúng mẻ, đá khô sạch, topping còn hạn dùng và dụng cụ không có mùi lạ."
         },
         {
           "stepNo": 2,
-          "title": "Làm lạnh",
-          "content": "Lắc nền trà sữa với đá."
+          "title": "Chuẩn bị ly",
+          "content": "Cắt pudding thành miếng vừa ăn và cho vào đáy ly. Thực hiện đúng định lượng và kiểm tra trạng thái nguyên liệu trước khi chuyển sang bước tiếp theo."
         },
         {
           "stepNo": 3,
+          "title": "Làm lạnh",
+          "content": "Lắc nền trà sữa với đá. Giữ kín nắp bình, lắc dứt khoát theo chiều dọc; dừng khi thành bình lạnh đều và có lớp bọt mỏng."
+        },
+        {
+          "stepNo": 4,
           "title": "Hoàn thiện",
-          "content": "Rót trà sữa vào ly."
+          "content": "Rót trà sữa vào ly. Thực hiện đúng định lượng và kiểm tra trạng thái nguyên liệu trước khi chuyển sang bước tiếp theo."
+        },
+        {
+          "stepNo": 5,
+          "title": "Kiểm tra thành phẩm và phục vụ",
+          "content": "Nếm một mẫu nhỏ trước khi giao: hương chính phải rõ, vị ngọt và chua cân bằng, không có cặn bột hoặc mùi lạ. Kiểm tra đúng dung tích 500 ml, lau sạch miệng ly, đậy nắp và phục vụ ngay."
         }
       ],
       "operationalNotes": [],
@@ -4518,18 +4968,28 @@
       "steps": [
         {
           "stepNo": 1,
-          "title": "Chuẩn bị ly",
-          "content": "Cho thạch 3Q vào đáy ly."
+          "title": "Chuẩn bị và kiểm tra nguyên liệu",
+          "content": "Cân đủ nguyên liệu theo công thức, ưu tiên chuẩn bị Nền trà sữa truyền thống, Thạch 3Q, Đá viên. Kiểm tra nền pha đúng mẻ, đá khô sạch, topping còn hạn dùng và dụng cụ không có mùi lạ."
         },
         {
           "stepNo": 2,
-          "title": "Làm lạnh",
-          "content": "Lắc trà sữa với đá."
+          "title": "Chuẩn bị ly",
+          "content": "Cho thạch 3Q vào đáy ly. Topping phải ráo vừa, còn độ dai hoặc mềm đặc trưng và không có mùi chua hay nhớt bất thường."
         },
         {
           "stepNo": 3,
+          "title": "Làm lạnh",
+          "content": "Lắc trà sữa với đá. Giữ kín nắp bình, lắc dứt khoát theo chiều dọc; dừng khi thành bình lạnh đều và có lớp bọt mỏng."
+        },
+        {
+          "stepNo": 4,
           "title": "Hoàn thiện",
-          "content": "Rót vào ly và phục vụ."
+          "content": "Rót vào ly và phục vụ. Rót sát thành ly để hạn chế bọt, giữ miệng ly sạch và không để nguyên liệu vượt vạch dung tích."
+        },
+        {
+          "stepNo": 5,
+          "title": "Kiểm tra thành phẩm và phục vụ",
+          "content": "Nếm một mẫu nhỏ trước khi giao: hương chính phải rõ, vị ngọt và chua cân bằng, không có cặn bột hoặc mùi lạ. Kiểm tra đúng dung tích 500 ml, lau sạch miệng ly, đậy nắp và phục vụ ngay."
         }
       ],
       "operationalNotes": [],
@@ -4590,18 +5050,28 @@
       "steps": [
         {
           "stepNo": 1,
-          "title": "Chuẩn bị ly",
-          "content": "Cho trân châu trắng vào đáy ly."
+          "title": "Chuẩn bị và kiểm tra nguyên liệu",
+          "content": "Cân đủ nguyên liệu theo công thức, ưu tiên chuẩn bị Nền trà sữa lài, Trân châu trắng, Đá viên. Kiểm tra nền pha đúng mẻ, đá khô sạch, topping còn hạn dùng và dụng cụ không có mùi lạ."
         },
         {
           "stepNo": 2,
-          "title": "Làm lạnh",
-          "content": "Lắc trà sữa với đá."
+          "title": "Chuẩn bị ly",
+          "content": "Cho trân châu trắng vào đáy ly. Topping phải ráo vừa, còn độ dai hoặc mềm đặc trưng và không có mùi chua hay nhớt bất thường."
         },
         {
           "stepNo": 3,
+          "title": "Làm lạnh",
+          "content": "Lắc trà sữa với đá. Giữ kín nắp bình, lắc dứt khoát theo chiều dọc; dừng khi thành bình lạnh đều và có lớp bọt mỏng."
+        },
+        {
+          "stepNo": 4,
           "title": "Hoàn thiện",
-          "content": "Rót vào ly."
+          "content": "Rót vào ly. Rót sát thành ly để hạn chế bọt, giữ miệng ly sạch và không để nguyên liệu vượt vạch dung tích."
+        },
+        {
+          "stepNo": 5,
+          "title": "Kiểm tra thành phẩm và phục vụ",
+          "content": "Nếm một mẫu nhỏ trước khi giao: hương chính phải rõ, vị ngọt và chua cân bằng, không có cặn bột hoặc mùi lạ. Kiểm tra đúng dung tích 500 ml, lau sạch miệng ly, đậy nắp và phục vụ ngay."
         }
       ],
       "operationalNotes": [],
@@ -4684,18 +5154,28 @@
       "steps": [
         {
           "stepNo": 1,
-          "title": "Chuẩn bị topping",
-          "content": "Cho lần lượt trân châu, pudding và thạch vào ly."
+          "title": "Chuẩn bị và kiểm tra nguyên liệu",
+          "content": "Cân đủ nguyên liệu theo công thức, ưu tiên chuẩn bị Nền trà sữa truyền thống, Trân châu đen, Pudding trứng, Thạch 3Q. Kiểm tra nền pha đúng mẻ, đá khô sạch, topping còn hạn dùng và dụng cụ không có mùi lạ."
         },
         {
           "stepNo": 2,
-          "title": "Làm lạnh",
-          "content": "Lắc trà sữa với đá."
+          "title": "Chuẩn bị topping",
+          "content": "Cho lần lượt trân châu, pudding và thạch vào ly. Thực hiện đúng định lượng và kiểm tra trạng thái nguyên liệu trước khi chuyển sang bước tiếp theo."
         },
         {
           "stepNo": 3,
+          "title": "Làm lạnh",
+          "content": "Lắc trà sữa với đá. Giữ kín nắp bình, lắc dứt khoát theo chiều dọc; dừng khi thành bình lạnh đều và có lớp bọt mỏng."
+        },
+        {
+          "stepNo": 4,
           "title": "Hoàn thiện",
-          "content": "Rót trà sữa vào ly, kiểm tra tổng thể tích không vượt miệng ly."
+          "content": "Rót trà sữa vào ly, kiểm tra tổng thể tích không vượt miệng ly. Thực hiện đúng định lượng và kiểm tra trạng thái nguyên liệu trước khi chuyển sang bước tiếp theo."
+        },
+        {
+          "stepNo": 5,
+          "title": "Kiểm tra thành phẩm và phục vụ",
+          "content": "Nếm một mẫu nhỏ trước khi giao: hương chính phải rõ, vị ngọt và chua cân bằng, không có cặn bột hoặc mùi lạ. Kiểm tra đúng dung tích 500 ml, lau sạch miệng ly, đậy nắp và phục vụ ngay."
         }
       ],
       "operationalNotes": [],
@@ -4745,23 +5225,33 @@
       "steps": [
         {
           "stepNo": 1,
-          "title": "Làm nóng dụng cụ",
-          "content": "Tráng bình ủ bằng nước nóng rồi đổ bỏ."
+          "title": "Vệ sinh và chuẩn bị mẻ",
+          "content": "Vệ sinh tay, dụng cụ và bề mặt thao tác; cân đủ nguyên liệu theo công thức. Dùng dụng cụ khô sạch, kiểm tra nguyên liệu còn hạn và chuẩn bị nhãn ghi giờ hoàn thành."
         },
         {
           "stepNo": 2,
-          "title": "Ủ trà",
-          "content": "Cho trà vào bình, rót nước 95°C, đậy nắp và ủ 10 phút."
+          "title": "Làm nóng dụng cụ",
+          "content": "Tráng bình ủ bằng nước nóng rồi đổ bỏ. Thực hiện đúng định lượng và kiểm tra trạng thái nguyên liệu trước khi chuyển sang bước tiếp theo."
         },
         {
           "stepNo": 3,
-          "title": "Lọc trà",
-          "content": "Lọc bỏ xác trà, không ép xác."
+          "title": "Ủ trà",
+          "content": "Cho trà vào bình, rót nước 95°C, đậy nắp và ủ 10 phút. Bấm giờ ngay khi nước chạm trà; không kéo dài thời gian ủ vì nền sẽ chát và mất hương."
         },
         {
           "stepNo": 4,
+          "title": "Lọc trà",
+          "content": "Lọc bỏ xác trà, không ép xác. Để nước trà tự chảy hết qua lọc, không bóp hoặc ép xác trà."
+        },
+        {
+          "stepNo": 5,
           "title": "Làm nguội",
-          "content": "Để trà hạ dưới 40°C rồi bảo quản lạnh."
+          "content": "Để trà hạ dưới 40°C rồi bảo quản lạnh. Chuyển sang dụng cụ sạch có nắp, ghi giờ hoàn thành và đưa về 2–5°C càng sớm càng tốt."
+        },
+        {
+          "stepNo": 6,
+          "title": "Kiểm tra mẻ và ghi nhãn",
+          "content": "Đối chiếu màu, mùi, độ trong hoặc độ sánh với mẫu chuẩn trước khi đưa vào sử dụng. Dùng tốt nhất trong 8 giờ; tối đa 24 giờ ở 2–5°C."
         }
       ],
       "operationalNotes": [
@@ -4813,18 +5303,28 @@
       "steps": [
         {
           "stepNo": 1,
-          "title": "Ủ trà",
-          "content": "Cho trà vào bình, rót nước 88°C và ủ 8 phút."
+          "title": "Vệ sinh và chuẩn bị mẻ",
+          "content": "Vệ sinh tay, dụng cụ và bề mặt thao tác; cân đủ nguyên liệu theo công thức. Dùng dụng cụ khô sạch, kiểm tra nguyên liệu còn hạn và chuẩn bị nhãn ghi giờ hoàn thành."
         },
         {
           "stepNo": 2,
-          "title": "Lọc",
-          "content": "Lọc bỏ xác trà, tránh ép xác."
+          "title": "Ủ trà",
+          "content": "Cho trà vào bình, rót nước 88°C và ủ 8 phút. Thực hiện đúng định lượng và kiểm tra trạng thái nguyên liệu trước khi chuyển sang bước tiếp theo."
         },
         {
           "stepNo": 3,
+          "title": "Lọc",
+          "content": "Lọc bỏ xác trà, tránh ép xác. Để nước trà tự chảy hết qua lọc, không bóp hoặc ép xác trà."
+        },
+        {
+          "stepNo": 4,
           "title": "Làm nguội",
-          "content": "Để nguội nhanh và bảo quản lạnh."
+          "content": "Để nguội nhanh và bảo quản lạnh. Chuyển sang dụng cụ sạch có nắp, ghi giờ hoàn thành và đưa về 2–5°C càng sớm càng tốt."
+        },
+        {
+          "stepNo": 5,
+          "title": "Kiểm tra mẻ và ghi nhãn",
+          "content": "Đối chiếu màu, mùi, độ trong hoặc độ sánh với mẫu chuẩn trước khi đưa vào sử dụng. Không ủ quá 10 phút để tránh chát."
         }
       ],
       "operationalNotes": [
@@ -4876,18 +5376,28 @@
       "steps": [
         {
           "stepNo": 1,
-          "title": "Tráng trà",
-          "content": "Rót nhanh 100 ml nước nóng qua trà rồi bỏ nước tráng."
+          "title": "Vệ sinh và chuẩn bị mẻ",
+          "content": "Vệ sinh tay, dụng cụ và bề mặt thao tác; cân đủ nguyên liệu theo công thức. Dùng dụng cụ khô sạch, kiểm tra nguyên liệu còn hạn và chuẩn bị nhãn ghi giờ hoàn thành."
         },
         {
           "stepNo": 2,
-          "title": "Ủ",
-          "content": "Rót 1000 ml nước 92°C và ủ 9 phút."
+          "title": "Tráng trà",
+          "content": "Rót nhanh 100 ml nước nóng qua trà rồi bỏ nước tráng. Thực hiện đúng định lượng và kiểm tra trạng thái nguyên liệu trước khi chuyển sang bước tiếp theo."
         },
         {
           "stepNo": 3,
+          "title": "Ủ",
+          "content": "Rót 1000 ml nước 92°C và ủ 9 phút. Thực hiện đúng định lượng và kiểm tra trạng thái nguyên liệu trước khi chuyển sang bước tiếp theo."
+        },
+        {
+          "stepNo": 4,
           "title": "Lọc",
-          "content": "Lọc trà và làm nguội nhanh."
+          "content": "Lọc trà và làm nguội nhanh. Để nước trà tự chảy hết qua lọc, không bóp hoặc ép xác trà."
+        },
+        {
+          "stepNo": 5,
+          "title": "Kiểm tra mẻ và ghi nhãn",
+          "content": "Đối chiếu màu, mùi, độ trong hoặc độ sánh với mẫu chuẩn trước khi đưa vào sử dụng. Đậy kín, ghi tên mẻ và giờ hoàn thành; bảo quản theo nhiệt độ phù hợp. Loại bỏ nếu có mùi lạ, tách lớp bất thường hoặc quá thời gian sử dụng nội bộ."
         }
       ],
       "operationalNotes": [],
@@ -4937,18 +5447,28 @@
       "steps": [
         {
           "stepNo": 1,
-          "title": "Ủ trà",
-          "content": "Cho trà vào túi lọc, rót nước nóng và ủ 10 phút."
+          "title": "Vệ sinh và chuẩn bị mẻ",
+          "content": "Vệ sinh tay, dụng cụ và bề mặt thao tác; cân đủ nguyên liệu theo công thức. Dùng dụng cụ khô sạch, kiểm tra nguyên liệu còn hạn và chuẩn bị nhãn ghi giờ hoàn thành."
         },
         {
           "stepNo": 2,
-          "title": "Lọc",
-          "content": "Nhấc túi lọc, để ráo tự nhiên."
+          "title": "Ủ trà",
+          "content": "Cho trà vào túi lọc, rót nước nóng và ủ 10 phút. Để nước trà tự chảy hết qua lọc, không bóp hoặc ép xác trà."
         },
         {
           "stepNo": 3,
+          "title": "Lọc",
+          "content": "Nhấc túi lọc, để ráo tự nhiên. Để nước trà tự chảy hết qua lọc, không bóp hoặc ép xác trà."
+        },
+        {
+          "stepNo": 4,
           "title": "Làm nguội",
-          "content": "Làm nguội nhanh trước khi bảo quản."
+          "content": "Làm nguội nhanh trước khi bảo quản. Chuyển sang dụng cụ sạch có nắp, ghi giờ hoàn thành và đưa về 2–5°C càng sớm càng tốt."
+        },
+        {
+          "stepNo": 5,
+          "title": "Kiểm tra mẻ và ghi nhãn",
+          "content": "Đối chiếu màu, mùi, độ trong hoặc độ sánh với mẫu chuẩn trước khi đưa vào sử dụng. Đậy kín, ghi tên mẻ và giờ hoàn thành; bảo quản theo nhiệt độ phù hợp. Loại bỏ nếu có mùi lạ, tách lớp bất thường hoặc quá thời gian sử dụng nội bộ."
         }
       ],
       "operationalNotes": [],
@@ -4998,18 +5518,28 @@
       "steps": [
         {
           "stepNo": 1,
-          "title": "Ủ trà",
-          "content": "Rót nước nóng vào trà và ủ 10 phút."
+          "title": "Vệ sinh và chuẩn bị mẻ",
+          "content": "Vệ sinh tay, dụng cụ và bề mặt thao tác; cân đủ nguyên liệu theo công thức. Dùng dụng cụ khô sạch, kiểm tra nguyên liệu còn hạn và chuẩn bị nhãn ghi giờ hoàn thành."
         },
         {
           "stepNo": 2,
-          "title": "Lọc",
-          "content": "Lọc bỏ xác trà."
+          "title": "Ủ trà",
+          "content": "Rót nước nóng vào trà và ủ 10 phút. Thực hiện đúng định lượng và kiểm tra trạng thái nguyên liệu trước khi chuyển sang bước tiếp theo."
         },
         {
           "stepNo": 3,
+          "title": "Lọc",
+          "content": "Lọc bỏ xác trà. Để nước trà tự chảy hết qua lọc, không bóp hoặc ép xác trà."
+        },
+        {
+          "stepNo": 4,
           "title": "Làm nguội",
-          "content": "Hạ nhiệt nhanh và bảo quản lạnh."
+          "content": "Hạ nhiệt nhanh và bảo quản lạnh. Chuyển sang dụng cụ sạch có nắp, ghi giờ hoàn thành và đưa về 2–5°C càng sớm càng tốt."
+        },
+        {
+          "stepNo": 5,
+          "title": "Kiểm tra mẻ và ghi nhãn",
+          "content": "Đối chiếu màu, mùi, độ trong hoặc độ sánh với mẫu chuẩn trước khi đưa vào sử dụng. Đậy kín, ghi tên mẻ và giờ hoàn thành; bảo quản theo nhiệt độ phù hợp. Loại bỏ nếu có mùi lạ, tách lớp bất thường hoặc quá thời gian sử dụng nội bộ."
         }
       ],
       "operationalNotes": [],
@@ -5081,23 +5611,33 @@
       "steps": [
         {
           "stepNo": 1,
-          "title": "Hòa bột",
-          "content": "Cho bột sữa vào trà còn ấm 60–70°C, khuấy tan."
+          "title": "Vệ sinh và chuẩn bị mẻ",
+          "content": "Vệ sinh tay, dụng cụ và bề mặt thao tác; cân đủ nguyên liệu theo công thức. Dùng dụng cụ khô sạch, kiểm tra nguyên liệu còn hạn và chuẩn bị nhãn ghi giờ hoàn thành."
         },
         {
           "stepNo": 2,
-          "title": "Phối sữa",
-          "content": "Thêm sữa đặc và nước đường, khuấy 1 phút."
+          "title": "Hòa bột",
+          "content": "Cho bột sữa vào trà còn ấm 60–70°C, khuấy tan. Miết sát thành ca và khuấy đến khi không còn hạt bột khô hoặc cặn ở đáy."
         },
         {
           "stepNo": 3,
-          "title": "Cân thể tích",
-          "content": "Bổ sung nước lọc nếu cần để đủ 1 lít."
+          "title": "Phối sữa",
+          "content": "Thêm sữa đặc và nước đường, khuấy 1 phút. Khuấy theo một chiều đến khi hỗn hợp đồng nhất, không còn lớp tách hoặc cặn ở đáy ca."
         },
         {
           "stepNo": 4,
+          "title": "Cân thể tích",
+          "content": "Bổ sung nước lọc nếu cần để đủ 1 lít. Để nước trà tự chảy hết qua lọc, không bóp hoặc ép xác trà."
+        },
+        {
+          "stepNo": 5,
           "title": "Làm nguội",
-          "content": "Làm nguội nhanh và bảo quản lạnh."
+          "content": "Làm nguội nhanh và bảo quản lạnh. Chuyển sang dụng cụ sạch có nắp, ghi giờ hoàn thành và đưa về 2–5°C càng sớm càng tốt."
+        },
+        {
+          "stepNo": 6,
+          "title": "Kiểm tra mẻ và ghi nhãn",
+          "content": "Đối chiếu màu, mùi, độ trong hoặc độ sánh với mẫu chuẩn trước khi đưa vào sử dụng. Lắc hoặc khuấy lại trước khi dùng."
         }
       ],
       "operationalNotes": [
@@ -5171,18 +5711,28 @@
       "steps": [
         {
           "stepNo": 1,
-          "title": "Hòa sữa",
-          "content": "Cho bột sữa vào trà ấm, khuấy tan."
+          "title": "Vệ sinh và chuẩn bị mẻ",
+          "content": "Vệ sinh tay, dụng cụ và bề mặt thao tác; cân đủ nguyên liệu theo công thức. Dùng dụng cụ khô sạch, kiểm tra nguyên liệu còn hạn và chuẩn bị nhãn ghi giờ hoàn thành."
         },
         {
           "stepNo": 2,
-          "title": "Cân vị",
-          "content": "Thêm sữa đặc và nước đường."
+          "title": "Hòa sữa",
+          "content": "Cho bột sữa vào trà ấm, khuấy tan. Miết sát thành ca và khuấy đến khi không còn hạt bột khô hoặc cặn ở đáy."
         },
         {
           "stepNo": 3,
+          "title": "Cân vị",
+          "content": "Thêm sữa đặc và nước đường. Thực hiện đúng định lượng và kiểm tra trạng thái nguyên liệu trước khi chuyển sang bước tiếp theo."
+        },
+        {
+          "stepNo": 4,
           "title": "Hoàn thiện",
-          "content": "Cân đủ 1 lít, làm nguội nhanh và bảo quản lạnh."
+          "content": "Cân đủ 1 lít, làm nguội nhanh và bảo quản lạnh. Chuyển sang dụng cụ sạch có nắp, ghi giờ hoàn thành và đưa về 2–5°C càng sớm càng tốt."
+        },
+        {
+          "stepNo": 5,
+          "title": "Kiểm tra mẻ và ghi nhãn",
+          "content": "Đối chiếu màu, mùi, độ trong hoặc độ sánh với mẫu chuẩn trước khi đưa vào sử dụng. Đậy kín, ghi tên mẻ và giờ hoàn thành; bảo quản theo nhiệt độ phù hợp. Loại bỏ nếu có mùi lạ, tách lớp bất thường hoặc quá thời gian sử dụng nội bộ."
         }
       ],
       "operationalNotes": [],
@@ -5252,28 +5802,38 @@
       "steps": [
         {
           "stepNo": 1,
-          "title": "Nấu nước",
-          "content": "Đun sôi mạnh 3 lít nước."
+          "title": "Vệ sinh và chuẩn bị mẻ",
+          "content": "Vệ sinh tay, dụng cụ và bề mặt thao tác; cân đủ nguyên liệu theo công thức. Dùng dụng cụ khô sạch, kiểm tra nguyên liệu còn hạn và chuẩn bị nhãn ghi giờ hoàn thành."
         },
         {
           "stepNo": 2,
-          "title": "Luộc trân châu",
-          "content": "Cho trân châu vào, khuấy 30 giây đầu; nấu theo thời gian nhà sản xuất, thường 25–30 phút."
+          "title": "Nấu nước",
+          "content": "Đun sôi mạnh 3 lít nước. Khuấy sát đáy để không khét; hạ lửa ngay khi đạt nhiệt hoặc độ sánh yêu cầu."
         },
         {
           "stepNo": 3,
-          "title": "Ủ",
-          "content": "Tắt bếp, đậy nắp và ủ 20 phút."
+          "title": "Luộc trân châu",
+          "content": "Cho trân châu vào, khuấy 30 giây đầu; nấu theo thời gian nhà sản xuất, thường 25–30 phút. Khuấy theo một chiều đến khi hỗn hợp đồng nhất, không còn lớp tách hoặc cặn ở đáy ca."
         },
         {
           "stepNo": 4,
-          "title": "Rửa",
-          "content": "Xả nhanh bằng nước sạch đến khi bớt nhớt."
+          "title": "Ủ",
+          "content": "Tắt bếp, đậy nắp và ủ 20 phút. Bấm giờ ngay khi nước chạm trà; không kéo dài thời gian ủ vì nền sẽ chát và mất hương."
         },
         {
           "stepNo": 5,
+          "title": "Rửa",
+          "content": "Xả nhanh bằng nước sạch đến khi bớt nhớt. Thực hiện đúng định lượng và kiểm tra trạng thái nguyên liệu trước khi chuyển sang bước tiếp theo."
+        },
+        {
+          "stepNo": 6,
           "title": "Ngâm đường",
-          "content": "Hòa đường nâu với nước nóng, ngâm trân châu ít nhất 15 phút."
+          "content": "Hòa đường nâu với nước nóng, ngâm trân châu ít nhất 15 phút. Khuấy theo một chiều đến khi hỗn hợp đồng nhất, không còn lớp tách hoặc cặn ở đáy ca."
+        },
+        {
+          "stepNo": 7,
+          "title": "Kiểm tra mẻ và ghi nhãn",
+          "content": "Đối chiếu màu, mùi, độ trong hoặc độ sánh với mẫu chuẩn trước khi đưa vào sử dụng. Dùng tốt nhất trong 4 giờ ở nhiệt độ phòng."
         }
       ],
       "operationalNotes": [
@@ -5325,18 +5885,28 @@
       "steps": [
         {
           "stepNo": 1,
-          "title": "Làm nóng sốt",
-          "content": "Đun sốt đường đen đến 70–80°C."
+          "title": "Vệ sinh và chuẩn bị mẻ",
+          "content": "Vệ sinh tay, dụng cụ và bề mặt thao tác; cân đủ nguyên liệu theo công thức. Dùng dụng cụ khô sạch, kiểm tra nguyên liệu còn hạn và chuẩn bị nhãn ghi giờ hoàn thành."
         },
         {
           "stepNo": 2,
-          "title": "Áo sốt",
-          "content": "Cho trân châu vào, đảo nhẹ 3–5 phút."
+          "title": "Làm nóng sốt",
+          "content": "Đun sốt đường đen đến 70–80°C. Khuấy sát đáy để không khét; hạ lửa ngay khi đạt nhiệt hoặc độ sánh yêu cầu."
         },
         {
           "stepNo": 3,
+          "title": "Áo sốt",
+          "content": "Cho trân châu vào, đảo nhẹ 3–5 phút. Topping phải ráo vừa, còn độ dai hoặc mềm đặc trưng và không có mùi chua hay nhớt bất thường."
+        },
+        {
+          "stepNo": 4,
           "title": "Ủ vị",
-          "content": "Tắt bếp và ủ 15 phút trước khi dùng."
+          "content": "Tắt bếp và ủ 15 phút trước khi dùng. Thực hiện đúng định lượng và kiểm tra trạng thái nguyên liệu trước khi chuyển sang bước tiếp theo."
+        },
+        {
+          "stepNo": 5,
+          "title": "Kiểm tra mẻ và ghi nhãn",
+          "content": "Đối chiếu màu, mùi, độ trong hoặc độ sánh với mẫu chuẩn trước khi đưa vào sử dụng. Giữ ấm nhẹ; không đun sôi lại nhiều lần."
         }
       ],
       "operationalNotes": [
@@ -5420,23 +5990,33 @@
       "steps": [
         {
           "stepNo": 1,
-          "title": "Làm mềm cheese",
-          "content": "Đánh cream cheese với đường và muối đến mịn."
+          "title": "Vệ sinh và chuẩn bị mẻ",
+          "content": "Vệ sinh tay, dụng cụ và bề mặt thao tác; cân đủ nguyên liệu theo công thức. Dùng dụng cụ khô sạch, kiểm tra nguyên liệu còn hạn và chuẩn bị nhãn ghi giờ hoàn thành."
         },
         {
           "stepNo": 2,
-          "title": "Phối sữa",
-          "content": "Cho sữa tươi từ từ, đánh đến đồng nhất."
+          "title": "Làm mềm cheese",
+          "content": "Đánh cream cheese với đường và muối đến mịn. Thực hiện đúng định lượng và kiểm tra trạng thái nguyên liệu trước khi chuyển sang bước tiếp theo."
         },
         {
           "stepNo": 3,
-          "title": "Tạo độ bông",
-          "content": "Thêm whipping cream và đánh tốc độ vừa đến khi sánh chảy chậm."
+          "title": "Phối sữa",
+          "content": "Cho sữa tươi từ từ, đánh đến đồng nhất. Thực hiện đúng định lượng và kiểm tra trạng thái nguyên liệu trước khi chuyển sang bước tiếp theo."
         },
         {
           "stepNo": 4,
+          "title": "Tạo độ bông",
+          "content": "Thêm whipping cream và đánh tốc độ vừa đến khi sánh chảy chậm. Thực hiện đúng định lượng và kiểm tra trạng thái nguyên liệu trước khi chuyển sang bước tiếp theo."
+        },
+        {
+          "stepNo": 5,
           "title": "Bảo quản",
-          "content": "Cho vào chai kín, giữ lạnh 2–5°C."
+          "content": "Cho vào chai kín, giữ lạnh 2–5°C. Thực hiện đúng định lượng và kiểm tra trạng thái nguyên liệu trước khi chuyển sang bước tiếp theo."
+        },
+        {
+          "stepNo": 6,
+          "title": "Kiểm tra mẻ và ghi nhãn",
+          "content": "Đối chiếu màu, mùi, độ trong hoặc độ sánh với mẫu chuẩn trước khi đưa vào sử dụng. Dùng trong 24 giờ; lắc nhẹ trước khi dùng."
         }
       ],
       "operationalNotes": [
@@ -5520,18 +6100,28 @@
       "steps": [
         {
           "stepNo": 1,
-          "title": "Hòa bột",
-          "content": "Khuấy bột sữa, đường và muối với sữa tươi."
+          "title": "Vệ sinh và chuẩn bị mẻ",
+          "content": "Vệ sinh tay, dụng cụ và bề mặt thao tác; cân đủ nguyên liệu theo công thức. Dùng dụng cụ khô sạch, kiểm tra nguyên liệu còn hạn và chuẩn bị nhãn ghi giờ hoàn thành."
         },
         {
           "stepNo": 2,
-          "title": "Đánh foam",
-          "content": "Thêm whipping cream và đánh tốc độ vừa đến khi sánh."
+          "title": "Hòa bột",
+          "content": "Khuấy bột sữa, đường và muối với sữa tươi. Miết sát thành ca và khuấy đến khi không còn hạt bột khô hoặc cặn ở đáy."
         },
         {
           "stepNo": 3,
+          "title": "Đánh foam",
+          "content": "Thêm whipping cream và đánh tốc độ vừa đến khi sánh. Thực hiện đúng định lượng và kiểm tra trạng thái nguyên liệu trước khi chuyển sang bước tiếp theo."
+        },
+        {
+          "stepNo": 4,
           "title": "Làm lạnh",
-          "content": "Giữ lạnh ít nhất 30 phút trước khi dùng."
+          "content": "Giữ lạnh ít nhất 30 phút trước khi dùng. Thực hiện đúng định lượng và kiểm tra trạng thái nguyên liệu trước khi chuyển sang bước tiếp theo."
+        },
+        {
+          "stepNo": 5,
+          "title": "Kiểm tra mẻ và ghi nhãn",
+          "content": "Đối chiếu màu, mùi, độ trong hoặc độ sánh với mẫu chuẩn trước khi đưa vào sử dụng. Đậy kín, ghi tên mẻ và giờ hoàn thành; bảo quản theo nhiệt độ phù hợp. Loại bỏ nếu có mùi lạ, tách lớp bất thường hoặc quá thời gian sử dụng nội bộ."
         }
       ],
       "operationalNotes": [],
@@ -5591,23 +6181,33 @@
       "steps": [
         {
           "stepNo": 1,
-          "title": "Hòa bột",
-          "content": "Trộn bột pudding với đường."
+          "title": "Vệ sinh và chuẩn bị mẻ",
+          "content": "Vệ sinh tay, dụng cụ và bề mặt thao tác; cân đủ nguyên liệu theo công thức. Dùng dụng cụ khô sạch, kiểm tra nguyên liệu còn hạn và chuẩn bị nhãn ghi giờ hoàn thành."
         },
         {
           "stepNo": 2,
-          "title": "Nấu",
-          "content": "Đun nước đến sôi nhẹ, cho hỗn hợp bột vào và khuấy liên tục 2–3 phút."
+          "title": "Hòa bột",
+          "content": "Trộn bột pudding với đường. Thực hiện đúng định lượng và kiểm tra trạng thái nguyên liệu trước khi chuyển sang bước tiếp theo."
         },
         {
           "stepNo": 3,
-          "title": "Đổ khuôn",
-          "content": "Rót vào khuôn sạch."
+          "title": "Nấu",
+          "content": "Đun nước đến sôi nhẹ, cho hỗn hợp bột vào và khuấy liên tục 2–3 phút. Miết sát thành ca và khuấy đến khi không còn hạt bột khô hoặc cặn ở đáy."
         },
         {
           "stepNo": 4,
+          "title": "Đổ khuôn",
+          "content": "Rót vào khuôn sạch. Thực hiện đúng định lượng và kiểm tra trạng thái nguyên liệu trước khi chuyển sang bước tiếp theo."
+        },
+        {
+          "stepNo": 5,
           "title": "Làm lạnh",
-          "content": "Để nguội rồi giữ lạnh ít nhất 2 giờ trước khi cắt."
+          "content": "Để nguội rồi giữ lạnh ít nhất 2 giờ trước khi cắt. Thực hiện đúng định lượng và kiểm tra trạng thái nguyên liệu trước khi chuyển sang bước tiếp theo."
+        },
+        {
+          "stepNo": 6,
+          "title": "Kiểm tra mẻ và ghi nhãn",
+          "content": "Đối chiếu màu, mùi, độ trong hoặc độ sánh với mẫu chuẩn trước khi đưa vào sử dụng. Dùng trong 48 giờ ở 2–5°C."
         }
       ],
       "operationalNotes": [
@@ -5670,23 +6270,33 @@
       "steps": [
         {
           "stepNo": 1,
-          "title": "Trộn khô",
-          "content": "Trộn đều bột rau câu với đường."
+          "title": "Vệ sinh và chuẩn bị mẻ",
+          "content": "Vệ sinh tay, dụng cụ và bề mặt thao tác; cân đủ nguyên liệu theo công thức. Dùng dụng cụ khô sạch, kiểm tra nguyên liệu còn hạn và chuẩn bị nhãn ghi giờ hoàn thành."
         },
         {
           "stepNo": 2,
-          "title": "Nấu",
-          "content": "Đun nền trà đến 85–90°C, rắc hỗn hợp bột vào và khuấy liên tục."
+          "title": "Trộn khô",
+          "content": "Trộn đều bột rau câu với đường. Thực hiện đúng định lượng và kiểm tra trạng thái nguyên liệu trước khi chuyển sang bước tiếp theo."
         },
         {
           "stepNo": 3,
-          "title": "Đổ khuôn",
-          "content": "Nấu thêm 2 phút rồi đổ khuôn."
+          "title": "Nấu",
+          "content": "Đun nền trà đến 85–90°C, rắc hỗn hợp bột vào và khuấy liên tục. Miết sát thành ca và khuấy đến khi không còn hạt bột khô hoặc cặn ở đáy."
         },
         {
           "stepNo": 4,
+          "title": "Đổ khuôn",
+          "content": "Nấu thêm 2 phút rồi đổ khuôn. Khuấy sát đáy để không khét; hạ lửa ngay khi đạt nhiệt hoặc độ sánh yêu cầu."
+        },
+        {
+          "stepNo": 5,
           "title": "Làm lạnh",
-          "content": "Để nguội và giữ lạnh 2 giờ trước khi cắt."
+          "content": "Để nguội và giữ lạnh 2 giờ trước khi cắt. Thực hiện đúng định lượng và kiểm tra trạng thái nguyên liệu trước khi chuyển sang bước tiếp theo."
+        },
+        {
+          "stepNo": 6,
+          "title": "Kiểm tra mẻ và ghi nhãn",
+          "content": "Đối chiếu màu, mùi, độ trong hoặc độ sánh với mẫu chuẩn trước khi đưa vào sử dụng. Đậy kín, ghi tên mẻ và giờ hoàn thành; bảo quản theo nhiệt độ phù hợp. Loại bỏ nếu có mùi lạ, tách lớp bất thường hoặc quá thời gian sử dụng nội bộ."
         }
       ],
       "operationalNotes": [],
@@ -5756,23 +6366,33 @@
       "steps": [
         {
           "stepNo": 1,
-          "title": "Trộn khô",
-          "content": "Trộn bột rau câu với đường."
+          "title": "Vệ sinh và chuẩn bị mẻ",
+          "content": "Vệ sinh tay, dụng cụ và bề mặt thao tác; cân đủ nguyên liệu theo công thức. Dùng dụng cụ khô sạch, kiểm tra nguyên liệu còn hạn và chuẩn bị nhãn ghi giờ hoàn thành."
         },
         {
           "stepNo": 2,
-          "title": "Nấu nền",
-          "content": "Đun nước đến gần sôi, cho hỗn hợp bột vào và khuấy tan."
+          "title": "Trộn khô",
+          "content": "Trộn bột rau câu với đường. Thực hiện đúng định lượng và kiểm tra trạng thái nguyên liệu trước khi chuyển sang bước tiếp theo."
         },
         {
           "stepNo": 3,
-          "title": "Thêm cà phê",
-          "content": "Cho cà phê vào, khuấy 1 phút."
+          "title": "Nấu nền",
+          "content": "Đun nước đến gần sôi, cho hỗn hợp bột vào và khuấy tan. Miết sát thành ca và khuấy đến khi không còn hạt bột khô hoặc cặn ở đáy."
         },
         {
           "stepNo": 4,
+          "title": "Thêm cà phê",
+          "content": "Cho cà phê vào, khuấy 1 phút. Khuấy theo một chiều đến khi hỗn hợp đồng nhất, không còn lớp tách hoặc cặn ở đáy ca."
+        },
+        {
+          "stepNo": 5,
           "title": "Đổ khuôn",
-          "content": "Đổ khuôn, để nguội và làm lạnh trước khi cắt."
+          "content": "Đổ khuôn, để nguội và làm lạnh trước khi cắt. Thực hiện đúng định lượng và kiểm tra trạng thái nguyên liệu trước khi chuyển sang bước tiếp theo."
+        },
+        {
+          "stepNo": 6,
+          "title": "Kiểm tra mẻ và ghi nhãn",
+          "content": "Đối chiếu màu, mùi, độ trong hoặc độ sánh với mẫu chuẩn trước khi đưa vào sử dụng. Đậy kín, ghi tên mẻ và giờ hoàn thành; bảo quản theo nhiệt độ phù hợp. Loại bỏ nếu có mùi lạ, tách lớp bất thường hoặc quá thời gian sử dụng nội bộ."
         }
       ],
       "operationalNotes": [],
@@ -5830,23 +6450,33 @@
       "steps": [
         {
           "stepNo": 1,
-          "title": "Hòa đường",
-          "content": "Cho đường, nước và muối vào nồi."
+          "title": "Vệ sinh và chuẩn bị mẻ",
+          "content": "Vệ sinh tay, dụng cụ và bề mặt thao tác; cân đủ nguyên liệu theo công thức. Dùng dụng cụ khô sạch, kiểm tra nguyên liệu còn hạn và chuẩn bị nhãn ghi giờ hoàn thành."
         },
         {
           "stepNo": 2,
-          "title": "Nấu sốt",
-          "content": "Đun lửa vừa đến khi sôi, hạ nhỏ lửa và nấu 8–10 phút."
+          "title": "Hòa đường",
+          "content": "Cho đường, nước và muối vào nồi. Thực hiện đúng định lượng và kiểm tra trạng thái nguyên liệu trước khi chuyển sang bước tiếp theo."
         },
         {
           "stepNo": 3,
-          "title": "Kiểm tra",
-          "content": "Sốt đạt khi phủ nhẹ mặt muỗng nhưng vẫn chảy."
+          "title": "Nấu sốt",
+          "content": "Đun lửa vừa đến khi sôi, hạ nhỏ lửa và nấu 8–10 phút. Khuấy sát đáy để không khét; hạ lửa ngay khi đạt nhiệt hoặc độ sánh yêu cầu."
         },
         {
           "stepNo": 4,
+          "title": "Kiểm tra",
+          "content": "Sốt đạt khi phủ nhẹ mặt muỗng nhưng vẫn chảy. Thực hiện đúng định lượng và kiểm tra trạng thái nguyên liệu trước khi chuyển sang bước tiếp theo."
+        },
+        {
+          "stepNo": 5,
           "title": "Làm nguội",
-          "content": "Để nguội hoàn toàn rồi cho vào chai."
+          "content": "Để nguội hoàn toàn rồi cho vào chai. Thực hiện đúng định lượng và kiểm tra trạng thái nguyên liệu trước khi chuyển sang bước tiếp theo."
+        },
+        {
+          "stepNo": 6,
+          "title": "Kiểm tra mẻ và ghi nhãn",
+          "content": "Đối chiếu màu, mùi, độ trong hoặc độ sánh với mẫu chuẩn trước khi đưa vào sử dụng. Sốt sẽ đặc hơn khi lạnh; không nấu quá lâu."
         }
       ],
       "operationalNotes": [
@@ -5896,18 +6526,28 @@
       "steps": [
         {
           "stepNo": 1,
-          "title": "Nấu",
-          "content": "Cho đường và nước vào nồi, đun lửa vừa."
+          "title": "Vệ sinh và chuẩn bị mẻ",
+          "content": "Vệ sinh tay, dụng cụ và bề mặt thao tác; cân đủ nguyên liệu theo công thức. Dùng dụng cụ khô sạch, kiểm tra nguyên liệu còn hạn và chuẩn bị nhãn ghi giờ hoàn thành."
         },
         {
           "stepNo": 2,
-          "title": "Hòa tan",
-          "content": "Khuấy đến khi đường tan hoàn toàn; khi vừa sôi nhẹ thì tắt bếp."
+          "title": "Nấu",
+          "content": "Cho đường và nước vào nồi, đun lửa vừa. Khuấy sát đáy để không khét; hạ lửa ngay khi đạt nhiệt hoặc độ sánh yêu cầu."
         },
         {
           "stepNo": 3,
+          "title": "Hòa tan",
+          "content": "Khuấy đến khi đường tan hoàn toàn; khi vừa sôi nhẹ thì tắt bếp. Khuấy theo một chiều đến khi hỗn hợp đồng nhất, không còn lớp tách hoặc cặn ở đáy ca."
+        },
+        {
+          "stepNo": 4,
           "title": "Làm nguội",
-          "content": "Để nguội, cho vào chai sạch và bảo quản lạnh."
+          "content": "Để nguội, cho vào chai sạch và bảo quản lạnh. Chuyển sang dụng cụ sạch có nắp, ghi giờ hoàn thành và đưa về 2–5°C càng sớm càng tốt."
+        },
+        {
+          "stepNo": 5,
+          "title": "Kiểm tra mẻ và ghi nhãn",
+          "content": "Đối chiếu màu, mùi, độ trong hoặc độ sánh với mẫu chuẩn trước khi đưa vào sử dụng. Dùng trong 7 ngày ở 2–5°C."
         }
       ],
       "operationalNotes": [
