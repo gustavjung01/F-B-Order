@@ -103,3 +103,17 @@ wholesale_price > 0
 ```
 
 Bundle dùng cùng điều kiện và phải có ít nhất một dòng trong `product_bundle_items`. Thiếu thành phần hoặc giá thì bundle vẫn hiện trong catalog nhưng chưa mở nút đặt hàng; không được tạo đơn giá 0 hoặc combo rỗng.
+
+## Migration inventory
+
+Production migration order is defined only in `apps/backend/scripts/migration-plan.mjs`.
+Do not run every SQL file in `db/migrations` by filename order.
+
+The following files are legacy/bootstrap references and are not executed by the production migration runner:
+
+- `db/migrations/0001_mvp_core.sql`
+- `db/migrations/001_initial_commerce.sql`
+- `db/migrations/002_product_catalog.sql`
+- `db/migrations/003_recipe_catalog.sql`
+
+Keep them for historical recovery until production ledger history is formally archived. New production changes must be added to `MIGRATION_FILES` and must not reuse an existing migration number.

@@ -16,6 +16,8 @@ LOCK_FILE="/var/lock/bepsi-phase7-deploy.lock"
 REPO_URL_PATTERN='github\.com[:/]gustavjung01/F-B-Order(\.git)?$'
 DEPLOY_USER="$(id -un)"
 DEPLOY_GROUP="$(id -gn)"
+BACKUP_RETENTION_DAYS="${BEPSI_BACKUP_RETENTION_DAYS:-30}"
+RELEASE_RETENTION_COUNT="${BEPSI_RELEASE_RETENTION_COUNT:-10}"
 
 log() {
   printf '[phase7-backend] %s\n' "$*"
@@ -53,6 +55,8 @@ fetch_with_retry() {
 for command in git flock rsync corepack node curl pg_dump sudo find; do
   command -v "$command" >/dev/null 2>&1 || die "Required command is missing: $command"
 done
+[[ "$BACKUP_RETENTION_DAYS" =~ ^[0-9]+$ ]] || die "BEPSI_BACKUP_RETENTION_DAYS must be a non-negative integer."
+[[ "$RELEASE_RETENTION_COUNT" =~ ^[1-9][0-9]*$ ]] || die "BEPSI_RELEASE_RETENTION_COUNT must be a positive integer."
 
 [[ -d "${SOURCE_DIR}/.git" ]] || die "Bếp Sỉ source repository is missing: ${SOURCE_DIR}"
 [[ -f "$ENV_FILE" ]] || die "Bếp Sỉ environment file is missing: ${ENV_FILE}"
@@ -185,7 +189,11 @@ import pg from "pg";
 
 const { Pool } = pg;
 const connectionString = process.env.BEPSI_DATABASE_URL || process.env.DATABASE_URL;
-const pool = new Pool({ connectionString, max: 1, ssl: { rejectUnauthorized: false } });
+const isLocal = connectionString.includes("localhost") || connectionString.includes("127.0.0.1");
+const allowInsecure = process.env.DB_SSL_REJECT_UNAUTHORIZED === "false";
+const ca = process.env.DB_SSL_CA?.replace(/\\n/g, "\n");
+const ssl = isLocal ? false : { rejectUnauthorized: !allowInsecure, ...(ca ? { ca } : {}) };
+const pool = new Pool({ connectionString, max: 1, ssl });
 try {
   const exists = await pool.query(`
     SELECT to_regclass('public.schema_migrations') IS NOT NULL AS exists
@@ -240,6 +248,33 @@ fetch_with_retry "${API_BASE_URL}/api/catalog/products?limit=1" "public catalog 
 
 SWITCHED=0
 trap - ERR
+
+log "Pruning database backups older than ${BACKUP_RETENTION_DAYS} day(s)"
+find "$BACKUP_DIR" -maxdepth 1 -type f \
+  \( -name 'bepsi-*.dump' -o -name 'schema-before-*.json' -o -name 'schema-after-*.json' \) \
+  -mtime "+${BACKUP_RETENTION_DAYS}" -print -delete
+
+log "Pruning old releases while keeping at most ${RELEASE_RETENTION_COUNT} total, including current and previous"
+mapfile -t RELEASE_CANDIDATES < <(
+  find "$RELEASES_DIR" -mindepth 1 -maxdepth 1 -type d -printf '%T@ %p\n' \
+    | sort -nr \
+    | awk '{ $1=""; sub(/^ /, ""); print }'
+)
+kept=0
+for candidate in "${RELEASE_CANDIDATES[@]}"; do
+  candidate_real="$(readlink -f "$candidate")"
+  if [[ "$candidate_real" == "$RELEASE_DIR" || "$candidate_real" == "$PREVIOUS_TARGET" || "$candidate_real" == "$CURRENT_REAL" ]]; then
+    kept=$((kept + 1))
+    continue
+  fi
+  if (( kept < RELEASE_RETENTION_COUNT )); then
+    kept=$((kept + 1))
+    continue
+  fi
+  log "Removing old release: ${candidate_real}"
+  rm -rf -- "$candidate_real"
+done
+
 log "Backend production deployment completed at ${TARGET_SHA}."
 log "Database backup: ${DB_BACKUP}"
 log "Previous code release retained at: ${PREVIOUS_TARGET}"
