@@ -790,8 +790,8 @@
           "unitLabel": "g",
           "note": null,
           "optional": false,
-          "sourceType": "catalog_candidate",
-          "catalogKey": "bot-chocolate",
+          "sourceType": "manual",
+          "catalogKey": null,
           "catalogVariantId": null
         },
         {
@@ -1089,8 +1089,8 @@
           "unitLabel": "ml",
           "note": null,
           "optional": false,
-          "sourceType": "catalog_candidate",
-          "catalogKey": "siro-dao",
+          "sourceType": "manual",
+          "catalogKey": null,
           "catalogVariantId": null
         },
         {
@@ -1132,8 +1132,8 @@
           "unitLabel": "g",
           "note": null,
           "optional": false,
-          "sourceType": "catalog_candidate",
-          "catalogKey": "dao-ngam",
+          "sourceType": "manual",
+          "catalogKey": null,
           "catalogVariantId": null
         },
         {
@@ -1204,8 +1204,8 @@
           "unitLabel": "ml",
           "note": null,
           "optional": false,
-          "sourceType": "catalog_candidate",
-          "catalogKey": "siro-dao",
+          "sourceType": "manual",
+          "catalogKey": null,
           "catalogVariantId": null
         },
         {
@@ -1237,8 +1237,8 @@
           "unitLabel": "g",
           "note": null,
           "optional": false,
-          "sourceType": "catalog_candidate",
-          "catalogKey": "dao-ngam",
+          "sourceType": "manual",
+          "catalogKey": null,
           "catalogVariantId": null
         },
         {
@@ -1309,8 +1309,8 @@
           "unitLabel": "ml",
           "note": null,
           "optional": false,
-          "sourceType": "catalog_candidate",
-          "catalogKey": "siro-vai",
+          "sourceType": "manual",
+          "catalogKey": null,
           "catalogVariantId": null
         },
         {
@@ -1352,8 +1352,8 @@
           "unitLabel": "trái",
           "note": null,
           "optional": false,
-          "sourceType": "catalog_candidate",
-          "catalogKey": "vai-ngam",
+          "sourceType": "manual",
+          "catalogKey": null,
           "catalogVariantId": null
         },
         {
@@ -1606,8 +1606,8 @@
           "unitLabel": "ml",
           "note": null,
           "optional": false,
-          "sourceType": "catalog_candidate",
-          "catalogKey": "siro-dau",
+          "sourceType": "manual",
+          "catalogKey": null,
           "catalogVariantId": null
         },
         {
@@ -1618,8 +1618,8 @@
           "unitLabel": "g",
           "note": null,
           "optional": false,
-          "sourceType": "catalog_candidate",
-          "catalogKey": "mut-dau",
+          "sourceType": "manual",
+          "catalogKey": null,
           "catalogVariantId": null
         },
         {
@@ -1733,8 +1733,8 @@
           "unitLabel": "ml",
           "note": null,
           "optional": false,
-          "sourceType": "catalog_candidate",
-          "catalogKey": "siro-xoai",
+          "sourceType": "manual",
+          "catalogKey": null,
           "catalogVariantId": null
         },
         {
@@ -1939,8 +1939,8 @@
           "unitLabel": "ml",
           "note": null,
           "optional": false,
-          "sourceType": "catalog_candidate",
-          "catalogKey": "siro-oi-hong",
+          "sourceType": "manual",
+          "catalogKey": null,
           "catalogVariantId": null
         },
         {
@@ -2054,8 +2054,8 @@
           "unitLabel": "ml",
           "note": null,
           "optional": false,
-          "sourceType": "catalog_candidate",
-          "catalogKey": "siro-dao",
+          "sourceType": "manual",
+          "catalogKey": null,
           "catalogVariantId": null
         },
         {
@@ -2235,8 +2235,8 @@
           "unitLabel": "g",
           "note": "Tùy chọn",
           "optional": true,
-          "sourceType": "catalog_candidate",
-          "catalogKey": "kem-topping",
+          "sourceType": "manual",
+          "catalogKey": null,
           "catalogVariantId": null
         }
       ],
@@ -2286,8 +2286,8 @@
           "unitLabel": "g",
           "note": null,
           "optional": false,
-          "sourceType": "catalog_candidate",
-          "catalogKey": "bot-chocolate",
+          "sourceType": "manual",
+          "catalogKey": null,
           "catalogVariantId": null
         },
         {
@@ -2339,8 +2339,8 @@
           "unitLabel": "g",
           "note": "Tùy chọn",
           "optional": true,
-          "sourceType": "catalog_candidate",
-          "catalogKey": "kem-topping",
+          "sourceType": "manual",
+          "catalogKey": null,
           "catalogVariantId": null
         }
       ],
@@ -2390,8 +2390,8 @@
           "unitLabel": "cái",
           "note": null,
           "optional": false,
-          "sourceType": "catalog_candidate",
-          "catalogKey": "banh-quy-chocolate",
+          "sourceType": "manual",
+          "catalogKey": null,
           "catalogVariantId": null
         },
         {
@@ -2444,8 +2444,8 @@
           "unitLabel": "g",
           "note": "Tùy chọn",
           "optional": true,
-          "sourceType": "catalog_candidate",
-          "catalogKey": "kem-topping",
+          "sourceType": "manual",
+          "catalogKey": null,
           "catalogVariantId": null
         }
       ],
@@ -2694,8 +2694,8 @@
           "unitLabel": "g",
           "note": null,
           "optional": false,
-          "sourceType": "catalog_candidate",
-          "catalogKey": "mut-dau",
+          "sourceType": "manual",
+          "catalogKey": null,
           "catalogVariantId": null
         },
         {
@@ -4116,8 +4116,8 @@
           "unitLabel": "ml",
           "note": null,
           "optional": false,
-          "sourceType": "catalog_candidate",
-          "catalogKey": "siro-dao",
+          "sourceType": "manual",
+          "catalogKey": null,
           "catalogVariantId": null
         },
         {
@@ -4138,8 +4138,8 @@
           "unitLabel": "g",
           "note": null,
           "optional": false,
-          "sourceType": "catalog_candidate",
-          "catalogKey": "dao-ngam",
+          "sourceType": "manual",
+          "catalogKey": null,
           "catalogVariantId": null
         },
         {
@@ -4221,8 +4221,8 @@
           "unitLabel": "ml",
           "note": null,
           "optional": false,
-          "sourceType": "catalog_candidate",
-          "catalogKey": "siro-dau",
+          "sourceType": "manual",
+          "catalogKey": null,
           "catalogVariantId": null
         },
         {
@@ -4233,8 +4233,8 @@
           "unitLabel": "g",
           "note": null,
           "optional": false,
-          "sourceType": "catalog_candidate",
-          "catalogKey": "mut-dau",
+          "sourceType": "manual",
+          "catalogKey": null,
           "catalogVariantId": null
         },
         {
@@ -5370,8 +5370,8 @@
           "unitLabel": "g",
           "note": "Để mềm",
           "optional": false,
-          "sourceType": "catalog_candidate",
-          "catalogKey": "cream-cheese",
+          "sourceType": "manual",
+          "catalogKey": null,
           "catalogVariantId": null
         },
         {
@@ -5382,8 +5382,8 @@
           "unitLabel": "ml",
           "note": "Lạnh",
           "optional": false,
-          "sourceType": "catalog_candidate",
-          "catalogKey": "whipping-cream",
+          "sourceType": "manual",
+          "catalogKey": null,
           "catalogVariantId": null
         },
         {
@@ -5470,8 +5470,8 @@
           "unitLabel": "ml",
           "note": null,
           "optional": false,
-          "sourceType": "catalog_candidate",
-          "catalogKey": "whipping-cream",
+          "sourceType": "manual",
+          "catalogKey": null,
           "catalogVariantId": null
         },
         {
