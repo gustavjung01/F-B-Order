@@ -6,6 +6,7 @@ import type { RequestIdentity, StaffIdentity } from "../auth/auth.identity.js";
 import { requirePermission, type PermissionKey } from "../auth/auth.permissions.js";
 import { writeAdminAuditLog } from "../admin/admin-audit.js";
 import { isOrderEngineError, OrderEngineError } from "../orders/order-errors.js";
+import { generateWithGoogleAgent } from "./google-agent.provider.js";
 
 type IdentityResolver = (req: Request) => Promise<RequestIdentity>;
 
@@ -104,48 +105,13 @@ async function buildReadOnlyContext(identity: StaffIdentity, scopes: string[]) {
   return context;
 }
 
-async function generateText(prompt: string, context: unknown, mode: "read_only" | "draft") {
-  const apiKey = process.env.OPENAI_API_KEY;
-  const model = process.env.OPENAI_MODEL || "gpt-5-mini";
-  if (!apiKey) {
-    return {
-      provider: "deterministic",
-      model: null,
-      text: mode === "read_only"
-        ? `Đã tổng hợp dữ liệu theo yêu cầu: ${prompt}`
-        : `Bản nháp được tạo từ yêu cầu: ${prompt}`,
-      data: { context },
-      usage: {},
-    };
-  }
-
-  const response = await fetch("https://api.openai.com/v1/responses", {
-    method: "POST",
-    headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
-    body: JSON.stringify({
-      model,
-      input: [
-        {
-          role: "system",
-          content: mode === "read_only"
-            ? "Bạn là trợ lý vận hành Bếp Sỉ. Chỉ phân tích dữ liệu được cung cấp, không đề xuất đã thực thi hành động. Trả lời tiếng Việt, nêu số liệu và giới hạn dữ liệu."
-            : "Bạn là trợ lý soạn bản nháp Bếp Sỉ. Chỉ tạo nội dung nháp, không tuyên bố đã cập nhật hệ thống. Trả lời tiếng Việt, có cấu trúc rõ ràng.",
-        },
-        { role: "user", content: `${prompt}\n\nDữ liệu được backend cho phép:\n${JSON.stringify(context)}` },
-      ],
-    }),
-  });
-  if (!response.ok) {
-    throw new OrderEngineError("AI_PROVIDER_FAILED", 502, `AI provider returned ${response.status}`);
-  }
-  const payload = await response.json() as { output_text?: string; usage?: unknown };
-  return {
-    provider: "openai",
-    model,
-    text: payload.output_text || "Không có nội dung trả về.",
-    data: { context },
-    usage: payload.usage ?? {},
-  };
+async function generateText(
+  prompt: string,
+  context: unknown,
+  mode: "read_only" | "draft",
+  userId: string,
+) {
+  return generateWithGoogleAgent({ prompt, context, mode, userId });
 }
 
 export function assertDifferentApprover(requesterStaffId: string, approverStaffId: string): void {
@@ -163,7 +129,7 @@ export function createAiRouter(identityResolver: IdentityResolver) {
       await requirePermission(identity, "ai.use");
       const input = querySchema.parse(req.body ?? {});
       const context = await buildReadOnlyContext(identity, input.scopes);
-      const generated = await generateText(input.prompt, context, "read_only");
+      const generated = await generateText(input.prompt, context, "read_only", identity.staffId);
       const result = await getDb().query<{ id: string }>(
         `INSERT INTO ai_interactions(staff_user_id,mode,prompt,context_scope,provider,model,response_text,response_data,token_usage)
          VALUES($1,'read_only',$2,$3,$4,$5,$6,$7::jsonb,$8::jsonb) RETURNING id::text`,
@@ -179,7 +145,7 @@ export function createAiRouter(identityResolver: IdentityResolver) {
       await requirePermission(identity, "ai.execute");
       const input = draftSchema.parse(req.body ?? {});
       const context = await buildReadOnlyContext(identity, input.scopes);
-      const generated = await generateText(input.prompt, context, "draft");
+      const generated = await generateText(input.prompt, context, "draft", identity.staffId);
       const client = await getDb().connect();
       try {
         await client.query("BEGIN");

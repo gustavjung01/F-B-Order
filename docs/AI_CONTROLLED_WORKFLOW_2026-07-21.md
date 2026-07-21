@@ -89,9 +89,25 @@ Khi được phê duyệt, backend ghi chú nội bộ đơn hàng trong transac
 
 ## Provider
 
-Nếu có `OPENAI_API_KEY`, backend gọi OpenAI Responses API bằng model trong `OPENAI_MODEL`.
+Backend g?i Google Vertex AI Agent Runtime ?? deploy:
 
-Nếu chưa có key, backend dùng deterministic provider để kiểm thử đầy đủ RBAC, draft, approval và audit mà không gọi dịch vụ ngoài.
+```text
+projects/bep-si-image-worker/locations/us-west1/reasoningEngines/710557190426984448
+```
+
+C?u h?nh runtime:
+
+```text
+GOOGLE_CLOUD_PROJECT=bep-si-image-worker
+GOOGLE_CLOUD_LOCATION=us-west1
+GOOGLE_AGENT_ENGINE_ID=710557190426984448
+GOOGLE_AGENT_ENDPOINT=https://us-west1-aiplatform.googleapis.com/v1/projects/bep-si-image-worker/locations/us-west1/reasoningEngines/710557190426984448:streamQuery
+GOOGLE_AGENT_TIMEOUT_MS=90000
+```
+
+X?c th?c d?ng Application Default Credentials ho?c `GOOGLE_SERVICE_ACCOUNT_JSON_BASE64`. Kh?ng l?u service-account JSON trong repository. Service account runtime ph?i c? quy?n `aiplatform.reasoningEngines.query`, th?ng th??ng qua `roles/aiplatform.user`.
+
+N?u ch?a c?u h?nh Google Agent Runtime, backend ch? d?ng deterministic provider cho local/test. N?u ?? c?u h?nh nh?ng Google tr? l?i IAM ho?c runtime, API tr? l?i 502/504 v? kh?ng gi? l?p k?t qu? th?nh c?ng.
 
 ## Frontend
 

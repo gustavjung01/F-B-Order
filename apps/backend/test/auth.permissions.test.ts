@@ -2,6 +2,7 @@
 import assert from "node:assert/strict";
 import { assertPermissionSet } from "../src/modules/auth/auth.permissions.ts";
 import { assertDifferentApprover } from "../src/modules/ai/ai.routes.ts";
+import { __testing as googleAgentTesting } from "../src/modules/ai/google-agent.provider.ts";
 
 const operations = [
   "orders.view",
@@ -50,4 +51,21 @@ test("AI requester cannot approve own action", () => {
 
 test("different approver is accepted", () => {
   assert.doesNotThrow(() => assertDifferentApprover("staff-1", "staff-2"));
+});
+
+
+test("Google Agent parser reads SSE content parts", () => {
+  const parsed = googleAgentTesting.parseAgentResponse(
+    'data: {"content":{"parts":[{"text":"Xin ch?o "}]}}\n\n' +
+      'data: {"content":{"parts":[{"text":"S?p"}]}}\n\n',
+  );
+  assert.equal(parsed.text, "Xin ch?o S?p");
+  assert.equal(parsed.events.length, 2);
+});
+
+test("Google Agent parser reads JSON arrays", () => {
+  const parsed = googleAgentTesting.parseAgentResponse(
+    JSON.stringify([{ content: { parts: [{ text: "F&B" }] } }]),
+  );
+  assert.equal(parsed.text, "F&B");
 });
