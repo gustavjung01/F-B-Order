@@ -62,7 +62,7 @@ async function seed(): Promise<SeedResult> {
       product_type, catalog_kind, base_price, wholesale_price,
       min_order_qty, status, is_active, is_public, is_orderable
     ) VALUES (
-      $1, 'ADMIN-001', 'Admin Product', 'admin-product', 'Gói', 'Gói',
+      $1, 'ADMIN-001', 'Admin Product', 'admin-product', 'GÃ³i', 'GÃ³i',
       'physical', 'sku_candidate', 12000, 10000,
       1, 'active', true, true, true
     ) RETURNING id::text
@@ -94,7 +94,7 @@ async function seed(): Promise<SeedResult> {
     INSERT INTO customers (
       name, shop_name, contact_name, phone, approval_status, status
     ) VALUES (
-      'Pending Customer', 'Pending Shop', 'Chị Pending', '0900000002', 'pending', 'active'
+      'Pending Customer', 'Pending Shop', 'Chá»‹ Pending', '0900000002', 'pending', 'active'
     ) RETURNING id::text
   `);
 
@@ -225,13 +225,13 @@ async function main() {
       identity: "customer",
     });
     assert.equal(customerDenied.status, 403);
-    assert.equal(customerDenied.body.error, "ADMIN_ACCESS_REQUIRED");
+    assert.equal(customerDenied.body.error, "STAFF_ACCESS_REQUIRED");
 
     const staffDenied = await requestJson(baseUrl, "/api/admin/orders", {
       identity: "staff",
     });
     assert.equal(staffDenied.status, 403);
-    assert.equal(staffDenied.body.error, "ADMIN_ACCESS_REQUIRED");
+    assert.equal(staffDenied.body.error, "PERMISSION_DENIED");
 
     const pendingList = await requestJson(
       baseUrl,
@@ -257,7 +257,7 @@ async function main() {
       {
         method: "PATCH",
         identity: "admin",
-        body: { status: "approved", note: "Hồ sơ hợp lệ" },
+        body: { status: "approved", note: "Há»“ sÆ¡ há»£p lá»‡" },
       },
     );
     assert.equal(approved.status, 200);
@@ -267,7 +267,7 @@ async function main() {
     assert.equal(approved.body.customer.approvalLogs[0].fromStatus, "pending");
     assert.equal(approved.body.customer.approvalLogs[0].toStatus, "approved");
     assert.equal(approved.body.customer.approvalLogs[0].actorId, seedData.admin.clerkUserId);
-    assert.equal(approved.body.customer.approvalLogs[0].note, "Hồ sơ hợp lệ");
+    assert.equal(approved.body.customer.approvalLogs[0].note, "Há»“ sÆ¡ há»£p lá»‡");
     assert.ok(approved.body.customer.approvalLogs[0].createdAt);
 
     const rejectedAgain = await requestJson(
@@ -276,7 +276,7 @@ async function main() {
       {
         method: "PATCH",
         identity: "admin",
-        body: { status: "rejected", note: "Thiếu giấy phép kinh doanh" },
+        body: { status: "rejected", note: "Thiáº¿u giáº¥y phÃ©p kinh doanh" },
       },
     );
     assert.equal(rejectedAgain.status, 200);
@@ -291,7 +291,7 @@ async function main() {
       {
         method: "PATCH",
         identity: "admin",
-        body: { status: "approved", note: "Đã bổ sung" },
+        body: { status: "approved", note: "ÄÃ£ bá»• sung" },
       },
     );
     assert.equal(missingRejectReason.status, 200);
@@ -320,11 +320,11 @@ async function main() {
       {
         method: "PATCH",
         identity: "admin",
-        body: { note: "Gọi xác nhận trước khi giao" },
+        body: { note: "Gá»i xÃ¡c nháº­n trÆ°á»›c khi giao" },
       },
     );
     assert.equal(noteUpdated.status, 200);
-    assert.equal(noteUpdated.body.order.internalNote, "Gọi xác nhận trước khi giao");
+    assert.equal(noteUpdated.body.order.internalNote, "Gá»i xÃ¡c nháº­n trÆ°á»›c khi giao");
     assert.equal(noteUpdated.body.order.internalNoteLogs.length, 1);
     assert.equal(noteUpdated.body.order.internalNoteLogs[0].actorId, seedData.admin.clerkUserId);
     assert.ok(noteUpdated.body.order.internalNoteLogs[0].createdAt);
@@ -332,7 +332,7 @@ async function main() {
     const confirmed = await requestJson(baseUrl, `/api/admin/orders/${orderId}/status`, {
       method: "PATCH",
       identity: "admin",
-      body: { status: "confirmed", note: "Đã xác nhận tồn kho" },
+      body: { status: "confirmed", note: "ÄÃ£ xÃ¡c nháº­n tá»“n kho" },
     });
     assert.equal(confirmed.status, 200);
     assert.equal(confirmed.body.order.status, "confirmed");
@@ -341,7 +341,7 @@ async function main() {
     assert.equal(confirmed.body.order.statusLogs[1].toStatus, "confirmed");
     assert.equal(confirmed.body.order.statusLogs[1].actorType, "staff");
     assert.equal(confirmed.body.order.statusLogs[1].actorId, seedData.admin.clerkUserId);
-    assert.equal(confirmed.body.order.statusLogs[1].note, "Đã xác nhận tồn kho");
+    assert.equal(confirmed.body.order.statusLogs[1].note, "ÄÃ£ xÃ¡c nháº­n tá»“n kho");
     assert.ok(confirmed.body.order.statusLogs[1].createdAt);
 
     const invalidTransition = await requestJson(baseUrl, `/api/admin/orders/${orderId}/status`, {
