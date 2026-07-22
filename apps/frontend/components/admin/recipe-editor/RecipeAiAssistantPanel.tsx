@@ -5,6 +5,8 @@ import { useAuth } from "@clerk/nextjs";
 import { adminApiFetch } from "@/lib/admin-api";
 import { useAdminPermissions } from "../AdminPermissionProvider";
 
+const APPLY_SOP_ENABLED = false;
+
 type AiJob = {
   id: string;
   status: "pending" | "processing" | "completed" | "failed" | "cancelled";
@@ -133,7 +135,7 @@ export function RecipeAiAssistantPanel({
       const steps = parseSuggestedSteps(job.response_text);
       onApplySteps(steps);
       onOpenSteps();
-      setMessage(`Đã đưa ${steps.length} bước AI vào bản nháp công thức. Hãy kiểm tra rồi bấm Lưu.`);
+      setMessage(`Đã merge ${steps.length} bước AI vào bản nháp và giữ nguyên media hiện có. Hãy kiểm tra rồi bấm Lưu.`);
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Không đọc được SOP nháp từ AI.");
     }
@@ -161,7 +163,8 @@ export function RecipeAiAssistantPanel({
       {job?.status === "completed" && job.response_text ? (
         <div className="mt-4">
           <pre className="max-h-80 overflow-auto whitespace-pre-wrap rounded-xl bg-slate-950 p-4 text-sm leading-6 text-slate-100">{job.response_text}</pre>
-          {mode === "draft" && canDraft && !locked ? <button type="button" onClick={applyDraft} className="mt-3 rounded-xl bg-emerald-600 px-4 py-2 text-xs font-black text-white">Đưa SOP vào bản nháp công thức</button> : null}
+          {mode === "draft" && canDraft && !locked && APPLY_SOP_ENABLED ? <button type="button" onClick={applyDraft} className="mt-3 rounded-xl bg-emerald-600 px-4 py-2 text-xs font-black text-white">Đưa SOP vào bản nháp công thức</button> : null}
+          {mode === "draft" && !APPLY_SOP_ENABLED ? <p className="mt-3 rounded-xl bg-amber-100 px-3 py-2 text-xs font-black text-amber-900">Apply SOP đang tạm khóa để bảo vệ mapping ảnh bước. Chỉ xem và đối chiếu kết quả AI.</p> : null}
         </div>
       ) : null}
       {message ? <p className="mt-3 text-sm font-bold text-slate-700">{message}</p> : null}
