@@ -21,13 +21,19 @@ import {
   aiRecipeDraftStatusLabel,
   aiRecipeDraftStatusTone,
   isRecipeSopDraftContent,
+  recipeDraftTaskLabel,
   type AiRecipeDraft,
+  type RecipeDraftTask,
 } from "./recipe-draft-types";
 
 function formatDate(value: string | null): string {
   if (!value) return "-";
   const date = new Date(value);
   return Number.isNaN(date.getTime()) ? value : date.toLocaleString("vi-VN");
+}
+
+function draftTask(draft: AiRecipeDraft): RecipeDraftTask {
+  return isRecipeSopDraftContent(draft.content) ? draft.content.task || "sop" : "sop";
 }
 
 export function AiRecipeDraftReviewQueue() {
@@ -81,10 +87,10 @@ export function AiRecipeDraftReviewQueue() {
       );
       setSelected(payload.draft);
       setReviewNote("");
-      setMessage(decision === "approve" ? "Đã duyệt AI draft. Người tạo có thể chọn từng phần để áp dụng." : "Đã từ chối AI draft.");
+      setMessage(decision === "approve" ? "Đã duyệt bản nháp. Người tạo có thể chọn từng phần để áp dụng." : "Đã từ chối bản nháp.");
       await loadDrafts();
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : "Không xử lý được AI draft.");
+      setMessage(error instanceof Error ? error.message : "Không xử lý được bản nháp.");
     } finally {
       setBusy(false);
     }
@@ -97,27 +103,28 @@ export function AiRecipeDraftReviewQueue() {
       <AdminSurface>
         <AdminSurfaceHeader
           eyebrow="Human review"
-          title="AI Recipe drafts chờ duyệt"
-          description="Reviewer xem diff với version gốc trước khi duyệt hoặc từ chối. Draft do chính reviewer tạo không xuất hiện trong hàng đợi."
+          title="Đề xuất công thức chờ duyệt"
+          description="Reviewer xem phần hiện tại và phần trợ lý đề xuất trước khi duyệt hoặc từ chối. Bản nháp do chính reviewer tạo không xuất hiện trong hàng đợi."
           actions={<AdminButton size="sm" tone="secondary" onClick={() => void loadDrafts()}>Tải lại</AdminButton>}
         />
         <AdminSurfaceBody className="grid gap-3">
           {message ? <AdminAlert tone={message.startsWith("Đã") ? "success" : "danger"}>{message}</AdminAlert> : null}
           {drafts.length === 0 ? (
-            <AdminEmptyState title="Không có Recipe draft cần review" description="Draft mới sẽ xuất hiện sau khi worker hoàn thành AI job." />
+            <AdminEmptyState title="Không có đề xuất cần review" description="SOP, QC hoặc định lượng mới sẽ xuất hiện sau khi trợ lý hoàn thành." />
           ) : drafts.map((draft) => (
             <article key={draft.id} className="rounded-2xl border border-slate-200 bg-white p-4">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
                   <div className="flex flex-wrap items-center gap-2">
                     <AdminBadge tone={aiRecipeDraftStatusTone(draft.status)}>{aiRecipeDraftStatusLabel[draft.status]}</AdminBadge>
-                    <AdminBadge tone="neutral">{draft.recipeTitle || "Recipe"}</AdminBadge>
+                    <AdminBadge tone="info">{recipeDraftTaskLabel[draftTask(draft)]}</AdminBadge>
+                    <AdminBadge tone="neutral">{draft.recipeTitle || "Công thức"}</AdminBadge>
                   </div>
                   <h3 className="mt-2 font-black text-slate-900">{draft.title}</h3>
-                  <p className="mt-1 text-xs font-medium text-slate-500">Tạo bởi {draft.createdByName || draft.createdByStaffId.slice(0, 8)} · {formatDate(draft.createdAt)}</p>
+                  <p className="mt-1 text-xs font-medium text-slate-500">Tạo bởi {draft.createdByName || "nhân viên"} · {formatDate(draft.createdAt)}</p>
                   {draft.reviewNote ? <p className="mt-2 text-sm font-medium text-slate-600">Nhận xét: {draft.reviewNote}</p> : null}
                 </div>
-                <AdminButton size="sm" tone="secondary" onClick={() => { setSelected(draft); setReviewNote(""); }}>Xem diff</AdminButton>
+                <AdminButton size="sm" tone="secondary" onClick={() => { setSelected(draft); setReviewNote(""); }}>Xem thay đổi</AdminButton>
               </div>
             </article>
           ))}
@@ -127,16 +134,16 @@ export function AiRecipeDraftReviewQueue() {
       <AdminDialog
         open={Boolean(selected)}
         size="xl"
-        eyebrow="AI Recipe draft review"
-        title={selected?.title || "Review AI draft"}
-        description={selected ? `${selected.recipeTitle || "Recipe"} · ${aiRecipeDraftStatusLabel[selected.status]}` : undefined}
+        eyebrow="Duyệt đề xuất công thức"
+        title={selected?.title || "Duyệt đề xuất"}
+        description={selected ? `${selected.recipeTitle || "Công thức"} · ${recipeDraftTaskLabel[draftTask(selected)]} · ${aiRecipeDraftStatusLabel[selected.status]}` : undefined}
         closeDisabled={busy}
         onClose={() => { if (!busy) setSelected(null); }}
         footer={selected?.status === "draft" ? (
           <div className="flex flex-wrap justify-end gap-2">
             <AdminButton tone="secondary" disabled={busy} onClick={() => setSelected(null)}>Đóng</AdminButton>
             <AdminButton tone="danger" disabled={busy || reviewNote.trim().length < 3} onClick={() => void review("reject")}>Từ chối</AdminButton>
-            <AdminButton tone="success" disabled={busy || reviewNote.trim().length < 3} onClick={() => void review("approve")}>Duyệt draft</AdminButton>
+            <AdminButton tone="success" disabled={busy || reviewNote.trim().length < 3} onClick={() => void review("approve")}>Duyệt đề xuất</AdminButton>
           </div>
         ) : <div className="flex justify-end"><AdminButton tone="secondary" onClick={() => setSelected(null)}>Đóng</AdminButton></div>}
       >
@@ -144,13 +151,13 @@ export function AiRecipeDraftReviewQueue() {
           <div className="grid gap-4">
             <div className="flex flex-wrap gap-2">
               <AdminBadge tone={aiRecipeDraftStatusTone(selected.status)}>{aiRecipeDraftStatusLabel[selected.status]}</AdminBadge>
-              <AdminBadge tone="neutral">Base version {selected.baseRecipeVersionId?.slice(0, 8) || "-"}</AdminBadge>
-              {selected.reviewedByName ? <AdminBadge tone="info">Reviewer: {selected.reviewedByName}</AdminBadge> : null}
+              <AdminBadge tone="info">{recipeDraftTaskLabel[draftTask(selected)]}</AdminBadge>
+              {selected.reviewedByName ? <AdminBadge tone="neutral">Đã review bởi {selected.reviewedByName}</AdminBadge> : null}
             </div>
             {isRecipeSopDraftContent(selected.content) ? (
               <AiRecipeDraftDiff content={selected.content} />
             ) : (
-              <AdminAlert tone="danger" title="Draft không hợp lệ">Không đọc được cấu trúc SOP để review.</AdminAlert>
+              <AdminAlert tone="danger" title="Bản nháp không hợp lệ">Không đọc được cấu trúc đề xuất để review.</AdminAlert>
             )}
             {selected.status === "draft" ? (
               <AdminField label="Nhận xét review" hint="Bắt buộc khi duyệt hoặc từ chối; tối thiểu 3 ký tự.">
