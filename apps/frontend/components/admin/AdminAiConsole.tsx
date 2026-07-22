@@ -1,9 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useAuth } from "@clerk/nextjs";
 import { adminApiFetch } from "@/lib/admin-api";
 import { useAdminPermissions } from "./AdminPermissionProvider";
+import { AdminAlert, AdminEmptyState } from "./ui/AdminUI";
+
+type AiScope = "orders" | "customers" | "catalog" | "recipes";
 
 type AiJob = {
   id: string;
@@ -30,9 +33,16 @@ type AiAction = {
   created_at: string;
 };
 
+const scopeLabels: Record<AiScope, string> = {
+  orders: "Đơn hàng",
+  customers: "Khách hàng",
+  catalog: "Catalog",
+  recipes: "Công thức",
+};
+
 export function AdminAiConsole() {
   const { getToken } = useAuth();
-  const { has } = useAdminPermissions();
+  const { has, permissions } = useAdminPermissions();
   const [prompt, setPrompt] = useState("");
   const [result, setResult] = useState("");
   const [busy, setBusy] = useState(false);
@@ -42,6 +52,17 @@ export function AdminAiConsole() {
   const [message, setMessage] = useState("");
   const [jobs, setJobs] = useState<AiJob[]>([]);
   const [actions, setActions] = useState<AiAction[]>([]);
+
+  const scopes = useMemo<AiScope[]>(() => {
+    const next: AiScope[] = [];
+    if (permissions.includes("orders.view")) next.push("orders");
+    if (permissions.includes("customers.view")) next.push("customers");
+    if (permissions.includes("catalog.view")) next.push("catalog");
+    if (permissions.includes("recipes.view")) next.push("recipes");
+    return next;
+  }, [permissions]);
+
+  const hasAiAccess = has("ai.use") || has("ai.execute") || has("ai.audit");
 
   async function token() {
     const value = await getToken();
@@ -70,6 +91,7 @@ export function AdminAiConsole() {
   }
 
   useEffect(() => {
+    if (!hasAiAccess) return;
     void loadJobs().catch(() => undefined);
     void loadActions().catch(() => undefined);
     const timer = window.setInterval(() => {
@@ -79,9 +101,13 @@ export function AdminAiConsole() {
     return () => window.clearInterval(timer);
     // Permission state is stable for the lifetime of the admin shell.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [hasAiAccess]);
 
   async function enqueue(path: string, body: Record<string, unknown>) {
+    if (!scopes.length) {
+      setMessage("Tài khoản chưa có quyền xem module dữ liệu nào để cấp context cho AI.");
+      return;
+    }
     setBusy(true);
     setMessage("");
     try {
@@ -102,7 +128,7 @@ export function AdminAiConsole() {
   async function runQuery() {
     await enqueue("/api/admin/ai/query", {
       prompt,
-      scopes: ["orders", "customers", "catalog", "recipes"],
+      scopes,
     });
   }
 
@@ -111,7 +137,7 @@ export function AdminAiConsole() {
       prompt,
       draftType: "operations_note",
       title: draftTitle || "AI draft",
-      scopes: ["orders", "customers", "catalog", "recipes"],
+      scopes,
     });
   }
 
@@ -164,16 +190,25 @@ export function AdminAiConsole() {
     }
   }
 
+  if (!hasAiAccess) {
+    return <AdminEmptyState title="Không có quyền sử dụng AI" description="Tài khoản cần ít nhất một permission ai.use, ai.execute hoặc ai.audit." />;
+  }
+
   return (
     <div className="grid gap-5">
+      {!scopes.length ? <AdminAlert tone="warning" title="Không có scope dữ liệu">AI chỉ được chạy khi tài khoản có quyền xem ít nhất một module Orders, Customers, Catalog hoặc Recipes.</AdminAlert> : null}
+
       <section className="rounded-[26px] border border-slate-200 bg-white p-5 shadow-sm">
         <h2 className="text-lg font-black text-slate-950">AI read-only / draft</h2>
         <p className="mt-2 text-sm text-slate-600">AI chạy nền trên backend VPS. Trang này chỉ gửi job và đọc kết quả từ PostgreSQL.</p>
+        <div className="mt-3 flex flex-wrap gap-2">
+          {scopes.map((scope) => <span key={scope} className="rounded-full bg-slate-100 px-3 py-1 text-xs font-black text-slate-700">{scopeLabels[scope]}</span>)}
+        </div>
         <textarea value={prompt} onChange={(event) => setPrompt(event.target.value)} className="mt-4 min-h-32 w-full rounded-2xl border border-slate-300 p-4 text-sm" placeholder="Ví dụ: Tóm tắt tình hình đơn hàng và chỉ ra bất thường." />
         <input value={draftTitle} onChange={(event) => setDraftTitle(event.target.value)} className="mt-3 w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Tiêu đề draft" />
         <div className="mt-4 flex flex-wrap gap-3">
-          {has("ai.use") ? <button disabled={busy || prompt.trim().length < 3} onClick={runQuery} className="rounded-2xl bg-slate-950 px-4 py-3 text-sm font-black text-white disabled:opacity-50">Đưa query vào hàng đợi</button> : null}
-          {has("ai.execute") ? <button disabled={busy || prompt.trim().length < 3} onClick={createDraft} className="rounded-2xl bg-orange-500 px-4 py-3 text-sm font-black text-white disabled:opacity-50">Đưa draft vào hàng đợi</button> : null}
+          {has("ai.use") ? <button disabled={busy || prompt.trim().length < 3 || scopes.length === 0} onClick={runQuery} className="rounded-2xl bg-slate-950 px-4 py-3 text-sm font-black text-white disabled:opacity-50">Đưa query vào hàng đợi</button> : null}
+          {has("ai.execute") ? <button disabled={busy || prompt.trim().length < 3 || scopes.length === 0} onClick={createDraft} className="rounded-2xl bg-orange-500 px-4 py-3 text-sm font-black text-white disabled:opacity-50">Đưa draft vào hàng đợi</button> : null}
         </div>
         {result ? <pre className="mt-5 whitespace-pre-wrap rounded-2xl bg-slate-950 p-4 text-sm leading-6 text-slate-100">{result}</pre> : null}
       </section>
