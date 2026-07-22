@@ -88,6 +88,10 @@ assert.match(source.recipeAi, /createPortal\(panel, stepsTarget\)/);
 assert.match(source.recipeSteps, /id="recipe-ai-sop-target"/);
 assert.match(source.recipeAi, /Tạo phiên bản mới/);
 assert.match(source.recipeAi, /RecipeAiAuditResult/);
+assert.match(source.recipeAudit, /Sức khỏe công thức/);
+assert.match(source.recipeAudit, /Checklist vận hành/);
+assert.match(source.recipeAudit, /8 tiêu chí vận hành/);
+assert.match(source.recipeAudit, /parseStructuredAudit/);
 assert.match(source.recipeAudit, /HIDDEN_SECTION_PATTERN/);
 assert.match(source.aiRecipeReview, /Duyệt draft/);
 assert.match(source.aiRecipeDiff, /AdminToggle/);
@@ -104,4 +108,4 @@ for (const moduleName of ["operations", "customers", "orders", "products", "scal
   assert.doesNotMatch(source[moduleName], /rounded-\[28px\] bg-white p-5 text-slate-950 shadow-xl/, `${moduleName} still contains the legacy module surface pattern.`);
 }
 
-console.log("Admin design system, compact mobile navigation, readable Recipe AI, explicit Steps slot, AI draft review surfaces, and no-page-CSS contract passed.");
+console.log("Admin design system, compact mobile navigation, Recipe Health Score, explicit Steps slot, AI draft review surfaces, and no-page-CSS contract passed.");

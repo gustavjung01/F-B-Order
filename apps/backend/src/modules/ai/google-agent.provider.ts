@@ -1,5 +1,6 @@
 import { GoogleAuth } from "google-auth-library";
 import { OrderEngineError } from "../orders/order-errors.js";
+import { buildRecipeAuditContent } from "./recipe-audit-content.js";
 
 type GoogleAgentResult = {
   provider: "google-agent-platform" | "deterministic";
@@ -194,13 +195,18 @@ function hasRecipeContext(context: unknown): boolean {
 function buildAgentMessage(input: AgentInput): string {
   const recipeContext = hasRecipeContext(input.context);
   const outputPolicy = recipeContext && input.mode === "read_only"
-    ? `QUY TẮC ĐẦU RA BẮT BUỘC CHO GIAO DIỆN CÔNG THỨC:
-- Viết cho người trực tiếp pha chế, dùng tiếng Việt đơn giản, câu ngắn và không chào hỏi.
-- Chỉ dùng 5 mục: Kết luận nhanh; Điểm cần chỉnh; SOP đề xuất; Tiêu chí kiểm soát; Dữ liệu cần bổ sung.
-- Điểm cần chỉnh tối đa 5 ý quan trọng, ưu tiên lỗi ảnh hưởng chất lượng, an toàn và tốc độ thao tác.
-- Không xuất JSON, code block, schema, ID, catalog key, action_key, target_id, permission, payload hoặc trạng thái hệ thống.
-- Không viết mục Hành động đề xuất. Giao diện Bếp Sỉ tự xử lý tạo SOP nháp, duyệt và áp dụng.
-- Không tự khẳng định giá vốn, hạn sử dụng hoặc nhiệt độ bảo quản khi dữ liệu nguồn chưa có.`
+    ? `QUY TẮC ĐẦU RA BẮT BUỘC CHO RECIPE HEALTH AUDIT:
+- Chỉ xuất đúng một JSON object hợp lệ. Không markdown, không code fence, không lời chào, không văn bản ngoài JSON.
+- JSON phải có đúng các trường: summary, findings, checklist, sop, qualityControls, missingData.
+- summary: kết luận ngắn cho người trực tiếp pha chế, tối đa 3 câu.
+- findings: tối đa 5 mục; mỗi mục có severity là high|medium|low, title và detail.
+- checklist: đúng 8 mục, không thiếu và không lặp. key lần lượt thuộc: ingredients, dosing, sequence, time_temperature, quality, storage, catalog, cost. Mỗi mục có status là pass|warning|missing và note ngắn.
+- sop: tối đa 6 bước; mỗi bước có title và content dễ thao tác.
+- qualityControls: tối đa 5 mục; mỗi mục có label và target.
+- missingData: tối đa 6 chuỗi ngắn. Chỉ ghi dữ liệu thật sự chưa có trong context.
+- Không xuất ID, catalog key, action_key, permission, payload, trạng thái hệ thống hay hành động kỹ thuật.
+- Không tự bịa giá vốn, hạn sử dụng, nhiệt độ hoặc tiêu chuẩn khi dữ liệu nguồn chưa có.
+- Giữ toàn bộ đầu ra ngắn gọn, mục tiêu 700-1200 token.`
     : recipeContext && input.mode === "draft"
       ? `QUY TẮC ĐẦU RA BẮT BUỘC CHO SOP NHÁP:
 - Chỉ xuất đúng một JSON object hợp lệ theo schema mà yêu cầu đã nêu.
@@ -318,9 +324,10 @@ export async function generateWithGoogleAgent(input: AgentInput): Promise<Google
     }
 
     const parsed = parseAgentResponse(raw);
-    const text = input.mode === "read_only" && hasRecipeContext(input.context)
-      ? sanitizeRecipeReadOnlyText(parsed.text)
-      : parsed.text;
+    const recipeAudit = input.mode === "read_only" && hasRecipeContext(input.context)
+      ? buildRecipeAuditContent(parsed.text)
+      : null;
+    const text = recipeAudit ? JSON.stringify(recipeAudit) : parsed.text;
     return {
       provider: "google-agent-platform",
       model: `reasoningEngines/${config.engineId}`,
@@ -331,6 +338,7 @@ export async function generateWithGoogleAgent(input: AgentInput): Promise<Google
         location: config.location,
         engineId: config.engineId,
         eventCount: parsed.events.length,
+        ...(recipeAudit ? { recipeAudit } : {}),
       },
       usage: {},
     };

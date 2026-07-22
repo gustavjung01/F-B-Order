@@ -14,6 +14,7 @@ const files = {
   recipePanel: read("apps/frontend/components/admin/AdminRecipeOperationsPanelV5.tsx"),
   recipeAi: read("apps/frontend/components/admin/recipe-editor/RecipeAiAssistantPanel.tsx"),
   recipeAudit: read("apps/frontend/components/admin/ai/RecipeAiAuditResult.tsx"),
+  recipeAuditSchema: read("apps/backend/src/modules/ai/recipe-audit-content.ts"),
   recipeSteps: read("apps/frontend/components/admin/recipe-editor/RecipeStepsTab.tsx"),
   recipeMerge: read("apps/frontend/components/admin/recipe-editor/recipe-step-merge.mjs"),
   aiConsole: read("apps/frontend/components/admin/AdminAiConsole.tsx"),
@@ -47,11 +48,10 @@ for (const permission of ["ai.use", "ai.execute", "ai.approve", "ai.audit"]) {
 assert.match(files.nav, /href: "\/admin\/ai"/);
 assert.doesNotMatch(files.aiConsole, /scopes:\s*\["orders",\s*"customers",\s*"catalog",\s*"recipes"\]/);
 
-// Part 3: SOP UI is in Steps, uses shared primitives, and hides raw JSON.
+// Part 3: Recipe Health Score UI is in Steps, uses shared primitives, and hides raw JSON.
 assert.match(files.recipeSteps, /id="recipe-ai-sop-target"/);
 assert.match(files.recipeAi, /createPortal\(panel, stepsTarget\)/);
 assert.match(files.recipeAi, /RecipeAiAuditResult/);
-assert.match(files.recipeAi, /Tuyệt đối không trả JSON/);
 assert.doesNotMatch(files.recipeAi, /:has\(|<style jsx global>|recipe-ai-sop-slot/);
 for (const primitive of ["AdminSurface", "AdminButton", "AdminAlert", "AdminDialog"]) {
   assert.match(files.recipeAi, new RegExp(primitive));
@@ -59,8 +59,15 @@ for (const primitive of ["AdminSurface", "AdminButton", "AdminAlert", "AdminDial
 for (const source of [files.recipeAi, files.recipeAudit, files.aiConsole, files.aiReviewQueue, files.aiDiff]) {
   assert.doesNotMatch(source, /<pre\b/, "user-facing AI flow must not expose raw JSON blocks");
 }
+assert.match(files.recipeAudit, /Sức khỏe công thức/);
+assert.match(files.recipeAudit, /Checklist vận hành/);
+assert.match(files.recipeAudit, /8 tiêu chí vận hành/);
+assert.match(files.recipeAudit, /parseStructuredAudit/);
 assert.match(files.recipeAudit, /HIDDEN_SECTION_PATTERN/);
 assert.match(files.recipeAudit, /TECHNICAL_KEY_PATTERN/);
+assert.match(files.recipeAuditSchema, /RECIPE_AUDIT_CHECKLIST_KEYS/);
+assert.match(files.recipeAuditSchema, /STATUS_MULTIPLIER/);
+assert.match(files.recipeAuditSchema, /score >= 85/);
 assert.doesNotMatch(files.recipeAi, /Job \{job\.id|Base \{draft\.baseRecipeVersionId|PostgreSQL|`ai\.approve`|`recipes\.review`/);
 assert.match(files.aiDiff, /Hiện tại/);
 assert.match(files.aiDiff, /AI đề xuất/);
@@ -85,8 +92,9 @@ assert.match(files.workerLifecycle, /await activeTick/);
 assert.match(files.workerUnit, /bepsi-ai-worker/);
 assert.match(files.provider, /AI_PROVIDER_NOT_CONFIGURED/);
 assert.match(files.provider, /process\.env\.NODE_ENV !== "production"/);
-assert.match(files.provider, /QUY TẮC ĐẦU RA BẮT BUỘC CHO GIAO DIỆN CÔNG THỨC/);
-assert.match(files.provider, /sanitizeRecipeReadOnlyText/);
+assert.match(files.provider, /QUY TẮC ĐẦU RA BẮT BUỘC CHO RECIPE HEALTH AUDIT/);
+assert.match(files.provider, /buildRecipeAuditContent/);
+assert.match(files.provider, /700-1200 token/);
 assert.doesNotMatch(files.provider, /fallbackReason:\s*"google_agent_not_configured"/);
 
 for (const workflowPath of [

@@ -138,10 +138,12 @@ test("Recipe AI panel mounts into the explicit Steps slot and applies only revie
   assert.match(routes, /listAiDraftReviewQueue\(identity\)/);
 });
 
-test("Recipe AI user view hides internal JSON and explains the workflow in normal language", async () => {
-  const [panel, recipeAudit, aiConsole, readableResult, reviewQueue, diff] = await Promise.all([
+test("Recipe AI renders a structured Health Score and never exposes its internal JSON", async () => {
+  const [panel, recipeAudit, auditSchema, provider, aiConsole, readableResult, reviewQueue, diff] = await Promise.all([
     readFile("apps/frontend/components/admin/recipe-editor/RecipeAiAssistantPanel.tsx", "utf8"),
     readFile("apps/frontend/components/admin/ai/RecipeAiAuditResult.tsx", "utf8"),
+    readFile("apps/backend/src/modules/ai/recipe-audit-content.ts", "utf8"),
+    readFile("apps/backend/src/modules/ai/google-agent.provider.ts", "utf8"),
     readFile("apps/frontend/components/admin/AdminAiConsole.tsx", "utf8"),
     readFile("apps/frontend/components/admin/ai/AiReadableResult.tsx", "utf8"),
     readFile("apps/frontend/components/admin/ai/AiRecipeDraftReviewQueue.tsx", "utf8"),
@@ -156,13 +158,25 @@ test("Recipe AI user view hides internal JSON and explains the workflow in norma
   }
 
   assert.match(panel, /RecipeAiAuditResult/);
-  assert.match(panel, /Tuyệt đối không trả JSON/);
   assert.match(panel, /Trợ lý công thức/);
   assert.match(panel, /Kiểm tra công thức/);
   assert.doesNotMatch(panel, /Job \{job\.id|Base \{draft\.baseRecipeVersionId|PostgreSQL|`ai\.approve`|`recipes\.review`/);
+
+  assert.match(recipeAudit, /Sức khỏe công thức/);
+  assert.match(recipeAudit, /Checklist vận hành/);
+  assert.match(recipeAudit, /8 tiêu chí vận hành/);
+  assert.match(recipeAudit, /parseStructuredAudit/);
+  assert.match(recipeAudit, /kind !== "recipe_audit"/);
   assert.match(recipeAudit, /HIDDEN_SECTION_PATTERN/);
   assert.match(recipeAudit, /TECHNICAL_KEY_PATTERN/);
   assert.match(recipeAudit, /action_key\|target_type\|target_id\|required_permission/);
+
+  assert.match(auditSchema, /RECIPE_AUDIT_CHECKLIST_KEYS/);
+  assert.match(auditSchema, /STATUS_MULTIPLIER/);
+  assert.match(auditSchema, /score >= 85/);
+  assert.match(provider, /buildRecipeAuditContent/);
+  assert.match(provider, /700-1200 token/);
+
   assert.match(reviewQueue, /AdminDialog/);
   assert.match(diff, /Hiện tại/);
   assert.match(diff, /AI đề xuất/);
