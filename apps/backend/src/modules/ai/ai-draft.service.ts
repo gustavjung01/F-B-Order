@@ -131,15 +131,20 @@ export async function listOwnAiDrafts(
   return { drafts: result.rows };
 }
 
-export async function listAiDraftReviewQueue(db: Pool = getDb()) {
+export async function listAiDraftReviewQueue(
+  identity: StaffIdentity,
+  db: Pool = getDb(),
+) {
   const result = await db.query(
     `${DRAFT_SELECT}
      WHERE draft.draft_type = 'recipe'
+       AND draft.created_by_staff_id <> $1
        AND draft.status IN ('draft', 'approved', 'rejected', 'applied')
      ORDER BY
        CASE draft.status WHEN 'draft' THEN 0 WHEN 'approved' THEN 1 ELSE 2 END,
        draft.created_at DESC
      LIMIT 200`,
+    [identity.staffId],
   );
   return { drafts: result.rows };
 }
@@ -194,7 +199,7 @@ export async function reviewAiDraft(
       resourceType: "ai_draft",
       resourceId: id,
       outcome: "success",
-      permissionKey: "ai.audit",
+      permissionKey: "ai.approve",
       reason: note,
       beforeData: { status: draft.status },
       afterData: { status: decision },
@@ -263,18 +268,15 @@ export async function applyApprovedRecipeDraft(
       status: string;
       currentVersionId: string | null;
       publishedVersionId: string | null;
-      snapshot: Record<string, unknown> | null;
     }>(
       `SELECT
-         recipe.id::text,
-         recipe.status,
-         recipe.current_version_id::text AS "currentVersionId",
-         recipe.published_version_id::text AS "publishedVersionId",
-         version.snapshot
-       FROM recipes recipe
-       LEFT JOIN recipe_versions version ON version.id = recipe.current_version_id
-       WHERE recipe.id = $1
-       FOR UPDATE OF recipe, version`,
+         id::text,
+         status,
+         current_version_id::text AS "currentVersionId",
+         published_version_id::text AS "publishedVersionId"
+       FROM recipes
+       WHERE id = $1
+       FOR UPDATE`,
       [draft.targetRecipeId],
     );
     const recipe = recipeResult.rows[0];
@@ -290,8 +292,26 @@ export async function applyApprovedRecipeDraft(
         { baseRecipeVersionId: draft.baseRecipeVersionId, currentRecipeVersionId: recipe.currentVersionId },
       );
     }
-    if (!recipe.snapshot || typeof recipe.snapshot !== "object") {
+
+    const versionResult = await client.query<{
+      snapshot: Record<string, unknown> | null;
+      workflowStatus: string;
+    }>(
+      `SELECT snapshot, workflow_status AS "workflowStatus"
+       FROM recipe_versions
+       WHERE id = $1 AND recipe_id = $2`,
+      [draft.baseRecipeVersionId, draft.targetRecipeId],
+    );
+    const baseVersion = versionResult.rows[0];
+    if (!baseVersion?.snapshot || typeof baseVersion.snapshot !== "object") {
       throw new OrderEngineError("RECIPE_VERSION_SNAPSHOT_MISSING", 409, "Current recipe version snapshot is missing.");
+    }
+    if (["in_review", "approved"].includes(baseVersion.workflowStatus)) {
+      throw new OrderEngineError(
+        "RECIPE_REVIEW_LOCKED",
+        409,
+        "Recipe is in review or approved. Request changes before applying an AI draft.",
+      );
     }
 
     const stepResult = await client.query<{
@@ -349,7 +369,7 @@ export async function applyApprovedRecipeDraft(
 
     currentSteps.sort((left, right) => left.stepNo - right.stepNo);
     const nextSnapshot = {
-      ...recipe.snapshot,
+      ...baseVersion.snapshot,
       steps: currentSteps.map((step) => ({
         title: step.title,
         content: step.content,
@@ -363,7 +383,7 @@ export async function applyApprovedRecipeDraft(
       [draft.targetRecipeId],
     );
     const nextVersionNo = nextVersionNoResult.rows[0]?.nextVersionNo ?? 1;
-    const versionResult = await client.query<{ id: string }>(
+    const insertedVersion = await client.query<{ id: string }>(
       `INSERT INTO recipe_versions(
          recipe_id,version_no,workflow_status,snapshot,change_note,created_by_staff_id
        ) VALUES($1,$2,'draft',$3::jsonb,$4,$5)
@@ -376,7 +396,7 @@ export async function applyApprovedRecipeDraft(
         identity.staffId,
       ],
     );
-    const versionId = versionResult.rows[0].id;
+    const versionId = insertedVersion.rows[0].id;
 
     await client.query(
       `UPDATE recipes
