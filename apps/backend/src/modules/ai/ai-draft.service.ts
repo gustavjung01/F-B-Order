@@ -410,11 +410,11 @@ export async function applyApprovedRecipeDraft(
 
     await client.query(
       `INSERT INTO recipe_media_version_refs(version_id,media_id,usage,step_no)
-       SELECT $2, recipe.cover_media_id, 'cover', NULL
+       SELECT $2::uuid, recipe.cover_media_id, 'cover', NULL
        FROM recipes recipe
        WHERE recipe.id = $1 AND recipe.cover_media_id IS NOT NULL
        UNION ALL
-       SELECT $2, step.media_id, 'step', step.step_no
+       SELECT $2::uuid, step.media_id, 'step', step.step_no
        FROM recipe_steps step
        WHERE step.recipe_id = $1 AND step.media_id IS NOT NULL`,
       [draft.targetRecipeId, versionId],
