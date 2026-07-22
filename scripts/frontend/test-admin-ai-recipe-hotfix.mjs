@@ -125,7 +125,8 @@ test("Recipe AI panel stays in Steps and applies only reviewed persisted drafts"
   assert.doesNotMatch(panel, /onApplySteps\(suggestedSteps\)/);
 
   assert.match(reviewQueue, /has\("ai\.approve"\)/);
-  assert.match(reviewQueue, /\/approve|\/reject/);
+  assert.match(reviewQueue, /review\("approve"\)/);
+  assert.match(reviewQueue, /review\("reject"\)/);
   assert.match(reviewQueue, /AiRecipeDraftDiff/);
   assert.match(diff, /AdminToggle/);
   assert.match(aiPage, /AiRecipeDraftReviewQueue/);
