@@ -13,6 +13,7 @@ function read(relativePath) {
 const files = {
   recipePanel: read("apps/frontend/components/admin/AdminRecipeOperationsPanelV5.tsx"),
   recipeAi: read("apps/frontend/components/admin/recipe-editor/RecipeAiAssistantPanel.tsx"),
+  recipeAudit: read("apps/frontend/components/admin/ai/RecipeAiAuditResult.tsx"),
   recipeSteps: read("apps/frontend/components/admin/recipe-editor/RecipeStepsTab.tsx"),
   recipeMerge: read("apps/frontend/components/admin/recipe-editor/recipe-step-merge.mjs"),
   aiConsole: read("apps/frontend/components/admin/AdminAiConsole.tsx"),
@@ -49,13 +50,18 @@ assert.doesNotMatch(files.aiConsole, /scopes:\s*\["orders",\s*"customers",\s*"ca
 // Part 3: SOP UI is in Steps, uses shared primitives, and hides raw JSON.
 assert.match(files.recipeSteps, /id="recipe-ai-sop-target"/);
 assert.match(files.recipeAi, /createPortal\(panel, stepsTarget\)/);
+assert.match(files.recipeAi, /RecipeAiAuditResult/);
+assert.match(files.recipeAi, /Tuyệt đối không trả JSON/);
 assert.doesNotMatch(files.recipeAi, /:has\(|<style jsx global>|recipe-ai-sop-slot/);
 for (const primitive of ["AdminSurface", "AdminButton", "AdminAlert", "AdminDialog"]) {
   assert.match(files.recipeAi, new RegExp(primitive));
 }
-for (const source of [files.recipeAi, files.aiConsole, files.aiReviewQueue, files.aiDiff]) {
+for (const source of [files.recipeAi, files.recipeAudit, files.aiConsole, files.aiReviewQueue, files.aiDiff]) {
   assert.doesNotMatch(source, /<pre\b/, "user-facing AI flow must not expose raw JSON blocks");
 }
+assert.match(files.recipeAudit, /HIDDEN_SECTION_PATTERN/);
+assert.match(files.recipeAudit, /TECHNICAL_KEY_PATTERN/);
+assert.doesNotMatch(files.recipeAi, /Job \{job\.id|Base \{draft\.baseRecipeVersionId|PostgreSQL|`ai\.approve`|`recipes\.review`/);
 assert.match(files.aiDiff, /Hiện tại/);
 assert.match(files.aiDiff, /AI đề xuất/);
 
@@ -79,6 +85,8 @@ assert.match(files.workerLifecycle, /await activeTick/);
 assert.match(files.workerUnit, /bepsi-ai-worker/);
 assert.match(files.provider, /AI_PROVIDER_NOT_CONFIGURED/);
 assert.match(files.provider, /process\.env\.NODE_ENV !== "production"/);
+assert.match(files.provider, /QUY TẮC ĐẦU RA BẮT BUỘC CHO GIAO DIỆN CÔNG THỨC/);
+assert.match(files.provider, /sanitizeRecipeReadOnlyText/);
 assert.doesNotMatch(files.provider, /fallbackReason:\s*"google_agent_not_configured"/);
 
 for (const workflowPath of [
