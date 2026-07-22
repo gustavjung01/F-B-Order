@@ -6,11 +6,14 @@ import { useAuth } from "@clerk/nextjs";
 import { adminApiFetch } from "@/lib/admin-api";
 import { AiRecipeDraftDiff } from "../ai/AiRecipeDraftDiff";
 import { RecipeAiAuditResult } from "../ai/RecipeAiAuditResult";
+import { RecipeCostPreview, type RecipeCostPreviewData } from "../ai/RecipeCostPreview";
 import {
   aiRecipeDraftStatusLabel,
   aiRecipeDraftStatusTone,
   isRecipeSopDraftContent,
+  recipeDraftTaskLabel,
   type AiRecipeDraft,
+  type RecipeDraftTask,
 } from "../ai/recipe-draft-types";
 import { useAdminPermissions } from "../AdminPermissionProvider";
 import {
@@ -26,7 +29,7 @@ import {
 
 const jobStatusLabel = {
   pending: "Đang chờ",
-  processing: "Đang kiểm tra",
+  processing: "Đang xử lý",
   completed: "Hoàn thành",
   failed: "Thất bại",
   cancelled: "Đã hủy",
@@ -55,6 +58,7 @@ type ApplyResult = {
 };
 
 type LegacySuggestedStep = { title: string; content: string };
+type CopilotMode = "audit" | "cost" | RecipeDraftTask | null;
 
 type RecipeAiAssistantPanelProps = {
   recipeId: string;
@@ -68,6 +72,33 @@ type RecipeAiAssistantPanelProps = {
   onOpenSteps?: () => void;
 };
 
+const modeLabel: Record<Exclude<CopilotMode, null>, string> = {
+  audit: "Kiểm tra công thức",
+  sop: "Tạo SOP",
+  qc: "Tạo QC",
+  dosing: "Chuẩn hóa định lượng",
+  cost: "Tính giá vốn",
+};
+
+function draftRequest(task: RecipeDraftTask, recipeTitle: string) {
+  if (task === "qc") {
+    return {
+      title: `QC nháp - ${recipeTitle}`,
+      prompt: `[RECIPE_TASK:QC]\nTạo phần kiểm soát chất lượng cho công thức ${recipeTitle}. Chỉ trả một JSON object hợp lệ theo cấu trúc {"task":"qc","steps":[{"title":"...","content":"..."}]}. Tạo tối đa 3 bước mới, tiêu đề phải bắt đầu bằng "Kiểm soát chất lượng". Nội dung phải nêu tiêu chí quan sát được, ngưỡng hoặc dấu hiệu đạt khi dữ liệu nguồn có hỗ trợ, lỗi cần loại bỏ và thời điểm kiểm tra. Không tự bịa nhiệt độ, hạn sử dụng hoặc định lượng chưa có trong dữ liệu. Không markdown và không thêm nội dung ngoài JSON.`,
+    };
+  }
+  if (task === "dosing") {
+    return {
+      title: `Định lượng nháp - ${recipeTitle}`,
+      prompt: `[RECIPE_TASK:DOSING]\nChuẩn hóa định lượng trong các bước pha chế của công thức ${recipeTitle}. Chỉ trả một JSON object hợp lệ theo cấu trúc {"task":"dosing","steps":[{"title":"...","content":"..."}]}. Chỉ trả các bước thực sự cần chỉnh. Giữ nguyên chính xác tiêu đề bước hiện tại để hệ thống ghép đúng bước; trong content thay cách cân đong khó vận hành bằng dụng cụ đo rõ ràng nhưng không thay đổi lượng nguyên liệu gốc. Không bịa quy đổi khi dữ liệu không đủ. Không markdown và không thêm nội dung ngoài JSON.`,
+    };
+  }
+  return {
+    title: `SOP nháp - ${recipeTitle}`,
+    prompt: `[RECIPE_TASK:SOP]\nAudit công thức ${recipeTitle} và viết lại SOP cách làm. Chỉ trả một JSON object hợp lệ theo cấu trúc {"task":"sop","steps":[{"title":"...","content":"..."}]}. Mỗi bước phải có thao tác, định lượng liên quan, thời gian hoặc nhiệt độ khi dữ liệu có sẵn, tiêu chí đạt và lỗi cần tránh. Không markdown và không thêm nội dung ngoài JSON.`,
+  };
+}
+
 export function RecipeAiAssistantPanel({
   recipeId,
   recipeTitle,
@@ -79,8 +110,9 @@ export function RecipeAiAssistantPanel({
   const { has } = useAdminPermissions();
   const [stepsTarget, setStepsTarget] = useState<HTMLElement | null>(null);
   const [job, setJob] = useState<AiJob | null>(null);
-  const [mode, setMode] = useState<"audit" | "draft" | null>(null);
+  const [mode, setMode] = useState<CopilotMode>(null);
   const [draft, setDraft] = useState<AiRecipeDraft | null>(null);
+  const [cost, setCost] = useState<RecipeCostPreviewData | null>(null);
   const [selectedStepIds, setSelectedStepIds] = useState<string[]>([]);
   const [applyOpen, setApplyOpen] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -89,6 +121,7 @@ export function RecipeAiAssistantPanel({
   const canUse = has("ai.use");
   const canDraft = has("ai.execute") && has("recipes.edit");
   const canApply = canDraft && has("recipes.media.manage");
+  const canCost = canUse && has("catalog.view") && has("recipes.view");
 
   useEffect(() => {
     setStepsTarget(document.getElementById("recipe-ai-sop-target"));
@@ -133,6 +166,7 @@ export function RecipeAiAssistantPanel({
     setJob(null);
     setMode(null);
     setDraft(null);
+    setCost(null);
     setApplyOpen(false);
     setSelectedStepIds([]);
     if (canUse) void loadLatestDraft().catch(() => undefined);
@@ -162,34 +196,81 @@ export function RecipeAiAssistantPanel({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [draft?.id, draft?.status]);
 
-  async function enqueue(nextMode: "audit" | "draft") {
-    if (dirty) {
-      setMessage("Hãy lưu công thức trước để trợ lý đọc đúng phiên bản mới nhất.");
-      return;
-    }
+  function assertSaved(): boolean {
+    if (!dirty) return true;
+    setMessage("Hãy lưu công thức trước để trợ lý đọc đúng phiên bản mới nhất.");
+    return false;
+  }
+
+  async function runAudit() {
+    if (!assertSaved()) return;
     setBusy(true);
     setMessage("");
-    setMode(nextMode);
-    if (nextMode === "draft") setDraft(null);
+    setMode("audit");
+    setCost(null);
     try {
-      const isDraft = nextMode === "draft";
-      const prompt = isDraft
-        ? `Audit công thức ${recipeTitle} và viết lại SOP cách làm. Chỉ trả JSON hợp lệ theo cấu trúc {"steps":[{"title":"...","content":"..."}]}. Mỗi bước phải có thao tác, định lượng liên quan, thời gian hoặc nhiệt độ khi cần, tiêu chí đạt và lỗi cần tránh. Không thêm markdown.`
-        : `Kiểm tra riêng công thức ${recipeTitle} cho người trực tiếp pha chế. Trả lời tiếng Việt ngắn gọn, dễ làm theo và không chào hỏi. Chỉ dùng 5 mục: Kết luận nhanh; Điểm cần chỉnh (tối đa 5 điểm quan trọng); SOP đề xuất; Tiêu chí kiểm soát; Dữ liệu cần bổ sung. Tuyệt đối không trả JSON, code block, action_key, ID, permission, payload hay trạng thái hệ thống. Không viết mục Hành động đề xuất vì giao diện đã có nút tạo SOP nháp riêng.`;
+      const prompt = `Kiểm tra riêng công thức ${recipeTitle} cho người trực tiếp pha chế. Đánh giá đủ 8 tiêu chí vận hành, chỉ dùng dữ liệu backend cung cấp và không tự bịa giá vốn, hạn sử dụng hoặc nhiệt độ.`;
       const payload = await adminApiFetch<{ jobId: string }>(
-        isDraft ? "/api/admin/ai/drafts" : "/api/admin/ai/query",
+        "/api/admin/ai/query",
+        await token(),
+        { method: "POST", body: JSON.stringify({ prompt, scopes: ["recipes"], recipeId }) },
+      );
+      setJob({ id: payload.jobId, status: "pending", draft_id: null, response_text: null, error_code: null, error_message: null });
+      setMessage("Đang kiểm tra công thức.");
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "Không gửi được yêu cầu kiểm tra.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function runDraft(task: RecipeDraftTask) {
+    if (!assertSaved() || !canDraft || locked) return;
+    setBusy(true);
+    setMessage("");
+    setMode(task);
+    setCost(null);
+    setDraft(null);
+    try {
+      const request = draftRequest(task, recipeTitle);
+      const payload = await adminApiFetch<{ jobId: string }>(
+        "/api/admin/ai/drafts",
         await token(),
         {
           method: "POST",
-          body: JSON.stringify(isDraft
-            ? { prompt, draftType: "recipe", title: `SOP nháp - ${recipeTitle}`, scopes: ["recipes"], recipeId }
-            : { prompt, scopes: ["recipes"], recipeId }),
+          body: JSON.stringify({
+            prompt: request.prompt,
+            draftType: "recipe",
+            title: request.title,
+            scopes: ["recipes"],
+            recipeId,
+          }),
         },
       );
       setJob({ id: payload.jobId, status: "pending", draft_id: null, response_text: null, error_code: null, error_message: null });
-      setMessage(isDraft ? "Đang tạo SOP nháp. Khi hoàn thành, bản nháp sẽ chờ một người khác duyệt." : "Đang kiểm tra công thức.");
+      setMessage(`Đang ${modeLabel[task].toLocaleLowerCase("vi-VN")}. Khi hoàn thành, bản nháp sẽ chờ một người khác duyệt.`);
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : "Không gửi được yêu cầu cho trợ lý.");
+      setMessage(error instanceof Error ? error.message : "Không tạo được bản nháp.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function calculateCost() {
+    if (!assertSaved() || !canCost) return;
+    setBusy(true);
+    setMessage("");
+    setMode("cost");
+    setJob(null);
+    try {
+      const payload = await adminApiFetch<{ cost: RecipeCostPreviewData }>(
+        `/api/admin/recipe-copilot/${recipeId}/cost-preview`,
+        await token(),
+      );
+      setCost(payload.cost);
+      setMessage(payload.cost.status === "ready" ? "Đã tính đủ giá vốn từ dữ liệu catalog hiện tại." : "Đã kiểm tra giá vốn và chỉ rõ dữ liệu còn thiếu.");
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "Không tính được giá vốn.");
     } finally {
       setBusy(false);
     }
@@ -221,7 +302,7 @@ export function RecipeAiAssistantPanel({
         window.location.reload();
       }
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : "Không áp dụng được SOP nháp.");
+      setMessage(error instanceof Error ? error.message : "Không áp dụng được bản nháp.");
     } finally {
       setBusy(false);
     }
@@ -229,27 +310,43 @@ export function RecipeAiAssistantPanel({
 
   if (!canUse) return null;
 
+  const draftTask: RecipeDraftTask = draft && isRecipeSopDraftContent(draft.content)
+    ? draft.content.task || "sop"
+    : "sop";
+
   const panel = (
     <div className="mb-4">
       <AdminSurface>
         <AdminSurfaceHeader
-          eyebrow="Trợ lý công thức"
-          title="Kiểm tra và chuẩn hóa cách làm"
-          description="Trợ lý chỉ ra điểm cần sửa bằng ngôn ngữ dễ hiểu. Khi cần cập nhật, hãy tạo SOP nháp để một người khác duyệt trước khi áp dụng."
-          actions={(
-            <>
-              <AdminButton tone="dark" size="sm" disabled={busy || dirty} onClick={() => void enqueue("audit")}>Kiểm tra công thức</AdminButton>
-              {canDraft && !locked ? <AdminButton tone="primary" size="sm" disabled={busy || dirty} onClick={() => void enqueue("draft")}>Tạo SOP nháp</AdminButton> : null}
-            </>
-          )}
+          eyebrow="Recipe Copilot"
+          title="Kiểm tra và làm nháp một chạm"
+          description="Chọn đúng việc cần làm. Trợ lý tạo đề xuất; mọi thay đổi nội dung vẫn phải qua người khác duyệt trước khi áp dụng."
+          actions={<AdminButton tone="dark" size="sm" disabled={busy || dirty} onClick={() => void runAudit()}>Kiểm tra công thức</AdminButton>}
         />
         <AdminSurfaceBody className="grid gap-4">
           {dirty ? <AdminAlert tone="warning" title="Cần lưu trước">Công thức có thay đổi chưa lưu. Hãy lưu để trợ lý làm việc trên đúng phiên bản.</AdminAlert> : null}
 
+          <section className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <div>
+                <h4 className="font-black text-slate-950">Hành động nhanh</h4>
+                <p className="mt-1 text-xs font-bold leading-5 text-slate-500">Không cần gõ prompt. Mỗi nút chỉ dùng dữ liệu của công thức đang mở.</p>
+              </div>
+              {mode ? <AdminBadge tone="orange">{modeLabel[mode]}</AdminBadge> : null}
+            </div>
+            <div className="mt-3 grid grid-cols-2 gap-2 lg:grid-cols-4">
+              {canDraft && !locked ? <AdminButton className="w-full justify-center" tone="primary" disabled={busy || dirty} onClick={() => void runDraft("sop")}>Tạo SOP</AdminButton> : null}
+              {canDraft && !locked ? <AdminButton className="w-full justify-center" tone="secondary" disabled={busy || dirty} onClick={() => void runDraft("qc")}>Tạo QC</AdminButton> : null}
+              {canDraft && !locked ? <AdminButton className="w-full justify-center" tone="secondary" disabled={busy || dirty} onClick={() => void runDraft("dosing")}>Chuẩn hóa định lượng</AdminButton> : null}
+              {canCost ? <AdminButton className="w-full justify-center" tone="dark" disabled={busy || dirty} onClick={() => void calculateCost()}>Tính giá vốn</AdminButton> : null}
+            </div>
+            {!canCost ? <p className="mt-2 text-xs font-bold text-slate-500">Tính giá vốn cần quyền xem catalog.</p> : null}
+          </section>
+
           {job ? (
             <div className="flex flex-wrap items-center gap-2">
               <AdminBadge tone={jobStatusTone[job.status]}>{jobStatusLabel[job.status]}</AdminBadge>
-              {mode ? <AdminBadge tone="orange">{mode === "audit" ? "Kiểm tra công thức" : "SOP nháp"}</AdminBadge> : null}
+              {mode && mode !== "cost" ? <AdminBadge tone="orange">{modeLabel[mode]}</AdminBadge> : null}
             </div>
           ) : null}
 
@@ -262,12 +359,15 @@ export function RecipeAiAssistantPanel({
             </section>
           ) : null}
 
+          {mode === "cost" ? <RecipeCostPreview cost={cost} /> : null}
+
           {draft ? (
             <section className="grid gap-3">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
                   <div className="flex flex-wrap gap-2">
                     <AdminBadge tone={aiRecipeDraftStatusTone(draft.status)}>{aiRecipeDraftStatusLabel[draft.status]}</AdminBadge>
+                    <AdminBadge tone="info">{recipeDraftTaskLabel[draftTask]}</AdminBadge>
                     {draft.appliedRecipeVersionNo ? <AdminBadge tone="success">Phiên bản {draft.appliedRecipeVersionNo}</AdminBadge> : null}
                   </div>
                   <h4 className="mt-2 font-black text-slate-900">{draft.title}</h4>
@@ -275,9 +375,9 @@ export function RecipeAiAssistantPanel({
                 {draft.status === "approved" && canApply && !locked ? <AdminButton tone="success" disabled={dirty || busy} onClick={openApplyDialog}>Chọn phần áp dụng</AdminButton> : null}
               </div>
 
-              {draft.status === "draft" ? <AdminAlert tone="warning" title="Đang chờ duyệt">SOP nháp đã được lưu và đang chờ một người khác kiểm tra, duyệt hoặc từ chối.</AdminAlert> : null}
-              {draft.status === "rejected" ? <AdminAlert tone="danger" title="SOP nháp bị từ chối">{draft.reviewNote || "Người duyệt chưa chấp nhận đề xuất này."}</AdminAlert> : null}
-              {draft.status === "approved" ? <AdminAlert tone="success" title="SOP nháp đã được duyệt">{draft.reviewNote || "Bạn có thể chọn từng phần để áp dụng."}</AdminAlert> : null}
+              {draft.status === "draft" ? <AdminAlert tone="warning" title="Đang chờ duyệt">Bản nháp đã được lưu và đang chờ một người khác kiểm tra, duyệt hoặc từ chối.</AdminAlert> : null}
+              {draft.status === "rejected" ? <AdminAlert tone="danger" title="Bản nháp bị từ chối">{draft.reviewNote || "Người duyệt chưa chấp nhận đề xuất này."}</AdminAlert> : null}
+              {draft.status === "approved" ? <AdminAlert tone="success" title="Bản nháp đã được duyệt">{draft.reviewNote || "Bạn có thể chọn từng phần để áp dụng."}</AdminAlert> : null}
               {draft.status === "applied" ? <AdminAlert tone="success" title="Đã tạo phiên bản công thức mới">Đã áp dụng {draft.applicationData?.selectedStepCount || 0} phần vào phiên bản {draft.appliedRecipeVersionNo || "mới"}.</AdminAlert> : null}
 
               {isRecipeSopDraftContent(draft.content) ? (
@@ -293,9 +393,9 @@ export function RecipeAiAssistantPanel({
                     </article>
                   ))}
                 </div>
-              ) : <AdminAlert tone="danger" title="SOP nháp không hợp lệ">Không đọc được các bước đề xuất. Hãy tạo lại bản nháp.</AdminAlert>}
+              ) : <AdminAlert tone="danger" title="Bản nháp không hợp lệ">Không đọc được các bước đề xuất. Hãy tạo lại bản nháp.</AdminAlert>}
             </section>
-          ) : !job ? <AdminEmptyState title="Chưa có SOP nháp" description="Tạo SOP nháp khi bạn muốn cập nhật cách làm sau khi kiểm tra." /> : null}
+          ) : !job && mode !== "cost" ? <AdminEmptyState title="Chưa có đề xuất" description="Dùng các nút hành động nhanh để tạo SOP, QC hoặc chuẩn hóa định lượng." /> : null}
 
           {message ? <AdminAlert tone={message.startsWith("Đã") || message.startsWith("Đang") ? "success" : "warning"}>{message}</AdminAlert> : null}
         </AdminSurfaceBody>
@@ -310,7 +410,7 @@ export function RecipeAiAssistantPanel({
       <AdminDialog
         open={applyOpen}
         size="xl"
-        eyebrow="Áp dụng SOP đã duyệt"
+        eyebrow="Áp dụng đề xuất đã duyệt"
         title="Chọn từng phần để tạo phiên bản công thức mới"
         description="Chỉ các bước được chọn mới được cập nhật. Thứ tự và hình ảnh hiện có vẫn được giữ nguyên."
         closeDisabled={busy}
@@ -332,7 +432,7 @@ export function RecipeAiAssistantPanel({
             selectedStepIds={selectedStepIds}
             onSelectionChange={setSelectedStepIds}
           />
-        ) : <AdminAlert tone="danger">SOP nháp không còn dữ liệu hợp lệ.</AdminAlert>}
+        ) : <AdminAlert tone="danger">Bản nháp không còn dữ liệu hợp lệ.</AdminAlert>}
       </AdminDialog>
     </>
   );
