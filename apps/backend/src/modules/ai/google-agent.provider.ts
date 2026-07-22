@@ -34,6 +34,28 @@ function configFromEnv(): GoogleAgentConfig | null {
   };
 }
 
+function missingConfigKeys(): string[] {
+  return [
+    ["GOOGLE_CLOUD_PROJECT", process.env.GOOGLE_CLOUD_PROJECT],
+    ["GOOGLE_CLOUD_LOCATION", process.env.GOOGLE_CLOUD_LOCATION],
+    ["GOOGLE_AGENT_ENGINE_ID", process.env.GOOGLE_AGENT_ENGINE_ID],
+  ].flatMap(([key, value]) => String(value || "").trim() ? [] : [key]);
+}
+
+function deterministicFallbackAllowed(): boolean {
+  return process.env.NODE_ENV !== "production"
+    && process.env.AI_ALLOW_DETERMINISTIC_FALLBACK?.trim().toLowerCase() === "true";
+}
+
+function providerNotConfiguredError(): OrderEngineError {
+  return new OrderEngineError(
+    "AI_PROVIDER_NOT_CONFIGURED",
+    503,
+    "Google Agent Platform is not fully configured. AI jobs cannot run until the worker environment is fixed.",
+    { missingEnvironmentVariables: missingConfigKeys() },
+  );
+}
+
 function createAuth(config: GoogleAgentConfig): GoogleAuth {
   if (!config.serviceAccountJsonBase64) {
     return new GoogleAuth({ scopes: ["https://www.googleapis.com/auth/cloud-platform"] });
@@ -56,6 +78,21 @@ function createAuth(config: GoogleAgentConfig): GoogleAuth {
     credentials,
     scopes: ["https://www.googleapis.com/auth/cloud-platform"],
   });
+}
+
+async function getGoogleAccessToken(config: GoogleAgentConfig): Promise<string> {
+  const auth = createAuth(config);
+  const client = await auth.getClient();
+  const accessToken = await client.getAccessToken();
+  const token = typeof accessToken === "string" ? accessToken : accessToken.token;
+  if (!token) {
+    throw new OrderEngineError(
+      "AI_GOOGLE_AUTH_FAILED",
+      502,
+      "Could not obtain Google Cloud access token",
+    );
+  }
+  return token;
 }
 
 function parseJsonLine(line: string): unknown | null {
@@ -137,6 +174,25 @@ function parseAgentResponse(raw: string): { text: string; events: unknown[] } {
   return { text, events };
 }
 
+export async function verifyGoogleAgentProvider(): Promise<{
+  provider: "google-agent-platform" | "deterministic";
+  model: string | null;
+}> {
+  const config = configFromEnv();
+  if (!config) {
+    if (deterministicFallbackAllowed()) {
+      return { provider: "deterministic", model: null };
+    }
+    throw providerNotConfiguredError();
+  }
+
+  await getGoogleAccessToken(config);
+  return {
+    provider: "google-agent-platform",
+    model: `reasoningEngines/${config.engineId}`,
+  };
+}
+
 export async function generateWithGoogleAgent(input: {
   prompt: string;
   context: unknown;
@@ -145,6 +201,7 @@ export async function generateWithGoogleAgent(input: {
 }): Promise<GoogleAgentResult> {
   const config = configFromEnv();
   if (!config) {
+    if (!deterministicFallbackAllowed()) throw providerNotConfiguredError();
     return {
       provider: "deterministic",
       model: null,
@@ -152,23 +209,12 @@ export async function generateWithGoogleAgent(input: {
         input.mode === "read_only"
           ? `Đã tổng hợp dữ liệu theo yêu cầu: ${input.prompt}`
           : `Bản nháp được tạo từ yêu cầu: ${input.prompt}`,
-      data: { context: input.context, fallbackReason: "google_agent_not_configured" },
+      data: { context: input.context, fallbackReason: "explicit_non_production_fallback" },
       usage: {},
     };
   }
 
-  const auth = createAuth(config);
-  const client = await auth.getClient();
-  const accessToken = await client.getAccessToken();
-  const token = typeof accessToken === "string" ? accessToken : accessToken.token;
-  if (!token) {
-    throw new OrderEngineError(
-      "AI_GOOGLE_AUTH_FAILED",
-      502,
-      "Could not obtain Google Cloud access token",
-    );
-  }
-
+  const token = await getGoogleAccessToken(config);
   const timeoutMs = Number(process.env.GOOGLE_AGENT_TIMEOUT_MS || 90_000);
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), timeoutMs);
@@ -234,4 +280,8 @@ export async function generateWithGoogleAgent(input: {
   }
 }
 
-export const __testing = { parseAgentResponse };
+export const __testing = {
+  deterministicFallbackAllowed,
+  missingConfigKeys,
+  parseAgentResponse,
+};
