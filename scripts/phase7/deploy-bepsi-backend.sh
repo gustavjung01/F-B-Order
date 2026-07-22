@@ -10,6 +10,9 @@ WORKTREES_DIR="/srv/apps/bepsi/worktrees"
 BACKUP_DIR="/srv/apps/bepsi/backups"
 ENV_FILE="/etc/app-env/bepsi.env"
 SERVICE_NAME="bepsi-api.service"
+WORKER_SERVICE_NAME="bepsi-ai-worker.service"
+WORKER_UNIT_RELATIVE="scripts/phase7/systemd/bepsi-ai-worker.service"
+WORKER_UNIT_PATH="/etc/systemd/system/${WORKER_SERVICE_NAME}"
 API_BASE_URL="${API_BASE_URL:-https://api.bepsi.click}"
 EXPECTED_BACKEND_VERSION="${BEPSI_EXPECTED_BACKEND_VERSION:-catalog-v2-backend}"
 LOCK_FILE="/var/lock/bepsi-phase7-deploy.lock"
@@ -50,13 +53,32 @@ fetch_with_retry() {
   die "${label} did not become ready after ${attempts} attempts: ${url}"
 }
 
+wait_for_service_active() {
+  local service="$1"
+  local attempts="${2:-10}"
+  local delay_seconds="${3:-2}"
+  local attempt
+
+  for ((attempt = 1; attempt <= attempts; attempt++)); do
+    if sudo systemctl is-active --quiet "$service"; then
+      if ((attempt >= 3)); then
+        return 0
+      fi
+    fi
+    sleep "$delay_seconds"
+  done
+
+  sudo systemctl status "$service" --no-pager || true
+  die "Systemd service did not remain active: ${service}"
+}
+
 [[ "$TARGET_SHA" =~ ^[0-9a-f]{40}$ ]] || die "Target commit must be a full 40-character SHA."
 
 for command in git flock rsync corepack node curl pg_dump sudo find; do
   command -v "$command" >/dev/null 2>&1 || die "Required command is missing: $command"
 done
 [[ "$BACKUP_RETENTION_DAYS" =~ ^[0-9]+$ ]] || die "BEPSI_BACKUP_RETENTION_DAYS must be a non-negative integer."
-[[ "$RELEASE_RETENTION_COUNT" =~ ^[1-9][0-9]*$ ]] || die "BEPSI_RELEASE_RETENTION_COUNT must be a positive integer."
+[[ "$RELEASE_RETENTION_COUNT" =~ ^[1-9][0-9]*$ ]] || die "RELEASE_RETENTION_COUNT must be a positive integer."
 
 [[ -d "${SOURCE_DIR}/.git" ]] || die "Bếp Sỉ source repository is missing: ${SOURCE_DIR}"
 [[ -f "$ENV_FILE" ]] || die "Bếp Sỉ environment file is missing: ${ENV_FILE}"
@@ -79,6 +101,12 @@ SERVICE_USER="$(sudo systemctl show -p User --value "$SERVICE_NAME")"
 SERVICE_GROUP="$(sudo systemctl show -p Group --value "$SERVICE_NAME")"
 [[ -n "$SERVICE_USER" ]] || SERVICE_USER=root
 [[ -n "$SERVICE_GROUP" ]] || SERVICE_GROUP="$SERVICE_USER"
+
+if sudo systemctl cat "$WORKER_SERVICE_NAME" >/dev/null 2>&1; then
+  EXISTING_WORKER_UNIT="$(sudo systemctl cat "$WORKER_SERVICE_NAME")"
+  printf '%s' "$EXISTING_WORKER_UNIT" | grep -Fq "$CURRENT_LINK" || die "${WORKER_SERVICE_NAME} is not configured to run from ${CURRENT_LINK}."
+  printf '%s' "$EXISTING_WORKER_UNIT" | grep -Eiq 'vlgn|tocviet' && die "Worker service unit contains another application path."
+fi
 
 log "Preparing writable Bếp Sỉ deployment directories"
 sudo install -d -o "$DEPLOY_USER" -g "$SERVICE_GROUP" -m 0750 "$RELEASES_DIR"
@@ -139,6 +167,11 @@ rollback_code() {
     sudo ln -sfn "$PREVIOUS_TARGET" "${CURRENT_LINK}.rollback"
     sudo mv -Tf "${CURRENT_LINK}.rollback" "$CURRENT_LINK"
     sudo systemctl restart "$SERVICE_NAME" || true
+    if [[ -r "$PREVIOUS_TARGET/apps/backend/dist/ai-worker.js" ]]; then
+      sudo systemctl restart "$WORKER_SERVICE_NAME" || true
+    else
+      sudo systemctl stop "$WORKER_SERVICE_NAME" || true
+    fi
   fi
   log "Database changes are forward-only; no automatic down migration was attempted."
   exit "$status"
@@ -178,6 +211,10 @@ sudo find "$RELEASE_DIR" -type d -exec chmod g+rx {} +
 sudo find "$RELEASE_DIR" -type f -exec chmod g+r {} +
 sudo -u "$SERVICE_USER" test -x "$RELEASE_DIR/apps/backend"
 sudo -u "$SERVICE_USER" test -r "$RELEASE_DIR/apps/backend/dist/main.js"
+sudo -u "$SERVICE_USER" test -r "$RELEASE_DIR/apps/backend/dist/ai-worker.js"
+test -r "$RELEASE_DIR/$WORKER_UNIT_RELATIVE"
+grep -Fq "$CURRENT_LINK" "$RELEASE_DIR/$WORKER_UNIT_RELATIVE" || die "Worker unit must run from ${CURRENT_LINK}."
+grep -Eiq 'vlgn|tocviet' "$RELEASE_DIR/$WORKER_UNIT_RELATIVE" && die "Worker unit contains another application path."
 
 log "Auditing production database before migration"
 corepack pnpm --filter @fb-order/backend db:audit:schema > "${BACKUP_DIR}/schema-before-${TIMESTAMP}-${TARGET_SHA:0:12}.json"
@@ -232,9 +269,16 @@ sudo ln -sfn "$RELEASE_DIR" "${CURRENT_LINK}.next"
 sudo mv -Tf "${CURRENT_LINK}.next" "$CURRENT_LINK"
 SWITCHED=1
 
-log "Restarting only ${SERVICE_NAME}"
+log "Installing ${WORKER_SERVICE_NAME}"
+sudo install -o root -g root -m 0644 "$RELEASE_DIR/$WORKER_UNIT_RELATIVE" "$WORKER_UNIT_PATH"
+sudo systemctl daemon-reload
+sudo systemctl enable "$WORKER_SERVICE_NAME"
+
+log "Restarting only ${SERVICE_NAME} and ${WORKER_SERVICE_NAME}"
 sudo systemctl restart "$SERVICE_NAME"
-sudo systemctl is-active --quiet "$SERVICE_NAME"
+sudo systemctl restart "$WORKER_SERVICE_NAME"
+wait_for_service_active "$SERVICE_NAME" 10 2
+wait_for_service_active "$WORKER_SERVICE_NAME" 10 2
 
 log "Waiting for local backend readiness"
 fetch_with_retry "${LOCAL_API_BASE_URL}/api/health" "local backend health" 30 2 >/dev/null
