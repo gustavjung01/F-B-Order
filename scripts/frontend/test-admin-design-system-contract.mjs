@@ -15,6 +15,8 @@ const files = {
   scale: "apps/frontend/components/admin/AdminRecipeScalePanel.tsx",
   aiConsole: "apps/frontend/components/admin/AdminAiConsole.tsx",
   aiReadable: "apps/frontend/components/admin/ai/AiReadableResult.tsx",
+  aiRecipeDiff: "apps/frontend/components/admin/ai/AiRecipeDraftDiff.tsx",
+  aiRecipeReview: "apps/frontend/components/admin/ai/AiRecipeDraftReviewQueue.tsx",
   recipeAi: "apps/frontend/components/admin/recipe-editor/RecipeAiAssistantPanel.tsx",
   recipeChrome: "apps/frontend/components/admin/recipe-editor/RecipeEditorChrome.tsx",
   recipePickers: "apps/frontend/components/admin/recipe-editor/RecipePickerDialogs.tsx",
@@ -60,29 +62,32 @@ for (const required of ["AdminModuleNav orientation=\"vertical\"", "UserButton",
 }
 assert.match(source.nav, /orientation\?: "horizontal" \| "vertical"/);
 
-for (const moduleName of ["operations", "customers", "orders", "products", "scale", "aiConsole", "aiReadable", "recipeAi", "recipeChrome", "recipePickers", "recipePublish"]) {
+for (const moduleName of ["operations", "customers", "orders", "products", "scale", "aiConsole", "aiReadable", "aiRecipeDiff", "aiRecipeReview", "recipeAi", "recipeChrome", "recipePickers", "recipePublish"]) {
   assert.match(source[moduleName], /components\/admin\/ui\/|\.\.\/ui\/AdminUI|\.\/ui\/AdminUI/, `${moduleName} must import shared admin UI primitives.`);
 }
 
-for (const moduleName of ["customers", "products", "recipePickers", "recipeAi"]) {
+for (const moduleName of ["customers", "products", "recipePickers", "recipeAi", "aiRecipeReview"]) {
   assert.doesNotMatch(source[moduleName], /className="absolute inset-0 bg-slate-950/, `${moduleName} must use AdminDialog instead of a private overlay.`);
   assert.match(source[moduleName], /AdminDialog/);
 }
 
-assert.doesNotMatch(source.aiConsole, /<pre\b/);
-assert.doesNotMatch(source.recipeAi, /<pre\b/);
-assert.doesNotMatch(source.aiReadable, /<pre\b/);
-assert.match(source.recipeAi, /So sánh trước khi áp dụng/);
+for (const moduleName of ["aiConsole", "recipeAi", "aiReadable", "aiRecipeDiff", "aiRecipeReview"]) {
+  assert.doesNotMatch(source[moduleName], /<pre\b/);
+}
+assert.match(source.recipeAi, /Tạo Recipe version mới/);
+assert.match(source.aiRecipeReview, /Duyệt draft/);
+assert.match(source.aiRecipeDiff, /AdminToggle/);
 assert.match(source.productsPage, /AdminProductsAuditPanelV2/);
 for (const pageName of ["adminPage", "productsPage", "recipesPage", "scalePage", "aiPage"]) {
   assert.match(source[pageName], /AdminShell/, `${pageName} must use AdminShell.`);
 }
+assert.match(source.aiPage, /AiRecipeDraftReviewQueue/);
 
 assert.doesNotMatch(source.recipesPage, /recipe-operations\.css/);
 assert.equal(existsSync("apps/frontend/app/admin/recipes/recipe-operations.css"), false, "Recipe page-specific CSS patch must stay deleted.");
 
-for (const moduleName of ["operations", "customers", "orders", "products", "scale", "aiConsole", "recipeAi"]) {
+for (const moduleName of ["operations", "customers", "orders", "products", "scale", "aiConsole", "recipeAi", "aiRecipeReview"]) {
   assert.doesNotMatch(source[moduleName], /rounded-\[28px\] bg-white p-5 text-slate-950 shadow-xl/, `${moduleName} still contains the legacy module surface pattern.`);
 }
 
-console.log("Admin design system shell, primitives, AI surfaces, module migration, and no-page-CSS contract passed.");
+console.log("Admin design system shell, primitives, AI draft review surfaces, module migration, and no-page-CSS contract passed.");
