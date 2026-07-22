@@ -3,9 +3,7 @@ name: Catalog boundary
 on:
   push:
     branches:
-      - "refactor/**"
-      - "agent/**"
-      - "hotfix/**"
+      - main
   pull_request:
     branches:
       - main
