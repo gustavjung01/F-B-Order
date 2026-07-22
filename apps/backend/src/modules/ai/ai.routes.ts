@@ -157,7 +157,7 @@ async function buildReadOnlyContext(identity: StaffIdentity, scopes: string[], r
           `SELECT
              step_no AS "stepNo",
              title,
-             COALESCE(content, instruction) AS content,
+             content,
              image_url AS "imageUrl"
            FROM recipe_steps
            WHERE recipe_id = $1
