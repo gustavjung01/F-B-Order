@@ -1,9 +1,16 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "@clerk/nextjs";
 import { adminApiFetch } from "@/lib/admin-api";
 import { AiReadableResult } from "../ai/AiReadableResult";
+import { AiRecipeDraftDiff } from "../ai/AiRecipeDraftDiff";
+import {
+  aiRecipeDraftStatusLabel,
+  aiRecipeDraftStatusTone,
+  isRecipeSopDraftContent,
+  type AiRecipeDraft,
+} from "../ai/recipe-draft-types";
 import { useAdminPermissions } from "../AdminPermissionProvider";
 import {
   AdminAlert,
@@ -15,11 +22,8 @@ import {
   AdminSurfaceBody,
   AdminSurfaceHeader,
 } from "../ui/AdminUI";
-import { AdminToggle } from "../ui/AdminToggle";
-import { buildSuggestedRecipeStepComparison } from "./recipe-step-merge.mjs";
-import type { Step } from "./types";
 
-const statusLabel = {
+const jobStatusLabel = {
   pending: "Đang chờ",
   processing: "Đang xử lý",
   completed: "Hoàn thành",
@@ -27,7 +31,7 @@ const statusLabel = {
   cancelled: "Đã hủy",
 } as const;
 
-const statusTone = {
+const jobStatusTone = {
   pending: "warning",
   processing: "info",
   completed: "success",
@@ -37,74 +41,44 @@ const statusTone = {
 
 type AiJob = {
   id: string;
-  status: keyof typeof statusLabel;
+  status: keyof typeof jobStatusLabel;
+  draft_id: string | null;
   response_text: string | null;
   error_code: string | null;
   error_message: string | null;
 };
 
-type SuggestedStep = {
-  title: string;
-  content: string;
+type ApplyResult = {
+  recipeVersionNo: number;
+  selectedStepCount: number;
 };
-
-type RecipeStepResponse = {
-  id: string;
-  title: string | null;
-  content: string;
-  imageUrl: string | null;
-};
-
-function parseSuggestedSteps(text: string): SuggestedStep[] {
-  const normalized = text.trim().replace(/^```json\s*/i, "").replace(/```$/i, "").trim();
-  const parsed = JSON.parse(normalized) as { steps?: unknown };
-  if (!Array.isArray(parsed.steps)) throw new Error("AI chưa trả đúng cấu trúc các bước SOP.");
-  const steps = parsed.steps
-    .map((value) => {
-      if (!value || typeof value !== "object") return null;
-      const row = value as Record<string, unknown>;
-      const title = typeof row.title === "string" ? row.title.trim() : "";
-      const content = typeof row.content === "string" ? row.content.trim() : "";
-      return title && content ? { title, content } : null;
-    })
-    .filter((value): value is SuggestedStep => Boolean(value));
-  if (!steps.length) throw new Error("AI chưa tạo được bước làm hợp lệ.");
-  return steps;
-}
 
 export function RecipeAiAssistantPanel({
   recipeId,
   recipeTitle,
   dirty,
   locked,
-  onApplySteps,
-  onOpenSteps,
+  onApplied,
 }: {
   recipeId: string;
   recipeTitle: string;
   dirty: boolean;
   locked: boolean;
-  onApplySteps: (steps: SuggestedStep[]) => void;
-  onOpenSteps: () => void;
+  onApplied: () => void | Promise<void>;
 }) {
   const { getToken } = useAuth();
   const { has } = useAdminPermissions();
   const [job, setJob] = useState<AiJob | null>(null);
   const [mode, setMode] = useState<"audit" | "draft" | null>(null);
+  const [draft, setDraft] = useState<AiRecipeDraft | null>(null);
+  const [selectedStepIds, setSelectedStepIds] = useState<string[]>([]);
+  const [applyOpen, setApplyOpen] = useState(false);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
-  const [suggestedSteps, setSuggestedSteps] = useState<SuggestedStep[]>([]);
-  const [currentSteps, setCurrentSteps] = useState<Step[]>([]);
-  const [compareOpen, setCompareOpen] = useState(false);
-  const [compareLoading, setCompareLoading] = useState(false);
-  const [comparisonConfirmed, setComparisonConfirmed] = useState(false);
 
   const canUse = has("ai.use");
   const canDraft = has("ai.execute") && has("recipes.edit");
-  const comparisons = useMemo(
-    () => buildSuggestedRecipeStepComparison(currentSteps, suggestedSteps),
-    [currentSteps, suggestedSteps],
-  );
+  const canApply = canDraft && has("recipes.media.manage");
 
   async function token() {
     const value = await getToken();
@@ -118,7 +92,39 @@ export function RecipeAiAssistantPanel({
       await token(),
     );
     setJob(payload.job);
+    if (payload.job.status === "completed" && payload.job.draft_id) {
+      await loadDraft(payload.job.draft_id);
+    }
   }
+
+  async function loadDraft(draftId: string) {
+    const payload = await adminApiFetch<{ draft: AiRecipeDraft }>(
+      `/api/admin/ai/drafts/${draftId}`,
+      await token(),
+    );
+    setDraft(payload.draft);
+  }
+
+  async function loadLatestDraft() {
+    if (!canUse) return;
+    const payload = await adminApiFetch<{ drafts: AiRecipeDraft[] }>(
+      `/api/admin/ai/drafts?recipeId=${encodeURIComponent(recipeId)}`,
+      await token(),
+    );
+    const latest = payload.drafts.find((item) => item.draftType === "recipe") || null;
+    setDraft(latest);
+  }
+
+  useEffect(() => {
+    setJob(null);
+    setMode(null);
+    setDraft(null);
+    setApplyOpen(false);
+    setSelectedStepIds([]);
+    if (canUse) void loadLatestDraft().catch(() => undefined);
+    // Reload workflow state when the editor changes Recipe.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [recipeId, canUse]);
 
   useEffect(() => {
     if (!job || !["pending", "processing"].includes(job.status)) return;
@@ -128,46 +134,46 @@ export function RecipeAiAssistantPanel({
       });
     }, 2500);
     return () => window.clearInterval(timer);
-    // Poll only the current job id and status.
+    // Poll only the active job.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [job?.id, job?.status]);
 
   useEffect(() => {
-    if (mode !== "draft" || job?.status !== "completed" || !job.response_text) return;
-    try {
-      setSuggestedSteps(parseSuggestedSteps(job.response_text));
-      setMessage("");
-    } catch (error) {
-      setSuggestedSteps([]);
-      setMessage(error instanceof Error ? error.message : "Không đọc được SOP nháp từ AI.");
-    }
-  }, [job?.response_text, job?.status, mode]);
+    if (!draft || draft.status !== "draft") return;
+    const timer = window.setInterval(() => {
+      void loadDraft(draft.id).catch(() => undefined);
+    }, 5000);
+    return () => window.clearInterval(timer);
+    // Poll only while waiting for human review.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [draft?.id, draft?.status]);
 
   async function enqueue(nextMode: "audit" | "draft") {
     if (dirty) {
-      setMessage("Hãy lưu công thức trước để AI đọc đúng dữ liệu mới nhất.");
+      setMessage("Hãy lưu công thức trước để AI đọc đúng version mới nhất.");
       return;
     }
     setBusy(true);
     setMessage("");
     setMode(nextMode);
-    setSuggestedSteps([]);
+    if (nextMode === "draft") setDraft(null);
     try {
       const isDraft = nextMode === "draft";
-      const path = isDraft ? "/api/admin/ai/drafts" : "/api/admin/ai/query";
       const prompt = isDraft
-        ? `Audit công thức ${recipeTitle} và viết lại toàn bộ SOP cách làm. Chỉ trả JSON hợp lệ theo cấu trúc {"steps":[{"title":"...","content":"..."}]}. Mỗi bước phải có thao tác, định lượng liên quan, thời gian hoặc nhiệt độ khi cần, tiêu chí đạt và lỗi cần tránh. Không thêm markdown.`
+        ? `Audit công thức ${recipeTitle} và viết lại SOP cách làm. Chỉ trả JSON hợp lệ theo cấu trúc {"steps":[{"title":"...","content":"..."}]}. Mỗi bước phải có thao tác, định lượng liên quan, thời gian hoặc nhiệt độ khi cần, tiêu chí đạt và lỗi cần tránh. Không thêm markdown.`
         : `Audit riêng công thức ${recipeTitle}. Kiểm tra nguyên liệu, định lượng, thứ tự bước, thời gian, nhiệt độ, tiêu chí thành phẩm, bảo quản và các câu hướng dẫn còn sơ sài hoặc mâu thuẫn. Trả lời tiếng Việt theo 6 mục: Kết luận; Lỗi phát hiện; SOP đề xuất; Kiểm soát chất lượng; Dữ liệu thiếu; Hành động đề xuất.`;
-      const body = isDraft
-        ? { prompt, draftType: "recipe", title: `SOP nháp - ${recipeTitle}`, scopes: ["recipes"], recipeId }
-        : { prompt, scopes: ["recipes"], recipeId };
-      const payload = await adminApiFetch<{ jobId: string; status: string }>(
-        path,
+      const payload = await adminApiFetch<{ jobId: string }>(
+        isDraft ? "/api/admin/ai/drafts" : "/api/admin/ai/query",
         await token(),
-        { method: "POST", body: JSON.stringify(body) },
+        {
+          method: "POST",
+          body: JSON.stringify(isDraft
+            ? { prompt, draftType: "recipe", title: `SOP nháp - ${recipeTitle}`, scopes: ["recipes"], recipeId }
+            : { prompt, scopes: ["recipes"], recipeId }),
+        },
       );
-      setJob({ id: payload.jobId, status: "pending", response_text: null, error_code: null, error_message: null });
-      setMessage("Đã đưa yêu cầu vào hàng đợi AI trên VPS.");
+      setJob({ id: payload.jobId, status: "pending", draft_id: null, response_text: null, error_code: null, error_message: null });
+      setMessage(isDraft ? "Đã đưa SOP draft vào hàng đợi. Khi worker xong, draft sẽ chờ reviewer duyệt." : "Đã đưa yêu cầu audit vào hàng đợi AI.");
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Không tạo được AI job.");
     } finally {
@@ -175,80 +181,62 @@ export function RecipeAiAssistantPanel({
     }
   }
 
-  async function openComparison() {
-    if (dirty || locked || !suggestedSteps.length) return;
-    setCompareLoading(true);
+  function openApplyDialog() {
+    if (!draft || draft.status !== "approved" || !isRecipeSopDraftContent(draft.content)) return;
+    setSelectedStepIds(draft.content.proposal.steps.map((step) => step.id));
+    setApplyOpen(true);
     setMessage("");
-    try {
-      const accessToken = await token();
-      const [detail, media] = await Promise.all([
-        adminApiFetch<{ recipe: { steps: RecipeStepResponse[] } }>(`/api/admin/recipes/${recipeId}`, accessToken),
-        adminApiFetch<{
-          steps: Array<{ stepNo: number; mediaId: string | null; publicUrl: string | null; thumbnailUrl: string | null }>;
-        }>(`/api/admin/recipes/media/recipe/${recipeId}`, accessToken),
-      ]);
-      const loaded = detail.recipe.steps.map((step, index) => {
-        const reference = media.steps.find((item) => item.stepNo === index + 1);
-        return {
-          clientId: `comparison-${step.id}`,
-          title: step.title || "",
-          content: step.content,
-          imageUrl: reference?.publicUrl || step.imageUrl || "",
-          thumbnailUrl: reference?.thumbnailUrl || "",
-          mediaId: reference?.mediaId || null,
-        };
-      });
-      setCurrentSteps(loaded);
-      setComparisonConfirmed(false);
-      setCompareOpen(true);
-    } catch (error) {
-      setMessage(error instanceof Error ? error.message : "Không tải được SOP hiện tại để so sánh.");
-    } finally {
-      setCompareLoading(false);
-    }
   }
 
-  function applyComparedDraft() {
-    if (!comparisonConfirmed || dirty || locked || !suggestedSteps.length) return;
-    onApplySteps(suggestedSteps);
-    onOpenSteps();
-    setCompareOpen(false);
-    setMessage(`Đã merge ${suggestedSteps.length} bước SOP vào bản nháp. Client ID và media hiện có được giữ nguyên; hãy kiểm tra rồi bấm Lưu.`);
+  async function applySelected() {
+    if (!draft || draft.status !== "approved" || !selectedStepIds.length || dirty || locked || !canApply) return;
+    setBusy(true);
+    setMessage("");
+    try {
+      const result = await adminApiFetch<ApplyResult>(
+        `/api/admin/ai/drafts/${draft.id}/apply`,
+        await token(),
+        { method: "POST", body: JSON.stringify({ selectedStepIds }) },
+      );
+      setApplyOpen(false);
+      await loadDraft(draft.id);
+      await onApplied();
+      setMessage(`Đã áp ${result.selectedStepCount} phần và tạo Recipe version ${result.recipeVersionNo}. Media hiện có được giữ nguyên.`);
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "Không áp dụng được AI draft.");
+    } finally {
+      setBusy(false);
+    }
   }
 
   if (!canUse) return null;
 
   return (
-    <div className="recipe-ai-sop-slot mb-4">
-      <style jsx global>{`
-        .recipe-ai-sop-slot { display: none; }
-        div:has(> .recipe-ai-sop-slot + [data-recipe-steps-tab="true"]) > .recipe-ai-sop-slot { display: block; }
-      `}</style>
-
-      <AdminSurface>
+    <>
+      <AdminSurface className="mb-4">
         <AdminSurfaceHeader
           eyebrow="AI chuyên gia F&B"
           title="Audit và chuẩn hóa SOP"
-          description="AI chỉ xuất đề xuất. Mọi thay đổi phải được so sánh với SOP hiện tại trước khi merge vào bản nháp."
+          description="AI tạo draft gắn với version hiện tại. Reviewer phải duyệt trước; người có quyền sau đó chọn từng phần để tạo Recipe version mới."
           actions={(
             <>
               <AdminButton tone="dark" size="sm" disabled={busy || dirty} onClick={() => void enqueue("audit")}>Audit cách làm</AdminButton>
-              {canDraft && !locked ? <AdminButton tone="primary" size="sm" disabled={busy || dirty} onClick={() => void enqueue("draft")}>Tạo SOP nháp</AdminButton> : null}
+              {canDraft && !locked ? <AdminButton tone="primary" size="sm" disabled={busy || dirty} onClick={() => void enqueue("draft")}>Tạo SOP draft</AdminButton> : null}
             </>
           )}
         />
         <AdminSurfaceBody className="grid gap-4">
-          {dirty ? <AdminAlert tone="warning" title="Cần lưu trước">Công thức đang có thay đổi chưa lưu. Lưu trước rồi mới gọi hoặc áp dụng AI.</AdminAlert> : null}
+          {dirty ? <AdminAlert tone="warning" title="Cần lưu trước">Công thức có thay đổi chưa lưu. AI draft phải được tạo từ một Recipe version cố định.</AdminAlert> : null}
 
           {job ? (
             <div className="flex flex-wrap items-center gap-2">
               <AdminBadge tone="neutral">Job {job.id.slice(0, 8)}</AdminBadge>
-              <AdminBadge tone={statusTone[job.status]}>{statusLabel[job.status]}</AdminBadge>
-              {mode ? <AdminBadge tone="orange">{mode === "audit" ? "Audit" : "SOP nháp"}</AdminBadge> : null}
+              <AdminBadge tone={jobStatusTone[job.status]}>{jobStatusLabel[job.status]}</AdminBadge>
+              {mode ? <AdminBadge tone="orange">{mode === "audit" ? "Audit" : "Recipe draft"}</AdminBadge> : null}
             </div>
-          ) : <AdminEmptyState title="Chưa chạy AI" description="Chọn Audit cách làm hoặc Tạo SOP nháp để bắt đầu." />}
+          ) : null}
 
-          {job?.status === "failed" ? <AdminAlert tone="danger" title={job.error_code || "AI job thất bại"}>{job.error_message || "Worker không trả được kết quả."}</AdminAlert> : null}
+          {job?.status === "failed" ? <AdminAlert tone="danger" title={job.error_code || "AI job thất bại"}>{job.error_message || "Worker không tạo được kết quả."}</AdminAlert> : null}
 
           {job?.status === "completed" && mode === "audit" ? (
             <section>
@@ -257,75 +245,73 @@ export function RecipeAiAssistantPanel({
             </section>
           ) : null}
 
-          {job?.status === "completed" && mode === "draft" && suggestedSteps.length ? (
+          {draft ? (
             <section className="grid gap-3">
-              <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                  <h4 className="font-black text-slate-900">SOP AI đề xuất</h4>
-                  <p className="text-sm font-medium text-slate-600">{suggestedSteps.length} bước đã được đọc thành dữ liệu có cấu trúc; raw JSON không hiển thị trong luồng chính.</p>
+                  <div className="flex flex-wrap gap-2">
+                    <AdminBadge tone={aiRecipeDraftStatusTone(draft.status)}>{aiRecipeDraftStatusLabel[draft.status]}</AdminBadge>
+                    <AdminBadge tone="neutral">Base {draft.baseRecipeVersionId?.slice(0, 8) || "-"}</AdminBadge>
+                    {draft.appliedRecipeVersionNo ? <AdminBadge tone="success">Recipe v{draft.appliedRecipeVersionNo}</AdminBadge> : null}
+                  </div>
+                  <h4 className="mt-2 font-black text-slate-900">{draft.title}</h4>
                 </div>
-                <AdminButton tone="success" disabled={compareLoading || dirty || locked} onClick={() => void openComparison()}>{compareLoading ? "Đang tải SOP hiện tại…" : "So sánh trước khi áp dụng"}</AdminButton>
+                {draft.status === "approved" && canApply && !locked ? <AdminButton tone="success" disabled={dirty || busy} onClick={openApplyDialog}>Chọn phần áp dụng</AdminButton> : null}
               </div>
-              <div className="grid gap-3 md:grid-cols-2">
-                {suggestedSteps.map((step, index) => (
-                  <article key={`${step.title}-${index}`} className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                    <div className="flex items-center gap-2"><AdminBadge tone="orange">Bước {index + 1}</AdminBadge><h5 className="font-black text-slate-900">{step.title}</h5></div>
-                    <p className="mt-2 text-sm font-medium leading-6 text-slate-700">{step.content}</p>
-                  </article>
-                ))}
-              </div>
-            </section>
-          ) : null}
 
-          {message ? <AdminAlert tone={message.includes("không") || message.includes("chưa") ? "warning" : "success"}>{message}</AdminAlert> : null}
+              {draft.status === "draft" ? <AdminAlert tone="warning" title="Đang chờ reviewer">Draft đã được lưu trong PostgreSQL. Người có `ai.audit` và `recipes.review` phải xem diff rồi duyệt hoặc từ chối.</AdminAlert> : null}
+              {draft.status === "rejected" ? <AdminAlert tone="danger" title="Draft bị từ chối">{draft.reviewNote || "Reviewer không chấp nhận đề xuất này."}</AdminAlert> : null}
+              {draft.status === "approved" ? <AdminAlert tone="success" title="Draft đã được duyệt">{draft.reviewNote || "Có thể chọn từng phần để áp dụng."}</AdminAlert> : null}
+              {draft.status === "applied" ? <AdminAlert tone="success" title="Đã tạo Recipe version mới">Đã áp {draft.applicationData?.selectedStepCount || 0} phần vào Recipe version {draft.appliedRecipeVersionNo || "mới"}.</AdminAlert> : null}
+
+              {isRecipeSopDraftContent(draft.content) ? (
+                <div className="grid gap-3 md:grid-cols-2">
+                  {draft.content.proposal.steps.map((step, index) => (
+                    <article key={step.id} className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <AdminBadge tone="orange">Đề xuất {index + 1}</AdminBadge>
+                        <AdminBadge tone={step.currentStepNo ? "info" : "success"}>{step.currentStepNo ? `Bước ${step.currentStepNo}` : "Bước mới"}</AdminBadge>
+                      </div>
+                      <h5 className="mt-2 font-black text-slate-900">{step.title}</h5>
+                      <p className="mt-2 text-sm font-medium leading-6 text-slate-700">{step.content}</p>
+                    </article>
+                  ))}
+                </div>
+              ) : <AdminAlert tone="danger" title="Draft không hợp lệ">Không đọc được nội dung SOP có cấu trúc.</AdminAlert>}
+            </section>
+          ) : !job ? <AdminEmptyState title="Chưa có Recipe AI draft" description="Tạo SOP draft để bắt đầu workflow review." /> : null}
+
+          {message ? <AdminAlert tone={message.startsWith("Đã") ? "success" : "warning"}>{message}</AdminAlert> : null}
         </AdminSurfaceBody>
       </AdminSurface>
 
       <AdminDialog
-        open={compareOpen}
-        title="So sánh SOP hiện tại và đề xuất AI"
-        eyebrow="Recipe SOP review"
-        description="Không có thay đổi nào được ghi vào database ở bước này. Media của bước khớp sẽ được giữ nguyên khi merge."
+        open={applyOpen}
         size="xl"
-        onClose={() => setCompareOpen(false)}
+        eyebrow="Apply approved AI draft"
+        title="Chọn từng phần để tạo Recipe version mới"
+        description="Backend chỉ cập nhật các phần được chọn. Không xóa, không reorder và không ghi đè media của bước hiện tại."
+        closeDisabled={busy}
+        onClose={() => { if (!busy) setApplyOpen(false); }}
         footer={(
-          <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
-            <AdminButton tone="ghost" onClick={() => setCompareOpen(false)}>Đóng</AdminButton>
-            <AdminButton tone="success" disabled={!comparisonConfirmed || dirty || locked} onClick={applyComparedDraft}>Merge SOP vào bản nháp</AdminButton>
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <p className="text-sm font-bold text-slate-600">Đã chọn {selectedStepIds.length} phần</p>
+            <div className="flex flex-wrap gap-2">
+              <AdminButton tone="secondary" disabled={busy} onClick={() => setApplyOpen(false)}>Đóng</AdminButton>
+              <AdminButton tone="success" disabled={busy || selectedStepIds.length === 0} onClick={() => void applySelected()}>Tạo Recipe version mới</AdminButton>
+            </div>
           </div>
         )}
       >
-        <div className="grid gap-4">
-          <AdminAlert tone="info" title="Quy tắc bảo vệ ảnh">Bước được ghép theo tiêu đề, sau đó mới fallback theo vị trí. Client ID, URL ảnh, thumbnail và media ID của bước hiện tại không bị AI ghi đè.</AdminAlert>
-
-          {comparisons.map((entry, index) => (
-            <article key={`${entry.suggestedStep.title}-${index}`} className="rounded-2xl border border-slate-200 bg-white p-4">
-              <div className="mb-3 flex flex-wrap items-center gap-2">
-                <AdminBadge tone={entry.status === "new" ? "orange" : "info"}>{entry.status === "new" ? "Bước mới" : `Cập nhật bước ${(entry.currentIndex ?? 0) + 1}`}</AdminBadge>
-                {entry.currentStep?.mediaId ? <AdminBadge tone="success">Giữ media {entry.currentStep.mediaId.slice(0, 8)}</AdminBadge> : null}
-              </div>
-              <div className="grid gap-3 lg:grid-cols-2">
-                <section className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                  <p className="text-xs font-black uppercase tracking-wide text-slate-500">Hiện tại</p>
-                  {entry.currentStep ? <><h4 className="mt-2 font-black text-slate-900">{entry.currentStep.title || "Chưa có tiêu đề"}</h4><p className="mt-2 whitespace-pre-line text-sm font-medium leading-6 text-slate-700">{entry.currentStep.content}</p></> : <p className="mt-2 text-sm font-medium text-slate-500">Chưa có bước tương ứng.</p>}
-                </section>
-                <section className="rounded-2xl border border-orange-200 bg-orange-50 p-4">
-                  <p className="text-xs font-black uppercase tracking-wide text-orange-700">AI đề xuất</p>
-                  <h4 className="mt-2 font-black text-slate-900">{entry.suggestedStep.title}</h4>
-                  <p className="mt-2 whitespace-pre-line text-sm font-medium leading-6 text-slate-700">{entry.suggestedStep.content}</p>
-                </section>
-              </div>
-            </article>
-          ))}
-
-          <AdminToggle
-            checked={comparisonConfirmed}
-            onChange={(event) => setComparisonConfirmed(event.target.checked)}
-            label="Tôi đã kiểm tra toàn bộ đề xuất"
-            description="Xác nhận này chỉ cho phép merge vào form; vẫn phải bấm Lưu để tạo version mới."
+        {draft && isRecipeSopDraftContent(draft.content) ? (
+          <AiRecipeDraftDiff
+            content={draft.content}
+            selectable
+            selectedStepIds={selectedStepIds}
+            onSelectionChange={setSelectedStepIds}
           />
-        </div>
+        ) : <AdminAlert tone="danger">Draft không còn dữ liệu SOP hợp lệ.</AdminAlert>}
       </AdminDialog>
-    </div>
+    </>
   );
 }
