@@ -324,7 +324,7 @@ export async function applyApprovedRecipeDraft(
       `SELECT
          step_no AS "stepNo",
          title,
-         COALESCE(content, instruction, '') AS content,
+         content,
          image_url AS "imageUrl",
          media_id::text AS "mediaId"
        FROM recipe_steps
