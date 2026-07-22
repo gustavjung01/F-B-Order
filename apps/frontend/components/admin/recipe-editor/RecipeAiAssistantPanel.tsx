@@ -221,77 +221,83 @@ export function RecipeAiAssistantPanel({
 
   return (
     <>
-      <AdminSurface className="mb-4">
-        <AdminSurfaceHeader
-          eyebrow="AI chuyên gia F&B"
-          title="Audit và chuẩn hóa SOP"
-          description="AI tạo draft gắn với version hiện tại. Reviewer phải duyệt trước; người có quyền sau đó chọn từng phần để tạo Recipe version mới."
-          actions={(
-            <>
-              <AdminButton tone="dark" size="sm" disabled={busy || dirty} onClick={() => void enqueue("audit")}>Audit cách làm</AdminButton>
-              {canDraft && !locked ? <AdminButton tone="primary" size="sm" disabled={busy || dirty} onClick={() => void enqueue("draft")}>Tạo SOP draft</AdminButton> : null}
-            </>
-          )}
-        />
-        <AdminSurfaceBody className="grid gap-4">
-          {dirty ? <AdminAlert tone="warning" title="Cần lưu trước">Công thức có thay đổi chưa lưu. AI draft phải được tạo từ một Recipe version cố định.</AdminAlert> : null}
+      <div className="recipe-ai-sop-slot mb-4">
+        <style jsx global>{`
+          .recipe-ai-sop-slot { display: none; }
+          div:has(> .recipe-ai-sop-slot + [data-recipe-steps-tab="true"]) > .recipe-ai-sop-slot { display: block; }
+        `}</style>
+        <AdminSurface>
+          <AdminSurfaceHeader
+            eyebrow="AI chuyên gia F&B"
+            title="Audit và chuẩn hóa SOP"
+            description="AI tạo draft gắn với version hiện tại. Reviewer phải duyệt trước; người có quyền sau đó chọn từng phần để tạo Recipe version mới."
+            actions={(
+              <>
+                <AdminButton tone="dark" size="sm" disabled={busy || dirty} onClick={() => void enqueue("audit")}>Audit cách làm</AdminButton>
+                {canDraft && !locked ? <AdminButton tone="primary" size="sm" disabled={busy || dirty} onClick={() => void enqueue("draft")}>Tạo SOP draft</AdminButton> : null}
+              </>
+            )}
+          />
+          <AdminSurfaceBody className="grid gap-4">
+            {dirty ? <AdminAlert tone="warning" title="Cần lưu trước">Công thức có thay đổi chưa lưu. AI draft phải được tạo từ một Recipe version cố định.</AdminAlert> : null}
 
-          {job ? (
-            <div className="flex flex-wrap items-center gap-2">
-              <AdminBadge tone="neutral">Job {job.id.slice(0, 8)}</AdminBadge>
-              <AdminBadge tone={jobStatusTone[job.status]}>{jobStatusLabel[job.status]}</AdminBadge>
-              {mode ? <AdminBadge tone="orange">{mode === "audit" ? "Audit" : "Recipe draft"}</AdminBadge> : null}
-            </div>
-          ) : null}
-
-          {job?.status === "failed" ? <AdminAlert tone="danger" title={job.error_code || "AI job thất bại"}>{job.error_message || "Worker không tạo được kết quả."}</AdminAlert> : null}
-
-          {job?.status === "completed" && mode === "audit" ? (
-            <section>
-              <h4 className="mb-3 font-black text-slate-900">Báo cáo audit</h4>
-              <AiReadableResult text={job.response_text} />
-            </section>
-          ) : null}
-
-          {draft ? (
-            <section className="grid gap-3">
-              <div className="flex flex-wrap items-start justify-between gap-3">
-                <div>
-                  <div className="flex flex-wrap gap-2">
-                    <AdminBadge tone={aiRecipeDraftStatusTone(draft.status)}>{aiRecipeDraftStatusLabel[draft.status]}</AdminBadge>
-                    <AdminBadge tone="neutral">Base {draft.baseRecipeVersionId?.slice(0, 8) || "-"}</AdminBadge>
-                    {draft.appliedRecipeVersionNo ? <AdminBadge tone="success">Recipe v{draft.appliedRecipeVersionNo}</AdminBadge> : null}
-                  </div>
-                  <h4 className="mt-2 font-black text-slate-900">{draft.title}</h4>
-                </div>
-                {draft.status === "approved" && canApply && !locked ? <AdminButton tone="success" disabled={dirty || busy} onClick={openApplyDialog}>Chọn phần áp dụng</AdminButton> : null}
+            {job ? (
+              <div className="flex flex-wrap items-center gap-2">
+                <AdminBadge tone="neutral">Job {job.id.slice(0, 8)}</AdminBadge>
+                <AdminBadge tone={jobStatusTone[job.status]}>{jobStatusLabel[job.status]}</AdminBadge>
+                {mode ? <AdminBadge tone="orange">{mode === "audit" ? "Audit" : "Recipe draft"}</AdminBadge> : null}
               </div>
+            ) : null}
 
-              {draft.status === "draft" ? <AdminAlert tone="warning" title="Đang chờ reviewer">Draft đã được lưu trong PostgreSQL. Người có `ai.approve` và `recipes.review` phải xem diff rồi duyệt hoặc từ chối.</AdminAlert> : null}
-              {draft.status === "rejected" ? <AdminAlert tone="danger" title="Draft bị từ chối">{draft.reviewNote || "Reviewer không chấp nhận đề xuất này."}</AdminAlert> : null}
-              {draft.status === "approved" ? <AdminAlert tone="success" title="Draft đã được duyệt">{draft.reviewNote || "Có thể chọn từng phần để áp dụng."}</AdminAlert> : null}
-              {draft.status === "applied" ? <AdminAlert tone="success" title="Đã tạo Recipe version mới">Đã áp {draft.applicationData?.selectedStepCount || 0} phần vào Recipe version {draft.appliedRecipeVersionNo || "mới"}.</AdminAlert> : null}
+            {job?.status === "failed" ? <AdminAlert tone="danger" title={job.error_code || "AI job thất bại"}>{job.error_message || "Worker không tạo được kết quả."}</AdminAlert> : null}
 
-              {isRecipeSopDraftContent(draft.content) ? (
-                <div className="grid gap-3 md:grid-cols-2">
-                  {draft.content.proposal.steps.map((step, index) => (
-                    <article key={step.id} className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <AdminBadge tone="orange">Đề xuất {index + 1}</AdminBadge>
-                        <AdminBadge tone={step.currentStepNo ? "info" : "success"}>{step.currentStepNo ? `Bước ${step.currentStepNo}` : "Bước mới"}</AdminBadge>
-                      </div>
-                      <h5 className="mt-2 font-black text-slate-900">{step.title}</h5>
-                      <p className="mt-2 text-sm font-medium leading-6 text-slate-700">{step.content}</p>
-                    </article>
-                  ))}
+            {job?.status === "completed" && mode === "audit" ? (
+              <section>
+                <h4 className="mb-3 font-black text-slate-900">Báo cáo audit</h4>
+                <AiReadableResult text={job.response_text} />
+              </section>
+            ) : null}
+
+            {draft ? (
+              <section className="grid gap-3">
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div>
+                    <div className="flex flex-wrap gap-2">
+                      <AdminBadge tone={aiRecipeDraftStatusTone(draft.status)}>{aiRecipeDraftStatusLabel[draft.status]}</AdminBadge>
+                      <AdminBadge tone="neutral">Base {draft.baseRecipeVersionId?.slice(0, 8) || "-"}</AdminBadge>
+                      {draft.appliedRecipeVersionNo ? <AdminBadge tone="success">Recipe v{draft.appliedRecipeVersionNo}</AdminBadge> : null}
+                    </div>
+                    <h4 className="mt-2 font-black text-slate-900">{draft.title}</h4>
+                  </div>
+                  {draft.status === "approved" && canApply && !locked ? <AdminButton tone="success" disabled={dirty || busy} onClick={openApplyDialog}>Chọn phần áp dụng</AdminButton> : null}
                 </div>
-              ) : <AdminAlert tone="danger" title="Draft không hợp lệ">Không đọc được nội dung SOP có cấu trúc.</AdminAlert>}
-            </section>
-          ) : !job ? <AdminEmptyState title="Chưa có Recipe AI draft" description="Tạo SOP draft để bắt đầu workflow review." /> : null}
 
-          {message ? <AdminAlert tone={message.startsWith("Đã") ? "success" : "warning"}>{message}</AdminAlert> : null}
-        </AdminSurfaceBody>
-      </AdminSurface>
+                {draft.status === "draft" ? <AdminAlert tone="warning" title="Đang chờ reviewer">Draft đã được lưu trong PostgreSQL. Người có `ai.approve` và `recipes.review` phải xem diff rồi duyệt hoặc từ chối.</AdminAlert> : null}
+                {draft.status === "rejected" ? <AdminAlert tone="danger" title="Draft bị từ chối">{draft.reviewNote || "Reviewer không chấp nhận đề xuất này."}</AdminAlert> : null}
+                {draft.status === "approved" ? <AdminAlert tone="success" title="Draft đã được duyệt">{draft.reviewNote || "Có thể chọn từng phần để áp dụng."}</AdminAlert> : null}
+                {draft.status === "applied" ? <AdminAlert tone="success" title="Đã tạo Recipe version mới">Đã áp {draft.applicationData?.selectedStepCount || 0} phần vào Recipe version {draft.appliedRecipeVersionNo || "mới"}.</AdminAlert> : null}
+
+                {isRecipeSopDraftContent(draft.content) ? (
+                  <div className="grid gap-3 md:grid-cols-2">
+                    {draft.content.proposal.steps.map((step, index) => (
+                      <article key={step.id} className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <AdminBadge tone="orange">Đề xuất {index + 1}</AdminBadge>
+                          <AdminBadge tone={step.currentStepNo ? "info" : "success"}>{step.currentStepNo ? `Bước ${step.currentStepNo}` : "Bước mới"}</AdminBadge>
+                        </div>
+                        <h5 className="mt-2 font-black text-slate-900">{step.title}</h5>
+                        <p className="mt-2 text-sm font-medium leading-6 text-slate-700">{step.content}</p>
+                      </article>
+                    ))}
+                  </div>
+                ) : <AdminAlert tone="danger" title="Draft không hợp lệ">Không đọc được nội dung SOP có cấu trúc.</AdminAlert>}
+              </section>
+            ) : !job ? <AdminEmptyState title="Chưa có Recipe AI draft" description="Tạo SOP draft để bắt đầu workflow review." /> : null}
+
+            {message ? <AdminAlert tone={message.startsWith("Đã") ? "success" : "warning"}>{message}</AdminAlert> : null}
+          </AdminSurfaceBody>
+        </AdminSurface>
+      </div>
 
       <AdminDialog
         open={applyOpen}
