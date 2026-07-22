@@ -1,6 +1,26 @@
 -- Bếp Sỉ F&B - review, approval, and controlled application for AI drafts
 BEGIN;
 
+INSERT INTO rbac_permissions(
+  permission_key,module_key,action_key,description,risk_level,is_system
+) VALUES(
+  'ai.approve','ai','approve','Review and approve or reject AI drafts','high',true
+)
+ON CONFLICT(permission_key) DO UPDATE SET
+  module_key=EXCLUDED.module_key,
+  action_key=EXCLUDED.action_key,
+  description=EXCLUDED.description,
+  risk_level=EXCLUDED.risk_level,
+  is_system=true,
+  updated_at=now();
+
+INSERT INTO rbac_role_permissions(role_id,permission_id)
+SELECT role.id,permission.id
+FROM rbac_roles role
+JOIN rbac_permissions permission ON permission.permission_key='ai.approve'
+WHERE role.role_key IN ('super_admin','recipe_publisher')
+ON CONFLICT(role_id,permission_id) DO NOTHING;
+
 ALTER TABLE ai_drafts
   ADD COLUMN IF NOT EXISTS target_recipe_id UUID REFERENCES recipes(id) ON DELETE SET NULL,
   ADD COLUMN IF NOT EXISTS base_recipe_version_id UUID REFERENCES recipe_versions(id) ON DELETE SET NULL,
