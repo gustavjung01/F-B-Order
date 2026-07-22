@@ -3,15 +3,28 @@
 import { useEffect, useMemo, useState } from "react";
 import { useAuth } from "@clerk/nextjs";
 import { adminApiFetch } from "@/lib/admin-api";
+import { AiReadableResult } from "./ai/AiReadableResult";
 import { useAdminPermissions } from "./AdminPermissionProvider";
-import { AdminAlert, AdminEmptyState } from "./ui/AdminUI";
+import {
+  AdminAlert,
+  AdminBadge,
+  AdminButton,
+  AdminEmptyState,
+  AdminField,
+  AdminInput,
+  AdminSurface,
+  AdminSurfaceBody,
+  AdminSurfaceHeader,
+  AdminTextarea,
+} from "./ui/AdminUI";
 
 type AiScope = "orders" | "customers" | "catalog" | "recipes";
+type AiJobStatus = "pending" | "processing" | "completed" | "failed" | "cancelled";
 
 type AiJob = {
   id: string;
   job_type: "read_only" | "draft";
-  status: "pending" | "processing" | "completed" | "failed" | "cancelled";
+  status: AiJobStatus;
   attempt_count: number;
   max_attempts: number;
   draft_id: string | null;
@@ -40,11 +53,31 @@ const scopeLabels: Record<AiScope, string> = {
   recipes: "Công thức",
 };
 
+const jobStatusLabel: Record<AiJobStatus, string> = {
+  pending: "Đang chờ",
+  processing: "Đang xử lý",
+  completed: "Hoàn thành",
+  failed: "Thất bại",
+  cancelled: "Đã hủy",
+};
+
+function jobStatusTone(status: AiJobStatus): "neutral" | "success" | "warning" | "danger" | "info" {
+  if (status === "completed") return "success";
+  if (status === "failed") return "danger";
+  if (status === "processing") return "info";
+  if (status === "pending") return "warning";
+  return "neutral";
+}
+
+function formatDate(value: string): string {
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? value : date.toLocaleString("vi-VN");
+}
+
 export function AdminAiConsole() {
   const { getToken } = useAuth();
   const { has, permissions } = useAdminPermissions();
   const [prompt, setPrompt] = useState("");
-  const [result, setResult] = useState("");
   const [busy, setBusy] = useState(false);
   const [draftTitle, setDraftTitle] = useState("");
   const [orderId, setOrderId] = useState("");
@@ -52,6 +85,7 @@ export function AdminAiConsole() {
   const [message, setMessage] = useState("");
   const [jobs, setJobs] = useState<AiJob[]>([]);
   const [actions, setActions] = useState<AiAction[]>([]);
+  const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
 
   const scopes = useMemo<AiScope[]>(() => {
     const next: AiScope[] = [];
@@ -63,6 +97,7 @@ export function AdminAiConsole() {
   }, [permissions]);
 
   const hasAiAccess = has("ai.use") || has("ai.execute") || has("ai.audit");
+  const selectedJob = jobs.find((job) => job.id === selectedJobId) || null;
 
   async function token() {
     const value = await getToken();
@@ -72,21 +107,17 @@ export function AdminAiConsole() {
 
   async function loadJobs() {
     if (!has("ai.use")) return;
-    const payload = await adminApiFetch<{ jobs: AiJob[] }>(
-      "/api/admin/ai/jobs",
-      await token(),
-    );
+    const payload = await adminApiFetch<{ jobs: AiJob[] }>("/api/admin/ai/jobs", await token());
     setJobs(payload.jobs);
-    const latestCompleted = payload.jobs.find((job) => job.status === "completed" && job.response_text);
-    if (latestCompleted?.response_text) setResult(latestCompleted.response_text);
+    setSelectedJobId((current) => {
+      if (current && payload.jobs.some((job) => job.id === current)) return current;
+      return payload.jobs.find((job) => job.status === "completed")?.id || payload.jobs[0]?.id || null;
+    });
   }
 
   async function loadActions() {
     if (!has("ai.audit")) return;
-    const payload = await adminApiFetch<{ actions: AiAction[] }>(
-      "/api/admin/ai/actions",
-      await token(),
-    );
+    const payload = await adminApiFetch<{ actions: AiAction[] }>("/api/admin/ai/actions", await token());
     setActions(payload.actions);
   }
 
@@ -116,7 +147,8 @@ export function AdminAiConsole() {
         await token(),
         { method: "POST", body: JSON.stringify(body) },
       );
-      setMessage(`Đã đưa AI job ${payload.jobId} vào hàng đợi.`);
+      setSelectedJobId(payload.jobId);
+      setMessage(`Đã đưa AI job ${payload.jobId.slice(0, 8)} vào hàng đợi.`);
       await loadJobs();
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Không tạo được AI job.");
@@ -126,10 +158,7 @@ export function AdminAiConsole() {
   }
 
   async function runQuery() {
-    await enqueue("/api/admin/ai/query", {
-      prompt,
-      scopes,
-    });
+    await enqueue("/api/admin/ai/query", { prompt, scopes });
   }
 
   async function createDraft() {
@@ -158,7 +187,7 @@ export function AdminAiConsole() {
           }),
         },
       );
-      setMessage(`Đã gửi action ${payload.actionRequestId} để người khác phê duyệt.`);
+      setMessage(`Đã gửi action ${payload.actionRequestId.slice(0, 8)} để người khác phê duyệt.`);
       await loadActions();
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Không gửi được AI action.");
@@ -196,87 +225,109 @@ export function AdminAiConsole() {
 
   return (
     <div className="grid gap-5">
-      {!scopes.length ? <AdminAlert tone="warning" title="Không có scope dữ liệu">AI chỉ được chạy khi tài khoản có quyền xem ít nhất một module Orders, Customers, Catalog hoặc Recipes.</AdminAlert> : null}
+      {!scopes.length ? <AdminAlert tone="warning" title="Không có scope dữ liệu">AI chỉ được chạy khi tài khoản có quyền xem ít nhất một module Đơn hàng, Khách hàng, Catalog hoặc Công thức.</AdminAlert> : null}
+      {message ? <AdminAlert tone={message.includes("Không") || message.includes("chưa") ? "warning" : "success"}>{message}</AdminAlert> : null}
 
-      <section className="rounded-[26px] border border-slate-200 bg-white p-5 shadow-sm">
-        <h2 className="text-lg font-black text-slate-950">AI read-only / draft</h2>
-        <p className="mt-2 text-sm text-slate-600">AI chạy nền trên backend VPS. Trang này chỉ gửi job và đọc kết quả từ PostgreSQL.</p>
-        <div className="mt-3 flex flex-wrap gap-2">
-          {scopes.map((scope) => <span key={scope} className="rounded-full bg-slate-100 px-3 py-1 text-xs font-black text-slate-700">{scopeLabels[scope]}</span>)}
-        </div>
-        <textarea value={prompt} onChange={(event) => setPrompt(event.target.value)} className="mt-4 min-h-32 w-full rounded-2xl border border-slate-300 p-4 text-sm" placeholder="Ví dụ: Tóm tắt tình hình đơn hàng và chỉ ra bất thường." />
-        <input value={draftTitle} onChange={(event) => setDraftTitle(event.target.value)} className="mt-3 w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Tiêu đề draft" />
-        <div className="mt-4 flex flex-wrap gap-3">
-          {has("ai.use") ? <button disabled={busy || prompt.trim().length < 3 || scopes.length === 0} onClick={runQuery} className="rounded-2xl bg-slate-950 px-4 py-3 text-sm font-black text-white disabled:opacity-50">Đưa query vào hàng đợi</button> : null}
-          {has("ai.execute") ? <button disabled={busy || prompt.trim().length < 3 || scopes.length === 0} onClick={createDraft} className="rounded-2xl bg-orange-500 px-4 py-3 text-sm font-black text-white disabled:opacity-50">Đưa draft vào hàng đợi</button> : null}
-        </div>
-        {result ? <pre className="mt-5 whitespace-pre-wrap rounded-2xl bg-slate-950 p-4 text-sm leading-6 text-slate-100">{result}</pre> : null}
-      </section>
+      <AdminSurface>
+        <AdminSurfaceHeader
+          eyebrow="AI queue"
+          title="Yêu cầu phân tích hoặc tạo draft"
+          description="Frontend chỉ gửi job. Worker VPS đọc context đã lọc theo quyền và ghi kết quả vào PostgreSQL."
+        />
+        <AdminSurfaceBody className="grid gap-4">
+          <div className="flex flex-wrap gap-2">
+            {scopes.map((scope) => <AdminBadge key={scope} tone="info">{scopeLabels[scope]}</AdminBadge>)}
+          </div>
+          <AdminField label="Yêu cầu cho AI" hint="Mô tả rõ dữ liệu cần phân tích và đầu ra mong muốn.">
+            <AdminTextarea value={prompt} onChange={(event) => setPrompt(event.target.value)} placeholder="Ví dụ: Tóm tắt tình hình đơn hàng và chỉ ra bất thường." />
+          </AdminField>
+          {has("ai.execute") ? (
+            <AdminField label="Tiêu đề draft" hint="Dùng khi tạo nội dung nháp cần review.">
+              <AdminInput value={draftTitle} onChange={(event) => setDraftTitle(event.target.value)} placeholder="Tiêu đề draft" />
+            </AdminField>
+          ) : null}
+          <div className="flex flex-wrap gap-2">
+            {has("ai.use") ? <AdminButton tone="dark" disabled={busy || prompt.trim().length < 3 || scopes.length === 0} onClick={() => void runQuery()}>Đưa query vào hàng đợi</AdminButton> : null}
+            {has("ai.execute") ? <AdminButton tone="primary" disabled={busy || prompt.trim().length < 3 || scopes.length === 0} onClick={() => void createDraft()}>Đưa draft vào hàng đợi</AdminButton> : null}
+          </div>
+        </AdminSurfaceBody>
+      </AdminSurface>
 
       {has("ai.use") ? (
-        <section className="rounded-[26px] border border-slate-200 bg-white p-5 shadow-sm">
-          <div className="flex items-center justify-between gap-3">
-            <h2 className="text-lg font-black text-slate-950">AI jobs</h2>
-            <button onClick={() => void loadJobs()} className="rounded-xl border border-slate-300 px-3 py-2 text-xs font-black text-slate-700">Tải lại</button>
-          </div>
-          <div className="mt-4 grid gap-3">
-            {jobs.length === 0 ? <p className="text-sm text-slate-500">Chưa có AI job.</p> : jobs.map((job) => (
-              <article key={job.id} className="rounded-2xl border border-slate-200 p-4">
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <p className="font-black text-slate-950">{job.job_type}</p>
-                  <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-black text-slate-600">{job.status}</span>
-                </div>
-                <p className="mt-2 text-xs text-slate-500">Lần chạy: {job.attempt_count}/{job.max_attempts}</p>
-                {job.error_message ? <p className="mt-2 text-sm text-rose-600">{job.error_code}: {job.error_message}</p> : null}
-                {job.response_text ? <p className="mt-2 line-clamp-3 text-sm text-slate-700">{job.response_text}</p> : null}
-              </article>
-            ))}
-          </div>
-        </section>
+        <AdminSurface>
+          <AdminSurfaceHeader
+            title="AI jobs"
+            description="Chọn một job để xem trạng thái và kết quả đã được trình bày thành nội dung dễ đọc."
+            actions={<AdminButton size="sm" tone="secondary" onClick={() => void loadJobs()}>Tải lại</AdminButton>}
+          />
+          <AdminSurfaceBody className="grid gap-4 xl:grid-cols-[360px_1fr]">
+            <div className="grid content-start gap-3">
+              {jobs.length === 0 ? <AdminEmptyState title="Chưa có AI job" description="Tạo query hoặc draft để bắt đầu." /> : jobs.map((job) => (
+                <article key={job.id} className={`rounded-2xl border p-4 ${selectedJobId === job.id ? "border-orange-400 bg-orange-50" : "border-slate-200 bg-white"}`}>
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <AdminBadge tone="neutral">{job.job_type === "draft" ? "Draft" : "Read only"}</AdminBadge>
+                      <AdminBadge tone={jobStatusTone(job.status)}>{jobStatusLabel[job.status]}</AdminBadge>
+                    </div>
+                    <AdminButton size="sm" tone="ghost" onClick={() => setSelectedJobId(job.id)}>Xem</AdminButton>
+                  </div>
+                  <p className="mt-2 text-xs font-medium text-slate-500">Job {job.id.slice(0, 8)} · {formatDate(job.created_at)}</p>
+                  <p className="mt-1 text-xs font-medium text-slate-500">Lần chạy {job.attempt_count}/{job.max_attempts}{job.provider ? ` · ${job.provider}` : ""}</p>
+                  {job.error_message ? <AdminAlert className="mt-3" tone="danger" title={job.error_code || "Job thất bại"}>{job.error_message}</AdminAlert> : null}
+                </article>
+              ))}
+            </div>
+
+            <section className="min-w-0">
+              <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+                <h3 className="font-black text-slate-900">Kết quả job</h3>
+                {selectedJob ? <div className="flex flex-wrap gap-2"><AdminBadge tone={jobStatusTone(selectedJob.status)}>{jobStatusLabel[selectedJob.status]}</AdminBadge>{selectedJob.model ? <AdminBadge tone="neutral">{selectedJob.model}</AdminBadge> : null}</div> : null}
+              </div>
+              {selectedJob ? <AiReadableResult text={selectedJob.response_text} emptyMessage="Job chưa hoàn thành hoặc chưa có nội dung trả về." /> : <AdminEmptyState title="Chưa chọn job" description="Chọn Xem ở danh sách bên trái." />}
+            </section>
+          </AdminSurfaceBody>
+        </AdminSurface>
       ) : null}
 
       {has("ai.execute") ? (
-        <section className="rounded-[26px] border border-slate-200 bg-white p-5 shadow-sm">
-          <h2 className="text-lg font-black text-slate-950">AI action cần phê duyệt</h2>
-          <p className="mt-2 text-sm text-slate-600">Action hiện hỗ trợ: đề xuất ghi chú nội bộ cho đơn hàng. Người tạo không thể tự duyệt.</p>
-          <input value={orderId} onChange={(event) => setOrderId(event.target.value)} className="mt-4 w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Order UUID" />
-          <textarea value={note} onChange={(event) => setNote(event.target.value)} className="mt-3 min-h-28 w-full rounded-2xl border border-slate-300 p-4 text-sm" placeholder="Nội dung ghi chú nội bộ đề xuất" />
-          <button disabled={busy || !orderId || !note.trim()} onClick={requestAction} className="mt-4 rounded-2xl bg-emerald-600 px-4 py-3 text-sm font-black text-white disabled:opacity-50">Gửi action chờ duyệt</button>
-        </section>
+        <AdminSurface>
+          <AdminSurfaceHeader title="Tạo action chờ phê duyệt" description="Action hiện hỗ trợ đề xuất ghi chú nội bộ cho đơn hàng. Người tạo không thể tự duyệt." />
+          <AdminSurfaceBody className="grid gap-4">
+            <AdminField label="Order UUID"><AdminInput value={orderId} onChange={(event) => setOrderId(event.target.value)} placeholder="Order UUID" /></AdminField>
+            <AdminField label="Ghi chú nội bộ đề xuất"><AdminTextarea value={note} onChange={(event) => setNote(event.target.value)} placeholder="Nội dung ghi chú nội bộ đề xuất" /></AdminField>
+            <div><AdminButton tone="success" disabled={busy || !orderId || !note.trim()} onClick={() => void requestAction()}>Gửi action chờ duyệt</AdminButton></div>
+          </AdminSurfaceBody>
+        </AdminSurface>
       ) : null}
 
       {has("ai.audit") ? (
-        <section className="rounded-[26px] border border-slate-200 bg-white p-5 shadow-sm">
-          <div className="flex items-center justify-between gap-3">
-            <div>
-              <h2 className="text-lg font-black text-slate-950">Action chờ phê duyệt</h2>
-              <p className="mt-1 text-sm text-slate-600">Người tạo không thể tự duyệt. Backend kiểm tra quyền nghiệp vụ trước khi thực thi.</p>
-            </div>
-            <button onClick={() => void loadActions()} className="rounded-xl border border-slate-300 px-3 py-2 text-xs font-black text-slate-700">Tải lại</button>
-          </div>
-          <div className="mt-4 grid gap-3">
-            {actions.length === 0 ? <p className="text-sm text-slate-500">Chưa có action nào.</p> : actions.map((action) => (
-              <article key={action.id} className="rounded-2xl border border-slate-200 p-4">
+        <AdminSurface>
+          <AdminSurfaceHeader
+            title="Action chờ phê duyệt"
+            description="Backend kiểm tra tách người tạo/người duyệt và permission nghiệp vụ trước khi thực thi."
+            actions={<AdminButton size="sm" tone="secondary" onClick={() => void loadActions()}>Tải lại</AdminButton>}
+          />
+          <AdminSurfaceBody className="grid gap-3">
+            {actions.length === 0 ? <AdminEmptyState title="Chưa có action" description="Không có đề xuất nào đang chờ xử lý." /> : actions.map((action) => (
+              <article key={action.id} className="rounded-2xl border border-slate-200 bg-white p-4">
                 <div className="flex flex-wrap items-center justify-between gap-2">
-                  <p className="font-black text-slate-950">{action.action_key}</p>
-                  <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-black text-slate-600">{action.status}</span>
+                  <h3 className="font-black text-slate-900">{action.action_key}</h3>
+                  <AdminBadge tone={action.status === "pending" ? "warning" : action.status === "executed" ? "success" : "neutral"}>{action.status}</AdminBadge>
                 </div>
-                <p className="mt-2 text-sm text-slate-600">Target: {action.target_id ?? "-"}</p>
-                <p className="mt-1 text-sm text-slate-700">{action.payload?.note ?? "Không có nội dung"}</p>
-                <p className="mt-1 text-xs text-slate-500">{action.requested_reason}</p>
+                <p className="mt-2 text-sm font-medium text-slate-600">Target: {action.target_id ?? "-"}</p>
+                <p className="mt-1 text-sm font-medium leading-6 text-slate-700">{action.payload?.note ?? "Không có nội dung"}</p>
+                <p className="mt-1 text-xs font-medium text-slate-500">{action.requested_reason}</p>
                 {action.status === "pending" ? (
                   <div className="mt-4 flex flex-wrap gap-2">
-                    {has("orders.internal_notes") ? <button disabled={busy} onClick={() => reviewAction(action.id, "approve")} className="rounded-xl bg-emerald-600 px-3 py-2 text-xs font-black text-white disabled:opacity-50">Phê duyệt và thực thi</button> : null}
-                    <button disabled={busy} onClick={() => reviewAction(action.id, "reject")} className="rounded-xl bg-rose-600 px-3 py-2 text-xs font-black text-white disabled:opacity-50">Từ chối</button>
+                    {has("orders.internal_notes") ? <AdminButton size="sm" tone="success" disabled={busy} onClick={() => void reviewAction(action.id, "approve")}>Phê duyệt và thực thi</AdminButton> : null}
+                    <AdminButton size="sm" tone="danger" disabled={busy} onClick={() => void reviewAction(action.id, "reject")}>Từ chối</AdminButton>
                   </div>
                 ) : null}
               </article>
             ))}
-          </div>
-        </section>
+          </AdminSurfaceBody>
+        </AdminSurface>
       ) : null}
-
-      {message ? <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-bold text-slate-700">{message}</div> : null}
     </div>
   );
 }
