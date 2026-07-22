@@ -5,6 +5,19 @@ export type SuggestedRecipeStep = {
   content: string;
 };
 
+export type SuggestedRecipeStepComparison = {
+  suggestionIndex: number;
+  currentIndex: number | null;
+  status: "update" | "new";
+  currentStep: Step | null;
+  suggestedStep: SuggestedRecipeStep;
+};
+
+export function buildSuggestedRecipeStepComparison(
+  currentSteps: Step[],
+  suggestedSteps: SuggestedRecipeStep[],
+): SuggestedRecipeStepComparison[];
+
 export function mergeSuggestedRecipeSteps(
   currentSteps: Step[],
   suggestedSteps: SuggestedRecipeStep[],
