@@ -31,7 +31,7 @@ const files = {
 };
 
 // Part 1: media safety.
-assert.match(files.recipeMerge, /filter\(\(step\) => step\.mediaId\)/, "media sync must omit null media IDs");
+assert.match(files.recipeMerge, /steps\.flatMap\(\(step, index\) => step\.mediaId/, "media sync must omit null media IDs");
 assert.match(files.draftService, /SET title = \$3, content = \$4/, "AI apply may update SOP text only for existing steps");
 assert.doesNotMatch(files.draftService, /SET[^;]*media_id\s*=\s*NULL/s, "AI apply must never clear existing step media");
 assert.match(files.draftService, /recipe_media_version_refs/, "new Recipe versions must retain media references");
@@ -68,7 +68,7 @@ assert.match(files.draftService, /SELF_APPROVAL_FORBIDDEN/);
 assert.match(files.draftService, /AI_DRAFT_STALE/);
 assert.match(files.draftService, /selectedStepIds/);
 assert.match(files.draftService, /INSERT INTO recipe_versions/);
-assert.match(files.draftService, /workflow_status[^\n]*'draft'/);
+assert.match(files.draftService, /INSERT INTO recipe_versions[\s\S]*VALUES\(\$1,\$2,'draft'/);
 
 // Part 5: standalone worker, fail-closed provider, and main-only CI.
 assert.doesNotMatch(files.apiMain, /startAiWorker|ai\.worker/);
