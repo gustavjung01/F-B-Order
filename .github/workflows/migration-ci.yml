@@ -1,26 +1,12 @@
 name: Migration CI
 
 on:
-  pull_request:
-    paths:
-      - "apps/backend/scripts/**"
-      - "db/migrations/**"
-      - "db/fixtures/**"
-      - "apps/backend/package.json"
-      - "package.json"
-      - "pnpm-lock.yaml"
-      - ".github/workflows/migration-ci.yml"
   push:
     branches:
       - main
-    paths:
-      - "apps/backend/scripts/**"
-      - "db/migrations/**"
-      - "db/fixtures/**"
-      - "apps/backend/package.json"
-      - "package.json"
-      - "pnpm-lock.yaml"
-      - ".github/workflows/migration-ci.yml"
+  pull_request:
+    branches:
+      - main
 
 permissions:
   contents: read
