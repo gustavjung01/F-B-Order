@@ -2,12 +2,7 @@ function normalizedTitle(value) {
   return String(value || "").trim().toLocaleLowerCase("vi-VN");
 }
 
-/**
- * Merge AI suggested steps into the editor without replacing step identity or media.
- * Exact title matches win; remaining suggestions fall back to the same unused index.
- * Existing unmatched steps are retained so an AI response cannot silently delete content.
- */
-export function mergeSuggestedRecipeSteps(currentSteps, suggestedSteps, createEmptyStep) {
+function matchSuggestedRecipeSteps(currentSteps, suggestedSteps) {
   const used = new Set();
   const byTitle = new Map();
 
@@ -19,7 +14,7 @@ export function mergeSuggestedRecipeSteps(currentSteps, suggestedSteps, createEm
     byTitle.set(key, indexes);
   });
 
-  const merged = suggestedSteps.map((suggestion, suggestionIndex) => {
+  const matches = suggestedSteps.map((suggestion, suggestionIndex) => {
     const titleKey = normalizedTitle(suggestion.title);
     const titleMatch = titleKey
       ? (byTitle.get(titleKey) || []).find((index) => !used.has(index))
@@ -27,19 +22,46 @@ export function mergeSuggestedRecipeSteps(currentSteps, suggestedSteps, createEm
     const indexMatch = !used.has(suggestionIndex) && currentSteps[suggestionIndex]
       ? suggestionIndex
       : undefined;
-    const matchedIndex = titleMatch ?? indexMatch;
+    const currentIndex = titleMatch ?? indexMatch;
+    if (currentIndex !== undefined) used.add(currentIndex);
+    return { suggestionIndex, currentIndex: currentIndex ?? null };
+  });
 
-    if (matchedIndex === undefined) {
+  return { matches, used };
+}
+
+/**
+ * Build a stable current-versus-proposed view for the SOP comparison dialog.
+ */
+export function buildSuggestedRecipeStepComparison(currentSteps, suggestedSteps) {
+  const { matches } = matchSuggestedRecipeSteps(currentSteps, suggestedSteps);
+  return matches.map(({ suggestionIndex, currentIndex }) => ({
+    suggestionIndex,
+    currentIndex,
+    status: currentIndex === null ? "new" : "update",
+    currentStep: currentIndex === null ? null : currentSteps[currentIndex],
+    suggestedStep: suggestedSteps[suggestionIndex],
+  }));
+}
+
+/**
+ * Merge AI suggested steps into the editor without replacing step identity or media.
+ * Exact title matches win; remaining suggestions fall back to the same unused index.
+ * Existing unmatched steps are retained so an AI response cannot silently delete content.
+ */
+export function mergeSuggestedRecipeSteps(currentSteps, suggestedSteps, createEmptyStep) {
+  const { matches, used } = matchSuggestedRecipeSteps(currentSteps, suggestedSteps);
+  const merged = matches.map(({ suggestionIndex, currentIndex }) => {
+    const suggestion = suggestedSteps[suggestionIndex];
+    if (currentIndex === null) {
       return {
         ...createEmptyStep(),
         title: suggestion.title,
         content: suggestion.content,
       };
     }
-
-    used.add(matchedIndex);
     return {
-      ...currentSteps[matchedIndex],
+      ...currentSteps[currentIndex],
       title: suggestion.title,
       content: suggestion.content,
     };
@@ -48,7 +70,6 @@ export function mergeSuggestedRecipeSteps(currentSteps, suggestedSteps, createEm
   currentSteps.forEach((step, index) => {
     if (!used.has(index)) merged.push(step);
   });
-
   return merged;
 }
 
