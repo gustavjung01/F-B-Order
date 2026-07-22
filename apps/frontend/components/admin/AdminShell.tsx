@@ -15,7 +15,7 @@ type AdminShellProps = {
 export function AdminShell({ title, subtitle, children, actions }: AdminShellProps) {
   return (
     <main className={adminStyles.page}>
-      <div className="mx-auto grid min-h-screen max-w-[1800px] lg:grid-cols-[272px_minmax(0,1fr)]">
+      <div className="mx-auto grid min-h-[100dvh] max-w-[1800px] lg:grid-cols-[272px_minmax(0,1fr)]">
         <aside className="sticky top-0 hidden h-screen border-r border-slate-200 bg-white p-4 lg:flex lg:flex-col">
           <Link href="/admin" className="flex items-center gap-3 rounded-2xl px-3 py-3">
             <span className="grid h-11 w-11 place-items-center rounded-xl bg-orange-500 text-xl font-black text-white shadow-sm">B</span>
@@ -35,7 +35,7 @@ export function AdminShell({ title, subtitle, children, actions }: AdminShellPro
         </aside>
 
         <div className="min-w-0">
-          <header className="sticky top-0 z-[70] border-b border-slate-200 bg-white/95 backdrop-blur-xl">
+          <header className="sticky top-0 z-[70] isolate border-b border-slate-200 bg-white/95 pt-[env(safe-area-inset-top)] backdrop-blur-xl">
             <div className="flex min-h-16 items-center justify-between gap-3 px-4 md:px-6 xl:px-8">
               <div className="min-w-0">
                 <p className="text-[10px] font-black uppercase tracking-[0.14em] text-orange-600 lg:hidden">Bếp Sỉ Admin</p>
@@ -47,8 +47,8 @@ export function AdminShell({ title, subtitle, children, actions }: AdminShellPro
                 <UserButton afterSignOutUrl="/" />
               </div>
             </div>
-            <div className="border-t border-slate-100 px-4 py-2 lg:hidden">
-              <AdminModuleNav />
+            <div className="min-w-0 border-t border-slate-100 px-3 py-2 sm:px-4 lg:hidden">
+              <AdminModuleNav className="[-webkit-overflow-scrolling:touch]" />
             </div>
           </header>
 
