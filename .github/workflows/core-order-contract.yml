@@ -71,9 +71,11 @@ jobs:
       - name: Typecheck
         run: pnpm typecheck
 
-      - name: Verify worker, deploy and CI trigger contracts
+      - name: Verify five-part AI production acceptance
         run: |
           set -Eeuo pipefail
+          pnpm --filter @fb-order/backend test:ai-provider
+          node scripts/ai/test-five-part-acceptance.mjs
           bash -n scripts/phase7/deploy-bepsi-backend.sh
           bash -n scripts/phase7/deploy-bepsi-vercel.sh
           node --check scripts/phase7/smoke-production.mjs

@@ -32,6 +32,8 @@ export function RecipeStepsTab({
 
   return (
     <section data-recipe-steps-tab="true" className="rounded-[24px] bg-white p-4 ring-1 ring-slate-200">
+      <div id="recipe-ai-sop-target" />
+
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div><h3 className="text-lg font-black">Các bước thực hiện</h3><p className="text-sm font-bold text-slate-500">Kéo thả để đổi thứ tự. Ảnh được chọn bằng media picker có thumbnail.</p></div>
         {!locked ? <button type="button" onClick={onAdd} className="rounded-xl bg-slate-950 px-4 py-3 text-sm font-black text-white">+ Thêm bước</button> : null}

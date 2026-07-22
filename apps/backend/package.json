@@ -17,6 +17,7 @@
     "test:recipe-scale": "tsx scripts/test-recipe-scale.ts",
     "test:recipe-workflow": "tsx scripts/test-admin-recipe-workflow.ts",
     "test:ai-draft-workflow": "tsx scripts/test-ai-draft-workflow.ts",
+    "test:ai-provider": "tsx --test test/google-agent.provider.test.ts",
     "recipe-media:cleanup": "tsx scripts/cleanup-recipe-media.ts",
     "db:migrate": "node scripts/run-migrations.mjs",
     "db:migrate:baseline": "node scripts/run-migrations.mjs --baseline-existing",
