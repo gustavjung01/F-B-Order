@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { generateWithGoogleAgent, verifyGoogleAgentProvider } from "../src/modules/ai/google-agent.provider.js";
+import { __testing, generateWithGoogleAgent, verifyGoogleAgentProvider } from "../src/modules/ai/google-agent.provider.js";
 
 const ENV_KEYS = [
   "NODE_ENV",
@@ -81,4 +81,44 @@ test("Google Agent provider fails closed in production and only allows explicit 
   } finally {
     restoreEnvironment(snapshot);
   }
+});
+
+test("Recipe audit prompt is operator-facing and forbids internal JSON", () => {
+  const message = __testing.buildAgentMessage({
+    prompt: "Kiểm tra Trà tắc",
+    context: { recipe: { id: "recipe-id", title: "Trà tắc" } },
+    mode: "read_only",
+    userId: "test-user",
+  });
+
+  assert.match(message, /người trực tiếp pha chế/);
+  assert.match(message, /không xuất JSON/i);
+  assert.match(message, /Không viết mục Hành động đề xuất/);
+  assert.match(message, /Kết luận nhanh/);
+  assert.match(message, /Dữ liệu cần bổ sung/);
+});
+
+test("Recipe audit sanitizer removes greetings, technical actions and JSON blocks", () => {
+  const sanitized = __testing.sanitizeRecipeReadOnlyText(`Chào bạn, tôi đã audit công thức.
+
+### 1. Kết luận
+Công thức cần chuẩn hóa thao tác.
+
+### 2. SOP đề xuất
+- Đong nguyên liệu bằng jigger.
+
+### 6. Hành động đề xuất
+\`\`\`json
+{
+  "action_key": "propose_recipe_update",
+  "target_id": "recipe-id",
+  "status": "pending_approval"
+}
+\`\`\``);
+
+  assert.doesNotMatch(sanitized, /Chào bạn/);
+  assert.match(sanitized, /Công thức cần chuẩn hóa thao tác/);
+  assert.match(sanitized, /Đong nguyên liệu bằng jigger/);
+  assert.doesNotMatch(sanitized, /Hành động đề xuất/);
+  assert.doesNotMatch(sanitized, /action_key|target_id|pending_approval|```|\{/);
 });

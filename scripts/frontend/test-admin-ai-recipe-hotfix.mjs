@@ -123,7 +123,7 @@ test("Recipe AI panel mounts into the explicit Steps slot and applies only revie
   assert.match(panel, /draft\.status !== "approved"/);
   assert.match(panel, /selectedStepIds/);
   assert.match(panel, /\/api\/admin\/ai\/drafts\/\$\{draft\.id\}\/apply/);
-  assert.match(panel, /Tạo Recipe version mới/);
+  assert.match(panel, /Tạo phiên bản mới/);
   assert.doesNotMatch(panel, /onApplySteps\([^)]*\)/);
 
   assert.match(reviewQueue, /has\("ai\.approve"\)/);
@@ -138,9 +138,10 @@ test("Recipe AI panel mounts into the explicit Steps slot and applies only revie
   assert.match(routes, /listAiDraftReviewQueue\(identity\)/);
 });
 
-test("AI user-facing surfaces use AdminUI and never expose raw JSON blocks", async () => {
-  const [panel, aiConsole, readableResult, reviewQueue, diff] = await Promise.all([
+test("Recipe AI user view hides internal JSON and explains the workflow in normal language", async () => {
+  const [panel, recipeAudit, aiConsole, readableResult, reviewQueue, diff] = await Promise.all([
     readFile("apps/frontend/components/admin/recipe-editor/RecipeAiAssistantPanel.tsx", "utf8"),
+    readFile("apps/frontend/components/admin/ai/RecipeAiAuditResult.tsx", "utf8"),
     readFile("apps/frontend/components/admin/AdminAiConsole.tsx", "utf8"),
     readFile("apps/frontend/components/admin/ai/AiReadableResult.tsx", "utf8"),
     readFile("apps/frontend/components/admin/ai/AiRecipeDraftReviewQueue.tsx", "utf8"),
@@ -150,9 +151,18 @@ test("AI user-facing surfaces use AdminUI and never expose raw JSON blocks", asy
   for (const primitive of ["AdminSurface", "AdminSurfaceHeader", "AdminSurfaceBody", "AdminButton", "AdminBadge", "AdminAlert", "AdminDialog"]) {
     assert.match(panel, new RegExp(primitive));
   }
-  for (const source of [panel, aiConsole, readableResult, reviewQueue, diff]) {
+  for (const source of [panel, recipeAudit, aiConsole, readableResult, reviewQueue, diff]) {
     assert.doesNotMatch(source, /<pre\b/);
   }
+
+  assert.match(panel, /RecipeAiAuditResult/);
+  assert.match(panel, /Tuyệt đối không trả JSON/);
+  assert.match(panel, /Trợ lý công thức/);
+  assert.match(panel, /Kiểm tra công thức/);
+  assert.doesNotMatch(panel, /Job \{job\.id|Base \{draft\.baseRecipeVersionId|PostgreSQL|`ai\.approve`|`recipes\.review`/);
+  assert.match(recipeAudit, /HIDDEN_SECTION_PATTERN/);
+  assert.match(recipeAudit, /TECHNICAL_KEY_PATTERN/);
+  assert.match(recipeAudit, /action_key\|target_type\|target_id\|required_permission/);
   assert.match(reviewQueue, /AdminDialog/);
   assert.match(diff, /Hiện tại/);
   assert.match(diff, /AI đề xuất/);

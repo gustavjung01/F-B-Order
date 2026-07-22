@@ -17,6 +17,16 @@ type GoogleAgentConfig = {
   serviceAccountJsonBase64?: string;
 };
 
+type AgentInput = {
+  prompt: string;
+  context: unknown;
+  mode: "read_only" | "draft";
+  userId: string;
+};
+
+const RECIPE_TECHNICAL_KEY_PATTERN = /\b(?:action_key|target_type|target_id|required_permission|pending_approval|sourceInteractionId|sourceDraftId)\b/i;
+const RECIPE_TECHNICAL_FIELD_PATTERN = /^\s*["']?(?:payload|status|missing_fields|recipe_slugs_to_review)["']?\s*:/i;
+
 function configFromEnv(): GoogleAgentConfig | null {
   const project = process.env.GOOGLE_CLOUD_PROJECT?.trim();
   const location = process.env.GOOGLE_CLOUD_LOCATION?.trim();
@@ -175,6 +185,70 @@ function parseAgentResponse(raw: string): { text: string; events: unknown[] } {
   return { text, events };
 }
 
+function hasRecipeContext(context: unknown): boolean {
+  if (!context || typeof context !== "object" || Array.isArray(context)) return false;
+  const recipe = (context as Record<string, unknown>).recipe;
+  return Boolean(recipe && typeof recipe === "object" && !Array.isArray(recipe));
+}
+
+function buildAgentMessage(input: AgentInput): string {
+  const recipeContext = hasRecipeContext(input.context);
+  const outputPolicy = recipeContext && input.mode === "read_only"
+    ? `QUY TẮC ĐẦU RA BẮT BUỘC CHO GIAO DIỆN CÔNG THỨC:
+- Viết cho người trực tiếp pha chế, dùng tiếng Việt đơn giản, câu ngắn và không chào hỏi.
+- Chỉ dùng 5 mục: Kết luận nhanh; Điểm cần chỉnh; SOP đề xuất; Tiêu chí kiểm soát; Dữ liệu cần bổ sung.
+- Điểm cần chỉnh tối đa 5 ý quan trọng, ưu tiên lỗi ảnh hưởng chất lượng, an toàn và tốc độ thao tác.
+- Không xuất JSON, code block, schema, ID, catalog key, action_key, target_id, permission, payload hoặc trạng thái hệ thống.
+- Không viết mục Hành động đề xuất. Giao diện Bếp Sỉ tự xử lý tạo SOP nháp, duyệt và áp dụng.
+- Không tự khẳng định giá vốn, hạn sử dụng hoặc nhiệt độ bảo quản khi dữ liệu nguồn chưa có.`
+    : recipeContext && input.mode === "draft"
+      ? `QUY TẮC ĐẦU RA BẮT BUỘC CHO SOP NHÁP:
+- Chỉ xuất đúng một JSON object hợp lệ theo schema mà yêu cầu đã nêu.
+- Không thêm lời chào, markdown, code fence, giải thích, action hay metadata ngoài JSON.`
+      : "Chỉ trả lời đúng yêu cầu và không tiết lộ dữ liệu kỹ thuật nội bộ của hệ thống.";
+
+  return `${input.prompt}\n\n${outputPolicy}\n\nDữ liệu do backend Bếp Sỉ cấp theo quyền người dùng:\n${JSON.stringify(input.context)}`;
+}
+
+function sanitizeRecipeReadOnlyText(value: string): string {
+  const output: string[] = [];
+  let hiddenSection = false;
+  let inCodeBlock = false;
+
+  for (const sourceLine of value.replace(/\r\n?/g, "\n").split("\n")) {
+    const line = sourceLine.trim();
+    if (/^```/.test(line)) {
+      inCodeBlock = !inCodeBlock;
+      continue;
+    }
+    if (inCodeBlock) continue;
+
+    const heading = line.match(/^#{1,6}\s*(?:\d+[.)]\s*)?(.+?)\s*$/);
+    if (heading) {
+      const title = heading[1].replace(/[*_`]/g, "").replace(/[:：]\s*$/, "").trim();
+      hiddenSection = /^(?:hành động đề xuất|đề xuất hành động|proposed actions?|system actions?)$/i.test(title);
+      if (!hiddenSection) output.push(sourceLine);
+      continue;
+    }
+
+    if (hiddenSection) continue;
+    if (RECIPE_TECHNICAL_KEY_PATTERN.test(line) || RECIPE_TECHNICAL_FIELD_PATTERN.test(line)) continue;
+    if (/^[{}\[\],]+$/.test(line)) continue;
+    if (output.length === 0 && /^chào\b/i.test(line)) continue;
+    output.push(sourceLine);
+  }
+
+  const sanitized = output.join("\n").replace(/\n{3,}/g, "\n\n").trim();
+  if (!sanitized) {
+    throw new OrderEngineError(
+      "AI_RECIPE_RESPONSE_NOT_READABLE",
+      502,
+      "Recipe audit response contained no safe user-facing content",
+    );
+  }
+  return sanitized;
+}
+
 export async function verifyGoogleAgentProvider(): Promise<{
   provider: "google-agent-platform" | "deterministic";
   model: string | null;
@@ -194,12 +268,7 @@ export async function verifyGoogleAgentProvider(): Promise<{
   };
 }
 
-export async function generateWithGoogleAgent(input: {
-  prompt: string;
-  context: unknown;
-  mode: "read_only" | "draft";
-  userId: string;
-}): Promise<GoogleAgentResult> {
+export async function generateWithGoogleAgent(input: AgentInput): Promise<GoogleAgentResult> {
   const config = configFromEnv();
   if (!config) {
     if (!deterministicFallbackAllowed()) throw providerNotConfiguredError();
@@ -232,7 +301,7 @@ export async function generateWithGoogleAgent(input: {
         classMethod: "async_stream_query",
         input: {
           user_id: input.userId,
-          message: `${input.prompt}\n\nDữ liệu do backend Bếp Sỉ cấp theo quyền người dùng:\n${JSON.stringify(input.context)}`,
+          message: buildAgentMessage(input),
         },
       }),
       signal: controller.signal,
@@ -249,10 +318,13 @@ export async function generateWithGoogleAgent(input: {
     }
 
     const parsed = parseAgentResponse(raw);
+    const text = input.mode === "read_only" && hasRecipeContext(input.context)
+      ? sanitizeRecipeReadOnlyText(parsed.text)
+      : parsed.text;
     return {
       provider: "google-agent-platform",
       model: `reasoningEngines/${config.engineId}`,
-      text: parsed.text,
+      text,
       data: {
         context: input.context,
         project: config.project,
@@ -282,7 +354,10 @@ export async function generateWithGoogleAgent(input: {
 }
 
 export const __testing = {
+  buildAgentMessage,
   deterministicFallbackAllowed,
+  hasRecipeContext,
   missingConfigKeys,
   parseAgentResponse,
+  sanitizeRecipeReadOnlyText,
 };
