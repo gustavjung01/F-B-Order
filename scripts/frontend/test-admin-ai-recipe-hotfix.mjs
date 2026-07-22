@@ -105,7 +105,7 @@ test("Recipe and AI admin surfaces stay permission-aware", async () => {
   assert.doesNotMatch(aiConsole, /scopes:\s*\["orders",\s*"customers",\s*"catalog",\s*"recipes"\]/);
 });
 
-test("Recipe AI panel stays in Steps and applies only reviewed persisted drafts", async () => {
+test("Recipe AI panel mounts into the explicit Steps slot and applies only reviewed persisted drafts", async () => {
   const [panel, stepsTab, reviewQueue, diff, aiPage, routes] = await Promise.all([
     readFile("apps/frontend/components/admin/recipe-editor/RecipeAiAssistantPanel.tsx", "utf8"),
     readFile("apps/frontend/components/admin/recipe-editor/RecipeStepsTab.tsx", "utf8"),
@@ -115,14 +115,16 @@ test("Recipe AI panel stays in Steps and applies only reviewed persisted drafts"
     readFile("apps/backend/src/modules/ai/ai.routes.ts", "utf8"),
   ]);
 
+  assert.match(stepsTab, /id="recipe-ai-sop-target"/);
   assert.match(stepsTab, /data-recipe-steps-tab="true"/);
-  assert.match(panel, /recipe-ai-sop-slot/);
-  assert.match(panel, /:has\(> \.recipe-ai-sop-slot \+ \[data-recipe-steps-tab/);
+  assert.match(panel, /createPortal\(panel, stepsTarget\)/);
+  assert.match(panel, /getElementById\("recipe-ai-sop-target"\)/);
+  assert.doesNotMatch(panel, /:has\(|recipe-ai-sop-slot|<style jsx global>/);
   assert.match(panel, /draft\.status !== "approved"/);
   assert.match(panel, /selectedStepIds/);
   assert.match(panel, /\/api\/admin\/ai\/drafts\/\$\{draft\.id\}\/apply/);
   assert.match(panel, /Tạo Recipe version mới/);
-  assert.doesNotMatch(panel, /onApplySteps\(suggestedSteps\)/);
+  assert.doesNotMatch(panel, /onApplySteps\([^)]*\)/);
 
   assert.match(reviewQueue, /has\("ai\.approve"\)/);
   assert.match(reviewQueue, /review\("approve"\)/);
