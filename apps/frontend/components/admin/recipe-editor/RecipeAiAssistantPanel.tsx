@@ -53,6 +53,8 @@ type ApplyResult = {
   selectedStepCount: number;
 };
 
+type LegacySuggestedStep = { title: string; content: string };
+
 export function RecipeAiAssistantPanel({
   recipeId,
   recipeTitle,
@@ -64,7 +66,9 @@ export function RecipeAiAssistantPanel({
   recipeTitle: string;
   dirty: boolean;
   locked: boolean;
-  onApplied: () => void | Promise<void>;
+  onApplied?: () => void | Promise<void>;
+  onApplySteps?: (steps: LegacySuggestedStep[]) => void;
+  onOpenSteps?: () => void;
 }) {
   const { getToken } = useAuth();
   const { has } = useAdminPermissions();
@@ -200,8 +204,12 @@ export function RecipeAiAssistantPanel({
       );
       setApplyOpen(false);
       await loadDraft(draft.id);
-      await onApplied();
-      setMessage(`Đã áp ${result.selectedStepCount} phần và tạo Recipe version ${result.recipeVersionNo}. Media hiện có được giữ nguyên.`);
+      if (onApplied) {
+        await onApplied();
+        setMessage(`Đã áp ${result.selectedStepCount} phần và tạo Recipe version ${result.recipeVersionNo}. Media hiện có được giữ nguyên.`);
+      } else {
+        window.location.reload();
+      }
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Không áp dụng được AI draft.");
     } finally {
@@ -259,7 +267,7 @@ export function RecipeAiAssistantPanel({
                 {draft.status === "approved" && canApply && !locked ? <AdminButton tone="success" disabled={dirty || busy} onClick={openApplyDialog}>Chọn phần áp dụng</AdminButton> : null}
               </div>
 
-              {draft.status === "draft" ? <AdminAlert tone="warning" title="Đang chờ reviewer">Draft đã được lưu trong PostgreSQL. Người có `ai.audit` và `recipes.review` phải xem diff rồi duyệt hoặc từ chối.</AdminAlert> : null}
+              {draft.status === "draft" ? <AdminAlert tone="warning" title="Đang chờ reviewer">Draft đã được lưu trong PostgreSQL. Người có `ai.approve` và `recipes.review` phải xem diff rồi duyệt hoặc từ chối.</AdminAlert> : null}
               {draft.status === "rejected" ? <AdminAlert tone="danger" title="Draft bị từ chối">{draft.reviewNote || "Reviewer không chấp nhận đề xuất này."}</AdminAlert> : null}
               {draft.status === "approved" ? <AdminAlert tone="success" title="Draft đã được duyệt">{draft.reviewNote || "Có thể chọn từng phần để áp dụng."}</AdminAlert> : null}
               {draft.status === "applied" ? <AdminAlert tone="success" title="Đã tạo Recipe version mới">Đã áp {draft.applicationData?.selectedStepCount || 0} phần vào Recipe version {draft.appliedRecipeVersionNo || "mới"}.</AdminAlert> : null}
