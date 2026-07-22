@@ -35,11 +35,12 @@ function configFromEnv(): GoogleAgentConfig | null {
 }
 
 function missingConfigKeys(): string[] {
-  return [
+  const required: Array<[string, string | undefined]> = [
     ["GOOGLE_CLOUD_PROJECT", process.env.GOOGLE_CLOUD_PROJECT],
     ["GOOGLE_CLOUD_LOCATION", process.env.GOOGLE_CLOUD_LOCATION],
     ["GOOGLE_AGENT_ENGINE_ID", process.env.GOOGLE_AGENT_ENGINE_ID],
-  ].flatMap(([key, value]) => String(value || "").trim() ? [] : [key]);
+  ];
+  return required.flatMap(([key, value]) => String(value || "").trim() ? [] : [key]);
 }
 
 function deterministicFallbackAllowed(): boolean {
