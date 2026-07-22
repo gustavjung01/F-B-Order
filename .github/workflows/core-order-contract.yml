@@ -112,6 +112,19 @@ jobs:
           path: recipe-workflow.log
           if-no-files-found: error
 
+      - name: Verify AI draft review and Recipe apply workflow
+        run: |
+          set -o pipefail
+          pnpm --filter @fb-order/backend test:ai-draft-workflow 2>&1 | tee ai-draft-workflow.log
+
+      - name: Upload AI draft workflow log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-draft-workflow-log
+          path: ai-draft-workflow.log
+          if-no-files-found: error
+
       - name: Verify Recipe scale contract
         run: |
           set -o pipefail

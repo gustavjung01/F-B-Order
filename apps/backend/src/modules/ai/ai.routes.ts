@@ -2,10 +2,17 @@ import type { Request, Response } from "express";
 import { Router } from "express";
 import { z } from "zod";
 import { getDb } from "../../db/pool.js";
+import { writeAdminAuditLog } from "../admin/admin-audit.js";
 import type { RequestIdentity, StaffIdentity } from "../auth/auth.identity.js";
 import { requirePermission, type PermissionKey } from "../auth/auth.permissions.js";
-import { writeAdminAuditLog } from "../admin/admin-audit.js";
 import { isOrderEngineError, OrderEngineError } from "../orders/order-errors.js";
+import {
+  applyApprovedRecipeDraft,
+  getAiDraft,
+  listAiDraftReviewQueue,
+  listOwnAiDrafts,
+  reviewAiDraft,
+} from "./ai-draft.service.js";
 
 type IdentityResolver = (req: Request) => Promise<RequestIdentity>;
 
@@ -21,6 +28,13 @@ const draftSchema = z.object({
   title: z.string().trim().min(1).max(200),
   scopes: z.array(z.enum(["orders", "customers", "catalog", "recipes"])).default([]),
   recipeId: z.string().uuid().optional(),
+}).superRefine((input, ctx) => {
+  if (input.draftType === "recipe" && !input.recipeId) {
+    ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["recipeId"], message: "recipeId is required for recipe drafts." });
+  }
+  if (input.draftType === "recipe" && !input.scopes.includes("recipes")) {
+    ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["scopes"], message: "Recipe drafts require the recipes scope." });
+  }
 });
 
 const actionSchema = z.object({
@@ -33,6 +47,9 @@ const actionSchema = z.object({
 });
 
 const approvalSchema = z.object({ note: z.string().trim().min(3).max(500) });
+const draftApplySchema = z.object({
+  selectedStepIds: z.array(z.string().regex(/^step-\d{3}$/)).min(1).max(100),
+});
 
 function requireActiveStaff(identity: RequestIdentity): StaffIdentity {
   if (identity.kind !== "staff" || !identity.isActive) {
@@ -99,31 +116,60 @@ async function buildReadOnlyContext(identity: StaffIdentity, scopes: string[], r
     if (recipeId) {
       const [recipeResult, ingredientResult, stepResult] = await Promise.all([
         db.query(
-          `SELECT id::text, slug, title, short_description, description, related_brand,
-                  yield_quantity, yield_unit, status, visibility, recipe_kind,
-                  operational_notes, updated_at
-           FROM recipes
-           WHERE id = $1`,
+          `SELECT
+             recipe.id::text AS id,
+             recipe.slug,
+             recipe.title,
+             recipe.short_description AS "shortDescription",
+             recipe.description,
+             recipe.related_brand AS "relatedBrand",
+             recipe.yield_quantity AS "yieldQuantity",
+             recipe.yield_unit AS "yieldUnit",
+             recipe.status,
+             recipe.visibility,
+             recipe.recipe_kind AS "recipeKind",
+             recipe.operational_notes AS "operationalNotes",
+             recipe.current_version_id::text AS "currentVersionId",
+             current_version.version_no AS "currentVersionNo",
+             recipe.updated_at AS "updatedAt"
+           FROM recipes recipe
+           LEFT JOIN recipe_versions current_version ON current_version.id = recipe.current_version_id
+           WHERE recipe.id = $1`,
           [recipeId],
         ),
         db.query(
-          `SELECT product_name, quantity, unit, note, optional,
-                  catalog_variant_id::text, source_type, catalog_key, source_recipe_slug
+          `SELECT
+             product_name AS "productName",
+             quantity,
+             unit,
+             note,
+             optional,
+             catalog_variant_id::text AS "catalogVariantId",
+             source_type AS "sourceType",
+             catalog_key AS "catalogKey",
+             source_recipe_slug AS "sourceRecipeSlug"
            FROM recipe_ingredients
            WHERE recipe_id = $1
            ORDER BY sort_order, created_at`,
           [recipeId],
         ),
         db.query(
-          `SELECT step_no, title, COALESCE(content, instruction) AS content, image_url
+          `SELECT
+             step_no AS "stepNo",
+             title,
+             content,
+             image_url AS "imageUrl"
            FROM recipe_steps
            WHERE recipe_id = $1
-           ORDER BY sort_order, step_no`,
+           ORDER BY step_no`,
           [recipeId],
         ),
       ]);
       if (!recipeResult.rows[0]) {
         throw new OrderEngineError("RECIPE_NOT_FOUND", 404, "Recipe was not found");
+      }
+      if (!recipeResult.rows[0].currentVersionId) {
+        throw new OrderEngineError("RECIPE_VERSION_MISSING", 409, "Recipe does not have a current version.");
       }
       context.recipe = {
         ...recipeResult.rows[0],
@@ -223,16 +269,68 @@ export function createAiRouter(identityResolver: IdentityResolver) {
     } catch (error) { sendError(res, error); }
   });
 
+  router.get("/drafts/review-queue", async (req, res) => {
+    try {
+      const identity = requireActiveStaff(await identityResolver(req));
+      await requirePermission(identity, "ai.approve");
+      await requirePermission(identity, "recipes.review");
+      res.json(await listAiDraftReviewQueue(identity));
+    } catch (error) { sendError(res, error); }
+  });
+
   router.get("/drafts", async (req, res) => {
     try {
       const identity = requireActiveStaff(await identityResolver(req));
       await requirePermission(identity, "ai.use");
-      const result = await getDb().query(
-        `SELECT id::text,draft_type,title,content,status,review_note,created_at,updated_at
-         FROM ai_drafts WHERE created_by_staff_id=$1 ORDER BY created_at DESC LIMIT 100`,
-        [identity.staffId],
-      );
-      res.json({ drafts: result.rows });
+      const recipeId = req.query.recipeId === undefined
+        ? null
+        : z.string().uuid().parse(req.query.recipeId);
+      res.json(await listOwnAiDrafts(identity, { recipeId }));
+    } catch (error) { sendError(res, error); }
+  });
+
+  router.get("/drafts/:draftId", async (req, res) => {
+    try {
+      const identity = requireActiveStaff(await identityResolver(req));
+      const payload = await getAiDraft(req.params.draftId);
+      if (payload.draft.createdByStaffId === identity.staffId) {
+        await requirePermission(identity, "ai.use");
+      } else {
+        await requirePermission(identity, "ai.approve");
+        if (payload.draft.draftType === "recipe") await requirePermission(identity, "recipes.review");
+      }
+      res.json(payload);
+    } catch (error) { sendError(res, error); }
+  });
+
+  router.post("/drafts/:draftId/approve", async (req, res) => {
+    try {
+      const identity = requireActiveStaff(await identityResolver(req));
+      await requirePermission(identity, "ai.approve");
+      await requirePermission(identity, "recipes.review");
+      const input = approvalSchema.parse(req.body ?? {});
+      res.json(await reviewAiDraft(identity, req.params.draftId, "approved", input.note, requestMeta(req)));
+    } catch (error) { sendError(res, error); }
+  });
+
+  router.post("/drafts/:draftId/reject", async (req, res) => {
+    try {
+      const identity = requireActiveStaff(await identityResolver(req));
+      await requirePermission(identity, "ai.approve");
+      await requirePermission(identity, "recipes.review");
+      const input = approvalSchema.parse(req.body ?? {});
+      res.json(await reviewAiDraft(identity, req.params.draftId, "rejected", input.note, requestMeta(req)));
+    } catch (error) { sendError(res, error); }
+  });
+
+  router.post("/drafts/:draftId/apply", async (req, res) => {
+    try {
+      const identity = requireActiveStaff(await identityResolver(req));
+      await requirePermission(identity, "ai.execute");
+      await requirePermission(identity, "recipes.edit");
+      await requirePermission(identity, "recipes.media.manage");
+      const input = draftApplySchema.parse(req.body ?? {});
+      res.json(await applyApprovedRecipeDraft(identity, req.params.draftId, input.selectedStepIds, requestMeta(req)));
     } catch (error) { sendError(res, error); }
   });
 

@@ -1,4 +1,5 @@
 import { AdminAiConsole } from "@/components/admin/AdminAiConsole";
+import { AiRecipeDraftReviewQueue } from "@/components/admin/ai/AiRecipeDraftReviewQueue";
 import { AdminShell } from "@/components/admin/AdminShell";
 
 export const dynamic = "force-dynamic";
@@ -7,9 +8,12 @@ export default function AdminAiPage() {
   return (
     <AdminShell
       title="Trợ lý AI"
-      subtitle="Phân tích dữ liệu, tạo draft và gửi action cần phê duyệt."
+      subtitle="Phân tích dữ liệu, review Recipe draft và kiểm soát các thay đổi do AI đề xuất."
     >
-      <AdminAiConsole />
+      <div className="grid gap-5">
+        <AiRecipeDraftReviewQueue />
+        <AdminAiConsole />
+      </div>
     </AdminShell>
   );
 }

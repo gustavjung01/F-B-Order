@@ -23,6 +23,7 @@ export type PermissionKey =
   | "audit.view"
   | "ai.use"
   | "ai.execute"
+  | "ai.approve"
   | "ai.configure"
   | "ai.audit";
 
@@ -47,6 +48,7 @@ const ALL_PERMISSIONS: PermissionKey[] = [
   "audit.view",
   "ai.use",
   "ai.execute",
+  "ai.approve",
   "ai.configure",
   "ai.audit",
 ];
@@ -73,7 +75,6 @@ export async function listEffectivePermissions(identity: StaffIdentity): Promise
 
   return identity.role === "admin" ? [...ALL_PERMISSIONS] : [];
 }
-
 
 export function assertPermissionSet(
   permissions: readonly PermissionKey[],

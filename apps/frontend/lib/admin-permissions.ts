@@ -19,6 +19,7 @@ export type AdminPermission =
   | "audit.view"
   | "ai.use"
   | "ai.execute"
+  | "ai.approve"
   | "ai.configure"
   | "ai.audit";
 
@@ -30,6 +31,7 @@ export const ADMIN_ENTRY_PERMISSIONS: readonly AdminPermission[] = [
   "staff.view",
   "audit.view",
   "ai.use",
+  "ai.approve",
 ];
 
 export function hasAdminPermission(
