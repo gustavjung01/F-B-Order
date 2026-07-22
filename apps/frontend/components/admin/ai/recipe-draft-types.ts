@@ -1,4 +1,5 @@
 export type AiRecipeDraftStatus = "draft" | "approved" | "rejected" | "applied" | "archived";
+export type RecipeDraftTask = "sop" | "qc" | "dosing";
 
 export type RecipeSopBaseStep = {
   stepNo: number;
@@ -17,6 +18,7 @@ export type RecipeSopProposalStep = {
 export type RecipeSopDraftContent = {
   schemaVersion: 1;
   kind: "recipe_sop";
+  task?: RecipeDraftTask;
   targetRecipeId: string;
   baseRecipeVersionId: string;
   baseSteps: RecipeSopBaseStep[];
@@ -51,6 +53,12 @@ export type AiRecipeDraft = {
   updatedAt: string;
 };
 
+export const recipeDraftTaskLabel: Record<RecipeDraftTask, string> = {
+  sop: "SOP pha chế",
+  qc: "Kiểm soát chất lượng",
+  dosing: "Chuẩn hóa định lượng",
+};
+
 export const aiRecipeDraftStatusLabel: Record<AiRecipeDraftStatus, string> = {
   draft: "Chờ duyệt",
   approved: "Đã duyệt",
@@ -71,6 +79,7 @@ export function isRecipeSopDraftContent(value: unknown): value is RecipeSopDraft
   const content = value as Partial<RecipeSopDraftContent>;
   return content.schemaVersion === 1
     && content.kind === "recipe_sop"
+    && (content.task === undefined || ["sop", "qc", "dosing"].includes(content.task))
     && typeof content.targetRecipeId === "string"
     && typeof content.baseRecipeVersionId === "string"
     && Array.isArray(content.baseSteps)
