@@ -9,6 +9,8 @@ const STALE_AFTER_MS = Number(process.env.AI_JOB_STALE_AFTER_MS || 5 * 60_000);
 
 let timer: NodeJS.Timeout | null = null;
 let running = false;
+let stopping = false;
+let activeTick: Promise<void> | null = null;
 
 function retryDelayMs(attempt: number): number {
   return Math.min(60_000, 2_000 * 2 ** Math.max(0, attempt - 1));
@@ -209,7 +211,7 @@ async function failJob(job: NonNullable<Awaited<ReturnType<typeof claimJob>>>, e
 }
 
 async function tick(): Promise<void> {
-  if (running) return;
+  if (running || stopping) return;
   running = true;
   try {
     const job = await claimJob();
@@ -227,16 +229,26 @@ async function tick(): Promise<void> {
   }
 }
 
+function scheduleTick(): void {
+  if (stopping || activeTick) return;
+  activeTick = tick().finally(() => {
+    activeTick = null;
+  });
+}
+
 export async function startAiWorker(): Promise<void> {
   if (timer) return;
+  stopping = false;
   await recoverStaleJobs();
-  timer = setInterval(() => void tick(), POLL_MS);
-  timer.unref();
-  void tick();
+  timer = setInterval(scheduleTick, POLL_MS);
+  scheduleTick();
   console.log("AI job worker started", { workerId: WORKER_ID, pollMs: POLL_MS });
 }
 
-export function stopAiWorker(): void {
+export async function stopAiWorker(): Promise<void> {
+  stopping = true;
   if (timer) clearInterval(timer);
   timer = null;
+  await activeTick;
+  console.log("AI job worker stopped", { workerId: WORKER_ID });
 }
