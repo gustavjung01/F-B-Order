@@ -62,6 +62,13 @@ for (const required of ["AdminModuleNav orientation=\"vertical\"", "UserButton",
   assert.ok(source.shell.includes(required), `AdminShell is missing: ${required}`);
 }
 assert.match(source.nav, /orientation\?: "horizontal" \| "vertical"/);
+assert.match(source.nav, /snap-x snap-mandatory/);
+assert.match(source.nav, /overflow-x-auto/);
+assert.match(source.nav, /touch-manipulation/);
+assert.match(source.nav, /aria-current=/);
+assert.doesNotMatch(source.nav, /sm:grid-cols-2 xl:grid-cols-6/);
+assert.match(source.shell, /min-h-\[100dvh\]/);
+assert.match(source.shell, /pt-\[env\(safe-area-inset-top\)\]/);
 
 for (const moduleName of ["operations", "customers", "orders", "products", "scale", "aiConsole", "aiReadable", "aiRecipeDiff", "aiRecipeReview", "recipeAi", "recipeChrome", "recipePickers", "recipePublish"]) {
   assert.match(source[moduleName], /components\/admin\/ui\/|\.\.\/ui\/AdminUI|\.\/ui\/AdminUI/, `${moduleName} must import shared admin UI primitives.`);
@@ -94,4 +101,4 @@ for (const moduleName of ["operations", "customers", "orders", "products", "scal
   assert.doesNotMatch(source[moduleName], /rounded-\[28px\] bg-white p-5 text-slate-950 shadow-xl/, `${moduleName} still contains the legacy module surface pattern.`);
 }
 
-console.log("Admin design system shell, explicit Recipe AI Steps slot, AI draft review surfaces, and no-page-CSS contract passed.");
+console.log("Admin design system, compact mobile navigation, explicit Recipe AI Steps slot, AI draft review surfaces, and no-page-CSS contract passed.");
