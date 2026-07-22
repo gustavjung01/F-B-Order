@@ -3,8 +3,7 @@ name: Core order contract
 on:
   push:
     branches:
-      - "feat/core-order-schema"
-      - "agent/**"
+      - main
   pull_request:
     branches:
       - main
@@ -72,13 +71,15 @@ jobs:
       - name: Typecheck
         run: pnpm typecheck
 
-      - name: Verify Phase 7 deploy contract
+      - name: Verify worker, deploy and CI trigger contracts
         run: |
           set -Eeuo pipefail
           bash -n scripts/phase7/deploy-bepsi-backend.sh
           bash -n scripts/phase7/deploy-bepsi-vercel.sh
           node --check scripts/phase7/smoke-production.mjs
           node scripts/phase7/test-deploy-contract.mjs
+          node scripts/phase7/test-ai-worker-service-contract.mjs
+          node scripts/ci/test-main-branch-triggers.mjs
 
       - name: Verify approval pricing
         run: pnpm test:auth-pricing
