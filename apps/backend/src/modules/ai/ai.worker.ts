@@ -1,5 +1,6 @@
 import os from "node:os";
 import { getDb } from "../../db/pool.js";
+import { buildRecipeSopDraftContent } from "./ai-draft-content.js";
 import { generateWithGoogleAgent } from "./google-agent.provider.js";
 
 const WORKER_ID = `${os.hostname()}:${process.pid}`;
@@ -115,20 +116,51 @@ async function completeJob(job: Awaited<ReturnType<typeof claimJob>>): Promise<v
 
     let draftId: string | null = null;
     if (job.job_type === "draft") {
+      const recipeContent = job.draft_type === "recipe"
+        ? buildRecipeSopDraftContent(generated.text, job.context_data)
+        : null;
+      const content = recipeContent ?? { text: generated.text, context: job.context_data };
+      const targetRecipeId = recipeContent?.targetRecipeId ?? null;
+      const baseRecipeVersionId = recipeContent?.baseRecipeVersionId ?? null;
       const draft = await client.query<{ id: string }>(
         `INSERT INTO ai_drafts(
-           created_by_staff_id, draft_type, title, content, source_interaction_id
-         ) VALUES($1,$2,$3,$4::jsonb,$5)
+           created_by_staff_id,
+           draft_type,
+           title,
+           content,
+           source_interaction_id,
+           target_recipe_id,
+           base_recipe_version_id
+         ) VALUES($1,$2,$3,$4::jsonb,$5,$6,$7)
          RETURNING id::text`,
         [
           job.staff_user_id,
           job.draft_type,
           job.draft_title,
-          JSON.stringify({ text: generated.text, context: job.context_data }),
+          JSON.stringify(content),
           interaction.rows[0].id,
+          targetRecipeId,
+          baseRecipeVersionId,
         ],
       );
       draftId = draft.rows[0].id;
+      await client.query(
+        `INSERT INTO ai_draft_events(draft_id,event_type,actor_staff_id,note,metadata)
+         VALUES($1,'generated',$2,$3,$4::jsonb)`,
+        [
+          draftId,
+          job.staff_user_id,
+          "AI worker generated a draft awaiting human review.",
+          JSON.stringify({
+            jobId: job.id,
+            draftType: job.draft_type,
+            targetRecipeId,
+            baseRecipeVersionId,
+            provider: generated.provider,
+            model: generated.model,
+          }),
+        ],
+      );
     }
 
     await client.query(
