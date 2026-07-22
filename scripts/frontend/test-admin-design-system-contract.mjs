@@ -15,6 +15,7 @@ const files = {
   scale: "apps/frontend/components/admin/AdminRecipeScalePanel.tsx",
   aiConsole: "apps/frontend/components/admin/AdminAiConsole.tsx",
   aiReadable: "apps/frontend/components/admin/ai/AiReadableResult.tsx",
+  recipeAudit: "apps/frontend/components/admin/ai/RecipeAiAuditResult.tsx",
   aiRecipeDiff: "apps/frontend/components/admin/ai/AiRecipeDraftDiff.tsx",
   aiRecipeReview: "apps/frontend/components/admin/ai/AiRecipeDraftReviewQueue.tsx",
   recipeAi: "apps/frontend/components/admin/recipe-editor/RecipeAiAssistantPanel.tsx",
@@ -70,7 +71,7 @@ assert.doesNotMatch(source.nav, /sm:grid-cols-2 xl:grid-cols-6/);
 assert.match(source.shell, /min-h-\[100dvh\]/);
 assert.match(source.shell, /pt-\[env\(safe-area-inset-top\)\]/);
 
-for (const moduleName of ["operations", "customers", "orders", "products", "scale", "aiConsole", "aiReadable", "aiRecipeDiff", "aiRecipeReview", "recipeAi", "recipeChrome", "recipePickers", "recipePublish"]) {
+for (const moduleName of ["operations", "customers", "orders", "products", "scale", "aiConsole", "aiReadable", "recipeAudit", "aiRecipeDiff", "aiRecipeReview", "recipeAi", "recipeChrome", "recipePickers", "recipePublish"]) {
   assert.match(source[moduleName], /components\/admin\/ui\/|\.\.\/ui\/AdminUI|\.\/ui\/AdminUI/, `${moduleName} must import shared admin UI primitives.`);
 }
 
@@ -79,13 +80,15 @@ for (const moduleName of ["customers", "products", "recipePickers", "recipeAi", 
   assert.match(source[moduleName], /AdminDialog/);
 }
 
-for (const moduleName of ["aiConsole", "recipeAi", "aiReadable", "aiRecipeDiff", "aiRecipeReview"]) {
+for (const moduleName of ["aiConsole", "recipeAi", "aiReadable", "recipeAudit", "aiRecipeDiff", "aiRecipeReview"]) {
   assert.doesNotMatch(source[moduleName], /<pre\b/);
 }
 assert.doesNotMatch(source.recipeAi, /:has\(|<style jsx global>|recipe-ai-sop-slot/, "Recipe AI must not use deep DOM selectors or global CSS mounting hacks.");
 assert.match(source.recipeAi, /createPortal\(panel, stepsTarget\)/);
 assert.match(source.recipeSteps, /id="recipe-ai-sop-target"/);
-assert.match(source.recipeAi, /Tạo Recipe version mới/);
+assert.match(source.recipeAi, /Tạo phiên bản mới/);
+assert.match(source.recipeAi, /RecipeAiAuditResult/);
+assert.match(source.recipeAudit, /HIDDEN_SECTION_PATTERN/);
 assert.match(source.aiRecipeReview, /Duyệt draft/);
 assert.match(source.aiRecipeDiff, /AdminToggle/);
 assert.match(source.productsPage, /AdminProductsAuditPanelV2/);
@@ -101,4 +104,4 @@ for (const moduleName of ["operations", "customers", "orders", "products", "scal
   assert.doesNotMatch(source[moduleName], /rounded-\[28px\] bg-white p-5 text-slate-950 shadow-xl/, `${moduleName} still contains the legacy module surface pattern.`);
 }
 
-console.log("Admin design system, compact mobile navigation, explicit Recipe AI Steps slot, AI draft review surfaces, and no-page-CSS contract passed.");
+console.log("Admin design system, compact mobile navigation, readable Recipe AI, explicit Steps slot, AI draft review surfaces, and no-page-CSS contract passed.");
