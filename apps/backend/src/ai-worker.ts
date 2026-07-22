@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 import { closeDb } from "./db/pool.js";
 import { startAiWorker, stopAiWorker } from "./modules/ai/ai.worker.js";
+import { verifyGoogleAgentProvider } from "./modules/ai/google-agent.provider.js";
 
 dotenv.config();
 
@@ -24,7 +25,11 @@ async function shutdown(signal: NodeJS.Signals): Promise<void> {
 process.once("SIGTERM", () => void shutdown("SIGTERM"));
 process.once("SIGINT", () => void shutdown("SIGINT"));
 
-void startAiWorker().catch(async (error) => {
+void (async () => {
+  const provider = await verifyGoogleAgentProvider();
+  console.log("AI provider preflight passed", provider);
+  await startAiWorker();
+})().catch(async (error) => {
   console.error("AI worker failed to start", error);
   process.exitCode = 1;
   await closeDb().catch(() => undefined);
