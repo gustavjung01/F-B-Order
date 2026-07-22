@@ -14,11 +14,17 @@ ON CONFLICT(permission_key) DO UPDATE SET
   is_system=true,
   updated_at=now();
 
+WITH role_permission_map(role_key,permission_key) AS (
+  VALUES
+    ('super_admin','ai.approve'),
+    ('recipe_publisher','ai.approve'),
+    ('recipe_editor','ai.execute')
+)
 INSERT INTO rbac_role_permissions(role_id,permission_id)
 SELECT role.id,permission.id
-FROM rbac_roles role
-JOIN rbac_permissions permission ON permission.permission_key='ai.approve'
-WHERE role.role_key IN ('super_admin','recipe_publisher')
+FROM role_permission_map map
+JOIN rbac_roles role ON role.role_key=map.role_key
+JOIN rbac_permissions permission ON permission.permission_key=map.permission_key
 ON CONFLICT(role_id,permission_id) DO NOTHING;
 
 ALTER TABLE ai_drafts
