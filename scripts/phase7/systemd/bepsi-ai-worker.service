@@ -1,0 +1,28 @@
+[Unit]
+Description=Bếp Sỉ AI job worker
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/srv/apps/bepsi/current/apps/backend
+EnvironmentFile=/etc/app-env/bepsi.env
+Environment=NODE_ENV=production
+Environment=APP_NAME=bepsi-ai-worker
+ExecStart=/usr/bin/node /srv/apps/bepsi/current/apps/backend/dist/ai-worker.js
+Restart=always
+RestartSec=5
+KillSignal=SIGTERM
+TimeoutStopSec=120
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=bepsi-ai-worker
+
+[Install]
+WantedBy=multi-user.target
