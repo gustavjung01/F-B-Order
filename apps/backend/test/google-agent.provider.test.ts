@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { __testing, generateWithGoogleAgent, verifyGoogleAgentProvider } from "../src/modules/ai/google-agent.provider.js";
+import { buildRecipeAuditContent, parseRecipeAuditResponse } from "../src/modules/ai/recipe-audit-content.js";
 
 const ENV_KEYS = [
   "NODE_ENV",
@@ -31,6 +32,30 @@ function clearGoogleConfiguration() {
   delete process.env.GOOGLE_AGENT_ENDPOINT;
   delete process.env.GOOGLE_SERVICE_ACCOUNT_JSON_BASE64;
 }
+
+const validAudit = {
+  summary: "Công thức có thể vận hành sau khi bổ sung thông tin bảo quản và chuẩn hóa vài thao tác.",
+  findings: [
+    { severity: "medium", title: "Thiếu nhiệt độ bảo quản", detail: "Nền trà chưa có nhiệt độ và thời gian sử dụng sau khi pha." },
+  ],
+  checklist: [
+    { key: "ingredients", status: "pass", note: "Danh sách nguyên liệu rõ ràng." },
+    { key: "dosing", status: "pass", note: "Định lượng chính đã có." },
+    { key: "sequence", status: "pass", note: "Thứ tự thao tác hợp lý." },
+    { key: "time_temperature", status: "warning", note: "Thiếu nhiệt độ bảo quản nền trà." },
+    { key: "quality", status: "pass", note: "Có tiêu chí màu và vị." },
+    { key: "storage", status: "warning", note: "Chưa ghi hạn dùng sau khi pha." },
+    { key: "catalog", status: "warning", note: "Một số nguyên liệu chưa liên kết catalog." },
+    { key: "cost", status: "warning", note: "Chưa đủ giá để tính giá vốn." },
+  ],
+  sop: [
+    { title: "Phối vị", content: "Đong lần lượt nước đường, nước cốt tắc và nền trà vào bình lắc." },
+  ],
+  qualityControls: [
+    { label: "Hương vị", target: "Chua ngọt cân bằng, không có vị đắng từ vỏ tắc." },
+  ],
+  missingData: ["Nhiệt độ bảo quản nền trà", "Giá nguyên liệu"],
+};
 
 test("Google Agent provider fails closed in production and only allows explicit non-production fallback", async () => {
   const snapshot = snapshotEnvironment();
@@ -83,7 +108,7 @@ test("Google Agent provider fails closed in production and only allows explicit 
   }
 });
 
-test("Recipe audit prompt is operator-facing and forbids internal JSON", () => {
+test("Recipe audit prompt enforces the compact health-check JSON schema", () => {
   const message = __testing.buildAgentMessage({
     prompt: "Kiểm tra Trà tắc",
     context: { recipe: { id: "recipe-id", title: "Trà tắc" } },
@@ -91,14 +116,43 @@ test("Recipe audit prompt is operator-facing and forbids internal JSON", () => {
     userId: "test-user",
   });
 
-  assert.match(message, /người trực tiếp pha chế/);
-  assert.match(message, /không xuất JSON/i);
-  assert.match(message, /Không viết mục Hành động đề xuất/);
-  assert.match(message, /Kết luận nhanh/);
-  assert.match(message, /Dữ liệu cần bổ sung/);
+  assert.match(message, /RECIPE HEALTH AUDIT/);
+  assert.match(message, /summary, findings, checklist, sop, qualityControls, missingData/);
+  assert.match(message, /đúng 8 mục/);
+  assert.match(message, /ingredients, dosing, sequence, time_temperature, quality, storage, catalog, cost/);
+  assert.match(message, /700-1200 token/);
+  assert.doesNotMatch(message, /Hành động đề xuất/);
 });
 
-test("Recipe audit sanitizer removes greetings, technical actions and JSON blocks", () => {
+test("Recipe audit schema computes a deterministic health score from eight weighted criteria", () => {
+  const content = buildRecipeAuditContent(JSON.stringify(validAudit));
+
+  assert.equal(content.kind, "recipe_audit");
+  assert.equal(content.schemaVersion, 1);
+  assert.equal(content.score, 78);
+  assert.equal(content.readiness, "needs_attention");
+  assert.equal(content.checklist.length, 8);
+  assert.equal(content.checklist[0].label, "Nguyên liệu");
+  assert.equal(content.findings[0].id, "finding-01");
+  assert.equal(content.sop[0].id, "sop-01");
+  assert.equal(content.qualityControls[0].id, "qc-01");
+});
+
+test("Recipe audit parser rejects incomplete or duplicated checklist output", () => {
+  const incomplete = {
+    ...validAudit,
+    checklist: validAudit.checklist.slice(0, 7),
+  };
+  assert.throws(() => parseRecipeAuditResponse(JSON.stringify(incomplete)));
+
+  const duplicated = {
+    ...validAudit,
+    checklist: validAudit.checklist.map((item, index) => index === 7 ? { ...item, key: "catalog" } : item),
+  };
+  assert.throws(() => parseRecipeAuditResponse(JSON.stringify(duplicated)));
+});
+
+test("Legacy Recipe audit sanitizer still removes greetings, technical actions and JSON blocks", () => {
   const sanitized = __testing.sanitizeRecipeReadOnlyText(`Chào bạn, tôi đã audit công thức.
 
 ### 1. Kết luận
