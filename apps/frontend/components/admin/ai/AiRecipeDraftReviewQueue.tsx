@@ -39,7 +39,7 @@ export function AiRecipeDraftReviewQueue() {
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
 
-  const canReview = has("ai.audit") && has("recipes.review");
+  const canReview = has("ai.approve") && has("recipes.review");
 
   async function token() {
     const value = await getToken();
@@ -98,7 +98,7 @@ export function AiRecipeDraftReviewQueue() {
         <AdminSurfaceHeader
           eyebrow="Human review"
           title="AI Recipe drafts chờ duyệt"
-          description="Reviewer xem diff với version gốc trước khi duyệt hoặc từ chối. Danh sách không hiển thị draft do chính reviewer tạo."
+          description="Reviewer xem diff với version gốc trước khi duyệt hoặc từ chối. Draft do chính reviewer tạo không xuất hiện trong hàng đợi."
           actions={<AdminButton size="sm" tone="secondary" onClick={() => void loadDrafts()}>Tải lại</AdminButton>}
         />
         <AdminSurfaceBody className="grid gap-3">
