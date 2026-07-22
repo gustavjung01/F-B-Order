@@ -158,7 +158,7 @@ test("Recipe AI renders a structured Health Score and never exposes its internal
   }
 
   assert.match(panel, /RecipeAiAuditResult/);
-  assert.match(panel, /Trợ lý công thức/);
+  assert.match(panel, /Recipe Copilot/);
   assert.match(panel, /Kiểm tra công thức/);
   assert.doesNotMatch(panel, /Job \{job\.id|Base \{draft\.baseRecipeVersionId|PostgreSQL|`ai\.approve`|`recipes\.review`/);
 
@@ -180,4 +180,48 @@ test("Recipe AI renders a structured Health Score and never exposes its internal
   assert.match(reviewQueue, /AdminDialog/);
   assert.match(diff, /Hiện tại/);
   assert.match(diff, /AI đề xuất/);
+});
+
+test("Recipe Copilot Phase 2 exposes one-click SOP QC dosing and deterministic cost", async () => {
+  const [panel, costView, costCalculator, copilotRoutes, draftContent, app, reviewQueue] = await Promise.all([
+    readFile("apps/frontend/components/admin/recipe-editor/RecipeAiAssistantPanel.tsx", "utf8"),
+    readFile("apps/frontend/components/admin/ai/RecipeCostPreview.tsx", "utf8"),
+    readFile("apps/backend/src/modules/ai/recipe-cost.ts", "utf8"),
+    readFile("apps/backend/src/modules/ai/recipe-copilot.routes.ts", "utf8"),
+    readFile("apps/backend/src/modules/ai/ai-draft-content.ts", "utf8"),
+    readFile("apps/backend/src/app.ts", "utf8"),
+    readFile("apps/frontend/components/admin/ai/AiRecipeDraftReviewQueue.tsx", "utf8"),
+  ]);
+
+  for (const label of ["Tạo SOP", "Tạo QC", "Chuẩn hóa định lượng", "Tính giá vốn"]) {
+    assert.match(panel, new RegExp(label));
+  }
+  for (const marker of ["RECIPE_TASK:SOP", "RECIPE_TASK:QC", "RECIPE_TASK:DOSING"]) {
+    assert.match(panel, new RegExp(marker));
+  }
+  assert.match(panel, /\/api\/admin\/recipe-copilot\/\$\{recipeId\}\/cost-preview/);
+  assert.match(panel, /scopes:\s*\["recipes"\]/);
+  assert.doesNotMatch(panel, /scopes:\s*\["recipes",\s*"catalog"\]/);
+
+  assert.match(draftContent, /z\.enum\(\["sop", "qc", "dosing"\]\)/);
+  assert.match(draftContent, /generated\.task === "sop"/);
+  assert.match(reviewQueue, /recipeDraftTaskLabel/);
+
+  assert.match(copilotRoutes, /requirePermission\(identity, "ai\.use"\)/);
+  assert.match(copilotRoutes, /requirePermission\(identity, "recipes\.view"\)/);
+  assert.match(copilotRoutes, /requirePermission\(identity, "catalog\.view"\)/);
+  assert.match(copilotRoutes, /buildRecipeCostPreview/);
+  assert.match(copilotRoutes, /to_jsonb\(variant\)/);
+  assert.match(app, /\/api\/admin\/recipe-copilot/);
+
+  assert.match(costCalculator, /shopPrice/);
+  assert.match(costCalculator, /missing_package_size/);
+  assert.match(costCalculator, /costPerYield/);
+  assert.match(costCalculator, /status === "ready"/);
+  assert.doesNotMatch(costCalculator, /generateWithGoogleAgent|Vertex|Gemini/);
+
+  assert.match(costView, /Chi phí bắt buộc đã biết/);
+  assert.match(costView, /Dòng bắt buộc còn thiếu/);
+  assert.match(costView, /Chưa dùng số này làm giá vốn chính thức/);
+  assert.doesNotMatch(costView, /<pre\b/);
 });
