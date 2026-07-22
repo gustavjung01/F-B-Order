@@ -3,6 +3,7 @@ import test from "node:test";
 import { readFile } from "node:fs/promises";
 import {
   buildRecipeStepMediaAssignments,
+  buildSuggestedRecipeStepComparison,
   mergeSuggestedRecipeSteps,
 } from "../../apps/frontend/components/admin/recipe-editor/recipe-step-merge.mjs";
 
@@ -56,6 +57,22 @@ test("AI SOP merge preserves existing image URLs, thumbnail URLs and media IDs",
   assert.equal(merged[2].mediaId, null);
 });
 
+test("AI SOP comparison maps existing steps before the user confirms a merge", () => {
+  const current = [
+    { ...emptyStep(), clientId: "one", title: "Ủ trà", content: "Cũ", mediaId: "33333333-3333-4333-8333-333333333333" },
+    { ...emptyStep(), clientId: "two", title: "Hoàn thiện", content: "Cũ 2" },
+  ];
+  const comparison = buildSuggestedRecipeStepComparison(current, [
+    { title: "Ủ trà", content: "Mới" },
+    { title: "QC", content: "Bước mới" },
+  ]);
+
+  assert.equal(comparison[0].status, "update");
+  assert.equal(comparison[0].currentStep.mediaId, current[0].mediaId);
+  assert.equal(comparison[1].status, "update");
+  assert.equal(comparison[1].currentIndex, 1);
+});
+
 test("AI SOP merge retains unmatched existing steps instead of silently deleting them", () => {
   const current = [
     { ...emptyStep(), clientId: "one", title: "Bước một", content: "A" },
@@ -69,12 +86,7 @@ test("AI SOP merge retains unmatched existing steps instead of silently deleting
     },
   ];
 
-  const merged = mergeSuggestedRecipeSteps(
-    current,
-    [{ title: "Bước một", content: "A mới" }],
-    emptyStep,
-  );
-
+  const merged = mergeSuggestedRecipeSteps(current, [{ title: "Bước một", content: "A mới" }], emptyStep);
   assert.equal(merged.length, 2);
   assert.equal(merged[1].clientId, "two");
   assert.equal(merged[1].mediaId, current[1].mediaId);
@@ -110,10 +122,26 @@ test("Recipe and AI admin surfaces stay permission-aware", async () => {
   assert.doesNotMatch(aiConsole, /scopes:\s*\["orders",\s*"customers",\s*"catalog",\s*"recipes"\]/);
 });
 
-test("Apply SOP button remains temporarily disabled", async () => {
-  const panel = await readFile(
-    "apps/frontend/components/admin/recipe-editor/RecipeAiAssistantPanel.tsx",
-    "utf8",
-  );
-  assert.match(panel, /APPLY_SOP_ENABLED\s*=\s*false/);
+test("AI SOP UI stays inside the Steps tab, uses AdminUI and never exposes raw JSON blocks", async () => {
+  const [panel, stepsTab, aiConsole, readableResult] = await Promise.all([
+    readFile("apps/frontend/components/admin/recipe-editor/RecipeAiAssistantPanel.tsx", "utf8"),
+    readFile("apps/frontend/components/admin/recipe-editor/RecipeStepsTab.tsx", "utf8"),
+    readFile("apps/frontend/components/admin/AdminAiConsole.tsx", "utf8"),
+    readFile("apps/frontend/components/admin/ai/AiReadableResult.tsx", "utf8"),
+  ]);
+
+  assert.match(stepsTab, /data-recipe-steps-tab="true"/);
+  assert.match(panel, /recipe-ai-sop-slot/);
+  assert.match(panel, /:has\(> \.recipe-ai-sop-slot \+ \[data-recipe-steps-tab/);
+  for (const primitive of ["AdminSurface", "AdminSurfaceHeader", "AdminSurfaceBody", "AdminButton", "AdminBadge", "AdminAlert", "AdminDialog"]) {
+    assert.match(panel, new RegExp(primitive));
+    assert.match(aiConsole, new RegExp(primitive === "AdminDialog" ? "AdminField" : primitive));
+  }
+  assert.match(panel, /buildSuggestedRecipeStepComparison/);
+  assert.match(panel, /So sánh trước khi áp dụng/);
+  assert.match(panel, /comparisonConfirmed/);
+  assert.doesNotMatch(panel, /<pre\b/);
+  assert.doesNotMatch(aiConsole, /<pre\b/);
+  assert.doesNotMatch(readableResult, /<pre\b/);
+  assert.doesNotMatch(panel, /APPLY_SOP_ENABLED/);
 });
