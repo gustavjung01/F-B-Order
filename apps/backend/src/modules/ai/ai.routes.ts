@@ -272,9 +272,9 @@ export function createAiRouter(identityResolver: IdentityResolver) {
   router.get("/drafts/review-queue", async (req, res) => {
     try {
       const identity = requireActiveStaff(await identityResolver(req));
-      await requirePermission(identity, "ai.audit");
+      await requirePermission(identity, "ai.approve");
       await requirePermission(identity, "recipes.review");
-      res.json(await listAiDraftReviewQueue());
+      res.json(await listAiDraftReviewQueue(identity));
     } catch (error) { sendError(res, error); }
   });
 
@@ -296,7 +296,7 @@ export function createAiRouter(identityResolver: IdentityResolver) {
       if (payload.draft.createdByStaffId === identity.staffId) {
         await requirePermission(identity, "ai.use");
       } else {
-        await requirePermission(identity, "ai.audit");
+        await requirePermission(identity, "ai.approve");
         if (payload.draft.draftType === "recipe") await requirePermission(identity, "recipes.review");
       }
       res.json(payload);
@@ -306,7 +306,7 @@ export function createAiRouter(identityResolver: IdentityResolver) {
   router.post("/drafts/:draftId/approve", async (req, res) => {
     try {
       const identity = requireActiveStaff(await identityResolver(req));
-      await requirePermission(identity, "ai.audit");
+      await requirePermission(identity, "ai.approve");
       await requirePermission(identity, "recipes.review");
       const input = approvalSchema.parse(req.body ?? {});
       res.json(await reviewAiDraft(identity, req.params.draftId, "approved", input.note, requestMeta(req)));
@@ -316,7 +316,7 @@ export function createAiRouter(identityResolver: IdentityResolver) {
   router.post("/drafts/:draftId/reject", async (req, res) => {
     try {
       const identity = requireActiveStaff(await identityResolver(req));
-      await requirePermission(identity, "ai.audit");
+      await requirePermission(identity, "ai.approve");
       await requirePermission(identity, "recipes.review");
       const input = approvalSchema.parse(req.body ?? {});
       res.json(await reviewAiDraft(identity, req.params.draftId, "rejected", input.note, requestMeta(req)));
