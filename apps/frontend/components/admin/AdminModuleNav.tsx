@@ -17,6 +17,7 @@ const modules: Array<{
   { href: "/admin/customers", label: "Khách sỉ", icon: "👥", description: "Hồ sơ và phê duyệt", permissions: ["customers.view"] },
   { href: "/admin/products", label: "Sản phẩm", icon: "📦", description: "Catalog, giá và trạng thái", permissions: ["catalog.view"] },
   { href: "/admin/recipes", label: "Công thức", icon: "🧋", description: "Draft, review và publish", permissions: ["recipes.view"] },
+  { href: "/admin/ai", label: "Trợ lý AI", icon: "✦", description: "Query, draft và phê duyệt", permissions: ["ai.use", "ai.execute", "ai.audit"] },
 ];
 
 export function AdminModuleNav({

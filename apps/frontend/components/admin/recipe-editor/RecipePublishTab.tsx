@@ -18,12 +18,14 @@ export function RecipePublishTab({
   versions,
   completion,
   reviewInput,
+  canReview,
   onReviewInputChange,
 }: {
   form: FormState;
   versions: Version[];
   completion: CompletionItem[];
   reviewInput: string;
+  canReview: boolean;
   onReviewInputChange: (value: string) => void;
 }) {
   const missing = completion.filter((item) => !item.complete);
@@ -48,12 +50,16 @@ export function RecipePublishTab({
       </AdminSurface>
 
       {form.workflowStatus === "in_review" ? (
-        <AdminSurface>
-          <AdminSurfaceHeader title="Quyết định review" description="Nhận xét bắt buộc khi yêu cầu chỉnh sửa. Hành động workflow chỉ nằm ở footer." />
-          <AdminSurfaceBody>
-            <AdminTextarea value={reviewInput} onChange={(event) => onReviewInputChange(event.target.value)} placeholder="Nhận xét review" />
-          </AdminSurfaceBody>
-        </AdminSurface>
+        canReview ? (
+          <AdminSurface>
+            <AdminSurfaceHeader title="Quyết định review" description="Nhận xét bắt buộc khi yêu cầu chỉnh sửa. Hành động workflow chỉ nằm ở footer." />
+            <AdminSurfaceBody>
+              <AdminTextarea value={reviewInput} onChange={(event) => onReviewInputChange(event.target.value)} placeholder="Nhận xét review" />
+            </AdminSurfaceBody>
+          </AdminSurface>
+        ) : (
+          <AdminAlert tone="info" title="Đang chờ người review">Tài khoản cần permission recipes.review để nhập nhận xét và ra quyết định.</AdminAlert>
+        )
       ) : null}
 
       {form.reviewNote ? <AdminAlert tone="warning" title="Nhận xét gần nhất"><p className="whitespace-pre-wrap">{form.reviewNote}</p></AdminAlert> : null}
@@ -88,6 +94,9 @@ export function RecipeEditorFooter({
   saving,
   uploading,
   reviewInput,
+  canEdit,
+  canReview,
+  canPublish,
   onClose,
   onSave,
   onSubmitReview,
@@ -100,6 +109,9 @@ export function RecipeEditorFooter({
   saving: boolean;
   uploading: boolean;
   reviewInput: string;
+  canEdit: boolean;
+  canReview: boolean;
+  canPublish: boolean;
   onClose: () => void;
   onSave: () => void;
   onSubmitReview: () => void;
@@ -109,7 +121,7 @@ export function RecipeEditorFooter({
 }) {
   const busy = saving || uploading;
   const workflowReady = !dirty && !busy;
-  const editable = form.workflowStatus !== "in_review" && form.workflowStatus !== "approved";
+  const editable = canEdit && form.workflowStatus !== "in_review" && form.workflowStatus !== "approved";
   const status = form.workflowStatus || "draft";
 
   return (
@@ -122,12 +134,12 @@ export function RecipeEditorFooter({
         <div className="grid flex-1 gap-2 sm:grid-cols-2 md:flex md:justify-end">
           <AdminButton disabled={busy} onClick={onClose}>Đóng</AdminButton>
           {editable ? <AdminButton tone="primary" disabled={busy} onClick={onSave}>{saving ? "Đang lưu…" : form.id ? "Lưu version mới" : "Tạo công thức"}</AdminButton> : null}
-          {form.id && (status === "draft" || status === "changes_requested") ? <AdminButton tone="dark" disabled={!workflowReady} onClick={onSubmitReview}>Gửi review</AdminButton> : null}
-          {form.id && status === "in_review" ? <>
+          {canEdit && form.id && (status === "draft" || status === "changes_requested") ? <AdminButton tone="dark" disabled={!workflowReady} onClick={onSubmitReview}>Gửi review</AdminButton> : null}
+          {canReview && form.id && status === "in_review" ? <>
             <AdminButton tone="warning" disabled={!workflowReady || !reviewInput.trim()} onClick={onRequestChanges}>Yêu cầu chỉnh sửa</AdminButton>
             <AdminButton tone="success" disabled={!workflowReady} onClick={onApprove}>Duyệt phiên bản</AdminButton>
           </> : null}
-          {form.id && status === "approved" ? <AdminButton tone="success" disabled={!workflowReady} onClick={onPublish}>Xuất bản</AdminButton> : null}
+          {canPublish && form.id && status === "approved" ? <AdminButton tone="success" disabled={!workflowReady} onClick={onPublish}>Xuất bản</AdminButton> : null}
         </div>
       </div>
     </footer>
