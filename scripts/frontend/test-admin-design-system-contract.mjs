@@ -18,6 +18,7 @@ const files = {
   aiRecipeDiff: "apps/frontend/components/admin/ai/AiRecipeDraftDiff.tsx",
   aiRecipeReview: "apps/frontend/components/admin/ai/AiRecipeDraftReviewQueue.tsx",
   recipeAi: "apps/frontend/components/admin/recipe-editor/RecipeAiAssistantPanel.tsx",
+  recipeSteps: "apps/frontend/components/admin/recipe-editor/RecipeStepsTab.tsx",
   recipeChrome: "apps/frontend/components/admin/recipe-editor/RecipeEditorChrome.tsx",
   recipePickers: "apps/frontend/components/admin/recipe-editor/RecipePickerDialogs.tsx",
   recipePublish: "apps/frontend/components/admin/recipe-editor/RecipePublishTab.tsx",
@@ -74,6 +75,9 @@ for (const moduleName of ["customers", "products", "recipePickers", "recipeAi", 
 for (const moduleName of ["aiConsole", "recipeAi", "aiReadable", "aiRecipeDiff", "aiRecipeReview"]) {
   assert.doesNotMatch(source[moduleName], /<pre\b/);
 }
+assert.doesNotMatch(source.recipeAi, /:has\(|<style jsx global>|recipe-ai-sop-slot/, "Recipe AI must not use deep DOM selectors or global CSS mounting hacks.");
+assert.match(source.recipeAi, /createPortal\(panel, stepsTarget\)/);
+assert.match(source.recipeSteps, /id="recipe-ai-sop-target"/);
 assert.match(source.recipeAi, /Tạo Recipe version mới/);
 assert.match(source.aiRecipeReview, /Duyệt draft/);
 assert.match(source.aiRecipeDiff, /AdminToggle/);
@@ -90,4 +94,4 @@ for (const moduleName of ["operations", "customers", "orders", "products", "scal
   assert.doesNotMatch(source[moduleName], /rounded-\[28px\] bg-white p-5 text-slate-950 shadow-xl/, `${moduleName} still contains the legacy module surface pattern.`);
 }
 
-console.log("Admin design system shell, primitives, AI draft review surfaces, module migration, and no-page-CSS contract passed.");
+console.log("Admin design system shell, explicit Recipe AI Steps slot, AI draft review surfaces, and no-page-CSS contract passed.");
