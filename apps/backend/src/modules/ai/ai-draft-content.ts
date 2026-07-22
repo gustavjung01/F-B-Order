@@ -1,12 +1,15 @@
 import { z } from "zod";
 import { OrderEngineError } from "../orders/order-errors.js";
 
+const recipeDraftTaskSchema = z.enum(["sop", "qc", "dosing"]);
+
 const generatedStepSchema = z.object({
   title: z.string().trim().min(1).max(240),
   content: z.string().trim().min(1).max(10000),
 });
 
 const generatedResponseSchema = z.object({
+  task: recipeDraftTaskSchema.default("sop"),
   steps: z.array(generatedStepSchema).min(1).max(100),
 });
 
@@ -28,6 +31,7 @@ const recipeContextSchema = z.object({
 const recipeSopDraftContentSchema = z.object({
   schemaVersion: z.literal(1),
   kind: z.literal("recipe_sop"),
+  task: recipeDraftTaskSchema.default("sop"),
   targetRecipeId: z.string().uuid(),
   baseRecipeVersionId: z.string().uuid(),
   baseSteps: z.array(z.object({
@@ -46,6 +50,7 @@ const recipeSopDraftContentSchema = z.object({
   }),
 });
 
+export type RecipeDraftTask = z.infer<typeof recipeDraftTaskSchema>;
 export type RecipeSopDraftContent = z.infer<typeof recipeSopDraftContentSchema>;
 
 function normalizeTitle(value: string | null | undefined): string {
@@ -77,7 +82,7 @@ export function parseRecipeSopResponse(text: string) {
     throw new OrderEngineError(
       "AI_RECIPE_DRAFT_INVALID_SHAPE",
       422,
-      "AI recipe draft does not contain valid SOP steps.",
+      "AI recipe draft does not contain valid proposed steps.",
       { issues: result.error.flatten() },
     );
   }
@@ -122,7 +127,9 @@ export function buildRecipeSopDraftContent(
     const titleMatch = (byTitle.get(normalizeTitle(step.title)) || [])
       .find((stepNo) => !usedStepNos.has(stepNo));
     const sameIndex = baseSteps[index]?.stepNo;
-    const indexMatch = sameIndex && !usedStepNos.has(sameIndex) ? sameIndex : undefined;
+    const indexMatch = generated.task === "sop" && sameIndex && !usedStepNos.has(sameIndex)
+      ? sameIndex
+      : undefined;
     const currentStepNo = titleMatch ?? indexMatch ?? null;
     if (currentStepNo) usedStepNos.add(currentStepNo);
 
@@ -137,6 +144,7 @@ export function buildRecipeSopDraftContent(
   return {
     schemaVersion: 1,
     kind: "recipe_sop",
+    task: generated.task,
     targetRecipeId: context.data.recipe.id,
     baseRecipeVersionId: context.data.recipe.currentVersionId,
     baseSteps,
@@ -164,6 +172,5 @@ export function readRecipeSopDraftContent(value: unknown): RecipeSopDraftContent
       "AI recipe draft maps more than one proposal to the same current step.",
     );
   }
-
   return parsed.data;
 }
