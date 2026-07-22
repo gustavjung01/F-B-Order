@@ -38,3 +38,9 @@ export function getDb(): Pool {
 
   return pool;
 }
+
+export async function closeDb(): Promise<void> {
+  const current = pool;
+  pool = null;
+  if (current) await current.end();
+}
