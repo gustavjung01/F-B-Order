@@ -19,13 +19,15 @@ const expectedTrigger = [
   "  pull_request:",
   "    branches:",
   "      - main",
-  "",
 ].join("\n");
 
 for (const workflow of workflows) {
   const source = fs.readFileSync(path.join(repoRoot, workflow), "utf8");
-  assert.ok(
-    source.startsWith(`${source.split("\n", 1)[0]}\n\n${expectedTrigger}`),
+  const match = source.match(/^name:[^\n]+\n\n([\s\S]*?)\n\n(?:permissions:|jobs:)/);
+  assert.ok(match, `${workflow} must contain a top-level trigger block`);
+  assert.equal(
+    match[1],
+    expectedTrigger,
     `${workflow} must run only for pushes to main and pull requests targeting main`,
   );
   assert.doesNotMatch(
