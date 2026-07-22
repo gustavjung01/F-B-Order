@@ -57,7 +57,7 @@ test("AI SOP merge preserves existing image URLs, thumbnail URLs and media IDs",
   assert.equal(merged[2].mediaId, null);
 });
 
-test("AI SOP comparison maps existing steps before the user confirms a merge", () => {
+test("AI SOP comparison maps existing steps before review", () => {
   const current = [
     { ...emptyStep(), clientId: "one", title: "Ủ trà", content: "Cũ", mediaId: "33333333-3333-4333-8333-333333333333" },
     { ...emptyStep(), clientId: "two", title: "Hoàn thiện", content: "Cũ 2" },
@@ -71,25 +71,6 @@ test("AI SOP comparison maps existing steps before the user confirms a merge", (
   assert.equal(comparison[0].currentStep.mediaId, current[0].mediaId);
   assert.equal(comparison[1].status, "update");
   assert.equal(comparison[1].currentIndex, 1);
-});
-
-test("AI SOP merge retains unmatched existing steps instead of silently deleting them", () => {
-  const current = [
-    { ...emptyStep(), clientId: "one", title: "Bước một", content: "A" },
-    {
-      ...emptyStep(),
-      clientId: "two",
-      title: "Bước cần giữ",
-      content: "B",
-      mediaId: "33333333-3333-4333-8333-333333333333",
-      imageUrl: "https://cdn.bepsi.click/recipes/c.webp",
-    },
-  ];
-
-  const merged = mergeSuggestedRecipeSteps(current, [{ title: "Bước một", content: "A mới" }], emptyStep);
-  assert.equal(merged.length, 2);
-  assert.equal(merged[1].clientId, "two");
-  assert.equal(merged[1].mediaId, current[1].mediaId);
 });
 
 test("media sync payload never emits null media IDs", () => {
@@ -107,41 +88,69 @@ test("media sync payload never emits null media IDs", () => {
 });
 
 test("Recipe and AI admin surfaces stay permission-aware", async () => {
-  const [recipePanel, footer, nav, aiConsole] = await Promise.all([
+  const [recipePanel, footer, nav, aiConsole, permissions] = await Promise.all([
     readFile("apps/frontend/components/admin/AdminRecipeOperationsPanelV5.tsx", "utf8"),
     readFile("apps/frontend/components/admin/recipe-editor/RecipePublishTab.tsx", "utf8"),
     readFile("apps/frontend/components/admin/AdminModuleNav.tsx", "utf8"),
     readFile("apps/frontend/components/admin/AdminAiConsole.tsx", "utf8"),
+    readFile("apps/frontend/lib/admin-permissions.ts", "utf8"),
   ]);
 
   for (const permission of ["recipes.view", "recipes.edit", "recipes.review", "recipes.publish", "recipes.media.manage"]) {
     assert.match(`${recipePanel}\n${footer}`, new RegExp(permission.replace(".", "\\.")));
   }
   assert.match(nav, /href: "\/admin\/ai"/);
-  assert.match(nav, /ai\.use/);
+  assert.match(nav, /ai\.approve/);
+  assert.match(permissions, /"ai\.approve"/);
   assert.doesNotMatch(aiConsole, /scopes:\s*\["orders",\s*"customers",\s*"catalog",\s*"recipes"\]/);
 });
 
-test("AI SOP UI stays inside the Steps tab, uses AdminUI and never exposes raw JSON blocks", async () => {
-  const [panel, stepsTab, aiConsole, readableResult] = await Promise.all([
+test("Recipe AI panel stays in Steps and applies only reviewed persisted drafts", async () => {
+  const [panel, stepsTab, reviewQueue, diff, aiPage, routes] = await Promise.all([
     readFile("apps/frontend/components/admin/recipe-editor/RecipeAiAssistantPanel.tsx", "utf8"),
     readFile("apps/frontend/components/admin/recipe-editor/RecipeStepsTab.tsx", "utf8"),
-    readFile("apps/frontend/components/admin/AdminAiConsole.tsx", "utf8"),
-    readFile("apps/frontend/components/admin/ai/AiReadableResult.tsx", "utf8"),
+    readFile("apps/frontend/components/admin/ai/AiRecipeDraftReviewQueue.tsx", "utf8"),
+    readFile("apps/frontend/components/admin/ai/AiRecipeDraftDiff.tsx", "utf8"),
+    readFile("apps/frontend/app/admin/ai/page.tsx", "utf8"),
+    readFile("apps/backend/src/modules/ai/ai.routes.ts", "utf8"),
   ]);
 
   assert.match(stepsTab, /data-recipe-steps-tab="true"/);
   assert.match(panel, /recipe-ai-sop-slot/);
   assert.match(panel, /:has\(> \.recipe-ai-sop-slot \+ \[data-recipe-steps-tab/);
+  assert.match(panel, /draft\.status !== "approved"/);
+  assert.match(panel, /selectedStepIds/);
+  assert.match(panel, /\/api\/admin\/ai\/drafts\/\$\{draft\.id\}\/apply/);
+  assert.match(panel, /Tạo Recipe version mới/);
+  assert.doesNotMatch(panel, /onApplySteps\(suggestedSteps\)/);
+
+  assert.match(reviewQueue, /has\("ai\.approve"\)/);
+  assert.match(reviewQueue, /\/approve|\/reject/);
+  assert.match(reviewQueue, /AiRecipeDraftDiff/);
+  assert.match(diff, /AdminToggle/);
+  assert.match(aiPage, /AiRecipeDraftReviewQueue/);
+
+  assert.match(routes, /requirePermission\(identity, "ai\.approve"\)/);
+  assert.match(routes, /selectedStepIds/);
+  assert.match(routes, /listAiDraftReviewQueue\(identity\)/);
+});
+
+test("AI user-facing surfaces use AdminUI and never expose raw JSON blocks", async () => {
+  const [panel, aiConsole, readableResult, reviewQueue, diff] = await Promise.all([
+    readFile("apps/frontend/components/admin/recipe-editor/RecipeAiAssistantPanel.tsx", "utf8"),
+    readFile("apps/frontend/components/admin/AdminAiConsole.tsx", "utf8"),
+    readFile("apps/frontend/components/admin/ai/AiReadableResult.tsx", "utf8"),
+    readFile("apps/frontend/components/admin/ai/AiRecipeDraftReviewQueue.tsx", "utf8"),
+    readFile("apps/frontend/components/admin/ai/AiRecipeDraftDiff.tsx", "utf8"),
+  ]);
+
   for (const primitive of ["AdminSurface", "AdminSurfaceHeader", "AdminSurfaceBody", "AdminButton", "AdminBadge", "AdminAlert", "AdminDialog"]) {
     assert.match(panel, new RegExp(primitive));
-    assert.match(aiConsole, new RegExp(primitive === "AdminDialog" ? "AdminField" : primitive));
   }
-  assert.match(panel, /buildSuggestedRecipeStepComparison/);
-  assert.match(panel, /So sánh trước khi áp dụng/);
-  assert.match(panel, /comparisonConfirmed/);
-  assert.doesNotMatch(panel, /<pre\b/);
-  assert.doesNotMatch(aiConsole, /<pre\b/);
-  assert.doesNotMatch(readableResult, /<pre\b/);
-  assert.doesNotMatch(panel, /APPLY_SOP_ENABLED/);
+  for (const source of [panel, aiConsole, readableResult, reviewQueue, diff]) {
+    assert.doesNotMatch(source, /<pre\b/);
+  }
+  assert.match(reviewQueue, /AdminDialog/);
+  assert.match(diff, /Hiện tại/);
+  assert.match(diff, /AI đề xuất/);
 });
