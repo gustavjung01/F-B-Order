@@ -3,8 +3,10 @@
   "private": true,
   "scripts": {
     "dev": "tsx watch src/main.ts",
+    "dev:worker": "tsx watch src/ai-worker.ts",
     "build": "tsc -p tsconfig.json",
     "start": "node dist/main.js",
+    "start:worker": "node dist/ai-worker.js",
     "lint": "tsc --noEmit",
     "typecheck": "tsc --noEmit",
     "test:auth-pricing": "tsx scripts/test-auth-pricing.ts",
