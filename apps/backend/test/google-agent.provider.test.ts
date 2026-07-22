@@ -1,7 +1,9 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { buildRecipeSopDraftContent } from "../src/modules/ai/ai-draft-content.js";
 import { __testing, generateWithGoogleAgent, verifyGoogleAgentProvider } from "../src/modules/ai/google-agent.provider.js";
 import { buildRecipeAuditContent, parseRecipeAuditResponse } from "../src/modules/ai/recipe-audit-content.js";
+import { buildRecipeCostPreview } from "../src/modules/ai/recipe-cost.js";
 
 const ENV_KEYS = [
   "NODE_ENV",
@@ -55,6 +57,17 @@ const validAudit = {
     { label: "Hương vị", target: "Chua ngọt cân bằng, không có vị đắng từ vỏ tắc." },
   ],
   missingData: ["Nhiệt độ bảo quản nền trà", "Giá nguyên liệu"],
+};
+
+const recipeContext = {
+  recipe: {
+    id: "11111111-1111-4111-8111-111111111111",
+    currentVersionId: "22222222-2222-4222-8222-222222222222",
+    steps: [
+      { stepNo: 1, title: "Phối vị", content: "Cho nguyên liệu vào bình lắc.", imageUrl: null },
+      { stepNo: 2, title: "Hoàn thiện", content: "Rót ra ly.", imageUrl: null },
+    ],
+  },
 };
 
 test("Google Agent provider fails closed in production and only allows explicit non-production fallback", async () => {
@@ -150,6 +163,67 @@ test("Recipe audit parser rejects incomplete or duplicated checklist output", ()
     checklist: validAudit.checklist.map((item, index) => index === 7 ? { ...item, key: "catalog" } : item),
   };
   assert.throws(() => parseRecipeAuditResponse(JSON.stringify(duplicated)));
+});
+
+test("Recipe QC drafts append a new control step while dosing drafts map by exact title", () => {
+  const qc = buildRecipeSopDraftContent(JSON.stringify({
+    task: "qc",
+    steps: [{ title: "Kiểm soát chất lượng thành phẩm", content: "Kiểm tra màu, mùi và độ đầy trước khi phục vụ." }],
+  }), recipeContext);
+  assert.equal(qc.task, "qc");
+  assert.equal(qc.proposal.steps[0].currentStepNo, null);
+
+  const dosing = buildRecipeSopDraftContent(JSON.stringify({
+    task: "dosing",
+    steps: [{ title: "Phối vị", content: "Đong đúng lượng bằng jigger trước khi cho vào bình lắc." }],
+  }), recipeContext);
+  assert.equal(dosing.task, "dosing");
+  assert.equal(dosing.proposal.steps[0].currentStepNo, 1);
+});
+
+test("Recipe cost is deterministic and fails closed when package data is missing", () => {
+  const ready = buildRecipeCostPreview(
+    { id: recipeContext.recipe.id, title: "Trà tắc", yieldQuantity: 1, yieldUnit: "ly" },
+    [{
+      productName: "Nền trà lài",
+      quantity: 180,
+      unit: "ml",
+      optional: false,
+      catalogVariantId: "33333333-3333-4333-8333-333333333333",
+      sourceType: "catalog",
+      sourceRecipeSlug: null,
+      sku: "TRA-LAI-1L",
+      shopPrice: 50000,
+      retailPrice: 60000,
+      variantData: { name: "Chai 1 l" },
+      productData: { name: "Nền trà lài" },
+    }],
+  );
+  assert.equal(ready.status, "ready");
+  assert.equal(ready.knownMandatoryCost, 9000);
+  assert.equal(ready.costPerYield, 9000);
+  assert.equal(ready.lines[0].priceSource, "shop");
+
+  const blocked = buildRecipeCostPreview(
+    { id: recipeContext.recipe.id, title: "Trà tắc", yieldQuantity: 1, yieldUnit: "ly" },
+    [{
+      productName: "Nước đường",
+      quantity: 30,
+      unit: "ml",
+      optional: false,
+      catalogVariantId: "44444444-4444-4444-8444-444444444444",
+      sourceType: "catalog",
+      sourceRecipeSlug: null,
+      sku: "DUONG",
+      shopPrice: 30000,
+      retailPrice: null,
+      variantData: { name: "Nước đường tiêu chuẩn" },
+      productData: {},
+    }],
+  );
+  assert.equal(blocked.status, "unavailable");
+  assert.equal(blocked.lines[0].status, "missing_package_size");
+  assert.equal(blocked.costPerYield, null);
 });
 
 test("Legacy Recipe audit sanitizer still removes greetings, technical actions and JSON blocks", () => {
