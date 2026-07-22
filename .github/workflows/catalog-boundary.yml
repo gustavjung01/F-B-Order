@@ -5,6 +5,7 @@ on:
     branches:
       - "refactor/**"
       - "agent/**"
+      - "hotfix/**"
   pull_request:
     branches:
       - main
@@ -75,6 +76,9 @@ jobs:
 
       - name: Test Recipe media cleanup schedule
         run: node scripts/frontend/test-recipe-media-cleanup-contract.mjs
+
+      - name: Test admin AI Recipe media and RBAC hotfix
+        run: node --test scripts/frontend/test-admin-ai-recipe-hotfix.mjs
 
       - name: Typecheck
         run: |
