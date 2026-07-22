@@ -1,6 +1,5 @@
 import dotenv from "dotenv";
 import { createApp } from "./app";
-import { startAiWorker } from "./modules/ai/ai.worker";
 
 dotenv.config();
 
@@ -17,10 +16,6 @@ const app = createApp({
   corsOrigin,
   clerkSecretKey,
   clerkPublishableKey,
-});
-
-void startAiWorker().catch((error) => {
-  console.error("AI worker failed to start", error);
 });
 
 app.listen(port, () => {
