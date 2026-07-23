@@ -10,6 +10,7 @@ import {
   AdminSurfaceHeader,
   AdminTextarea,
 } from "@/components/admin/ui/AdminUI";
+import { RecipeVersionComparePanel } from "./RecipeVersionComparePanel";
 import type { CompletionItem, FormState, Version } from "./types";
 import { formatDate, workflowLabel } from "./types";
 
@@ -65,24 +66,37 @@ export function RecipePublishTab({
       {form.reviewNote ? <AdminAlert tone="warning" title="Nhận xét gần nhất"><p className="whitespace-pre-wrap">{form.reviewNote}</p></AdminAlert> : null}
 
       {form.id ? (
-        <AdminSurface>
-          <AdminSurfaceHeader title="Lịch sử phiên bản" />
-          <AdminSurfaceBody>
-            {versions.length ? (
-              <div className="grid gap-2">
-                {versions.map((version) => (
-                  <article key={version.id} className="rounded-xl border border-slate-200 bg-slate-50 p-3">
-                    <div className="flex flex-wrap justify-between gap-2">
-                      <b>v{version.versionNo} · {workflowLabel[version.workflowStatus || "draft"]}{version.isCurrent ? " · hiện tại" : ""}{version.isPublished ? " · công khai" : ""}</b>
-                      <span className="text-xs font-medium text-slate-500">{formatDate(version.createdAt)}</span>
-                    </div>
-                    {version.changeNote ? <p className="mt-2 text-sm font-medium text-slate-600">{version.changeNote}</p> : null}
-                  </article>
-                ))}
-              </div>
-            ) : <AdminEmptyState title="Chưa có lịch sử phiên bản" className="min-h-28" />}
-          </AdminSurfaceBody>
-        </AdminSurface>
+        <>
+          <AdminSurface>
+            <AdminSurfaceHeader title="Lịch sử phiên bản" />
+            <AdminSurfaceBody>
+              {versions.length ? (
+                <div className="grid gap-2">
+                  {versions.map((version) => (
+                    <article key={version.id} className="rounded-xl border border-slate-200 bg-slate-50 p-3">
+                      <div className="flex flex-wrap justify-between gap-2">
+                        <b>v{version.versionNo} · {workflowLabel[version.workflowStatus || "draft"]}{version.isCurrent ? " · hiện tại" : ""}{version.isPublished ? " · công khai" : ""}</b>
+                        <span className="text-xs font-medium text-slate-500">{formatDate(version.createdAt)}</span>
+                      </div>
+                      {version.changeNote ? <p className="mt-2 text-sm font-medium text-slate-600">{version.changeNote}</p> : null}
+                    </article>
+                  ))}
+                </div>
+              ) : <AdminEmptyState title="Chưa có lịch sử phiên bản" className="min-h-28" />}
+            </AdminSurfaceBody>
+          </AdminSurface>
+
+          <AdminSurface>
+            <AdminSurfaceHeader
+              eyebrow="Phase 4"
+              title="Phân tích Recipe Version"
+              description="Backend dựng diff, cost delta và cờ rủi ro trước. AI chỉ giải thích dữ liệu đã được tính, không tự sửa hoặc publish công thức."
+            />
+            <AdminSurfaceBody>
+              <RecipeVersionComparePanel recipeId={form.id} versions={versions} />
+            </AdminSurfaceBody>
+          </AdminSurface>
+        </>
       ) : null}
     </div>
   );
