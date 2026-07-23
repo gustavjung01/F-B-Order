@@ -26,7 +26,8 @@ export const MIGRATION_FILES = Object.freeze([
   "db/migrations/025_ai_draft_review_apply.sql",
   "db/migrations/026_operational_intelligence.sql",
   "db/migrations/027_kitchen_capacity_simulation.sql",
-  "db/migrations/028_recipe_rd_workflow.sql"
+  "db/migrations/028_recipe_rd_workflow.sql",
+  "db/migrations/029_production_planning.sql"
 ]);
 
 export const BASELINE_MIGRATION_FILES = Object.freeze([
