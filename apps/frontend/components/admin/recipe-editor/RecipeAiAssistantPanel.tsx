@@ -308,7 +308,13 @@ export function RecipeAiAssistantPanel({
     }
   }
 
-  if (!canUse) return null;
+  if (!canUse) {
+    return (
+      <AdminAlert tone="warning" title="Recipe Copilot chưa được cấp quyền">
+        Tài khoản cần quyền ai.use để dùng kiểm tra công thức, tạo SOP, tạo QC và tính giá vốn.
+      </AdminAlert>
+    );
+  }
 
   const draftTask: RecipeDraftTask = draft && isRecipeSopDraftContent(draft.content)
     ? draft.content.task || "sop"
@@ -405,7 +411,7 @@ export function RecipeAiAssistantPanel({
 
   return (
     <>
-      {stepsTarget ? createPortal(panel, stepsTarget) : null}
+      {stepsTarget ? createPortal(panel, stepsTarget) : panel}
 
       <AdminDialog
         open={applyOpen}
