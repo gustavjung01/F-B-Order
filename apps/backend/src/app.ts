@@ -19,6 +19,7 @@ import { createKitchenCapacityRouter } from "./modules/kitchen/kitchen-capacity.
 import { createAdminOrdersRouter } from "./modules/orders/admin-orders.routes";
 import { createCustomerOrdersRouter } from "./modules/orders/customer-orders.routes";
 import { createOrderEntryRouter } from "./modules/orders/orders-entry.routes";
+import { createProductionPlanningRouter } from "./modules/production/production-planning.routes";
 import { createAdminRecipesRouter } from "./modules/recipes/recipe-admin.routes";
 import { createPublicRecipesRouter } from "./modules/recipes/recipe-public.routes";
 import { createRecipeVersionAnalysisRouter } from "./modules/recipes/recipe-version-analysis.routes";
@@ -89,6 +90,7 @@ export function createApp(config: AppConfig) {
     app.use("/api/admin/recipes", createAdminRecipesRouter(resolveRequestIdentity));
     app.use("/api/admin/recipe-version-analysis", createRecipeVersionAnalysisRouter(resolveRequestIdentity));
     app.use("/api/admin/kitchen-capacity", createKitchenCapacityRouter(resolveRequestIdentity));
+    app.use("/api/admin/production-planning", createProductionPlanningRouter(resolveRequestIdentity));
     app.use("/api/admin/recipe-rd", createRecipeRdRouter(resolveRequestIdentity));
     app.use("/api/admin/staff", createAdminStaffRouter(resolveRequestIdentity));
     app.use("/api/admin/ai", createAiRouter(resolveRequestIdentity));
@@ -110,6 +112,7 @@ export function createApp(config: AppConfig) {
     app.use("/api/admin/recipes", clerkUnavailable);
     app.use("/api/admin/recipe-version-analysis", clerkUnavailable);
     app.use("/api/admin/kitchen-capacity", clerkUnavailable);
+    app.use("/api/admin/production-planning", clerkUnavailable);
     app.use("/api/admin/recipe-rd", clerkUnavailable);
     app.use("/api/admin/staff", clerkUnavailable);
     app.use("/api/admin/ai", clerkUnavailable);
