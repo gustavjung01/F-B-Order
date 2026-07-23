@@ -19,6 +19,7 @@
     "test:recipe-version-analysis": "tsx scripts/test-recipe-version-analysis.ts",
     "test:kitchen-capacity": "tsx scripts/test-kitchen-capacity.ts",
     "test:ai-draft-workflow": "tsx scripts/test-ai-draft-workflow.ts",
+    "test:recipe-rd": "tsx scripts/test-recipe-rd.ts",
     "test:ai-provider": "tsx --test test/google-agent.provider.test.ts",
     "recipe-media:cleanup": "tsx scripts/cleanup-recipe-media.ts",
     "db:migrate": "node scripts/run-migrations.mjs",
