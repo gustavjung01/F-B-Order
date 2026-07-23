@@ -11,6 +11,10 @@ on:
       - "pnpm-lock.yaml"
   workflow_dispatch:
 
+concurrency:
+  group: recipe-rd-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   recipe-rd:
     runs-on: ubuntu-latest
