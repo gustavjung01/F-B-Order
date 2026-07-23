@@ -40,7 +40,7 @@ async function main() {
        ) VALUES(
          'hung-phat-v2',$1,'Trà fixture so sánh version','Bếp Sỉ','Nguyên liệu trà sữa',
          'nguyen-lieu-tra-sua','Trà','recipe-version-analysis-test','[]'::jsonb,
-         'active',999997,'tra'
+         'active',99997,'tra'
        ) RETURNING id::text`,
       [`recipe-version-analysis-product-${suffix}`],
     );
@@ -52,7 +52,7 @@ async function main() {
          retail_price,shop_price,status,is_active,is_public,is_orderable,sort_order
        ) VALUES(
          $1,'hung-phat-v2',$2,$3,'Gói 1kg','{"size":"1kg"}'::jsonb,
-         'fixed',NULL,NULL,100000,'active',true,true,true,999997
+         'fixed',NULL,NULL,100000,'active',true,true,true,99997
        ) RETURNING id::text`,
       [productId, `recipe-version-analysis-variant-${suffix}`, `RVA-${suffix.slice(0, 20)}`],
     );
@@ -66,7 +66,7 @@ async function main() {
       relatedBrand: "Bếp Sỉ",
       yieldQuantity: 10,
       yieldUnit: "ly",
-      sortOrder: 999997,
+      sortOrder: 99997,
       changeNote: "Version nền có QC",
       ingredients: [
         {
@@ -93,7 +93,7 @@ async function main() {
       relatedBrand: "Bếp Sỉ",
       yieldQuantity: 8,
       yieldUnit: "ly",
-      sortOrder: 999997,
+      sortOrder: 99997,
       changeNote: "Tăng định lượng và bỏ bước QC",
       ingredients: [
         {
