@@ -17,13 +17,15 @@ import {
   AdminTextarea,
 } from "../ui/AdminUI";
 import { AiRecipeDraftDiff } from "./AiRecipeDraftDiff";
+import { AiRecipeRdDiff } from "./AiRecipeRdDiff";
 import {
   aiRecipeDraftStatusLabel,
   aiRecipeDraftStatusTone,
+  isRecipeRdDraftContent,
   isRecipeSopDraftContent,
   recipeDraftTaskLabel,
   type AiRecipeDraft,
-  type RecipeDraftTask,
+  type RecipeDraftDisplayKind,
 } from "./recipe-draft-types";
 
 function formatDate(value: string | null): string {
@@ -32,7 +34,8 @@ function formatDate(value: string | null): string {
   return Number.isNaN(date.getTime()) ? value : date.toLocaleString("vi-VN");
 }
 
-function draftTask(draft: AiRecipeDraft): RecipeDraftTask {
+function draftKind(draft: AiRecipeDraft): RecipeDraftDisplayKind {
+  if (isRecipeRdDraftContent(draft.content)) return "rd";
   return isRecipeSopDraftContent(draft.content) ? draft.content.task || "sop" : "sop";
 }
 
@@ -45,7 +48,9 @@ export function AiRecipeDraftReviewQueue() {
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
 
-  const canReview = has("ai.approve") && has("recipes.review");
+  const canReviewSop = has("ai.approve") && has("recipes.review");
+  const canReviewRd = has("ai.approve") && has("recipe.rd.review");
+  const canReview = canReviewSop || canReviewRd;
 
   async function token() {
     const value = await getToken();
@@ -59,10 +64,14 @@ export function AiRecipeDraftReviewQueue() {
       "/api/admin/ai/drafts/review-queue",
       await token(),
     );
-    setDrafts(payload.drafts);
+    const visible = payload.drafts.filter((draft) => {
+      if (isRecipeRdDraftContent(draft.content)) return canReviewRd;
+      return canReviewSop;
+    });
+    setDrafts(visible);
     setSelected((current) => {
       if (!current) return null;
-      return payload.drafts.find((draft) => draft.id === current.id) || null;
+      return visible.find((draft) => draft.id === current.id) || null;
     });
   }
 
@@ -73,21 +82,24 @@ export function AiRecipeDraftReviewQueue() {
     return () => window.clearInterval(timer);
     // Permissions remain stable inside the admin shell.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [canReview]);
+  }, [canReview, canReviewRd, canReviewSop]);
 
   async function review(decision: "approve" | "reject") {
     if (!selected || reviewNote.trim().length < 3) return;
     setBusy(true);
     setMessage("");
     try {
+      const basePath = isRecipeRdDraftContent(selected.content)
+        ? "/api/admin/recipe-rd/drafts"
+        : "/api/admin/ai/drafts";
       const payload = await adminApiFetch<{ draft: AiRecipeDraft }>(
-        `/api/admin/ai/drafts/${selected.id}/${decision}`,
+        `${basePath}/${selected.id}/${decision}`,
         await token(),
         { method: "POST", body: JSON.stringify({ note: reviewNote.trim() }) },
       );
       setSelected(payload.draft);
       setReviewNote("");
-      setMessage(decision === "approve" ? "Đã duyệt bản nháp. Người tạo có thể chọn từng phần để áp dụng." : "Đã từ chối bản nháp.");
+      setMessage(decision === "approve" ? "Đã duyệt bản nháp. Người tạo có thể áp dụng theo workflow được kiểm soát." : "Đã từ chối bản nháp.");
       await loadDrafts();
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Không xử lý được bản nháp.");
@@ -104,20 +116,20 @@ export function AiRecipeDraftReviewQueue() {
         <AdminSurfaceHeader
           eyebrow="Human review"
           title="Đề xuất công thức chờ duyệt"
-          description="Reviewer xem phần hiện tại và phần trợ lý đề xuất trước khi duyệt hoặc từ chối. Bản nháp do chính reviewer tạo không xuất hiện trong hàng đợi."
+          description="Reviewer đối chiếu dữ liệu gốc, đề xuất, cost, ràng buộc và kế hoạch test trước khi duyệt hoặc từ chối. Bản nháp do chính reviewer tạo không xuất hiện trong hàng đợi."
           actions={<AdminButton size="sm" tone="secondary" onClick={() => void loadDrafts()}>Tải lại</AdminButton>}
         />
         <AdminSurfaceBody className="grid gap-3">
           {message ? <AdminAlert tone={message.startsWith("Đã") ? "success" : "danger"}>{message}</AdminAlert> : null}
           {drafts.length === 0 ? (
-            <AdminEmptyState title="Không có đề xuất cần review" description="SOP, QC hoặc định lượng mới sẽ xuất hiện sau khi trợ lý hoàn thành." />
+            <AdminEmptyState title="Không có đề xuất cần review" description="SOP, QC, định lượng hoặc phương án R&D mới sẽ xuất hiện sau khi trợ lý hoàn thành." />
           ) : drafts.map((draft) => (
             <article key={draft.id} className="rounded-2xl border border-slate-200 bg-white p-4">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
                   <div className="flex flex-wrap items-center gap-2">
                     <AdminBadge tone={aiRecipeDraftStatusTone(draft.status)}>{aiRecipeDraftStatusLabel[draft.status]}</AdminBadge>
-                    <AdminBadge tone="info">{recipeDraftTaskLabel[draftTask(draft)]}</AdminBadge>
+                    <AdminBadge tone="info">{recipeDraftTaskLabel[draftKind(draft)]}</AdminBadge>
                     <AdminBadge tone="neutral">{draft.recipeTitle || "Công thức"}</AdminBadge>
                   </div>
                   <h3 className="mt-2 font-black text-slate-900">{draft.title}</h3>
@@ -136,7 +148,7 @@ export function AiRecipeDraftReviewQueue() {
         size="xl"
         eyebrow="Duyệt đề xuất công thức"
         title={selected?.title || "Duyệt đề xuất"}
-        description={selected ? `${selected.recipeTitle || "Công thức"} · ${recipeDraftTaskLabel[draftTask(selected)]} · ${aiRecipeDraftStatusLabel[selected.status]}` : undefined}
+        description={selected ? `${selected.recipeTitle || "Công thức"} · ${recipeDraftTaskLabel[draftKind(selected)]} · ${aiRecipeDraftStatusLabel[selected.status]}` : undefined}
         closeDisabled={busy}
         onClose={() => { if (!busy) setSelected(null); }}
         footer={selected?.status === "draft" ? (
@@ -151,17 +163,19 @@ export function AiRecipeDraftReviewQueue() {
           <div className="grid gap-4">
             <div className="flex flex-wrap gap-2">
               <AdminBadge tone={aiRecipeDraftStatusTone(selected.status)}>{aiRecipeDraftStatusLabel[selected.status]}</AdminBadge>
-              <AdminBadge tone="info">{recipeDraftTaskLabel[draftTask(selected)]}</AdminBadge>
+              <AdminBadge tone="info">{recipeDraftTaskLabel[draftKind(selected)]}</AdminBadge>
               {selected.reviewedByName ? <AdminBadge tone="neutral">Đã review bởi {selected.reviewedByName}</AdminBadge> : null}
             </div>
-            {isRecipeSopDraftContent(selected.content) ? (
+            {isRecipeRdDraftContent(selected.content) ? (
+              <AiRecipeRdDiff content={selected.content} />
+            ) : isRecipeSopDraftContent(selected.content) ? (
               <AiRecipeDraftDiff content={selected.content} />
             ) : (
               <AdminAlert tone="danger" title="Bản nháp không hợp lệ">Không đọc được cấu trúc đề xuất để review.</AdminAlert>
             )}
             {selected.status === "draft" ? (
               <AdminField label="Nhận xét review" hint="Bắt buộc khi duyệt hoặc từ chối; tối thiểu 3 ký tự.">
-                <AdminTextarea value={reviewNote} onChange={(event) => setReviewNote(event.target.value)} placeholder="Nêu rõ lý do duyệt hoặc điểm cần sửa." />
+                <AdminTextarea value={reviewNote} onChange={(event) => setReviewNote(event.target.value)} placeholder="Nêu rõ lý do duyệt, dữ liệu đã đối chiếu hoặc điểm cần sửa." />
               </AdminField>
             ) : selected.reviewNote ? (
               <AdminAlert tone={selected.status === "rejected" ? "danger" : "info"} title="Nhận xét reviewer">{selected.reviewNote}</AdminAlert>
