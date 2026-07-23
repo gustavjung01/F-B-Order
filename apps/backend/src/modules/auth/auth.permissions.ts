@@ -16,6 +16,10 @@ export type PermissionKey =
   | "suppliers.view"
   | "kitchen.capacity.view"
   | "kitchen.capacity.manage"
+  | "recipe.rd.view"
+  | "recipe.rd.create"
+  | "recipe.rd.review"
+  | "recipe.rd.apply"
   | "recipes.view"
   | "recipes.edit"
   | "recipes.review"
@@ -45,6 +49,10 @@ const ALL_PERMISSIONS: PermissionKey[] = [
   "suppliers.view",
   "kitchen.capacity.view",
   "kitchen.capacity.manage",
+  "recipe.rd.view",
+  "recipe.rd.create",
+  "recipe.rd.review",
+  "recipe.rd.apply",
   "recipes.view",
   "recipes.edit",
   "recipes.review",

@@ -1,0 +1,108 @@
+name: Recipe R&D workflow
+
+on:
+  pull_request:
+    paths:
+      - "apps/backend/**"
+      - "apps/frontend/**"
+      - "db/migrations/**"
+      - ".github/workflows/recipe-rd.yml"
+      - "package.json"
+      - "pnpm-lock.yaml"
+  workflow_dispatch:
+
+concurrency:
+  group: recipe-rd-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  recipe-rd:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: fb_order_recipe_rd
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d fb_order_recipe_rd"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/fb_order_recipe_rd
+      NODE_ENV: test
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Prepare logs
+        run: mkdir -p logs
+
+      - name: Run migrations
+        shell: bash
+        run: |
+          set -o pipefail
+          pnpm db:migrate 2>&1 | tee logs/migrations.log
+
+      - name: Backend typecheck
+        shell: bash
+        run: |
+          set -o pipefail
+          pnpm --filter @fb-order/backend typecheck 2>&1 | tee logs/backend-typecheck.log
+
+      - name: Recipe R&D integration test
+        shell: bash
+        run: |
+          set -o pipefail
+          pnpm --filter @fb-order/backend test:recipe-rd 2>&1 | tee logs/recipe-rd-test.log
+
+      - name: Recipe R&D trial audit integration test
+        shell: bash
+        run: |
+          set -o pipefail
+          pnpm --filter @fb-order/backend test:recipe-rd-trial-audit 2>&1 | tee logs/recipe-rd-trial-audit-test.log
+
+      - name: Frontend typecheck
+        shell: bash
+        run: |
+          set -o pipefail
+          pnpm --filter @fb-order/frontend typecheck 2>&1 | tee logs/frontend-typecheck.log
+
+      - name: Backend build
+        shell: bash
+        run: |
+          set -o pipefail
+          pnpm run build:backend 2>&1 | tee logs/backend-build.log
+
+      - name: Frontend build
+        shell: bash
+        run: |
+          set -o pipefail
+          pnpm run build:frontend 2>&1 | tee logs/frontend-build.log
+
+      - name: Upload failure logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: recipe-rd-failure-logs
+          path: logs
+          if-no-files-found: error
