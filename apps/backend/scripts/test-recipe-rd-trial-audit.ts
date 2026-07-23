@@ -121,18 +121,18 @@ async function main(): Promise<void> {
       "RECIPE_RD_TRIAL_BATCH_INVALID",
     );
 
-    const draftRequest = await db.query<{ id: string }>(
+    const queuedRequest = await db.query<{ id: string }>(
       `INSERT INTO recipe_rd_requests(
          created_by_staff_id,recipe_id,base_recipe_version_id,objective,constraints,status
-       ) VALUES($1,$2,$3,$4,'{}'::jsonb,'draft')
+       ) VALUES($1,$2,$3,$4,'{}'::jsonb,'queued')
        RETURNING id::text`,
       [staffId, recipeId, baseRecipeVersionId, "Reject trial before proposal generation"],
     );
-    const draftRequestId = draftRequest.rows[0].id;
-    requestIds.push(draftRequestId);
+    const queuedRequestId = queuedRequest.rows[0].id;
+    requestIds.push(queuedRequestId);
 
     await expectCode(
-      () => recordAuditedRecipeRdTrialResult(identity, draftRequestId, {
+      () => recordAuditedRecipeRdTrialResult(identity, queuedRequestId, {
         resultStatus: "failed",
         note: "This write must roll back.",
       }, meta, db),
@@ -146,7 +146,7 @@ async function main(): Promise<void> {
           WHERE action_key='recipe.rd.trial.record'
             AND resource_type='recipe_rd_request'
             AND resource_id=$1::text) AS audits`,
-      [draftRequestId],
+      [queuedRequestId],
     );
     assert.deepEqual(rolledBack.rows[0], { trials: 0, audits: 0 });
 
