@@ -9,8 +9,8 @@ import {
   applyApprovedRecipeRdDraft,
   createRecipeRdRequest,
   listRecipeRdRequests,
-  recordRecipeRdTrialResult,
 } from "./recipe-rd.service.js";
+import { recordAuditedRecipeRdTrialResult } from "./recipe-rd-trial.service.js";
 
 const constraintsSchema = z.object({
   maxCostPerYield: z.coerce.number().positive().nullable().optional(),
@@ -99,7 +99,12 @@ export function createRecipeRdRouter(identityResolver: IdentityResolver) {
       const identity = requireActiveStaff(await identityResolver(req));
       await requirePermission(identity, "recipe.rd.create");
       const input = trialSchema.parse(req.body ?? {});
-      res.status(201).json(await recordRecipeRdTrialResult(identity, req.params.requestId, input));
+      res.status(201).json(await recordAuditedRecipeRdTrialResult(
+        identity,
+        req.params.requestId,
+        input,
+        requestMeta(req),
+      ));
     } catch (error) { sendError(res, error); }
   });
 
