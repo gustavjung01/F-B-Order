@@ -1,5 +1,6 @@
 import os from "node:os";
 import { getDb } from "../../db/pool.js";
+import { buildRecipeRdDraftContent } from "../rd/recipe-rd-content.js";
 import { buildRecipeSopDraftContent } from "./ai-draft-content.js";
 import { generateWithGoogleAgent } from "./google-agent.provider.js";
 
@@ -14,6 +15,10 @@ let activeTick: Promise<void> | null = null;
 
 function retryDelayMs(attempt: number): number {
   return Math.min(60_000, 2_000 * 2 ** Math.max(0, attempt - 1));
+}
+
+function contextRecord(value: unknown): Record<string, unknown> {
+  return value && typeof value === "object" && !Array.isArray(value) ? value as Record<string, unknown> : {};
 }
 
 async function recoverStaleJobs(): Promise<void> {
@@ -118,8 +123,11 @@ async function completeJob(job: Awaited<ReturnType<typeof claimJob>>): Promise<v
 
     let draftId: string | null = null;
     if (job.job_type === "draft") {
+      const context = contextRecord(job.context_data);
       const recipeContent = job.draft_type === "recipe"
-        ? buildRecipeSopDraftContent(generated.text, job.context_data)
+        ? context.kind === "recipe_rd_request"
+          ? buildRecipeRdDraftContent(generated.text, job.context_data)
+          : buildRecipeSopDraftContent(generated.text, job.context_data)
         : null;
       const content = recipeContent ?? { text: generated.text, context: job.context_data };
       const targetRecipeId = recipeContent?.targetRecipeId ?? null;
@@ -156,6 +164,7 @@ async function completeJob(job: Awaited<ReturnType<typeof claimJob>>): Promise<v
           JSON.stringify({
             jobId: job.id,
             draftType: job.draft_type,
+            contentKind: recipeContent && "kind" in recipeContent ? recipeContent.kind : null,
             targetRecipeId,
             baseRecipeVersionId,
             provider: generated.provider,
@@ -163,6 +172,14 @@ async function completeJob(job: Awaited<ReturnType<typeof claimJob>>): Promise<v
           }),
         ],
       );
+      if (context.kind === "recipe_rd_request" && typeof context.rdRequestId === "string") {
+        await client.query(
+          `UPDATE recipe_rd_requests
+           SET status='generated',ai_draft_id=$2,failure_code=NULL,failure_message=NULL
+           WHERE id=$1 AND ai_job_id=$3`,
+          [context.rdRequestId, draftId, job.id],
+        );
+      }
     }
 
     await client.query(
@@ -193,21 +210,40 @@ async function failJob(job: NonNullable<Awaited<ReturnType<typeof claimJob>>>, e
   const code = (error as { code?: string }).code || "AI_JOB_FAILED";
   const message = error instanceof Error ? error.message : "Unknown AI job failure";
   const shouldRetry = job.attempt_count < job.max_attempts;
-  await getDb().query(
-    `UPDATE ai_jobs
-     SET status = $2,
-         available_at = CASE WHEN $2 = 'pending'
-           THEN now() + ($3::int * interval '1 millisecond')
-           ELSE available_at END,
-         completed_at = CASE WHEN $2 = 'failed' THEN now() ELSE completed_at END,
-         locked_at = NULL,
-         locked_by = NULL,
-         error_code = $4,
-         error_message = $5,
-         updated_at = now()
-     WHERE id = $1`,
-    [job.id, shouldRetry ? "pending" : "failed", retryDelayMs(job.attempt_count), code, message.slice(0, 2000)],
-  );
+  const client = await getDb().connect();
+  try {
+    await client.query("BEGIN");
+    await client.query(
+      `UPDATE ai_jobs
+       SET status = $2,
+           available_at = CASE WHEN $2 = 'pending'
+             THEN now() + ($3::int * interval '1 millisecond')
+             ELSE available_at END,
+           completed_at = CASE WHEN $2 = 'failed' THEN now() ELSE completed_at END,
+           locked_at = NULL,
+           locked_by = NULL,
+           error_code = $4,
+           error_message = $5,
+           updated_at = now()
+       WHERE id = $1`,
+      [job.id, shouldRetry ? "pending" : "failed", retryDelayMs(job.attempt_count), code, message.slice(0, 2000)],
+    );
+    const context = contextRecord(job.context_data);
+    if (!shouldRetry && context.kind === "recipe_rd_request" && typeof context.rdRequestId === "string") {
+      await client.query(
+        `UPDATE recipe_rd_requests
+         SET status='failed',failure_code=$2,failure_message=$3
+         WHERE id=$1 AND ai_job_id=$4`,
+        [context.rdRequestId, code, message.slice(0, 2000), job.id],
+      );
+    }
+    await client.query("COMMIT");
+  } catch (updateError) {
+    await client.query("ROLLBACK").catch(() => undefined);
+    throw updateError;
+  } finally {
+    client.release();
+  }
 }
 
 async function tick(): Promise<void> {
