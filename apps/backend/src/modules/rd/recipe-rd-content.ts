@@ -301,7 +301,7 @@ export function buildRecipeRdDraftContent(generatedText: string, contextData: un
       variantId: ingredient.catalogVariantId,
       sku: catalog.sku,
       availableQuantity: available ?? 0,
-      status: available === undefined ? "unknown" as const : available > 0 ? "available" as const : "unavailable" as const,
+      status: available == null ? "unknown" as const : available > 0 ? "available" as const : "unavailable" as const,
     };
   });
 
