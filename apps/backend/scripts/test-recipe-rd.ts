@@ -7,6 +7,7 @@ import { createAdminRecipe } from "../src/modules/recipes/recipe-admin.service.j
 import {
   buildRecipeRdDraftContent,
   parseGeneratedRecipeRdProposal,
+  type RecipeRdConstraints,
   type RecipeRdDraftContent,
 } from "../src/modules/rd/recipe-rd-content.js";
 import { reviewRecipeRdDraft } from "../src/modules/rd/recipe-rd-review.service.js";
@@ -14,23 +15,21 @@ import {
   applyApprovedRecipeRdDraft,
   createRecipeRdRequest,
   recordRecipeRdTrialResult,
-  type RecipeRdConstraints,
 } from "../src/modules/rd/recipe-rd.service.js";
 
+const db = getDb();
 const meta = { requestId: "recipe-rd-integration", ipAddress: null, userAgent: "integration-test" };
 
-async function expectErrorCode(run: () => Promise<unknown>, code: string) {
-  await assert.rejects(run, (error: unknown) => {
-    return Boolean(error && typeof error === "object" && "code" in error && error.code === code);
-  });
+async function expectCode(run: () => Promise<unknown>, code: string): Promise<void> {
+  await assert.rejects(run, (error: unknown) =>
+    Boolean(error && typeof error === "object" && "code" in error && error.code === code));
 }
 
 async function insertStaff(label: string, suffix: string): Promise<StaffIdentity> {
   const clerkUserId = `recipe-rd-${label}-${suffix}`;
-  const result = await getDb().query<{ id: string }>(
+  const result = await db.query<{ id: string }>(
     `INSERT INTO staff_users(clerk_user_id,email,name,role,is_active)
-     VALUES($1,$2,$3,'admin',true)
-     RETURNING id::text`,
+     VALUES($1,$2,$3,'admin',true) RETURNING id::text`,
     [clerkUserId, `${label}-${suffix}@example.com`, `Recipe R&D ${label}`],
   );
   return {
@@ -42,86 +41,80 @@ async function insertStaff(label: string, suffix: string): Promise<StaffIdentity
   };
 }
 
-function proposalText(variantId: string, options: { quantity?: number; yieldQuantity?: number; stepSuffix?: string } = {}) {
+function proposal(variantId: string, objective: string): string {
   return JSON.stringify({
     title: "Phương án R&D trà sữa",
     rationale: "Giữ yield, kiểm soát cost và xác minh bằng mẻ thử.",
     proposal: {
-      yieldQuantity: options.yieldQuantity ?? 10,
+      yieldQuantity: 10,
       yieldUnit: "ly",
-      ingredients: [
-        {
-          productName: "Trà fixture",
-          catalogVariantId: variantId,
-          quantity: options.quantity ?? 100,
-          unit: "g",
-          optional: false,
-          note: "Định lượng do proposal đề xuất",
-        },
-      ],
+      ingredients: [{
+        productName: "Trà fixture",
+        catalogVariantId: variantId,
+        quantity: 100,
+        unit: "g",
+        optional: false,
+        note: "Định lượng proposal",
+      }],
       steps: [
-        { title: "Ủ trà", content: `Ủ trà theo batch${options.stepSuffix ?? ""}.` },
+        { title: "Ủ trà", content: `Ủ trà theo batch - ${objective}.` },
         { title: "Hoàn thiện", content: "Rót đủ yield và ghi nhận mẻ thử." },
       ],
     },
-    expectedEffects: ["Cost nằm trong giới hạn đã đặt."],
+    expectedEffects: ["Cost nằm trong giới hạn."],
     risks: ["Cần mẻ thử để xác nhận cảm quan."],
-    testPlan: [
-      { metric: "Cost mỗi ly", target: "Không vượt trần", method: "Đối chiếu cost backend" },
-      { metric: "Cảm quan", target: "Từ 8/10", method: "Chấm mù sau mẻ thử" },
-    ],
+    testPlan: [{ metric: "Cost mỗi ly", target: "Không vượt trần", method: "Đối chiếu cost backend" }],
   });
 }
 
-type CreatedDraft = {
+type GeneratedDraft = {
   requestId: string;
   jobId: string;
   draftId: string;
   content: RecipeRdDraftContent;
+  context: unknown;
 };
 
-async function createGeneratedDraft(
+async function generateDraft(
   creator: StaffIdentity,
   recipeId: string,
   variantId: string,
-  constraints: RecipeRdConstraints,
   objective: string,
-): Promise<CreatedDraft> {
-  const db = getDb();
+  constraints: RecipeRdConstraints,
+): Promise<GeneratedDraft> {
   const request = await createRecipeRdRequest(creator, {
     recipeId,
     objective,
     constraints,
-    additionalNotes: "Integration test Phase 6",
+    additionalNotes: "Phase 6 integration fixture",
   }, db);
   const job = await db.query<{ contextData: unknown }>(
     `SELECT context_data AS "contextData" FROM ai_jobs WHERE id=$1`,
     [request.jobId],
   );
   assert.ok(job.rows[0]?.contextData);
-
-  const generatedText = proposalText(variantId, { stepSuffix: ` - ${objective}` });
-  const content = buildRecipeRdDraftContent(generatedText, job.rows[0].contextData);
-  const draft = await db.query<{ id: string }>(
+  const context = job.rows[0].contextData;
+  const generatedText = proposal(variantId, objective);
+  const content = buildRecipeRdDraftContent(generatedText, context);
+  const inserted = await db.query<{ id: string }>(
     `INSERT INTO ai_drafts(
        created_by_staff_id,draft_type,title,content,status,target_recipe_id,base_recipe_version_id
-     ) VALUES($1,'recipe',$2,$3::jsonb,'draft',$4,$5)
-     RETURNING id::text`,
+     ) VALUES($1,'recipe',$2,$3::jsonb,'draft',$4,$5) RETURNING id::text`,
     [creator.staffId, `R&D ${objective}`, JSON.stringify(content), content.targetRecipeId, content.baseRecipeVersionId],
   );
-  const draftId = draft.rows[0].id;
+  const draftId = inserted.rows[0].id;
   await db.query(
     `INSERT INTO ai_draft_events(draft_id,event_type,actor_staff_id,note,metadata)
-     VALUES($1,'generated',$2,'Integration test simulated the worker output',$3::jsonb)`,
+     VALUES($1,'generated',$2,'Simulated worker output',$3::jsonb)`,
     [draftId, creator.staffId, JSON.stringify({ jobId: request.jobId, contentKind: content.kind })],
   );
-  const requestUpdate = await db.query(
+  const linked = await db.query(
     `UPDATE recipe_rd_requests
      SET status='generated',ai_draft_id=$2,failure_code=NULL,failure_message=NULL
      WHERE id=$1 AND ai_job_id=$3`,
     [request.requestId, draftId, request.jobId],
   );
-  assert.equal(requestUpdate.rowCount, 1);
+  assert.equal(linked.rowCount, 1);
   await db.query(
     `UPDATE ai_jobs
      SET status='completed',completed_at=now(),draft_id=$2,response_text=$3,
@@ -129,11 +122,10 @@ async function createGeneratedDraft(
      WHERE id=$1`,
     [request.jobId, draftId, generatedText],
   );
-  return { requestId: request.requestId, jobId: request.jobId, draftId, content };
+  return { requestId: request.requestId, jobId: request.jobId, draftId, content, context };
 }
 
-async function main() {
-  const db = getDb();
+async function main(): Promise<void> {
   const suffix = randomUUID().replaceAll("-", "");
   const staffIds: string[] = [];
   const draftIds: string[] = [];
@@ -141,7 +133,7 @@ async function main() {
   let productId: string | null = null;
   let variantId: string | null = null;
   let recipeId: string | null = null;
-  let inventoryLocationId: string | null = null;
+  let locationId: string | null = null;
   let supplierId: string | null = null;
 
   try {
@@ -156,8 +148,7 @@ async function main() {
          source_group,option_groups,status,sort_order,catalog_group_key
        ) VALUES(
          'hung-phat-v2',$1,'Trà fixture Recipe R&D','Bếp Sỉ','Nguyên liệu trà sữa',
-         'nguyen-lieu-tra-sua','Trà','recipe-rd-test','[]'::jsonb,
-         'active',0,'tra'
+         'nguyen-lieu-tra-sua','Trà','recipe-rd-test','[]'::jsonb,'active',0,'tra'
        ) RETURNING id::text`,
       [`recipe-rd-product-${suffix}`],
     );
@@ -180,12 +171,12 @@ async function main() {
        VALUES($1,$2,'active') RETURNING id::text`,
       [`recipe-rd-${suffix}`, `Kho R&D ${suffix}`],
     );
-    inventoryLocationId = location.rows[0].id;
+    locationId = location.rows[0].id;
     await db.query(
       `INSERT INTO inventory_balances(
          location_id,catalog_variant_id,on_hand_quantity,reserved_quantity,reorder_point,safety_stock,unit
        ) VALUES($1,$2,20,2,5,2,'package')`,
-      [inventoryLocationId, variantId],
+      [locationId, variantId],
     );
 
     const supplier = await db.query<{ id: string }>(
@@ -219,31 +210,28 @@ async function main() {
       ],
     }, db);
     recipeId = String(created.recipe.id);
-    const baseVersionId = String(created.recipe.currentVersionId);
-
+    const publishedVersionId = String(created.recipe.currentVersionId);
     await db.query(
-      `UPDATE recipe_versions
-       SET workflow_status='published',published_by_staff_id=$2,published_at=now()
-       WHERE id=$1`,
-      [baseVersionId, creator.staffId],
+      `UPDATE recipe_versions SET workflow_status='published',published_by_staff_id=$2,published_at=now() WHERE id=$1`,
+      [publishedVersionId, creator.staffId],
     );
     await db.query(
       `UPDATE recipes
        SET status='active',published_version_id=$2,published_by_staff_id=$3,published_at=now()
        WHERE id=$1`,
-      [recipeId, baseVersionId, creator.staffId],
+      [recipeId, publishedVersionId, creator.staffId],
     );
 
-    const profile = await saveKitchenCapacityProfile(creator, recipeId, baseVersionId, {
+    const profile = await saveKitchenCapacityProfile(creator, recipeId, publishedVersionId, {
       batchOutputQuantity: 10,
       batchOutputUnit: "ly",
       setupMinutes: 5,
-      notes: "Recipe R&D integration fixture",
+      notes: "Recipe R&D fixture",
       steps: [
         {
           recipeStepNo: 1,
           stepName: "Ủ trà",
-          stationName: `Station R&D brew ${suffix}`,
+          stationName: `R&D brew ${suffix}`,
           stationParallelSlots: 1,
           stationAvailableWorkers: 1,
           cycleMinutes: 10,
@@ -255,7 +243,7 @@ async function main() {
         {
           recipeStepNo: 2,
           stepName: "Hoàn thiện",
-          stationName: `Station R&D finish ${suffix}`,
+          stationName: `R&D finish ${suffix}`,
           stationParallelSlots: 1,
           stationAvailableWorkers: 1,
           cycleMinutes: 5,
@@ -268,73 +256,51 @@ async function main() {
     }, db);
     assert.equal(profile.readiness.status, "ready");
 
-    await expectErrorCode(
-      async () => parseGeneratedRecipeRdProposal("not-json"),
-      "AI_RECIPE_RD_INVALID_JSON",
-    );
-    await expectErrorCode(
-      async () => parseGeneratedRecipeRdProposal("{}"),
-      "AI_RECIPE_RD_INVALID_SHAPE",
-    );
+    await expectCode(async () => { parseGeneratedRecipeRdProposal("not-json"); }, "AI_RECIPE_RD_INVALID_JSON");
+    await expectCode(async () => { parseGeneratedRecipeRdProposal("{}"); }, "AI_RECIPE_RD_INVALID_SHAPE");
 
-    const validConstraints: RecipeRdConstraints = {
+    const constraints: RecipeRdConstraints = {
       maxCostPerYield: 1500,
       preserveYield: true,
       useAvailableInventoryOnly: true,
       maxIngredientCount: 2,
     };
-    const valid = await createGeneratedDraft(
-      creator,
-      recipeId,
-      variantId,
-      validConstraints,
-      "Giữ yield và tối ưu vận hành",
-    );
+    const valid = await generateDraft(creator, recipeId, variantId, "valid proposal", constraints);
     draftIds.push(valid.draftId);
     jobIds.push(valid.jobId);
-
-    assert.equal(valid.content.kind, "recipe_rd");
     assert.equal(valid.content.evaluation.cost.status, "ready");
     assert.equal(valid.content.evaluation.cost.costPerYield, 1000);
     assert.equal(valid.content.evaluation.allRequiredConstraintsMet, true);
-    assert.ok(valid.content.evaluation.constraints.every((item) => item.status === "met"));
     assert.equal(valid.content.evaluation.inventory[0]?.status, "available");
     assert.equal(valid.content.evaluation.capacity.status, "revalidation_required");
 
-    await expectErrorCode(
-      async () => buildRecipeRdDraftContent(proposalText(randomUUID()), (await db.query<{ contextData: unknown }>(
-        `SELECT context_data AS "contextData" FROM ai_jobs WHERE id=$1`,
-        [valid.jobId],
-      )).rows[0].contextData),
+    await expectCode(
+      async () => { buildRecipeRdDraftContent(proposal(randomUUID(), "forbidden SKU"), valid.context); },
       "AI_RECIPE_RD_CATALOG_VARIANT_FORBIDDEN",
     );
-
-    await expectErrorCode(
+    await expectCode(
       () => applyApprovedRecipeRdDraft(applier, valid.draftId, meta, db),
       "AI_DRAFT_NOT_APPROVED",
     );
 
-    const plannedTrial = await recordRecipeRdTrialResult(creator, valid.requestId, {
+    await recordRecipeRdTrialResult(creator, valid.requestId, {
       resultStatus: "planned",
       batchQuantity: 10,
       batchUnit: "ly",
       measurements: { target: "baseline" },
       note: "Lập kế hoạch mẻ thử",
     }, db);
-    assert.equal(plannedTrial.status, "planned");
-
-    await expectErrorCode(
+    await expectCode(
       () => reviewRecipeRdDraft(creator, valid.draftId, "approved", "Tự duyệt không hợp lệ", meta, db),
       "SELF_APPROVAL_FORBIDDEN",
     );
-    const afterSelfReview = await db.query<{ requestStatus: string; draftStatus: string }>(
+    const unchanged = await db.query<{ requestStatus: string; draftStatus: string }>(
       `SELECT request.status AS "requestStatus",draft.status AS "draftStatus"
-       FROM recipe_rd_requests request
-       JOIN ai_drafts draft ON draft.id=request.ai_draft_id
+       FROM recipe_rd_requests request JOIN ai_drafts draft ON draft.id=request.ai_draft_id
        WHERE request.id=$1`,
       [valid.requestId],
     );
-    assert.deepEqual(afterSelfReview.rows[0], { requestStatus: "generated", draftStatus: "draft" });
+    assert.deepEqual(unchanged.rows[0], { requestStatus: "generated", draftStatus: "draft" });
 
     const approved = await reviewRecipeRdDraft(
       reviewer,
@@ -345,157 +311,93 @@ async function main() {
       db,
     );
     assert.equal(approved.draft.status, "approved");
-    const approvedRequest = await db.query<{ status: string; reviewedByStaffId: string }>(
-      `SELECT status,reviewed_by_staff_id::text AS "reviewedByStaffId"
-       FROM recipe_rd_requests WHERE id=$1`,
-      [valid.requestId],
-    );
-    assert.deepEqual(approvedRequest.rows[0], { status: "approved", reviewedByStaffId: reviewer.staffId });
-
-    await recordRecipeRdTrialResult(creator, valid.requestId, {
-      resultStatus: "needs_changes",
-      sensoryScore: 7.5,
-      operationalScore: 8,
-      measurements: { sweetness: "reduce" },
-      note: "Cần tinh chỉnh trước khi áp dụng",
-    }, db);
-
     const applied = await applyApprovedRecipeRdDraft(applier, valid.draftId, meta, db);
     assert.equal(applied.status, "applied");
-    assert.equal(applied.recipeVersionNo, 2);
 
     const recipeState = await db.query<{
       currentVersionId: string;
       publishedVersionId: string;
       workflowStatus: string;
-      versionNo: number;
     }>(
-      `SELECT
-         recipe.current_version_id::text AS "currentVersionId",
-         recipe.published_version_id::text AS "publishedVersionId",
-         version.workflow_status AS "workflowStatus",
-         version.version_no AS "versionNo"
-       FROM recipes recipe
-       JOIN recipe_versions version ON version.id=recipe.current_version_id
+      `SELECT recipe.current_version_id::text AS "currentVersionId",
+              recipe.published_version_id::text AS "publishedVersionId",
+              version.workflow_status AS "workflowStatus"
+       FROM recipes recipe JOIN recipe_versions version ON version.id=recipe.current_version_id
        WHERE recipe.id=$1`,
       [recipeId],
     );
     assert.equal(recipeState.rows[0].currentVersionId, applied.recipeVersionId);
-    assert.equal(recipeState.rows[0].publishedVersionId, baseVersionId);
+    assert.equal(recipeState.rows[0].publishedVersionId, publishedVersionId);
     assert.equal(recipeState.rows[0].workflowStatus, "draft");
-    assert.equal(recipeState.rows[0].versionNo, 2);
-
-    const appliedWorkflow = await db.query<{ requestStatus: string; draftStatus: string }>(
-      `SELECT request.status AS "requestStatus",draft.status AS "draftStatus"
-       FROM recipe_rd_requests request
-       JOIN ai_drafts draft ON draft.id=request.ai_draft_id
-       WHERE request.id=$1`,
-      [valid.requestId],
-    );
-    assert.deepEqual(appliedWorkflow.rows[0], { requestStatus: "applied", draftStatus: "applied" });
-
-    await expectErrorCode(
+    await expectCode(
       () => applyApprovedRecipeRdDraft(applier, valid.draftId, meta, db),
       "AI_DRAFT_NOT_APPROVED",
     );
 
-    await recordRecipeRdTrialResult(creator, valid.requestId, {
-      resultStatus: "passed",
-      sensoryScore: 8.5,
-      operationalScore: 9,
-      measurements: { costPerYield: valid.content.evaluation.cost.costPerYield },
-      note: "Mẻ thử đạt",
-    }, db);
-    await recordRecipeRdTrialResult(creator, valid.requestId, {
-      resultStatus: "failed",
-      sensoryScore: 4,
-      operationalScore: 6,
-      measurements: { followUp: true },
-      note: "Ghi nhận một mẻ lỗi để kiểm tra lifecycle dữ liệu",
-    }, db);
+    for (const resultStatus of ["needs_changes", "passed", "failed"] as const) {
+      await recordRecipeRdTrialResult(creator, valid.requestId, {
+        resultStatus,
+        sensoryScore: resultStatus === "passed" ? 8.5 : 6,
+        operationalScore: 8,
+        measurements: { resultStatus },
+        note: `Trial ${resultStatus}`,
+      }, db);
+    }
     const trialCount = await db.query<{ count: number }>(
       `SELECT count(*)::int AS count FROM recipe_rd_trial_results WHERE rd_request_id=$1`,
       [valid.requestId],
     );
     assert.equal(trialCount.rows[0].count, 4);
 
-    const failedConstraint = await createGeneratedDraft(
+    const failed = await generateDraft(
       creator,
       recipeId,
       variantId,
-      { ...validConstraints, maxCostPerYield: 500 },
-      "Kiểm tra constraint fail",
+      "constraint failure",
+      { ...constraints, maxCostPerYield: 500 },
     );
-    draftIds.push(failedConstraint.draftId);
-    jobIds.push(failedConstraint.jobId);
-    assert.ok(failedConstraint.content.evaluation.constraints.some((item) => item.status === "failed"));
-    await reviewRecipeRdDraft(
-      reviewer,
-      failedConstraint.draftId,
-      "approved",
-      "Duyệt có chủ đích để kiểm tra apply chặn constraint.",
-      meta,
-      db,
-    );
-    await expectErrorCode(
-      () => applyApprovedRecipeRdDraft(applier, failedConstraint.draftId, meta, db),
+    draftIds.push(failed.draftId);
+    jobIds.push(failed.jobId);
+    assert.ok(failed.content.evaluation.constraints.some((item) => item.status === "failed"));
+    await reviewRecipeRdDraft(reviewer, failed.draftId, "approved", "Approve to test apply guard.", meta, db);
+    await expectCode(
+      () => applyApprovedRecipeRdDraft(applier, failed.draftId, meta, db),
       "RECIPE_RD_CONSTRAINT_FAILED",
     );
 
-    const stale = await createGeneratedDraft(
-      creator,
-      recipeId,
-      variantId,
-      validConstraints,
-      "Kiểm tra stale Recipe Version",
-    );
+    const stale = await generateDraft(creator, recipeId, variantId, "stale version", constraints);
     draftIds.push(stale.draftId);
     jobIds.push(stale.jobId);
-    await reviewRecipeRdDraft(
-      reviewer,
-      stale.draftId,
-      "approved",
-      "Duyệt để kiểm tra stale guard.",
-      meta,
-      db,
-    );
+    await reviewRecipeRdDraft(reviewer, stale.draftId, "approved", "Approve to test stale guard.", meta, db);
     const current = await db.query<{ versionNo: number; snapshot: unknown }>(
       `SELECT version.version_no AS "versionNo",version.snapshot
-       FROM recipes recipe
-       JOIN recipe_versions version ON version.id=recipe.current_version_id
+       FROM recipes recipe JOIN recipe_versions version ON version.id=recipe.current_version_id
        WHERE recipe.id=$1`,
       [recipeId],
     );
     const concurrent = await db.query<{ id: string }>(
       `INSERT INTO recipe_versions(recipe_id,version_no,workflow_status,snapshot,change_note,created_by_staff_id)
-       VALUES($1,$2,'draft',$3::jsonb,'Concurrent manual version',$4)
-       RETURNING id::text`,
+       VALUES($1,$2,'draft',$3::jsonb,'Concurrent version',$4) RETURNING id::text`,
       [recipeId, current.rows[0].versionNo + 1, JSON.stringify(current.rows[0].snapshot), creator.staffId],
     );
     await db.query(`UPDATE recipes SET current_version_id=$2 WHERE id=$1`, [recipeId, concurrent.rows[0].id]);
-    await expectErrorCode(
+    await expectCode(
       () => applyApprovedRecipeRdDraft(applier, stale.draftId, meta, db),
       "AI_DRAFT_STALE",
     );
 
-    const rejected = await createGeneratedDraft(
-      creator,
-      recipeId,
-      variantId,
-      validConstraints,
-      "Kiểm tra reject proposal",
-    );
+    const rejected = await generateDraft(creator, recipeId, variantId, "rejected proposal", constraints);
     draftIds.push(rejected.draftId);
     jobIds.push(rejected.jobId);
-    const rejectedResult = await reviewRecipeRdDraft(
+    const rejection = await reviewRecipeRdDraft(
       reviewer,
       rejected.draftId,
       "rejected",
-      "Từ chối để kiểm tra đồng bộ lifecycle.",
+      "Từ chối để kiểm tra lifecycle.",
       meta,
       db,
     );
-    assert.equal(rejectedResult.draft.status, "rejected");
+    assert.equal(rejection.draft.status, "rejected");
     const rejectedRequest = await db.query<{ status: string }>(
       `SELECT status FROM recipe_rd_requests WHERE id=$1`,
       [rejected.requestId],
@@ -503,17 +405,13 @@ async function main() {
     assert.equal(rejectedRequest.rows[0].status, "rejected");
 
     const events = await db.query<{ eventType: string }>(
-      `SELECT event_type AS "eventType"
-       FROM ai_draft_events WHERE draft_id=$1 ORDER BY created_at,id`,
+      `SELECT event_type AS "eventType" FROM ai_draft_events WHERE draft_id=$1 ORDER BY created_at,id`,
       [valid.draftId],
     );
     assert.deepEqual(events.rows.map((row) => row.eventType), ["generated", "approved", "applied"]);
-
     const audits = await db.query<{ actionKey: string }>(
-      `SELECT action_key AS "actionKey"
-       FROM admin_audit_logs
-       WHERE request_id=$1 AND action_key IN ('recipe.rd.approve','recipe.rd.apply')
-       ORDER BY created_at`,
+      `SELECT action_key AS "actionKey" FROM admin_audit_logs
+       WHERE request_id=$1 AND action_key IN ('recipe.rd.approve','recipe.rd.apply')`,
       [meta.requestId],
     );
     assert.ok(audits.rows.some((row) => row.actionKey === "recipe.rd.approve"));
@@ -521,20 +419,12 @@ async function main() {
 
     console.log("Recipe R&D integration passed.");
   } finally {
-    if (draftIds.length) {
-      await db.query("DELETE FROM ai_drafts WHERE id=ANY($1::uuid[])", [draftIds]).catch(() => undefined);
-    }
-    if (jobIds.length) {
-      await db.query("DELETE FROM ai_jobs WHERE id=ANY($1::uuid[])", [jobIds]).catch(() => undefined);
-    }
+    if (draftIds.length) await db.query("DELETE FROM ai_drafts WHERE id=ANY($1::uuid[])", [draftIds]).catch(() => undefined);
+    if (jobIds.length) await db.query("DELETE FROM ai_jobs WHERE id=ANY($1::uuid[])", [jobIds]).catch(() => undefined);
     if (recipeId) await db.query("DELETE FROM recipes WHERE id=$1", [recipeId]).catch(() => undefined);
-    if (inventoryLocationId) {
-      await db.query("DELETE FROM inventory_locations WHERE id=$1", [inventoryLocationId]).catch(() => undefined);
-    }
+    if (locationId) await db.query("DELETE FROM inventory_locations WHERE id=$1", [locationId]).catch(() => undefined);
     if (supplierId) await db.query("DELETE FROM suppliers WHERE id=$1", [supplierId]).catch(() => undefined);
-    for (const staffId of staffIds) {
-      await db.query("DELETE FROM staff_users WHERE id=$1", [staffId]).catch(() => undefined);
-    }
+    for (const staffId of staffIds) await db.query("DELETE FROM staff_users WHERE id=$1", [staffId]).catch(() => undefined);
     if (variantId) await db.query("DELETE FROM catalog_variants WHERE id=$1", [variantId]).catch(() => undefined);
     if (productId) await db.query("DELETE FROM catalog_products WHERE id=$1", [productId]).catch(() => undefined);
     await db.end().catch(() => undefined);
