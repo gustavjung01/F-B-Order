@@ -15,8 +15,7 @@ import {
 } from "@/components/admin/ui/AdminUI";
 import type { Version } from "./types";
 
--type Scalar = string | number | boolean | null;
-+type Scalar = string | number | boolean | null;
+type Scalar = string | number | boolean | null;
 
 type CostPreview = {
   status: "ready" | "partial" | "unavailable";
