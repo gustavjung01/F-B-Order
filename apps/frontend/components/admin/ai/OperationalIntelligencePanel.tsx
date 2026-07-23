@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useAuth } from "@clerk/nextjs";
 import { adminApiFetch } from "@/lib/admin-api";
 import { useAdminPermissions } from "../AdminPermissionProvider";
@@ -58,6 +58,14 @@ export function OperationalIntelligencePanel() {
   const [context, setContext] = useState<OperationalContext | null>(null);
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
+
+  useEffect(() => {
+    setSelectedScopes((current) => {
+      const retained = current.filter((scope) => availableScopes.includes(scope));
+      const missing = availableScopes.filter((scope) => !retained.includes(scope));
+      return [...retained, ...missing];
+    });
+  }, [availableScopes]);
 
   async function token() {
     const value = await getToken();
