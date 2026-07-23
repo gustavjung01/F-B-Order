@@ -50,31 +50,49 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Prepare logs
+        run: mkdir -p logs
+
       - name: Run migrations
-        run: pnpm db:migrate
+        shell: bash
+        run: |
+          set -o pipefail
+          pnpm db:migrate 2>&1 | tee logs/migrations.log
 
       - name: Backend typecheck
-        run: pnpm --filter @fb-order/backend typecheck
+        shell: bash
+        run: |
+          set -o pipefail
+          pnpm --filter @fb-order/backend typecheck 2>&1 | tee logs/backend-typecheck.log
 
       - name: Recipe R&D integration test
-        run: pnpm --filter @fb-order/backend test:recipe-rd
+        shell: bash
+        run: |
+          set -o pipefail
+          pnpm --filter @fb-order/backend test:recipe-rd 2>&1 | tee logs/recipe-rd-test.log
 
       - name: Frontend typecheck
-        run: pnpm --filter @fb-order/frontend typecheck
+        shell: bash
+        run: |
+          set -o pipefail
+          pnpm --filter @fb-order/frontend typecheck 2>&1 | tee logs/frontend-typecheck.log
 
       - name: Backend build
-        run: pnpm run build:backend
+        shell: bash
+        run: |
+          set -o pipefail
+          pnpm run build:backend 2>&1 | tee logs/backend-build.log
 
       - name: Frontend build
-        run: pnpm run build:frontend
+        shell: bash
+        run: |
+          set -o pipefail
+          pnpm run build:frontend 2>&1 | tee logs/frontend-build.log
 
       - name: Upload failure logs
         if: failure()
         uses: actions/upload-artifact@v4
         with:
           name: recipe-rd-failure-logs
-          path: |
-            *.log
-            apps/backend/*.log
-            apps/frontend/*.log
-          if-no-files-found: ignore
+          path: logs
+          if-no-files-found: error
