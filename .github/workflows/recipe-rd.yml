@@ -1,0 +1,80 @@
+name: Recipe R&D workflow
+
+on:
+  pull_request:
+    paths:
+      - "apps/backend/**"
+      - "apps/frontend/**"
+      - "db/migrations/**"
+      - ".github/workflows/recipe-rd.yml"
+      - "package.json"
+      - "pnpm-lock.yaml"
+  workflow_dispatch:
+
+jobs:
+  recipe-rd:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: fb_order_recipe_rd
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d fb_order_recipe_rd"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/fb_order_recipe_rd
+      NODE_ENV: test
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run migrations
+        run: pnpm db:migrate
+
+      - name: Backend typecheck
+        run: pnpm --filter @fb-order/backend typecheck
+
+      - name: Recipe R&D integration test
+        run: pnpm --filter @fb-order/backend test:recipe-rd
+
+      - name: Frontend typecheck
+        run: pnpm --filter @fb-order/frontend typecheck
+
+      - name: Backend build
+        run: pnpm run build:backend
+
+      - name: Frontend build
+        run: pnpm run build:frontend
+
+      - name: Upload failure logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: recipe-rd-failure-logs
+          path: |
+            *.log
+            apps/backend/*.log
+            apps/frontend/*.log
+          if-no-files-found: ignore
