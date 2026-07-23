@@ -1,0 +1,146 @@
+name: Patch R&D trial audit
+
+on:
+  push:
+    branches:
+      - feat/phase6-recipe-rd
+    paths:
+      - ".github/workflows/patch-rd-trial-audit.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/phase6-recipe-rd
+          fetch-depth: 0
+
+      - name: Harden trial persistence and coverage
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          service = Path("apps/backend/src/modules/rd/recipe-rd.service.ts")
+          text = service.read_text(encoding="utf-8")
+          pattern = re.compile(
+              r'export async function recordRecipeRdTrialResult\([\s\S]*?\n\}\n\n(?=export async function applyApprovedRecipeRdDraft\()'
+          )
+          replacement = '''export async function recordRecipeRdTrialResult(
+            identity: StaffIdentity,
+            requestIdValue: string,
+            input: RecipeRdTrialInput,
+            db: Pool = getDb(),
+          ) {
+            requireAdmin(identity);
+            const requestId = normalizeUuid(requestIdValue, "requestId");
+            const batchQuantity = input.batchQuantity ?? null;
+            const batchUnit = text(input.batchUnit, "batchUnit", 80);
+            if ((batchQuantity === null) !== (batchUnit === null)) {
+              throw new OrderEngineError("RECIPE_RD_TRIAL_BATCH_INVALID", 400, "batchQuantity and batchUnit must be supplied together.");
+            }
+
+            const client = await db.connect();
+            try {
+              await client.query("BEGIN");
+              const requestResult = await client.query<{
+                status: string;
+                recipeId: string;
+                aiDraftId: string | null;
+              }>(
+                `SELECT status,recipe_id::text AS "recipeId",ai_draft_id::text AS "aiDraftId"
+                 FROM recipe_rd_requests WHERE id=$1 FOR UPDATE`,
+                [requestId],
+              );
+              const request = requestResult.rows[0];
+              if (!request) {
+                throw new OrderEngineError("RECIPE_RD_REQUEST_NOT_FOUND", 404, "Recipe R&D request was not found.");
+              }
+              if (!["generated", "approved", "applied"].includes(request.status)) {
+                throw new OrderEngineError("RECIPE_RD_TRIAL_NOT_ALLOWED", 409, "Trial results can only be recorded after a proposal is generated.");
+              }
+
+              const result = await client.query<{ id: string }>(
+                `INSERT INTO recipe_rd_trial_results(
+                   rd_request_id,recorded_by_staff_id,result_status,batch_quantity,batch_unit,
+                   sensory_score,operational_score,measurements,note
+                 ) VALUES($1,$2,$3,$4,$5,$6,$7,$8::jsonb,$9)
+                 RETURNING id::text`,
+                [
+                  requestId,
+                  identity.staffId,
+                  input.resultStatus,
+                  batchQuantity,
+                  batchUnit,
+                  input.sensoryScore ?? null,
+                  input.operationalScore ?? null,
+                  JSON.stringify(input.measurements ?? {}),
+                  text(input.note, "note", 4000),
+                ],
+              );
+              const trialResultId = result.rows[0].id;
+              await writeAdminAuditLog({
+                actorStaffId: identity.staffId,
+                actionKey: "recipe.rd.trial.record",
+                resourceType: "recipe_rd_request",
+                resourceId: requestId,
+                outcome: "success",
+                permissionKey: "recipe.rd.create",
+                reason: text(input.note, "note", 4000),
+                beforeData: { requestStatus: request.status },
+                afterData: {
+                  trialResultId,
+                  resultStatus: input.resultStatus,
+                  sensoryScore: input.sensoryScore ?? null,
+                  operationalScore: input.operationalScore ?? null,
+                },
+                metadata: { recipeId: request.recipeId, aiDraftId: request.aiDraftId },
+                requestId: null,
+                ipAddress: null,
+                userAgent: null,
+              }, client);
+              await client.query("COMMIT");
+              return { trialResultId, status: input.resultStatus };
+            } catch (error) {
+              await client.query("ROLLBACK").catch(() => undefined);
+              throw error;
+            } finally {
+              client.release();
+            }
+          }
+
+'''
+          text, count = pattern.subn(replacement, text, count=1)
+          if count != 1:
+              raise SystemExit(f"Expected one trial function, replaced {count}")
+          service.write_text(text, encoding="utf-8")
+
+          test = Path("apps/backend/scripts/test-recipe-rd.ts")
+          test_text = test.read_text(encoding="utf-8")
+          old_filter = "WHERE request_id=$1 AND action_key IN ('recipe.rd.approve','recipe.rd.apply')"
+          new_filter = "WHERE request_id=$1 AND action_key IN ('recipe.rd.approve','recipe.rd.apply','recipe.rd.trial.record')"
+          if test_text.count(old_filter) != 1:
+              raise SystemExit("Expected audit filter once")
+          test_text = test_text.replace(old_filter, new_filter)
+          old_assert = 'assert.ok(audits.rows.some((row) => row.actionKey === "recipe.rd.apply"));'
+          new_assert = old_assert + '\n    assert.ok(audits.rows.some((row) => row.actionKey === "recipe.rd.trial.record"));'
+          if test_text.count(old_assert) != 1:
+              raise SystemExit("Expected apply audit assertion once")
+          test.write_text(test_text.replace(old_assert, new_assert), encoding="utf-8")
+
+          Path(".github/workflows/patch-rd-trial-audit.yml").unlink()
+          PY
+
+      - name: Commit patch and remove helper
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add apps/backend/src/modules/rd/recipe-rd.service.ts apps/backend/scripts/test-recipe-rd.ts .github/workflows/patch-rd-trial-audit.yml
+          git commit -m "fix(rd): audit trial results atomically"
+          git push origin HEAD:feat/phase6-recipe-rd
