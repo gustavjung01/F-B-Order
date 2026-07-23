@@ -4,6 +4,7 @@ import { z } from "zod";
 import type { RequestIdentity, StaffIdentity } from "../auth/auth.identity.js";
 import { requirePermission } from "../auth/auth.permissions.js";
 import { isOrderEngineError, OrderEngineError } from "../orders/order-errors.js";
+import { reviewRecipeRdDraft } from "./recipe-rd-review.service.js";
 import {
   applyApprovedRecipeRdDraft,
   createRecipeRdRequest,
@@ -34,6 +35,8 @@ const trialSchema = z.object({
   measurements: z.record(z.unknown()).default({}),
   note: z.string().trim().max(4000).nullable().optional(),
 });
+
+const reviewSchema = z.object({ note: z.string().trim().min(3).max(500) });
 
 type IdentityResolver = (req: Request) => Promise<RequestIdentity>;
 
@@ -97,6 +100,26 @@ export function createRecipeRdRouter(identityResolver: IdentityResolver) {
       await requirePermission(identity, "recipe.rd.create");
       const input = trialSchema.parse(req.body ?? {});
       res.status(201).json(await recordRecipeRdTrialResult(identity, req.params.requestId, input));
+    } catch (error) { sendError(res, error); }
+  });
+
+  router.post("/drafts/:draftId/approve", async (req, res) => {
+    try {
+      const identity = requireActiveStaff(await identityResolver(req));
+      await requirePermission(identity, "recipe.rd.review");
+      await requirePermission(identity, "ai.approve");
+      const input = reviewSchema.parse(req.body ?? {});
+      res.json(await reviewRecipeRdDraft(identity, req.params.draftId, "approved", input.note, requestMeta(req)));
+    } catch (error) { sendError(res, error); }
+  });
+
+  router.post("/drafts/:draftId/reject", async (req, res) => {
+    try {
+      const identity = requireActiveStaff(await identityResolver(req));
+      await requirePermission(identity, "recipe.rd.review");
+      await requirePermission(identity, "ai.approve");
+      const input = reviewSchema.parse(req.body ?? {});
+      res.json(await reviewRecipeRdDraft(identity, req.params.draftId, "rejected", input.note, requestMeta(req)));
     } catch (error) { sendError(res, error); }
   });
 
