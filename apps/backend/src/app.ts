@@ -20,6 +20,7 @@ import { createCustomerOrdersRouter } from "./modules/orders/customer-orders.rou
 import { createOrderEntryRouter } from "./modules/orders/orders-entry.routes";
 import { createAdminRecipesRouter } from "./modules/recipes/recipe-admin.routes";
 import { createPublicRecipesRouter } from "./modules/recipes/recipe-public.routes";
+import { createRecipeVersionAnalysisRouter } from "./modules/recipes/recipe-version-analysis.routes";
 
 export type AppConfig = {
   corsOrigin: string;
@@ -84,6 +85,7 @@ export function createApp(config: AppConfig) {
     app.use("/api/admin/products", createAdminProductsRouter(resolveRequestIdentity));
     app.use("/api/admin/orders", createAdminOrdersRouter(resolveRequestIdentity));
     app.use("/api/admin/recipes", createAdminRecipesRouter(resolveRequestIdentity));
+    app.use("/api/admin/recipe-version-analysis", createRecipeVersionAnalysisRouter(resolveRequestIdentity));
     app.use("/api/admin/staff", createAdminStaffRouter(resolveRequestIdentity));
     app.use("/api/admin/ai", createAiRouter(resolveRequestIdentity));
     app.use("/api/admin/ai/operations", createOperationalIntelligenceRouter(resolveRequestIdentity));
@@ -102,6 +104,7 @@ export function createApp(config: AppConfig) {
     app.use("/api/admin/products", clerkUnavailable);
     app.use("/api/admin/orders", clerkUnavailable);
     app.use("/api/admin/recipes", clerkUnavailable);
+    app.use("/api/admin/recipe-version-analysis", clerkUnavailable);
     app.use("/api/admin/staff", clerkUnavailable);
     app.use("/api/admin/ai", clerkUnavailable);
     app.use("/api/admin/ai/operations", clerkUnavailable);
