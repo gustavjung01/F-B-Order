@@ -15,6 +15,7 @@ import { createCatalogV2DetailRouter } from "./modules/catalog-v2/catalog-v2-det
 import { createCatalogV2ListRouter } from "./modules/catalog-v2/catalog-v2-list.routes";
 import { createCartRouter } from "./modules/catalog/cart.routes";
 import { createCatalogRouter } from "./modules/catalog/catalog.routes";
+import { createKitchenCapacityRouter } from "./modules/kitchen/kitchen-capacity.routes";
 import { createAdminOrdersRouter } from "./modules/orders/admin-orders.routes";
 import { createCustomerOrdersRouter } from "./modules/orders/customer-orders.routes";
 import { createOrderEntryRouter } from "./modules/orders/orders-entry.routes";
@@ -86,6 +87,7 @@ export function createApp(config: AppConfig) {
     app.use("/api/admin/orders", createAdminOrdersRouter(resolveRequestIdentity));
     app.use("/api/admin/recipes", createAdminRecipesRouter(resolveRequestIdentity));
     app.use("/api/admin/recipe-version-analysis", createRecipeVersionAnalysisRouter(resolveRequestIdentity));
+    app.use("/api/admin/kitchen-capacity", createKitchenCapacityRouter(resolveRequestIdentity));
     app.use("/api/admin/staff", createAdminStaffRouter(resolveRequestIdentity));
     app.use("/api/admin/ai", createAiRouter(resolveRequestIdentity));
     app.use("/api/admin/ai/operations", createOperationalIntelligenceRouter(resolveRequestIdentity));
@@ -105,6 +107,7 @@ export function createApp(config: AppConfig) {
     app.use("/api/admin/orders", clerkUnavailable);
     app.use("/api/admin/recipes", clerkUnavailable);
     app.use("/api/admin/recipe-version-analysis", clerkUnavailable);
+    app.use("/api/admin/kitchen-capacity", clerkUnavailable);
     app.use("/api/admin/staff", clerkUnavailable);
     app.use("/api/admin/ai", clerkUnavailable);
     app.use("/api/admin/ai/operations", clerkUnavailable);
