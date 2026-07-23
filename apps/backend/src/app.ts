@@ -6,6 +6,7 @@ import { createAdminCustomersRouter } from "./modules/admin/admin-customers.rout
 import { createAdminProductsRouter } from "./modules/admin/admin-products.routes";
 import { createAdminStaffRouter } from "./modules/admin/admin-staff.routes";
 import { createAiRouter } from "./modules/ai/ai.routes";
+import { createOperationalIntelligenceRouter } from "./modules/ai/operational-intelligence.routes";
 import { createRecipeCopilotRouter } from "./modules/ai/recipe-copilot.routes";
 import { anonymousIdentity, resolveRequestIdentity } from "./modules/auth/auth.identity";
 import { createAuthRouter } from "./modules/auth/auth.routes";
@@ -85,6 +86,7 @@ export function createApp(config: AppConfig) {
     app.use("/api/admin/recipes", createAdminRecipesRouter(resolveRequestIdentity));
     app.use("/api/admin/staff", createAdminStaffRouter(resolveRequestIdentity));
     app.use("/api/admin/ai", createAiRouter(resolveRequestIdentity));
+    app.use("/api/admin/ai/operations", createOperationalIntelligenceRouter(resolveRequestIdentity));
     app.use("/api/admin/recipe-copilot", createRecipeCopilotRouter(resolveRequestIdentity));
   } else {
     const clerkUnavailable = (_req: express.Request, res: express.Response) => {
@@ -102,6 +104,7 @@ export function createApp(config: AppConfig) {
     app.use("/api/admin/recipes", clerkUnavailable);
     app.use("/api/admin/staff", clerkUnavailable);
     app.use("/api/admin/ai", clerkUnavailable);
+    app.use("/api/admin/ai/operations", clerkUnavailable);
     app.use("/api/admin/recipe-copilot", clerkUnavailable);
   }
 

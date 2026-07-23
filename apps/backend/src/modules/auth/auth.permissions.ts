@@ -12,6 +12,8 @@ export type PermissionKey =
   | "catalog.edit"
   | "catalog.publish"
   | "catalog.pricing"
+  | "inventory.view"
+  | "suppliers.view"
   | "recipes.view"
   | "recipes.edit"
   | "recipes.review"
@@ -37,6 +39,8 @@ const ALL_PERMISSIONS: PermissionKey[] = [
   "catalog.edit",
   "catalog.publish",
   "catalog.pricing",
+  "inventory.view",
+  "suppliers.view",
   "recipes.view",
   "recipes.edit",
   "recipes.review",

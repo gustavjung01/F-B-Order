@@ -8,6 +8,8 @@ export type AdminPermission =
   | "catalog.edit"
   | "catalog.publish"
   | "catalog.pricing"
+  | "inventory.view"
+  | "suppliers.view"
   | "recipes.view"
   | "recipes.edit"
   | "recipes.review"
@@ -27,6 +29,8 @@ export const ADMIN_ENTRY_PERMISSIONS: readonly AdminPermission[] = [
   "orders.view",
   "customers.view",
   "catalog.view",
+  "inventory.view",
+  "suppliers.view",
   "recipes.view",
   "staff.view",
   "audit.view",
