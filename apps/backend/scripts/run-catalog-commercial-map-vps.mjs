@@ -99,11 +99,16 @@ try {
     "set -euo pipefail",
     `cd '${remoteDir}'`,
     `chmod 600 '${payloadName}'`,
-    `if [ -d '${remoteRoot}/apps/backend/node_modules' ]; then ln -s '${remoteRoot}/apps/backend/node_modules' node_modules; elif [ -d '${remoteRoot}/node_modules' ]; then ln -s '${remoteRoot}/node_modules' node_modules; else echo 'Bếp Sỉ node_modules not found' >&2; exit 1; fi`,
+    `SERVICE_PID=$(systemctl show --property MainPID --value '${remoteService}')`,
+    `test -n "$SERVICE_PID" && test "$SERVICE_PID" -gt 0`,
+    `SERVICE_CWD=$(readlink -f "/proc/$SERVICE_PID/cwd")`,
+    `test -n "$SERVICE_CWD"`,
+    `mkdir -p node_modules`,
+    `for PACKAGE_NAME in pg dotenv; do PACKAGE_JSON=$(find "$SERVICE_CWD" '${remoteRoot}' /srv/apps -type f -path "*/node_modules/$PACKAGE_NAME/package.json" -print -quit 2>/dev/null || true); if [ -z "$PACKAGE_JSON" ]; then echo "Bếp Sỉ runtime package not found: $PACKAGE_NAME (service cwd: $SERVICE_CWD)" >&2; exit 1; fi; ln -s "$(dirname "$PACKAGE_JSON")" "node_modules/$PACKAGE_NAME"; done`,
     "set -a",
     `. '${remoteEnv}'`,
     "set +a",
-    `test -n \"\${DATABASE_URL:-\${BEPSI_DATABASE_URL:-}}\"`,
+    `test -n "\${DATABASE_URL:-\${BEPSI_DATABASE_URL:-}}"`,
     `node import-catalog-commercial-map.mjs --file='${payloadName}'`,
   ].join("\n");
   const encodedScript = Buffer.from(remoteScript, "utf8").toString("base64");
