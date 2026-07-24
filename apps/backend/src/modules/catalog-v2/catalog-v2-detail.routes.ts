@@ -41,12 +41,23 @@ type VariantRow = CatalogV2PriceRow & {
   image_key: string | null;
   image_object_key: string | null;
   sort_order: number;
+  packaging_sell_unit: string | null;
+  packaging_package_quantity: string | null;
+  packaging_package_unit: string | null;
+  packaging_net_quantity: string | null;
+  packaging_net_unit: string | null;
+  packaging_confidence: "high" | "medium" | "low" | null;
 };
 
 function assetUrl(objectKey: string | null) {
   if (!objectKey) return null;
   const base = (process.env.R2_PUBLIC_BASE_URL || process.env.CATALOG_ASSET_BASE_URL || DEFAULT_ASSET_BASE_URL).trim();
   return `${base.replace(/\/+$/, "")}/${objectKey.replace(/^\/+/, "")}`;
+}
+
+function positiveNumber(value: string | null) {
+  const parsed = value === null ? null : Number(value);
+  return parsed !== null && Number.isFinite(parsed) && parsed > 0 ? parsed : null;
 }
 
 function normalizeKey(value: string) {
@@ -221,6 +232,23 @@ function variantCard(row: VariantRow, identity: RequestIdentity) {
   const sizeLabel = options.size || null;
   const packageLabel = options.package || null;
   const sellUnit = options.sell_unit || null;
+  const packageQuantity = positiveNumber(row.packaging_package_quantity);
+  const netQuantity = positiveNumber(row.packaging_net_quantity);
+  const packaging = row.packaging_sell_unit
+    && packageQuantity
+    && row.packaging_package_unit
+    && netQuantity
+    && row.packaging_net_unit
+    ? {
+      sellUnit: row.packaging_sell_unit,
+      packageQuantity,
+      packageUnit: row.packaging_package_unit,
+      netQuantity,
+      netUnit: row.packaging_net_unit,
+      confidence: row.packaging_confidence,
+      outerPrice: pricing.amount === null ? null : Math.round(pricing.amount * packageQuantity * 100) / 100,
+    }
+    : null;
 
   return {
     id: row.variant_id,
@@ -243,6 +271,7 @@ function variantCard(row: VariantRow, identity: RequestIdentity) {
     packageLabel,
     sellUnit,
     specificationLabel: [sizeLabel, packageLabel, sellUnit ? `ĐVT: ${sellUnit}` : null].filter(Boolean).join(" · ") || null,
+    packaging,
     priceMode: row.price_mode,
     price: pricing.amount,
     priceLabel: pricing.label,
@@ -288,9 +317,16 @@ function selectVariants(priceGroupParameter: number) {
     variant.is_orderable,
     variant.is_active,
     variant.is_public,
-    variant.sort_order
+    variant.sort_order,
+    packaging.sell_unit AS packaging_sell_unit,
+    packaging.package_quantity::text AS packaging_package_quantity,
+    packaging.package_unit AS packaging_package_unit,
+    packaging.net_quantity::text AS packaging_net_quantity,
+    packaging.net_unit AS packaging_net_unit,
+    packaging.confidence AS packaging_confidence
   FROM catalog_variants variant
   JOIN catalog_products product ON product.id = variant.product_id
+  LEFT JOIN catalog_variant_packaging_specs packaging ON packaging.variant_id = variant.id
   LEFT JOIN LATERAL (
     SELECT price.price
     FROM catalog_variant_prices price
