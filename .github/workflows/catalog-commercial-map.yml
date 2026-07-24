@@ -7,6 +7,8 @@ on:
     paths:
       - "apps/backend/scripts/catalog-commercial-map.mjs"
       - "apps/backend/scripts/import-catalog-commercial-map.mjs"
+      - "apps/backend/scripts/run-catalog-commercial-map-bepsi.mjs"
+      - "apps/backend/scripts/run-catalog-commercial-map-vps.mjs"
       - "apps/backend/scripts/test-catalog-commercial-map.mjs"
       - "apps/backend/scripts/validate-catalog-commercial-map.mjs"
       - "apps/backend/src/modules/catalog-v2/catalog-v2-detail.routes.ts"
@@ -67,6 +69,16 @@ jobs:
 
       - name: Prepare logs
         run: mkdir -p logs
+
+      - name: Check commercial scripts
+        shell: bash
+        run: |
+          set -o pipefail
+          node --check apps/backend/scripts/catalog-commercial-map.mjs
+          node --check apps/backend/scripts/import-catalog-commercial-map.mjs
+          node --check apps/backend/scripts/run-catalog-commercial-map-bepsi.mjs
+          node --check apps/backend/scripts/run-catalog-commercial-map-vps.mjs
+          node --check apps/backend/scripts/validate-catalog-commercial-map.mjs
 
       - name: Run migrations
         shell: bash
