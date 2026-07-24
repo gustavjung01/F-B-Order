@@ -55,7 +55,7 @@
     "zod": "3.23.8"
   },
   "devDependencies": {
-    "@types/cors": "5.0.6",
+    "@types/cors": "2.8.19",
     "@types/express": "5.0.6",
     "@types/node": "25.9.3",
     "tsx": "4.19.2",
