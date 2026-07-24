@@ -13,6 +13,7 @@ const remoteRoot = "/srv/apps/bepsi";
 const remoteEnv = "/etc/app-env/bepsi.env";
 const remoteService = "bepsi-api.service";
 const remoteDir = `${remoteRoot}/.tmp/catalog-commercial-map-${Date.now()}-${process.pid}`;
+const localReportPath = path.join(repoRoot, "artifacts/catalog-commercial-import/reconciliation.json");
 
 function argument(name, fallback = null) {
   const prefix = `--${name}=`;
@@ -57,7 +58,8 @@ if (!fs.existsSync(sshKey)) fail(`SSH key not found: ${sshKey}`);
 
 const importerPath = path.join(here, "import-catalog-commercial-map.mjs");
 const helperPath = path.join(here, "catalog-commercial-map.mjs");
-for (const requiredPath of [importerPath, helperPath]) {
+const reconciliationPath = path.join(here, "audit-catalog-commercial-map-reconciliation.mjs");
+for (const requiredPath of [importerPath, helperPath, reconciliationPath]) {
   if (!fs.existsSync(requiredPath)) fail(`Required script not found: ${requiredPath}`);
 }
 
@@ -90,6 +92,7 @@ try {
     ...scpArgs,
     importerPath,
     helperPath,
+    reconciliationPath,
     payloadPath,
     `${sshTarget}:${remoteDir}/`,
   ]);
@@ -109,12 +112,35 @@ try {
     `. '${remoteEnv}'`,
     "set +a",
     `test -n "\${DATABASE_URL:-\${BEPSI_DATABASE_URL:-}}"`,
+    "set +e",
     `node import-catalog-commercial-map.mjs --file='${payloadName}'`,
+    "IMPORT_STATUS=$?",
+    "set -e",
+    "if [ \"$IMPORT_STATUS\" -eq 2 ]; then",
+    `  node audit-catalog-commercial-map-reconciliation.mjs --file='${payloadName}' --output='reconciliation.json'`,
+    "elif [ \"$IMPORT_STATUS\" -ne 0 ]; then",
+    "  exit \"$IMPORT_STATUS\"",
+    "fi",
   ].join("\n");
   const encodedScript = Buffer.from(remoteScript, "utf8").toString("base64");
   const remoteCommand = `printf '%s' '${encodedScript}' | base64 -d | sudo -n bash`;
 
   run("ssh", [...sshArgs, sshTarget, remoteCommand]);
+
+  const reportProbe = run("ssh", [
+    ...sshArgs,
+    sshTarget,
+    `sudo -n test -f '${remoteDir}/reconciliation.json'`,
+  ], { allowFailure: true, capture: true });
+  if (reportProbe.status === 0) {
+    fs.mkdirSync(path.dirname(localReportPath), { recursive: true });
+    run("scp", [
+      ...scpArgs,
+      `${sshTarget}:${remoteDir}/reconciliation.json`,
+      localReportPath,
+    ]);
+    console.log(`[catalog-commercial] Reconciliation report saved: ${localReportPath}`);
+  }
 } catch (error) {
   console.error(`[catalog-commercial] VPS dry-run failed: ${error instanceof Error ? error.message : String(error)}`);
   process.exitCode = 1;
