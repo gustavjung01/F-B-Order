@@ -11,6 +11,7 @@ const sshKey = process.env.BEPSI_SSH_KEY || defaultKey;
 const sshTarget = process.env.BEPSI_SSH_TARGET || "ubuntu@40.233.83.234";
 const remoteRoot = "/srv/apps/bepsi";
 const remoteEnv = "/etc/app-env/bepsi.env";
+const remoteService = "bepsi-api.service";
 const remoteDir = `${remoteRoot}/.tmp/catalog-commercial-map-${Date.now()}-${process.pid}`;
 
 function argument(name, fallback = null) {
@@ -74,6 +75,7 @@ const scpArgs = [
 ];
 
 console.log(`[catalog-commercial] VPS dry-run target: ${sshTarget}${remoteRoot}`);
+console.log(`[catalog-commercial] Service: ${remoteService}`);
 console.log(`[catalog-commercial] Environment: ${remoteEnv}`);
 console.log("[catalog-commercial] Mode: READ ONLY; no migration, import, service restart, or deploy.");
 
@@ -81,7 +83,7 @@ try {
   run("ssh", [
     ...sshArgs,
     sshTarget,
-    `set -euo pipefail; test -d '${remoteRoot}'; test -f '${remoteEnv}'; mkdir -p '${remoteDir}'; chmod 700 '${remoteDir}'`,
+    `set -euo pipefail; sudo -n test -d '${remoteRoot}'; sudo -n test -f '${remoteEnv}'; sudo -n systemctl is-active --quiet '${remoteService}'; sudo -n mkdir -p '${remoteDir}'; sudo -n chown ubuntu:ubuntu '${remoteDir}'; chmod 700 '${remoteDir}'`,
   ]);
 
   run("scp", [
@@ -93,7 +95,7 @@ try {
   ]);
 
   const payloadName = path.basename(payloadPath);
-  const remoteCommand = [
+  const remoteScript = [
     "set -euo pipefail",
     `cd '${remoteDir}'`,
     `chmod 600 '${payloadName}'`,
@@ -102,7 +104,9 @@ try {
     "set +a",
     `test -n \"\${DATABASE_URL:-\${BEPSI_DATABASE_URL:-}}\"`,
     `node import-catalog-commercial-map.mjs --file='${payloadName}'`,
-  ].join("; ");
+  ].join("\n");
+  const encodedScript = Buffer.from(remoteScript, "utf8").toString("base64");
+  const remoteCommand = `printf '%s' '${encodedScript}' | base64 -d | sudo -n bash`;
 
   run("ssh", [...sshArgs, sshTarget, remoteCommand]);
 } catch (error) {
@@ -112,6 +116,6 @@ try {
   run("ssh", [
     ...sshArgs,
     sshTarget,
-    `rm -rf '${remoteDir}'`,
+    `sudo -n rm -rf '${remoteDir}'`,
   ], { allowFailure: true, capture: true });
 }
