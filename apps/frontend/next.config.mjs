@@ -24,15 +24,6 @@ const nextConfig = {
       { source: "/open-external-browser.js", headers: noStoreHeaders },
     ];
   },
-  async redirects() {
-    return [
-      {
-        source: "/account",
-        destination: "/register",
-        permanent: false,
-      },
-    ];
-  },
 };
 
 export default nextConfig;
