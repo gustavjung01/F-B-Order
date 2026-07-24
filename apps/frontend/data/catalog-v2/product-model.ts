@@ -14,6 +14,16 @@ export type CatalogV2Image = {
   url: string | null;
 };
 
+export type CatalogV2Packaging = {
+  sellUnit: string;
+  packageQuantity: number;
+  packageUnit: string;
+  netQuantity: number;
+  netUnit: string;
+  confidence: "high" | "medium" | "low" | null;
+  outerPrice: number | null;
+};
+
 export type CatalogV2VariantCard = {
   id: string;
   variant_id: string;
@@ -35,6 +45,7 @@ export type CatalogV2VariantCard = {
   packageLabel: string | null;
   sellUnit: string | null;
   specificationLabel: string | null;
+  packaging?: CatalogV2Packaging | null;
   shortDescription?: string | null;
   commercialDataConfidence?: "high" | "medium" | null;
   priceMode: "fixed" | "market";
