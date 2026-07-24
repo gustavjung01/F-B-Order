@@ -27,5 +27,10 @@ test-results/
 artifacts/catalog/hung-phat-v2-preview/
 data/catalog/hung-phat/v2/generated/
 
+# Private commercial catalog imports and local reports
+# Supplier workbooks and generated payloads must never enter the public repo.
+data/private/catalog-imports/
+artifacts/catalog-commercial-import/
+
 # TypeScript incremental build cache
 *.tsbuildinfo
