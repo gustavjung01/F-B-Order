@@ -24,3 +24,16 @@ test("customer account navigation opens the account page without a registration 
   assert.match(accountPage, /title=["']Tài khoản["']/u);
   assert.match(accountStatus, /href=["']\/orders["'][\s\S]*Đơn hàng của tôi/u);
 });
+
+test("customer account shows recent orders and frequently purchased products from order history", () => {
+  const accountPage = read("apps/frontend/app/account/page.tsx");
+  const insights = read("apps/frontend/components/account/AccountOrderInsights.tsx");
+
+  assert.match(accountPage, /<AccountOrderInsights\s*\/>/u);
+  assert.match(insights, /fetch\(["']\/api\/orders\?limit=20["']/u);
+  assert.match(insights, /Đơn gần đây/u);
+  assert.match(insights, /Sản phẩm hay mua/u);
+  assert.match(insights, /order\.status !== ["']cancelled["']/u);
+  assert.match(insights, /order\.status !== ["']rejected["']/u);
+  assert.match(insights, /href=["']\/orders["']/u);
+});
