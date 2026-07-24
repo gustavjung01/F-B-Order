@@ -16,6 +16,19 @@ type Props = {
   onVariantChange?: (variant: CatalogV2VariantCard) => void;
 };
 
+const quantityFormatter = new Intl.NumberFormat("vi-VN", { maximumFractionDigits: 3 });
+const moneyFormatter = new Intl.NumberFormat("vi-VN", {
+  style: "currency",
+  currency: "VND",
+  maximumFractionDigits: 0,
+});
+
+function packagingLabel(variant: CatalogV2VariantCard | null) {
+  const packaging = variant?.packaging;
+  if (!packaging) return null;
+  return `${quantityFormatter.format(packaging.netQuantity)} ${packaging.netUnit}/${packaging.sellUnit} · ${quantityFormatter.format(packaging.packageQuantity)} ${packaging.sellUnit}/${packaging.packageUnit}`;
+}
+
 function initialOptions(detail: CatalogV2DetailResponse, variant: CatalogV2VariantCard | undefined) {
   return Object.fromEntries(
     detail.optionGroups
@@ -171,6 +184,7 @@ export function CompactPurchaseSelector({ detail, initialVariantId, onVariantCha
   );
   const choicesReady = choiceGroups.every((group) => !group.required || Boolean(choices[group.key]));
   const selectedLabel = selectedPurchaseLabel(detail, options, choices);
+  const packageSummary = packagingLabel(variant);
 
   function updateOption(groupIndex: number, key: string, value: string) {
     const next = { ...options, [key]: value };
@@ -262,6 +276,12 @@ export function CompactPurchaseSelector({ detail, initialVariantId, onVariantCha
           <p className="truncate text-[10px] font-black text-slate-500">{variant?.sku || "Chưa chọn đủ phân loại"}</p>
           {selectedLabel ? <p className="mt-0.5 truncate text-xs font-black text-slate-700">Đã chọn: {selectedLabel}</p> : null}
           <p className="mt-0.5 text-sm font-black text-[#ff5a00]">{variant ? getCatalogV2PriceLabel(variant) : "Chọn phân loại"}</p>
+          {packageSummary ? <p className="mt-1 text-[11px] font-bold text-slate-600">Quy cách: {packageSummary}</p> : null}
+          {variant?.packaging?.outerPrice !== null && variant?.packaging?.outerPrice !== undefined ? (
+            <p className="mt-1 text-[11px] font-black text-[#08775f]">
+              Giá {variant.packaging.packageUnit} tham khảo: {moneyFormatter.format(variant.packaging.outerPrice)} · tính theo {quantityFormatter.format(variant.packaging.packageQuantity)} {variant.packaging.sellUnit}
+            </p>
+          ) : null}
         </div>
         <div className="grid h-10 w-28 shrink-0 grid-cols-3 overflow-hidden rounded-[12px] border border-[#e7dccd] bg-white text-sm font-black">
           <button type="button" onClick={() => setQuantity((value) => Math.max(1, value - 1))}>−</button>
