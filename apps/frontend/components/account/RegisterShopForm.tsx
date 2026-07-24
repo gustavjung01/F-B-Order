@@ -128,7 +128,7 @@ export function RegisterShopForm() {
           setError(
             data.error === "AUTH_REQUIRED"
               ? "Bạn cần đăng nhập để quản lý hồ sơ quán."
-              : "Không tải được hồ sơ hiện tại từ backend.",
+              : "Chưa tải được hồ sơ hiện tại. Vui lòng thử lại.",
           );
           return;
         }
@@ -139,7 +139,7 @@ export function RegisterShopForm() {
           setForm(profileToForm(data.profile));
         }
       } catch {
-        if (active) setError("Không kết nối được backend để tải hồ sơ hiện tại.");
+        if (active) setError("Chưa tải được hồ sơ hiện tại. Vui lòng thử lại.");
       } finally {
         if (active) setProfileLoading(false);
       }
@@ -203,7 +203,7 @@ export function RegisterShopForm() {
   if (profileLoading) {
     return (
       <section className="rounded-[22px] bg-white p-5 font-black text-slate-500 ring-1 ring-[#efe7dc]">
-        Đang tải hồ sơ quán từ backend...
+        Đang tải hồ sơ quán...
       </section>
     );
   }
@@ -219,7 +219,7 @@ export function RegisterShopForm() {
         </h2>
         <p className="mt-2 text-sm font-bold leading-6 text-slate-600">
           {existingProfile
-            ? "Thông tin bên dưới đã được nạp từ backend. Chỉ chỉnh sửa phần cần thay đổi rồi bấm Lưu thay đổi."
+            ? "Thông tin bên dưới đã được điền từ hồ sơ đã lưu. Chỉ chỉnh sửa phần cần thay đổi rồi bấm Lưu thay đổi."
             : "Hoàn tất thông tin quán một lần để gửi xét duyệt quyền mua sỉ."}
         </p>
       </section>
