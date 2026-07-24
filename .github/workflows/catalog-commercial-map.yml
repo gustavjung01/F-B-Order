@@ -1,0 +1,113 @@
+name: Catalog commercial map
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "apps/backend/scripts/catalog-commercial-map.mjs"
+      - "apps/backend/scripts/import-catalog-commercial-map.mjs"
+      - "apps/backend/scripts/test-catalog-commercial-map.mjs"
+      - "apps/backend/scripts/validate-catalog-commercial-map.mjs"
+      - "apps/backend/src/modules/catalog-v2/catalog-v2-detail.routes.ts"
+      - "apps/frontend/components/catalog/CompactPurchaseSelector.tsx"
+      - "apps/frontend/data/catalog-v2/product-model.ts"
+      - "db/migrations/030_catalog_commercial_import_batches.sql"
+      - "docs/catalog-commercial-map.md"
+      - ".github/workflows/catalog-commercial-map.yml"
+      - ".gitignore"
+      - "package.json"
+      - "apps/backend/package.json"
+      - "apps/backend/scripts/migration-plan.mjs"
+      - "pnpm-lock.yaml"
+  workflow_dispatch:
+
+concurrency:
+  group: catalog-commercial-map-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  catalog-commercial-map:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: fb_order_catalog_commercial
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d fb_order_catalog_commercial"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/fb_order_catalog_commercial
+      NODE_ENV: test
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Prepare logs
+        run: mkdir -p logs
+
+      - name: Run migrations
+        shell: bash
+        run: |
+          set -o pipefail
+          pnpm db:migrate 2>&1 | tee logs/migrations.log
+
+      - name: Validate commercial map contracts
+        shell: bash
+        run: |
+          set -o pipefail
+          pnpm catalog:commercial:test 2>&1 | tee logs/catalog-commercial-test.log
+
+      - name: Backend typecheck
+        shell: bash
+        run: |
+          set -o pipefail
+          pnpm --filter @fb-order/backend typecheck 2>&1 | tee logs/backend-typecheck.log
+
+      - name: Frontend typecheck
+        shell: bash
+        run: |
+          set -o pipefail
+          pnpm --filter @fb-order/frontend typecheck 2>&1 | tee logs/frontend-typecheck.log
+
+      - name: Backend build
+        shell: bash
+        run: |
+          set -o pipefail
+          pnpm run build:backend 2>&1 | tee logs/backend-build.log
+
+      - name: Frontend build
+        shell: bash
+        run: |
+          set -o pipefail
+          pnpm run build:frontend 2>&1 | tee logs/frontend-build.log
+
+      - name: Upload failure logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: catalog-commercial-map-failure-logs
+          path: logs
+          if-no-files-found: error
