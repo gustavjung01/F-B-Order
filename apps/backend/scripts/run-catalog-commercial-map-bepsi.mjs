@@ -22,4 +22,15 @@ if (!process.env.BEPSI_DATABASE_URL) {
 // This command belongs to Bếp Sỉ only. Never fall back to another app's DATABASE_URL.
 process.env.DATABASE_URL = process.env.BEPSI_DATABASE_URL;
 
+// pnpm --filter runs this command from apps/backend. Resolve user-supplied relative
+// payload paths from the repository root so data/private/... points to the right file.
+const fileArgumentIndex = process.argv.findIndex((value) => value.startsWith("--file="));
+if (fileArgumentIndex >= 0) {
+  const suppliedPath = process.argv[fileArgumentIndex].slice("--file=".length);
+  const resolvedPath = path.isAbsolute(suppliedPath)
+    ? suppliedPath
+    : path.resolve(repoRoot, suppliedPath);
+  process.argv[fileArgumentIndex] = `--file=${resolvedPath}`;
+}
+
 await import("./import-catalog-commercial-map.mjs");
