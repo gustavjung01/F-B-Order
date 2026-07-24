@@ -99,6 +99,7 @@ try {
     "set -euo pipefail",
     `cd '${remoteDir}'`,
     `chmod 600 '${payloadName}'`,
+    `if [ -d '${remoteRoot}/apps/backend/node_modules' ]; then ln -s '${remoteRoot}/apps/backend/node_modules' node_modules; elif [ -d '${remoteRoot}/node_modules' ]; then ln -s '${remoteRoot}/node_modules' node_modules; else echo 'Bếp Sỉ node_modules not found' >&2; exit 1; fi`,
     "set -a",
     `. '${remoteEnv}'`,
     "set +a",
