@@ -11,7 +11,7 @@ export default function RegisterPage() {
             <p className="text-[12px] font-black uppercase tracking-[0.16em] text-[#ff5a00]">Hồ sơ khách hàng</p>
             <h1 className="mt-3 text-[26px] font-black leading-tight tracking-tight md:text-5xl">Quản lý thông tin quán</h1>
             <p className="mt-3 text-[14px] font-semibold leading-6 text-slate-700 md:max-w-2xl md:text-base md:leading-7">
-              Tạo hồ sơ lần đầu hoặc cập nhật thông tin đã lưu. Hồ sơ hiện có sẽ được nạp trực tiếp từ backend.
+              Tạo hồ sơ lần đầu hoặc cập nhật thông tin đã lưu. Hồ sơ hiện có sẽ được tự động điền.
             </p>
           </div>
           <span className="absolute bottom-2 right-3 text-[68px] drop-shadow-sm md:text-[104px]">🛍️</span>
