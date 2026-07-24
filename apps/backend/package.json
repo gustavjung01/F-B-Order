@@ -36,7 +36,7 @@
     "catalog:v2:apply": "node scripts/import-catalog-v2.mjs --apply",
     "catalog:commercial:test": "node scripts/test-catalog-commercial-map.mjs",
     "catalog:commercial:validate": "node scripts/validate-catalog-commercial-map.mjs",
-    "catalog:commercial:dry-run": "node scripts/run-catalog-commercial-map-bepsi.mjs",
+    "catalog:commercial:dry-run": "node scripts/run-catalog-commercial-map-vps.mjs",
     "catalog:commercial:apply": "node scripts/run-catalog-commercial-map-bepsi.mjs --apply",
     "catalog:commercial:rollback": "node scripts/run-catalog-commercial-map-bepsi.mjs",
     "recipe:images:upload": "node scripts/upload-recipe-images-r2.mjs",
