@@ -48,6 +48,9 @@ jobs:
       - name: Audit customer copy
         run: pnpm frontend:audit:copy
 
+      - name: Test customer account navigation contract
+        run: node --test scripts/frontend/test-customer-account-navigation-contract.mjs
+
       - name: Test admin catalog readiness
         run: pnpm --filter @fb-order/backend test:admin-products
 
