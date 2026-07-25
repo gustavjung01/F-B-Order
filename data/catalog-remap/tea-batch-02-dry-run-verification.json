@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "taskId": "TEA-BATCH-02",
+  "groupKey": "tea-batch-02",
+  "status": "BATCH_DRY_RUN_PASS",
+  "verifiedBy": "project-owner-terminal-run",
+  "verifiedDate": "2026-07-25",
+  "rowCount": 18,
+  "rowPassCount": 18,
+  "rowBlockedCount": 0,
+  "canApplyNow": false,
+  "canApplyAfterMigration": true,
+  "migrationRequired": "db/migrations/031_catalog_group_remap.sql",
+  "productionModified": false,
+  "imagesGenerated": false,
+  "r2Writes": 0,
+  "reportPaths": [
+    "artifacts/catalog-remap/tea-batch-02-dry-run.json",
+    "artifacts/catalog-remap/tea-batch-02-dry-run.csv"
+  ],
+  "notes": [
+    "16 REMAP + 2 CREATE_NEW đều PASS.",
+    "TXABON và TXABIE không tạo legacy alias.",
+    "BGKQ-0177 → TRGAON thiếu ảnh được chấp nhận; ảnh bổ sung thủ công sau.",
+    "Không tạo ảnh AI và không ghi object R2.",
+    "Chưa chạy migration 031 hoặc apply production."
+  ]
+}
