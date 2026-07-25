@@ -1,94 +1,40 @@
 # Catalog remap progress
 
-> Tracker bền vững cho việc chuẩn hóa catalog theo từng nhóm. Cập nhật file này sau mỗi bước; không dùng lịch sử chat làm nguồn tiến độ.
+> Tracker chính cho việc chuẩn hóa catalog theo từng nhóm. Sau mỗi task phải cập nhật file này và `data/catalog-remap/sku-image-transition.csv`; không lấy lịch sử chat làm nguồn tiến độ.
 
 - Cập nhật: 2026-07-25
-- Nguồn đối chiếu: `BANG_GIA_KENH_QUAN_THEM_NHOM_CHI_TIET.xlsx`
+- Nguồn: `BANG_GIA_KENH_QUAN_THEM_NHOM_CHI_TIET.xlsx`
 - Nhánh: `agent/catalog-commercial-map-trial`
-- PR: #106
-- Chế độ hiện tại: **audit/dry-run only — chưa apply production**
+- PR: #106 — draft, chưa merge
+- Production: chưa migrate, chưa apply, chưa đổi/xóa ảnh R2
 
 ## Quy tắc bắt buộc
 
-1. Làm từng `Nhóm chuẩn → Nhóm chi tiết`, không remap toàn bộ catalog cùng lúc.
-2. Cấu trúc chuẩn: `Ngành → Nhóm chuẩn → Nhóm chi tiết/hãng → Sản phẩm → Variant/SKU`.
-3. SKU mới phải khớp một-một với đúng sản phẩm/vị. SKU cũ được giữ làm `legacySku`/alias.
-4. Khi chỉ đổi SKU một-một trên cùng sản phẩm, giữ nguyên `productId` và `variantId`.
-5. Khi gộp nhiều sản phẩm cũ thành một sản phẩm cha, giữ toàn bộ `variantId`, chọn một `productId` sống tiếp và chỉ xử lý các product rỗng sau khi đã kiểm tra tham chiếu.
-6. Mỗi task phải ghi ngay từng cặp `legacySku → canonicalSku` vào `data/catalog-remap/sku-image-transition.csv`.
-7. SKU remap và migration ảnh R2 là hai giai đoạn riêng. Trong task SKU chỉ ghi nhận ảnh cũ/mới; không xóa hoặc đổi tên object R2.
-8. Tên file ảnh đích dùng quy ước: `canonicalSku` viết thường + `.webp`; đường dẫn object R2 chính xác được điền sau khi chốt cấu trúc thư mục.
-9. Chỉ xóa ảnh R2 cũ sau khi toàn bộ ảnh mới đã upload, DB đã chuyển sang object key mới, URL ảnh mới kiểm tra PASS và có manifest rollback.
-10. Mỗi SKU phải có đủ: đơn vị bán lẻ, dung tích/khối lượng, số lượng/thùng, đơn vị thùng, giá lẻ và giá thùng tham chiếu hoặc giá thùng độc lập có nguồn.
-11. Không được dùng giá thùng tham chiếu như một mức chiết khấu thật.
-12. Một nhóm chỉ được apply sau khi dry-run PASS, báo cáo ảnh PASS và được duyệt rõ ràng.
-13. File tracker không ghi giá chi tiết để tránh phát tán dữ liệu thương mại trong repo public.
+1. Làm theo `Nhóm chuẩn → Nhóm chi tiết/hãng → Sản phẩm → Variant/SKU`.
+2. Mỗi SKU phải ghi `legacySku → canonicalSku` trong sổ chuyển đổi.
+3. Giữ `variantId`; khi gộp sản phẩm phải xử lý recipe giữ cả `variantId + productId` trong cùng transaction.
+4. SKU cũ phải tồn tại qua alias sau khi đổi SKU chính.
+5. Remap SKU và migration ảnh R2 là hai giai đoạn riêng.
+6. Ảnh cũ chỉ xóa sau khi ảnh mới đã upload đủ, DB chuyển key, API/frontend PASS và có manifest rollback.
+7. Không commit workbook, payload giá hoặc báo cáo production vào repo public.
+8. Không apply khi chưa có `DRY_RUN_PASS` và phê duyệt rõ ràng.
 
-## Trạng thái catalog
+## Trạng thái
 
-- `TODO`: chưa audit
-- `AUDIT`: đang đối chiếu dữ liệu cũ/mới
-- `AUDIT_PASS`: audit production và ảnh cũ đã đạt; chưa dry-run thay đổi
-- `BLOCKED`: thiếu hoặc xung đột dữ liệu
-- `DRY_RUN_PASS`: đạt toàn bộ kiểm tra thay đổi đọc-only
+- `TODO`: chưa làm
+- `AUDIT`: đang đối chiếu
+- `AUDIT_PASS`: dữ liệu và ảnh cũ đã đạt
+- `BLOCKED`: có xung đột hoặc thiếu dữ liệu
+- `DRY_RUN_PASS`: kế hoạch thay đổi read-only đã đạt
 - `APPROVED`: đã được duyệt để apply
 - `APPLIED`: đã ghi production có batch/snapshot
-- `VERIFIED`: đã kiểm tra UI, API, ảnh và dữ liệu sau apply
+- `VERIFIED`: đã kiểm API, frontend, dữ liệu và ảnh sau apply
 
-## Sổ chuyển đổi SKU và ảnh R2
+## Tổng quan nhóm
 
-Nguồn theo dõi máy đọc được:
-
-```text
-data/catalog-remap/sku-image-transition.csv
-```
-
-Mỗi SKU có một dòng với các trường chính:
-
-```text
-task_id
-group_key
-detail_group
-legacy_sku
-canonical_sku
-current_image_key
-current_object_key
-target_image_file
-target_object_key
-sku_remap_status
-image_migration_status
-old_r2_delete_status
-```
-
-### Trạng thái ảnh
-
-- `WAITING_CURRENT_OBJECT_KEY`: đã biết SKU/ảnh key cũ nhưng chưa lấy object key thật từ production.
-- `CURRENT_IMAGE_VERIFIED_PENDING_OBJECT_KEY_SYNC`: file audit và ảnh cũ đã được duyệt; object key thật chưa chép vào sổ.
-- `MAPPED`: đã có đủ object key cũ và tên file ảnh mới.
-- `READY_UPLOAD`: ảnh mới đã chuẩn bị và kiểm checksum/kích thước.
-- `UPLOADED`: ảnh mới đã có trên R2 nhưng DB chưa chuyển key.
-- `DB_SWITCHED`: catalog đã trỏ sang ảnh mới, ảnh cũ vẫn giữ.
-- `VERIFIED`: API/frontend và URL ảnh mới đều PASS.
-- `OLD_DELETED`: ảnh cũ đã xóa sau bước xác nhận cuối cùng.
-
-### Cổng an toàn trước khi xóa ảnh cũ
-
-Chỉ được chạy xóa hàng loạt khi đồng thời đạt:
-
-1. Tất cả task catalog cần remap đã `VERIFIED`.
-2. Mỗi canonical SKU có đúng một `targetObjectKey` và file tồn tại trên R2.
-3. Số ảnh upload mới khớp số dòng đủ điều kiện trong sổ chuyển đổi.
-4. DB không còn tham chiếu `currentObjectKey` cũ.
-5. API/frontend mở được toàn bộ ảnh mới.
-6. Đã xuất danh sách object cũ để rollback hoặc khôi phục.
-
-## Tổng quan nguồn dữ liệu
-
-Workbook hiện có **343 dòng**, gồm các nhóm chuẩn sau:
-
-| Nhóm chuẩn | Số SKU | Trạng thái |
+| Nhóm chuẩn | SKU | Trạng thái |
 |---|---:|---|
-| Trà | 48 | AUDIT |
+| Trà | 48 | ĐANG LÀM |
 | Siro | 99 | TODO |
 | Sinh tố / mứt | 40 | TODO |
 | Khác | 32 | TODO |
@@ -112,131 +58,102 @@ Workbook hiện có **343 dòng**, gồm các nhóm chuẩn sau:
 
 ## Tiến độ nhóm Trà
 
-Thứ tự ưu tiên dựa trên độ sạch của SKU cũ–mới, quy cách và khả năng map ảnh.
-
-| Thứ tự | Nhóm chi tiết/hãng | SKU | Trạng thái | Ghi chú |
+| Thứ tự | Hãng/nhóm chi tiết | SKU | Trạng thái | Ghi chú |
 |---:|---|---:|---|---|
-| 1 | Novia | 3 | AUDIT_PASS | Audit và ảnh đã duyệt; dry-run read-only đã sẵn sàng để chạy |
-| 2 | Hoàng Gia | 3 | TODO | Quy cách tương đối đồng nhất |
-| 3 | GTP | 1 | TODO | Nhóm nhỏ, dễ xác nhận |
-| 4 | ONA | 7 | TODO | Cần kiểm ảnh và một số liên kết cũ |
-| 5 | Lộc Phát | 4 | TODO | Cần rà đủ variant cũ |
-| 6 | King | 3 | BLOCKED | Có dòng dung tích/khối lượng bằng 0 |
-| 7 | Phúc Long | 4 | BLOCKED | Có dấu hiệu SKU cũ gộp nhiều loại trà |
-| 8 | Thái Nguyên | 2 | BLOCKED | Một SKU cũ có thể phải tách sen/lài |
-| 9 | Trà Thái | 4 | BLOCKED | Nhiều SKU mới có thể tranh cùng SKU cũ |
-| 10 | Cozy | 13 | BLOCKED | Nhiều dạng sản phẩm/quy cách, cần chia nhỏ hơn |
-| 11 | Tân Nam Bắc | 3 | BLOCKED | Chưa có đối chiếu SKU cũ đủ chắc chắn |
-| 12 | Douxian | 1 | BLOCKED | Thiếu dung tích/khối lượng hợp lệ |
+| 1 | Novia | 3 | DRY_RUN_PASS | Chờ migration 031 và phê duyệt apply |
+| 2 | Hoàng Gia | 3 | TODO | Nhóm kế tiếp |
+| 3 | GTP | 1 | TODO | Nhóm nhỏ |
+| 4 | ONA | 7 | TODO | Cần rà liên kết cũ |
+| 5 | Lộc Phát | 4 | TODO | Cần rà variant cũ |
+| 6 | King | 3 | BLOCKED | Có khối lượng bằng 0 |
+| 7 | Phúc Long | 4 | BLOCKED | Có dấu hiệu SKU cũ gộp nhiều loại |
+| 8 | Thái Nguyên | 2 | BLOCKED | Có thể phải tách sen/lài |
+| 9 | Trà Thái | 4 | BLOCKED | Nhiều SKU mới có thể tranh SKU cũ |
+| 10 | Cozy | 13 | BLOCKED | Nhiều dạng sản phẩm/quy cách |
+| 11 | Tân Nam Bắc | 3 | BLOCKED | Thiếu đối chiếu chắc chắn |
+| 12 | Douxian | 1 | BLOCKED | Khối lượng chưa hợp lệ |
 
-## Task đang chạy: Trà → Novia
+# Task TEA-NOVIA-01 — Trà Novia
 
-### Phạm vi
+## Mapping SKU và ảnh
 
-| Legacy SKU | SKU mới | Tên chuẩn | Ảnh cũ | File ảnh mới dự kiến |
+| SKU cũ | SKU mới | Tên chuẩn | Ảnh cũ | Ảnh mới dự kiến |
 |---|---|---|---|---|
 | `BGKQ-0170` | `TRGANO` | Trà gạo Novia | `bgkq-0170` | `trgano.webp` |
 | `BGKQ-0171` | `TRDENN` | Trà đen Novia | `bgkq-0171` | `trdenn.webp` |
 | `BGKQ-0172` | `TRLANO` | Trà lài Novia | `bgkq-0172` | `trlano.webp` |
 
-### Cấu trúc đích
+Sổ máy đọc: `data/catalog-remap/sku-image-transition.csv`.
 
-- Sản phẩm cha: `Trà Novia` (`productKey = tra-novia`).
-- Product sống tiếp: product đang chứa `BGKQ-0170`.
-- Giữ nguyên cả 3 `variantId`.
-- Reparent variant của `BGKQ-0171` và `BGKQ-0172` vào product sống tiếp khi apply được duyệt.
+## Cấu trúc đích
+
+- Product cha: `Trà Novia` (`productKey = tra-novia`).
+- Product sống tiếp: product chứa `BGKQ-0170`.
+- Giữ nguyên 3 `variantId`.
 - SKU mới: `TRGANO`, `TRDENN`, `TRLANO`.
-- SKU cũ phải tồn tại trong alias/legacy mapping.
-- Trong task remap SKU, giữ nguyên `imageObjectKey` hiện tại.
-- Sau khi toàn bộ catalog hoàn tất, upload ảnh Novia mới theo `trgano.webp`, `trdenn.webp`, `trlano.webp`, chuyển DB sang key mới, kiểm tra PASS rồi mới xóa ảnh cũ.
+- SKU cũ được lưu qua alias.
+- Quy cách mỗi SKU: `500 g/bịch`, `20 bịch/thùng`.
+- Giữ nguyên object key ảnh R2 trong task remap SKU.
+- Ảnh mới chỉ upload theo đợt migration ảnh cuối dự án.
 
-### File triển khai
+## Kết quả đã xác nhận
 
-- Manifest công khai, không chứa giá: `data/catalog-remap/tea-novia.json`.
-- Sổ SKU–ảnh toàn dự án: `data/catalog-remap/sku-image-transition.csv`.
-- Audit đọc-only: `apps/backend/scripts/audit-catalog-remap-group.mjs`.
-- Runner audit VPS: `apps/backend/scripts/run-catalog-remap-group-vps.mjs`.
-- Dry-run đọc-only: `apps/backend/scripts/dry-run-catalog-remap-group.mjs`.
-- Runner dry-run VPS: `apps/backend/scripts/run-catalog-remap-dry-run-vps.mjs`.
-- Migration hỗ trợ alias/batch, chưa chạy production: `db/migrations/031_catalog_group_remap.sql`.
-- Báo cáo local:
-  - `artifacts/catalog-remap/tea-novia-audit.json`
-  - `artifacts/catalog-remap/tea-novia-audit.csv`
-  - `artifacts/catalog-remap/tea-novia-dry-run.json`
-  - `artifacts/catalog-remap/tea-novia-dry-run.csv`
+### Audit
 
-### Checklist tiến độ
+- Trạng thái: `AUDIT_PASS`.
+- 3 SKU cũ khớp đúng variant.
+- 3 SKU mới chưa bị chiếm.
+- Giá, quy cách và tên nguồn đạt.
+- 3 ảnh cũ mở được và đã kiểm đúng gạo/đen/lài.
+- Không thay đổi production.
 
-- [x] Xác nhận 3 dòng nguồn Novia trong workbook
-- [x] Xác nhận mapping `BGKQ → SKU mới`
-- [x] Xác nhận mục tiêu `500 g/bịch`, `20 bịch/thùng`
-- [x] Ghi 3 cặp SKU cũ–mới và file ảnh đích vào sổ chuyển đổi toàn dự án
-- [x] Tạo manifest nhóm Novia
-- [x] Tạo audit read-only lấy `productId`, `variantId`, nhóm, giá, quy cách và ảnh R2
-- [x] Tạo runner VPS chỉ giới hạn `/srv/apps/bepsi` và `bepsi-api.service`
-- [x] Chạy audit production và tải báo cáo JSON/CSV
-- [x] Duyệt thủ công file audit và 3 ảnh gạo/đen/lài
-- [x] Xác nhận không có SKU mới trùng trong production
-- [x] Tạo migration alias SKU cũ và snapshot batch; chưa chạy production
-- [x] Tạo dry-run kiểm alias, cart, order, recipe, giá, quy cách và ảnh cho đúng 3 SKU
-- [ ] Chạy dry-run production và tải báo cáo JSON/CSV
-- [ ] Điền 3 `currentObjectKey` thật từ báo cáo local vào sổ chuyển đổi
-- [ ] Duyệt thủ công dry-run
-- [ ] Apply SKU/catalog có hash + snapshot + rollback batch
-- [ ] Kiểm tra sau apply trên API và frontend
-- [ ] Để ảnh cũ nguyên trạng cho tới đợt migration ảnh hàng loạt cuối dự án
+### Dry-run
 
-### Lệnh hiện tại
+- Trạng thái: `REMAP_DRY_RUN_PASS`.
+- Phân loại: `PASS_WITH_EXISTING_PRODUCT_CONSOLIDATION`.
+- `canApplyNow = false`.
+- `canApplyAfterMigration = true`.
+- Migration bắt buộc trước apply: `db/migrations/031_catalog_group_remap.sql`.
+- Trạng thái `legacy_products_not_one_per_source_row` được xác nhận là tình trạng gộp product hiện hữu, không phải blocker SKU.
+- Không chạy migration, không ghi DB, không ghi R2, không restart/deploy.
 
-Audit đã PASS. Lệnh tiếp theo là dry-run:
+Báo cáo local, đã bị `.gitignore`:
 
-```powershell
-git pull --ff-only origin agent/catalog-commercial-map-trial
-pnpm catalog:remap:dry-run -- --commercial-file=data/private/catalog-imports/kenh-quan-commercial-map.safe-remap.json
+```text
+artifacts/catalog-remap/tea-novia-audit.json
+artifacts/catalog-remap/tea-novia-audit.csv
+artifacts/catalog-remap/tea-novia-dry-run.json
+artifacts/catalog-remap/tea-novia-dry-run.csv
 ```
 
-Lệnh dry-run chỉ đọc DB và xuất kế hoạch thay đổi. Nó không chạy migration, không sửa SKU/product/variant/alias/giá/quy cách, không sửa cart/order/recipe, không ghi R2 và không restart service.
+## Checklist
 
-### Tiêu chí PASS dry-run
+- [x] Đối chiếu 3 dòng workbook
+- [x] Ghi 3 cặp SKU cũ–mới vào sổ chuyển đổi
+- [x] Xác nhận `500 g/bịch`, `20 bịch/thùng`
+- [x] Audit production read-only
+- [x] Kiểm thủ công 3 ảnh cũ
+- [x] Xác nhận không trùng SKU mới
+- [x] Tạo migration alias/batch `031`; chưa chạy production
+- [x] Dry-run production read-only
+- [x] Xác nhận giữ `variantId`, cart/order và kế hoạch cập nhật recipe
+- [x] Nâng task lên `DRY_RUN_PASS`
+- [ ] Điền `currentObjectKey` thật vào sổ chuyển đổi từ báo cáo local
+- [ ] Duyệt migration 031 và kế hoạch apply
+- [ ] Apply có manifest hash + snapshot + rollback batch
+- [ ] Hậu kiểm API/frontend/cart/order/recipe
+- [ ] Giữ ảnh R2 cũ tới đợt migration ảnh cuối
 
-- Tìm đúng 3 legacy SKU và không có canonical SKU bị chiếm.
-- Giữ nguyên đủ 3 `variantId`.
-- Chọn đúng product của `BGKQ-0170` làm product sống tiếp.
-- Báo đúng 2 variant cần reparent.
-- Liệt kê đủ cart/order tham chiếu được giữ nguyên qua `variantId`.
-- Liệt kê đúng recipe cần đổi `catalog_product_id` và snapshot.
-- Dự kiến tạo đủ 3 alias SKU cũ.
-- Dự kiến đủ giá lẻ, `500 g/bịch`, `20 bịch/thùng` cho cả 3 SKU.
-- Giữ nguyên 3 object key ảnh cũ và có `r2Writes = 0`.
-- Không có thay đổi production.
+## Cổng apply Novia
 
-### Tiêu chí PASS sau remap
+Chỉ được apply sau khi có phê duyệt rõ ràng cho cả hai việc:
 
-- Đúng `industryKey = nguyen-lieu-tra-sua`.
-- Đúng `catalogGroupKey = tra`, nhóm chi tiết/brand `Novia`.
-- Có đúng một sản phẩm cha `Trà Novia` và đúng 3 variant.
-- Có đúng 3 SKU mới, không trùng và không map nhầm loại.
-- Ba SKU cũ tìm được qua alias/legacy mapping.
-- Cả 3 `variantId` được giữ nguyên.
-- 3/3 ảnh R2 cũ tiếp tục hiển thị đúng trong giai đoạn remap SKU.
-- 3/3 SKU đủ thông tin lẻ/thùng và dung tích/khối lượng, không có `0`/`null`.
-- Giá lẻ và giá thùng được phân biệt rõ; không tạo chiết khấu giả.
-- Đơn hàng cũ, công thức, giỏ hàng và API/frontend không gãy.
+1. Chạy migration `031_catalog_group_remap.sql` trên đúng backend Bếp Sỉ.
+2. Apply remap đúng task `TEA-NOVIA-01` với hash, snapshot và rollback.
 
-## Mốc gần nhất
+Không dùng lệnh apply chung cho backend khác trên VPS.
 
-- Payload remap an toàn 55 SKU đã `DRY_RUN_PASS` nhưng **đang giữ, chưa apply**.
-- Novia đã `AUDIT_PASS`; file audit và 3 ảnh cũ đã được duyệt thủ công.
-- Migration alias/batch và dry-run Novia đã được thêm vào branch; chưa chạy production.
-- Việc tiếp theo: chạy `catalog:remap:dry-run`, đọc hai báo cáo và chỉ nâng Novia lên `DRY_RUN_PASS` khi không còn blocker.
+## Việc tiếp theo
 
-## Quy tắc cập nhật file
-
-Sau mỗi lần làm việc, cập nhật tối thiểu:
-
-1. Trạng thái hàng tương ứng trong bảng tiến độ.
-2. Checklist task đang chạy.
-3. Mỗi SKU mới phải được thêm/cập nhật trong `data/catalog-remap/sku-image-transition.csv`.
-4. Điền `currentObjectKey`, `targetObjectKey` và trạng thái ảnh khi có dữ liệu thật.
-5. `Mốc gần nhất` và `Việc tiếp theo`.
-6. Commit/batch/hash liên quan nếu có.
+- Novia: chờ phê duyệt migration/apply; không tự chạy production.
+- Catalog: bắt đầu task `TEA-HOANG-GIA-02`, ghi SKU cũ–mới và ảnh vào sổ trước khi audit.
