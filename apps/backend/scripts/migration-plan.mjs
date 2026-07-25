@@ -29,7 +29,8 @@ export const MIGRATION_FILES = Object.freeze([
   "db/migrations/028_recipe_rd_workflow.sql",
   "db/migrations/029_production_planning.sql",
   "db/migrations/030_catalog_commercial_import_batches.sql",
-  "db/migrations/031_catalog_group_remap.sql"
+  "db/migrations/031_catalog_group_remap.sql",
+  "db/migrations/032_catalog_packaging_count_only.sql"
 ]);
 
 export const BASELINE_MIGRATION_FILES = Object.freeze([
