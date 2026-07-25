@@ -1,8 +1,8 @@
 # Catalog remap progress
 
 - Cập nhật: 2026-07-25
-- Nhánh: `agent/catalog-commercial-map-trial`
-- PR: #106 — chờ CI và merge
+- Nhánh chính: `main`
+- PR #106: **đã squash merge** — commit `c7a1b45e4f30ed4862c2f15e81b01c50b0cd2c04`
 - Production: chưa migration `031/032`, chưa apply catalog, chưa ghi/xóa ảnh R2
 
 ## Quy tắc khóa
@@ -14,11 +14,11 @@
 5. Không commit workbook, payload giá private hoặc báo cáo production.
 6. Merge code không đồng nghĩa apply production. Apply chỉ được chạy sau migration, dry-run PASS và phê duyệt production riêng.
 
-## Tổng quan phần chưa merge
+## Tổng quan sau merge
 
-Chỉ còn **1 PR mở: #106**. PR này chứa toàn bộ hạ tầng commercial-map và ba batch Trà dưới đây.
+Hiện **không còn PR mở thuộc luồng commercial-map này**.
 
-| Task | SKU | Trạng thái dữ liệu | Việc còn lại sau merge |
+| Task | SKU | Trạng thái dữ liệu | Việc còn lại |
 |---|---:|---|---|
 | `TEA-NOVIA-01` | 3 | `DRY_RUN_PASS` | Migration `031` + phê duyệt apply |
 | `TEA-BATCH-02` | 18 | `DRY_RUN_PASS` | Migration `031` + phê duyệt apply |
@@ -61,7 +61,7 @@ COZMAT = 1000 g/bịch; 30 bịch/thùng
 
 11 SKU Cozy mới dùng `COUNT_ONLY`, bán theo hộp và 30 hộp/thùng. Các SKU gộp cũ `BGKQ-0162`, `0164`, `0166`, `0167`, `0168` vẫn tồn tại độc lập.
 
-## Hạ tầng trong PR #106
+## Hạ tầng đã merge từ PR #106
 
 - Migration `030`: commercial import batch snapshots và rollback.
 - Migration `031`: catalog group remap và SKU alias.
