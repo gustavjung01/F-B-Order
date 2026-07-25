@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "taskId": "TEA-BATCH-03",
+  "groupKey": "tea-batch-03",
+  "status": "BATCH_DRY_RUN_PASS",
+  "verifiedBy": "project-owner-run",
+  "verifiedDate": "2026-07-25",
+  "reportPath": "artifacts/catalog-remap/tea-batch-03-dry-run.json",
+  "csvPath": "artifacts/catalog-remap/tea-batch-03-dry-run.csv",
+  "rowCount": 27,
+  "passCount": 27,
+  "blockedCount": 0,
+  "canApplyNow": false,
+  "canApplyAfterMigration": true,
+  "productionModified": false,
+  "notes": [
+    "Batch dry-run was executed against the Bếp Sỉ production database in read-only mode.",
+    "All 27 rows passed and no production row, service, or R2 object was modified.",
+    "Migration 031 and 032 are required before apply.",
+    "A separate explicit production approval is still required before migration or apply."
+  ]
+}
