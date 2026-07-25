@@ -1,0 +1,21 @@
+{
+  "taskId": "TEA-BATCH-03",
+  "status": "AUDIT_PASS",
+  "verifiedDate": "2026-07-25",
+  "manifest": "data/catalog-remap/tea-batch-03.json",
+  "commercialPayload": "data/private/catalog-imports/tea-batch-03.private.json",
+  "payloadHash": "1191f9072d6a3679082bdda2b137220bc514a605679a34ba23682da9b6542ff0",
+  "result": {
+    "rows": 27,
+    "pass": 27,
+    "blocked": 0,
+    "mode": "READ_ONLY"
+  },
+  "reports": [
+    "artifacts/catalog-remap/tea-batch-03-audit.json",
+    "artifacts/catalog-remap/tea-batch-03-audit.csv"
+  ],
+  "productionWrites": false,
+  "r2Writes": 0,
+  "note": "Read-only batch audit. No migration, SKU, product, variant, alias, image, price, packaging, cart, order, recipe, service, or R2 row/object was modified."
+}
