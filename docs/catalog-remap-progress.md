@@ -116,7 +116,7 @@ Thứ tự ưu tiên dựa trên độ sạch của SKU cũ–mới, quy cách v
 
 | Thứ tự | Nhóm chi tiết/hãng | SKU | Trạng thái | Ghi chú |
 |---:|---|---:|---|---|
-| 1 | Novia | 3 | AUDIT_PASS | File audit và 3 ảnh cũ đã được duyệt; đang chuẩn bị dry-run remap |
+| 1 | Novia | 3 | AUDIT_PASS | Audit và ảnh đã duyệt; dry-run read-only đã sẵn sàng để chạy |
 | 2 | Hoàng Gia | 3 | TODO | Quy cách tương đối đồng nhất |
 | 3 | GTP | 1 | TODO | Nhóm nhỏ, dễ xác nhận |
 | 4 | ONA | 7 | TODO | Cần kiểm ảnh và một số liên kết cũ |
@@ -155,10 +155,15 @@ Thứ tự ưu tiên dựa trên độ sạch của SKU cũ–mới, quy cách v
 - Manifest công khai, không chứa giá: `data/catalog-remap/tea-novia.json`.
 - Sổ SKU–ảnh toàn dự án: `data/catalog-remap/sku-image-transition.csv`.
 - Audit đọc-only: `apps/backend/scripts/audit-catalog-remap-group.mjs`.
-- Runner VPS Bếp Sỉ: `apps/backend/scripts/run-catalog-remap-group-vps.mjs`.
-- Báo cáo local sau chạy:
+- Runner audit VPS: `apps/backend/scripts/run-catalog-remap-group-vps.mjs`.
+- Dry-run đọc-only: `apps/backend/scripts/dry-run-catalog-remap-group.mjs`.
+- Runner dry-run VPS: `apps/backend/scripts/run-catalog-remap-dry-run-vps.mjs`.
+- Migration hỗ trợ alias/batch, chưa chạy production: `db/migrations/031_catalog_group_remap.sql`.
+- Báo cáo local:
   - `artifacts/catalog-remap/tea-novia-audit.json`
   - `artifacts/catalog-remap/tea-novia-audit.csv`
+  - `artifacts/catalog-remap/tea-novia-dry-run.json`
+  - `artifacts/catalog-remap/tea-novia-dry-run.csv`
 
 ### Checklist tiến độ
 
@@ -172,34 +177,37 @@ Thứ tự ưu tiên dựa trên độ sạch của SKU cũ–mới, quy cách v
 - [x] Chạy audit production và tải báo cáo JSON/CSV
 - [x] Duyệt thủ công file audit và 3 ảnh gạo/đen/lài
 - [x] Xác nhận không có SKU mới trùng trong production
+- [x] Tạo migration alias SKU cũ và snapshot batch; chưa chạy production
+- [x] Tạo dry-run kiểm alias, cart, order, recipe, giá, quy cách và ảnh cho đúng 3 SKU
+- [ ] Chạy dry-run production và tải báo cáo JSON/CSV
 - [ ] Điền 3 `currentObjectKey` thật từ báo cáo local vào sổ chuyển đổi
-- [ ] Xác nhận cơ chế lưu SKU cũ/alias trong dry-run remap
-- [ ] Kiểm tra tham chiếu đơn hàng/công thức/giỏ hàng trước khi reparent
-- [ ] Tạo dry-run thay đổi cho đúng 3 SKU Novia
 - [ ] Duyệt thủ công dry-run
 - [ ] Apply SKU/catalog có hash + snapshot + rollback batch
 - [ ] Kiểm tra sau apply trên API và frontend
 - [ ] Để ảnh cũ nguyên trạng cho tới đợt migration ảnh hàng loạt cuối dự án
 
-### Lệnh audit hiện tại
+### Lệnh hiện tại
+
+Audit đã PASS. Lệnh tiếp theo là dry-run:
 
 ```powershell
 git pull --ff-only origin agent/catalog-commercial-map-trial
-pnpm catalog:remap:audit -- --commercial-file=data/private/catalog-imports/kenh-quan-commercial-map.safe-remap.json
+pnpm catalog:remap:dry-run -- --commercial-file=data/private/catalog-imports/kenh-quan-commercial-map.safe-remap.json
 ```
 
-Lệnh trên chỉ đọc DB và kiểm tra URL ảnh; không sửa SKU, product, giá, quy cách, R2, cart, order hoặc recipe.
+Lệnh dry-run chỉ đọc DB và xuất kế hoạch thay đổi. Nó không chạy migration, không sửa SKU/product/variant/alias/giá/quy cách, không sửa cart/order/recipe, không ghi R2 và không restart service.
 
-### Tiêu chí PASS audit
+### Tiêu chí PASS dry-run
 
-Audit Novia đã được duyệt PASS ngày 2026-07-25:
-
-- Tìm đúng một variant cho mỗi SKU cũ.
-- `TRGANO`, `TRDENN`, `TRLANO` chưa bị SKU khác chiếm.
-- 3 `variantId` khác nhau và đầy đủ.
-- Ba dòng private payload khớp tên, nhóm, quy cách và giá nguồn.
-- 3/3 ảnh có `imageObjectKey` hiệu lực, URL mở được và đã được kiểm đúng gạo/đen/lài.
-- Không có product khác chiếm `productKey = tra-novia`.
+- Tìm đúng 3 legacy SKU và không có canonical SKU bị chiếm.
+- Giữ nguyên đủ 3 `variantId`.
+- Chọn đúng product của `BGKQ-0170` làm product sống tiếp.
+- Báo đúng 2 variant cần reparent.
+- Liệt kê đủ cart/order tham chiếu được giữ nguyên qua `variantId`.
+- Liệt kê đúng recipe cần đổi `catalog_product_id` và snapshot.
+- Dự kiến tạo đủ 3 alias SKU cũ.
+- Dự kiến đủ giá lẻ, `500 g/bịch`, `20 bịch/thùng` cho cả 3 SKU.
+- Giữ nguyên 3 object key ảnh cũ và có `r2Writes = 0`.
 - Không có thay đổi production.
 
 ### Tiêu chí PASS sau remap
@@ -219,8 +227,8 @@ Audit Novia đã được duyệt PASS ngày 2026-07-25:
 
 - Payload remap an toàn 55 SKU đã `DRY_RUN_PASS` nhưng **đang giữ, chưa apply**.
 - Novia đã `AUDIT_PASS`; file audit và 3 ảnh cũ đã được duyệt thủ công.
-- Ba cặp SKU cũ–mới và tên file ảnh đích đã được ghi vào sổ chuyển đổi.
-- Việc tiếp theo: kiểm alias/tham chiếu và tạo dry-run remap Novia; chưa ghi production, chưa migration ảnh R2.
+- Migration alias/batch và dry-run Novia đã được thêm vào branch; chưa chạy production.
+- Việc tiếp theo: chạy `catalog:remap:dry-run`, đọc hai báo cáo và chỉ nâng Novia lên `DRY_RUN_PASS` khi không còn blocker.
 
 ## Quy tắc cập nhật file
 
