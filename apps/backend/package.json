@@ -39,6 +39,7 @@
     "catalog:commercial:dry-run": "node scripts/run-catalog-commercial-map-vps.mjs",
     "catalog:commercial:apply": "node scripts/run-catalog-commercial-map-bepsi.mjs --apply",
     "catalog:commercial:rollback": "node scripts/run-catalog-commercial-map-bepsi.mjs",
+    "catalog:remap:audit": "node scripts/run-catalog-remap-group-vps.mjs",
     "recipe:images:upload": "node scripts/upload-recipe-images-r2.mjs",
     "recipe:content:import": "node scripts/import-recipes-v1.mjs",
     "recipe:content:validate": "node scripts/validate-recipes-v1.mjs",
