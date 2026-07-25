@@ -1,14 +1,14 @@
 batch_id,row_no,action,legacy_sku,canonical_sku,product_name,detail_group,current_image_key,image_status,review_status,notes
-TEA-BATCH-03,1,REMAP,BGKQ-0145,HTRKIG,Hồng trà King,King,bgkq-0145,VERIFY_EXISTING,PENDING_USER_REVIEW,Tên cũ-mới khớp; thiếu net quantity; chỉ duyệt SKU trước và bổ sung quy cách trước audit
+TEA-BATCH-03,1,REMAP,BGKQ-0145,HTRKIG,Hồng trà King,King,bgkq-0145,VERIFY_EXISTING,MAPPING_APPROVED,Người dùng xác nhận 500 g/bịch; sellUnit=bịch; packageQuantity=30; packageUnit=bao; measureMode=MEASURED; giữ variantId và ảnh cũ nếu audit PASS
 TEA-BATCH-03,2,CREATE_NEW,,HTRLPH,Hồng trà Lộc Phát,Lộc Phát,,WAITING_MANUAL_IMAGE,PENDING_USER_REVIEW,BGKQ-0148 đã map TRLALP; tạo mới không alias; ảnh bổ sung thủ công; không tạo ảnh AI
-TEA-BATCH-03,3,REMAP,BGKQ-0151,TR9DXN,Trà số 9 Douxian,Douxian,bgkq-0151,VERIFY_EXISTING,PENDING_USER_REVIEW,Tên cũ-mới khớp; thiếu net quantity; chỉ duyệt SKU trước và bổ sung quy cách trước audit
+TEA-BATCH-03,3,REMAP,BGKQ-0151,TR9DXN,Trà số 9 Douxian,Douxian,bgkq-0151,VERIFY_EXISTING,MAPPING_APPROVED,Người dùng xác nhận 500 g/bịch; sellUnit=bịch; packageQuantity=10; packageUnit=thùng; measureMode=MEASURED; giữ variantId và ảnh cũ nếu audit PASS
 TEA-BATCH-03,4,REMAP,BGKQ-0156,TROLTA,Trà Olong tấm,Hoàng Gia,bgkq-0156,VERIFY_EXISTING,PENDING_USER_REVIEW,Giữ variantId và ảnh cũ nếu audit PASS
 TEA-BATCH-03,5,REMAP,BGKQ-0158,HTRTNB,Hồng trà Tân Nam Bắc,Tân Nam Bắc,bgkq-0158,VERIFY_EXISTING,PENDING_USER_REVIEW,Giữ variantId và ảnh cũ nếu audit PASS
 TEA-BATCH-03,6,REMAP,BGKQ-0159,TRDTNB,Trà đào Tân Nam Bắc,Tân Nam Bắc,bgkq-0159,VERIFY_EXISTING,PENDING_USER_REVIEW,Giữ variantId và ảnh cũ nếu audit PASS
 TEA-BATCH-03,7,REMAP,BGKQ-0160,TRLTNB,Trà lài Tân Nam Bắc,Tân Nam Bắc,bgkq-0160,VERIFY_EXISTING,PENDING_USER_REVIEW,Giữ variantId và ảnh cũ nếu audit PASS
 TEA-BATCH-03,8,CREATE_NEW,,TRSPLL,Trà sen Phúc Long lọc,Phúc Long,,WAITING_MANUAL_IMAGE,PENDING_USER_REVIEW,BGKQ-0162 là SKU gộp sen/lài; giữ SKU cũ độc lập; tạo mới không alias; ảnh thủ công
-TEA-BATCH-03,9,CREATE_NEW,,TRLPLL,Trà lài Phúc Long lọc,Phúc Long,,WAITING_MANUAL_IMAGE,PENDING_USER_REVIEW,BGKQ-0162 là SKU gộp sen/lài; giữ SKU cũ độc lập; thiếu net quantity; tạo mới không alias
-TEA-BATCH-03,10,REMAP,BGKQ-0163,TROPLL,Trà Olong Phúc Long lọc,Phúc Long,bgkq-0163,VERIFY_EXISTING,PENDING_USER_REVIEW,Tên cũ-mới khớp; thiếu net quantity; chỉ duyệt SKU trước và bổ sung quy cách trước audit
+TEA-BATCH-03,9,CREATE_NEW,,TRLPLL,Trà lài Phúc Long lọc,Phúc Long,,WAITING_MANUAL_IMAGE,MAPPING_APPROVED,Người dùng xác nhận dạng túi lọc theo hộp; sellUnit=hộp; packageQuantity=20; packageUnit=thùng; measureMode=COUNT_ONLY; netQuantity/netUnit để trống; BGKQ-0162 giữ độc lập; ảnh thủ công
+TEA-BATCH-03,10,REMAP,BGKQ-0163,TROPLL,Trà Olong Phúc Long lọc,Phúc Long,bgkq-0163,VERIFY_EXISTING,MAPPING_APPROVED,Người dùng xác nhận dạng túi lọc theo hộp; sellUnit=hộp; packageQuantity=20; packageUnit=thùng; measureMode=COUNT_ONLY; netQuantity/netUnit để trống; giữ variantId và ảnh cũ nếu audit PASS
 TEA-BATCH-03,11,CREATE_NEW,,TRSETN,Trà sen Thái Nguyên,Thái Nguyên,,WAITING_MANUAL_IMAGE,PENDING_USER_REVIEW,BGKQ-0164 là SKU gộp sen/lài; giữ SKU cũ độc lập; tạo mới không alias; ảnh thủ công
 TEA-BATCH-03,12,CREATE_NEW,,TRLATN,Trà lài Thái Nguyên,Thái Nguyên,,WAITING_MANUAL_IMAGE,PENDING_USER_REVIEW,BGKQ-0164 là SKU gộp sen/lài; giữ SKU cũ độc lập; tạo mới không alias; ảnh thủ công
 TEA-BATCH-03,13,CREATE_NEW,,COHTBD,Cozy hòa tan bí đao,Cozy,,WAITING_MANUAL_IMAGE,MAPPING_APPROVED,Người dùng xác nhận dạng gói/túi trong hộp; sellUnit=hộp; packageQuantity=30; packageUnit=thùng; measureMode=COUNT_ONLY; netQuantity/netUnit để trống hợp lệ; BGKQ-0166 giữ độc lập; ảnh bổ sung thủ công; không tạo ảnh AI
@@ -25,4 +25,4 @@ TEA-BATCH-03,23,CREATE_NEW,,COTLDA,Cozy túi lọc dâu,Cozy,,WAITING_MANUAL_IMA
 TEA-BATCH-03,24,CREATE_NEW,,TXACTY,Thái xanh Công ty,Trà Thái,,WAITING_MANUAL_IMAGE,PENDING_USER_REVIEW,BGKQ-0168 là SKU gộp xanh/đỏ; giữ SKU cũ độc lập; tạo mới không alias; ảnh thủ công
 TEA-BATCH-03,25,CREATE_NEW,,TDOCTY,Thái đỏ Công ty,Trà Thái,,WAITING_MANUAL_IMAGE,PENDING_USER_REVIEW,BGKQ-0168 là SKU gộp xanh/đỏ; giữ SKU cũ độc lập; tạo mới không alias; ảnh thủ công
 TEA-BATCH-03,26,CREATE_NEW,,TRQMON,Trà ONA quả mọng,ONA,,WAITING_MANUAL_IMAGE,PENDING_USER_REVIEW,Không có SKU cũ đúng nghĩa; tạo mới không alias; ảnh bổ sung thủ công; không tạo ảnh AI
-TEA-BATCH-03,27,REMAP,BGKQ-0187,COZMAT,Cozy bột matcha,Cozy,bgkq-0187,VERIFY_EXISTING,PENDING_USER_REVIEW,Tên cũ-mới khớp; thiếu net quantity; chỉ duyệt SKU trước và bổ sung quy cách trước audit
+TEA-BATCH-03,27,REMAP,BGKQ-0187,COZMAT,Cozy bột matcha,Cozy,bgkq-0187,VERIFY_EXISTING,MAPPING_APPROVED,Người dùng xác nhận 1000 g/bịch; sellUnit=bịch; packageQuantity=30; packageUnit=thùng; measureMode=MEASURED; ghi đè quy cách nguồn cũ 200 g; giữ variantId và ảnh cũ nếu audit PASS
