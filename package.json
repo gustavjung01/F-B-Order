@@ -39,6 +39,7 @@
     "catalog:commercial:dry-run": "pnpm --filter @fb-order/backend catalog:commercial:dry-run",
     "catalog:commercial:apply": "pnpm --filter @fb-order/backend catalog:commercial:apply",
     "catalog:commercial:rollback": "pnpm --filter @fb-order/backend catalog:commercial:rollback",
+    "catalog:remap:audit": "pnpm --filter @fb-order/backend catalog:remap:audit",
     "test:catalog-api:v2": "pnpm --filter @fb-order/backend test:catalog-v2",
     "frontend:audit:copy": "node scripts/frontend/audit-production-copy.mjs",
     "catalog:preview:v2": "node scripts/catalog/hung-phat-v2/build-phase3-preview.mjs",
