@@ -11,10 +11,23 @@ on:
       - "apps/backend/scripts/run-catalog-commercial-map-vps.mjs"
       - "apps/backend/scripts/test-catalog-commercial-map.mjs"
       - "apps/backend/scripts/validate-catalog-commercial-map.mjs"
+      - "apps/backend/scripts/catalog-remap-batch-engine.mjs"
+      - "apps/backend/scripts/catalog-remap-batch-common.mjs"
+      - "apps/backend/scripts/catalog-remap-batch-state.mjs"
+      - "apps/backend/scripts/catalog-remap-batch-apply.mjs"
+      - "apps/backend/scripts/catalog-remap-batch-verify.mjs"
+      - "apps/backend/scripts/test-catalog-remap-batch-engine.mjs"
+      - "apps/backend/scripts/run-catalog-remap-tea-production-vps.mjs"
+      - "apps/backend/scripts/run-catalog-remap-tea-production-vps-root.mjs"
+      - "apps/backend/scripts/run-catalog-remap-tea-rollback-vps.mjs"
+      - "apps/backend/scripts/run-catalog-remap-tea-rollback-vps-root.mjs"
       - "apps/backend/src/modules/catalog-v2/catalog-v2-detail.routes.ts"
       - "apps/frontend/components/catalog/CompactPurchaseSelector.tsx"
       - "apps/frontend/data/catalog-v2/product-model.ts"
+      - "data/catalog-remap/tea-production-plan.json"
       - "db/migrations/030_catalog_commercial_import_batches.sql"
+      - "db/migrations/031_catalog_group_remap.sql"
+      - "db/migrations/032_catalog_packaging_count_only.sql"
       - "docs/catalog-commercial-map.md"
       - ".github/workflows/catalog-commercial-map.yml"
       - ".gitignore"
@@ -70,7 +83,7 @@ jobs:
       - name: Prepare logs
         run: mkdir -p logs
 
-      - name: Check commercial scripts
+      - name: Check commercial and remap scripts
         shell: bash
         run: |
           set -o pipefail
@@ -79,6 +92,17 @@ jobs:
           node --check apps/backend/scripts/run-catalog-commercial-map-bepsi.mjs
           node --check apps/backend/scripts/run-catalog-commercial-map-vps.mjs
           node --check apps/backend/scripts/validate-catalog-commercial-map.mjs
+          node --check apps/backend/scripts/catalog-remap-batch-common.mjs
+          node --check apps/backend/scripts/catalog-remap-batch-state.mjs
+          node --check apps/backend/scripts/catalog-remap-batch-apply.mjs
+          node --check apps/backend/scripts/catalog-remap-batch-verify.mjs
+          node --check apps/backend/scripts/catalog-remap-batch-engine.mjs
+          node --check apps/backend/scripts/test-catalog-remap-batch-engine.mjs
+          node --check apps/backend/scripts/run-catalog-remap-tea-production-vps.mjs
+          node --check apps/backend/scripts/run-catalog-remap-tea-production-vps-root.mjs
+          node --check apps/backend/scripts/run-catalog-remap-tea-rollback-vps.mjs
+          node --check apps/backend/scripts/run-catalog-remap-tea-rollback-vps-root.mjs
+          pnpm catalog:remap:batch:self-test 2>&1 | tee logs/catalog-remap-batch-self-test.log
 
       - name: Run migrations
         shell: bash
@@ -91,6 +115,12 @@ jobs:
         run: |
           set -o pipefail
           pnpm catalog:commercial:test 2>&1 | tee logs/catalog-commercial-test.log
+
+      - name: Test reversible catalog remap engine
+        shell: bash
+        run: |
+          set -o pipefail
+          pnpm catalog:remap:batch:test 2>&1 | tee logs/catalog-remap-batch-test.log
 
       - name: Backend typecheck
         shell: bash

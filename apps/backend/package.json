@@ -43,9 +43,13 @@
     "catalog:remap:dry-run": "node scripts/run-catalog-remap-dry-run-vps-root.mjs",
     "catalog:remap:batch:audit": "node scripts/run-catalog-remap-batch-audit-vps-root.mjs",
     "catalog:remap:batch:dry-run": "node scripts/run-catalog-remap-batch-dry-run-vps-root.mjs",
-    "recipe:images:upload": "node scripts/upload-recipe-images-r2.mjs",
-    "recipe:content:import": "node scripts/import-recipes-v1.mjs",
-    "recipe:content:validate": "node scripts/validate-recipes-v1.mjs",
+    "catalog:remap:batch:self-test": "node scripts/catalog-remap-batch-engine.mjs --self-test",
+    "catalog:remap:batch:test": "node scripts/test-catalog-remap-batch-engine.mjs",
+    "catalog:remap:production:tea": "node scripts/run-catalog-remap-tea-production-vps-root.mjs",
+    "catalog:remap:production:rollback": "node scripts/run-catalog-remap-tea-rollback-vps-root.mjs",
+    "recipe:images:upload": "tsx scripts/upload-recipe-images-r2.mjs",
+    "recipe:content:import": "tsx scripts/import-recipes-v1.mjs",
+    "recipe:content:validate": "tsx scripts/validate-recipes-v1.mjs",
     "test:rbac": "tsx --test test/auth.permissions.test.ts"
   },
   "dependencies": {
