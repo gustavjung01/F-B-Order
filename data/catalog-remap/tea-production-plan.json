@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "planId": "TEA-PRODUCTION-48",
+  "remoteRoot": "/srv/apps/bepsi",
+  "requiredMigrations": [
+    "db/migrations/031_catalog_group_remap.sql",
+    "db/migrations/032_catalog_packaging_count_only.sql"
+  ],
+  "tasks": [
+    {
+      "taskId": "TEA-NOVIA-01",
+      "manifest": "data/catalog-remap/tea-novia.json",
+      "commercialFile": "data/private/catalog-imports/tea-novia.private.json"
+    },
+    {
+      "taskId": "TEA-BATCH-02",
+      "manifest": "data/catalog-remap/tea-batch-02.json",
+      "commercialFile": "data/private/catalog-imports/tea-batch-02.private.json"
+    },
+    {
+      "taskId": "TEA-BATCH-03",
+      "manifest": "data/catalog-remap/tea-batch-03.json",
+      "commercialFile": "data/private/catalog-imports/tea-batch-03.private.json"
+    }
+  ]
+}
