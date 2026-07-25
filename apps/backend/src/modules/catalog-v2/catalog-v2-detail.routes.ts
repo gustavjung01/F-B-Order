@@ -234,17 +234,17 @@ function variantCard(row: VariantRow, identity: RequestIdentity) {
   const sellUnit = options.sell_unit || null;
   const packageQuantity = positiveNumber(row.packaging_package_quantity);
   const netQuantity = positiveNumber(row.packaging_net_quantity);
+  const measured = Boolean(netQuantity && row.packaging_net_unit);
   const packaging = row.packaging_sell_unit
     && packageQuantity
     && row.packaging_package_unit
-    && netQuantity
-    && row.packaging_net_unit
     ? {
+      measureMode: measured ? "measured" as const : "count_only" as const,
       sellUnit: row.packaging_sell_unit,
       packageQuantity,
       packageUnit: row.packaging_package_unit,
-      netQuantity,
-      netUnit: row.packaging_net_unit,
+      netQuantity: measured ? netQuantity : null,
+      netUnit: measured ? row.packaging_net_unit : null,
       confidence: row.packaging_confidence,
       outerPrice: pricing.amount === null ? null : Math.round(pricing.amount * packageQuantity * 100) / 100,
     }
