@@ -15,11 +15,12 @@ export type CatalogV2Image = {
 };
 
 export type CatalogV2Packaging = {
+  measureMode: "measured" | "count_only";
   sellUnit: string;
   packageQuantity: number;
   packageUnit: string;
-  netQuantity: number;
-  netUnit: string;
+  netQuantity: number | null;
+  netUnit: string | null;
   confidence: "high" | "medium" | "low" | null;
   outerPrice: number | null;
 };
