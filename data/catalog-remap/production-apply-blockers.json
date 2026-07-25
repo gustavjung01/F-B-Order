@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "recordedDate": "2026-07-25",
+  "scope": "catalog tea remap production apply",
+  "status": "PRODUCTION_APPLY_BLOCKED",
+  "productionModified": false,
+  "authorizedScope": {
+    "remoteRoot": "/srv/apps/bepsi",
+    "migrations": [
+      "db/migrations/031_catalog_group_remap.sql",
+      "db/migrations/032_catalog_packaging_count_only.sql"
+    ],
+    "tasks": [
+      "TEA-NOVIA-01",
+      "TEA-BATCH-02",
+      "TEA-BATCH-03"
+    ]
+  },
+  "blockers": [
+    {
+      "code": "CATALOG_REMAP_BATCH_APPLY_MISSING",
+      "detail": "Repository has batch audit and dry-run commands but no batch apply/rollback implementation. Manual SQL apply is prohibited because it would bypass manifest hash, before/after snapshot and rollback gates."
+    },
+    {
+      "code": "CATALOG_REMAP_COUNT_ONLY_OPTIONS_INVALID",
+      "detail": "Current batch dry-run builds options.size from null net fields for COUNT_ONLY rows, producing nullnull. Dry-run must be corrected and TEA-BATCH-03 must be rerun before production apply."
+    },
+    {
+      "code": "EXECUTION_ENVIRONMENT_SSH_UNAVAILABLE",
+      "detail": "Current chat execution environment has no mounted Bếp Sỉ SSH key or SSH client. Production was not accessed."
+    }
+  ],
+  "requiredBeforeApply": [
+    "Implement and test catalog:remap:batch:apply and rollback.",
+    "Fix COUNT_ONLY option generation so size is omitted instead of nullnull.",
+    "Rerun TEA-BATCH-03 dry-run and obtain 27/27 PASS with corrected after-state.",
+    "Create a database backup before migrations.",
+    "Run migrations and apply only through the guarded Bếp Sỉ production runner."
+  ]
+}
