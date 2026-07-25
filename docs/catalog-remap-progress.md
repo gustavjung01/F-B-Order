@@ -25,7 +25,6 @@
 - `TODO`: chưa làm
 - `PENDING_USER_REVIEW`: đã kê mapping, chờ duyệt
 - `MAPPING_APPROVED`: SKU cũ–mới đã duyệt, chờ audit
-- `AUDIT`: đang đối chiếu production
 - `AUDIT_PASS`: dữ liệu và ảnh đạt theo chính sách task
 - `BLOCKED`: có xung đột hoặc thiếu dữ liệu bắt buộc
 - `DRY_RUN_PASS`: kế hoạch thay đổi read-only đã đạt
@@ -38,8 +37,8 @@
 | Thứ tự | Task | SKU chuẩn | Trạng thái | Ghi chú |
 |---:|---|---:|---|---|
 | 1 | `TEA-NOVIA-01` | 3 | `DRY_RUN_PASS` | Chờ migration 031 và phê duyệt apply |
-| 2 | `TEA-BATCH-02` | 18 | `AUDIT_PASS` | Audit production read-only 18/18 PASS; dry-run batch đã sẵn sàng |
-| 3 | Phần Trà còn lại | 27 | `TODO` | Kê batch tiếp theo sau khi batch 02 dry-run |
+| 2 | `TEA-BATCH-02` | 18 | `DRY_RUN_PASS` | Audit và dry-run production read-only 18/18 PASS |
+| 3 | `TEA-BATCH-03` | 27 | `TODO` | Kê toàn bộ phần Trà còn lại để duyệt một lượt |
 
 # Task TEA-NOVIA-01 — Trà Novia
 
@@ -68,6 +67,7 @@
 data/catalog-remap/tea-batch-02-review.csv
 data/catalog-remap/tea-batch-02.json
 data/catalog-remap/tea-batch-02-audit-verification.json
+data/catalog-remap/tea-batch-02-dry-run-verification.json
 data/catalog-remap/sku-image-transition.csv
 ```
 
@@ -81,53 +81,53 @@ data/private/catalog-imports/tea-batch-02.private.json
 - Payload chứa 18 dòng giá/quy cách đã duyệt.
 - File nằm trong `.gitignore`; không commit.
 
-## Kết quả audit batch
+## Kết quả audit
 
-- Trạng thái: `BATCH_AUDIT_PASS`.
-- Tổng dòng: 18.
-- PASS: 18.
-- BLOCKED: 0.
-- Báo cáo local:
+- `BATCH_AUDIT_PASS`.
+- 18/18 dòng PASS, 0 BLOCKED.
+- Chỉ đọc production; không sửa DB, R2 hoặc service.
+
+Báo cáo local:
 
 ```text
 artifacts/catalog-remap/tea-batch-02-audit.json
 artifacts/catalog-remap/tea-batch-02-audit.csv
 ```
 
-- Audit chỉ đọc; không sửa DB, R2, service hoặc production.
+## Kết quả dry-run
 
-## Dry-run batch read-only
+- `BATCH_DRY_RUN_PASS`.
+- 18/18 dòng PASS, 0 BLOCKED.
+- `canApplyNow = false`.
+- `canApplyAfterMigration = true`.
+- Thiếu migration `031` là cổng hạ tầng trước apply, không phải blocker dữ liệu.
+- 16 `variantId` remap được giữ nguyên.
+- Dự kiến tạo 16 alias SKU cũ.
+- `TXABON` và `TXABIE` được tạo mới, không có alias legacy.
+- Cart/order giữ tham chiếu qua `variantId`.
+- Recipe được liệt kê phần cần đổi `catalog_product_id` và snapshot.
+- Ảnh R2 hiện hữu được giữ nguyên; 3 ảnh thiếu chờ bổ sung thủ công.
+- `generateImages = false`, `r2Writes = 0`.
+- Không sửa DB, R2, service hoặc production.
 
-Lệnh:
-
-```powershell
-git pull --ff-only origin agent/catalog-commercial-map-trial
-pnpm catalog:remap:batch:dry-run -- --commercial-file=data/private/catalog-imports/tea-batch-02.private.json
-```
-
-Kết quả local:
+Báo cáo local:
 
 ```text
 artifacts/catalog-remap/tea-batch-02-dry-run.json
 artifacts/catalog-remap/tea-batch-02-dry-run.csv
 ```
 
-Dry-run kiểm:
+## Cổng production
 
-- Parent riêng cho GTP, King, Lộc Phát, Hoàng Gia, Phúc Long, Cozy, Trà Thái và ONA.
-- 16 `variantId` remap được giữ nguyên.
-- 16 alias SKU cũ được dự kiến tạo sau migration 031.
-- `TXABON` và `TXABIE` được dự kiến tạo mới, không có alias legacy.
-- Cart/order tiếp tục giữ tham chiếu qua `variantId`.
-- Recipe được liệt kê chính xác phần cần đổi `catalog_product_id` và snapshot.
-- Ảnh R2 hiện hữu được giữ nguyên; 3 ảnh thiếu chờ bổ sung thủ công.
-- `generateImages = false`, `r2Writes = 0`.
-- Thiếu migration 031 chỉ làm `canApplyNow = false`; không phải blocker dữ liệu.
-- Không sửa DB, R2, service hoặc production.
+Chỉ được thực hiện khi có phê duyệt riêng, rõ ràng:
 
-## Cổng tiếp theo
+1. Chạy migration `db/migrations/031_catalog_group_remap.sql` trên đúng backend Bếp Sỉ.
+2. Apply task `TEA-BATCH-02` bằng manifest hash, before/after snapshot và rollback batch.
+3. Hậu kiểm API, frontend, cart, order và recipe.
+4. Không tạo/upload/xóa ảnh trong task SKU.
+5. Không thao tác backend khác trên cùng VPS.
 
-1. Chạy dry-run batch read-only.
-2. Nếu `BATCH_DRY_RUN_PASS`, nâng `TEA-BATCH-02` lên `DRY_RUN_PASS`.
-3. Chỉ chạy migration 031 và apply sau khi có phê duyệt production riêng.
-4. Không tạo hoặc upload ảnh trong task SKU.
+## Việc tiếp theo
+
+- Catalog: kê `TEA-BATCH-03` gồm 27 SKU Trà còn lại để người dùng duyệt một lượt.
+- Production: giữ nguyên; chưa migration 031, chưa apply Novia hoặc batch 02.
