@@ -113,4 +113,4 @@ async function buildPlan(client, manifest, payload, { lock = false } = {}) {
   };
 }
 
-export { assertSchema, productByKey, variantByActualSku, variantBySkuOrAlias, loadPackaging, snapshotState, buildPlan };
+export { PRODUCT_FIELDS, assertSchema, productByKey, variantByActualSku, variantBySkuOrAlias, loadPackaging, snapshotState, buildPlan };
