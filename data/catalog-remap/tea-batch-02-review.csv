@@ -1,19 +1,19 @@
 batch_id,row_no,action,legacy_sku,canonical_sku,product_name,detail_group,current_image_key,image_status,review_status,notes
-TEA-BATCH-02,1,REMAP,BGKQ-0144,HTGTP1,Hồng trà GTP 1kg,GTP,bgkq-0144,VERIFY_EXISTING,PENDING_USER_REVIEW,Giữ variantId và ảnh cũ nếu audit PASS
-TEA-BATCH-02,2,REMAP,BGKQ-0146,TRLAKG,Trà lài King gói,King,bgkq-0146,VERIFY_EXISTING,PENDING_USER_REVIEW,Giữ variantId và ảnh cũ nếu audit PASS
-TEA-BATCH-02,3,REMAP,BGKQ-0147,TROLKG,Trà Olong King,King,bgkq-0147,VERIFY_EXISTING,PENDING_USER_REVIEW,Giữ variantId và ảnh cũ nếu audit PASS
-TEA-BATCH-02,4,REMAP,BGKQ-0148,TRLALP,Trà lài Lộc Phát,Lộc Phát,bgkq-0148,VERIFY_EXISTING,PENDING_USER_REVIEW,Nguồn hiện tại ghi đúng Trà lài Lộc Phát
-TEA-BATCH-02,5,REMAP,BGKQ-0149,TRDELP,Trà đen Lộc Phát,Lộc Phát,bgkq-0149,VERIFY_EXISTING,PENDING_USER_REVIEW,Giữ variantId và ảnh cũ nếu audit PASS
-TEA-BATCH-02,6,REMAP,BGKQ-0150,TROLLP,Trà Olong Lộc Phát,Lộc Phát,bgkq-0150,VERIFY_EXISTING,PENDING_USER_REVIEW,Giữ variantId và ảnh cũ nếu audit PASS
-TEA-BATCH-02,7,REMAP,BGKQ-0154,TRDEHG,Trà đen Hoàng Gia,Hoàng Gia,bgkq-0154,VERIFY_EXISTING,PENDING_USER_REVIEW,Giữ variantId và ảnh cũ nếu audit PASS
-TEA-BATCH-02,8,REMAP,BGKQ-0155,TRLAHG,Trà lài Hoàng Gia,Hoàng Gia,bgkq-0155,VERIFY_EXISTING,PENDING_USER_REVIEW,Giữ variantId và ảnh cũ nếu audit PASS
-TEA-BATCH-02,9,REMAP,BGKQ-0161,TRDEPL,Trà đen Phúc Long,Phúc Long,bgkq-0161,VERIFY_EXISTING,PENDING_USER_REVIEW,Giữ variantId và ảnh cũ nếu audit PASS
-TEA-BATCH-02,10,REMAP,BGKQ-0165,LIPTON,Cozy Lipton,Cozy,bgkq-0165,VERIFY_EXISTING,PENDING_USER_REVIEW,Giữ variantId và ảnh cũ nếu audit PASS
-TEA-BATCH-02,11,CREATE_NEW,,TXABON,Thái xanh B-One,Trà Thái,,WAITING_MANUAL_IMAGE,PENDING_USER_REVIEW,SKU mới; không alias BGKQ-0169; không tạo ảnh AI
-TEA-BATCH-02,12,CREATE_NEW,,TXABIE,Thái xanh Biên,Trà Thái,,WAITING_MANUAL_IMAGE,PENDING_USER_REVIEW,SKU mới; khác Thái xanh B-One; không alias BGKQ-0169; không tạo ảnh AI
-TEA-BATCH-02,13,REMAP,BGKQ-0173,HTRCGA,Hồng trà Cô Gái ONA,ONA,bgkq-0173,VERIFY_EXISTING,PENDING_USER_REVIEW,Giữ variantId và ảnh cũ nếu audit PASS
-TEA-BATCH-02,14,REMAP,BGKQ-0174,TRDECG,Trà ONA đen Cô Gái,ONA,bgkq-0174,VERIFY_EXISTING,PENDING_USER_REVIEW,Giữ variantId và ảnh cũ nếu audit PASS
-TEA-BATCH-02,15,REMAP,BGKQ-0175,TRLACG,Trà ONA lài Cô Gái,ONA,bgkq-0175,VERIFY_EXISTING,PENDING_USER_REVIEW,Giữ variantId và ảnh cũ nếu audit PASS
-TEA-BATCH-02,16,REMAP,BGKQ-0176,TRLANY,Trà ONA lài Như Ý,ONA,bgkq-0176,VERIFY_EXISTING,PENDING_USER_REVIEW,Giữ variantId và ảnh cũ nếu audit PASS
-TEA-BATCH-02,17,REMAP,BGKQ-0177,TRGAON,Trà ONA gạo rang,ONA,bgkq-0177,MISSING_IMAGE_USER_CONFIRMED,PENDING_USER_REVIEW,Không có ảnh thực tế; remap SKU trước; ảnh bổ sung thủ công sau; không tạo ảnh AI
-TEA-BATCH-02,18,REMAP,BGKQ-0178,TROLTQ,Trà ONA Olong Tứ Quý,ONA,bgkq-0178,VERIFY_EXISTING,PENDING_USER_REVIEW,Giữ variantId và ảnh cũ nếu audit PASS
+TEA-BATCH-02,1,REMAP,BGKQ-0144,HTGTP1,Hồng trà GTP 1kg,GTP,bgkq-0144,VERIFY_EXISTING,APPROVED,Giữ variantId và ảnh cũ nếu audit PASS
+TEA-BATCH-02,2,REMAP,BGKQ-0146,TRLAKG,Trà lài King gói,King,bgkq-0146,VERIFY_EXISTING,APPROVED,Giữ variantId và ảnh cũ nếu audit PASS
+TEA-BATCH-02,3,REMAP,BGKQ-0147,TROLKG,Trà Olong King,King,bgkq-0147,VERIFY_EXISTING,APPROVED,Giữ variantId và ảnh cũ nếu audit PASS
+TEA-BATCH-02,4,REMAP,BGKQ-0148,TRLALP,Trà lài Lộc Phát,Lộc Phát,bgkq-0148,VERIFY_EXISTING,APPROVED,Nguồn cũ ghi đúng Trà lài Lộc Phát; remap BGKQ-0148 → TRLALP
+TEA-BATCH-02,5,REMAP,BGKQ-0149,TRDELP,Trà đen Lộc Phát,Lộc Phát,bgkq-0149,VERIFY_EXISTING,APPROVED,Giữ variantId và ảnh cũ nếu audit PASS
+TEA-BATCH-02,6,REMAP,BGKQ-0150,TROLLP,Trà Olong Lộc Phát,Lộc Phát,bgkq-0150,VERIFY_EXISTING,APPROVED,Giữ variantId và ảnh cũ nếu audit PASS
+TEA-BATCH-02,7,REMAP,BGKQ-0154,TRDEHG,Trà đen Hoàng Gia,Hoàng Gia,bgkq-0154,VERIFY_EXISTING,APPROVED,Giữ variantId và ảnh cũ nếu audit PASS
+TEA-BATCH-02,8,REMAP,BGKQ-0155,TRLAHG,Trà lài Hoàng Gia,Hoàng Gia,bgkq-0155,VERIFY_EXISTING,APPROVED,Giữ variantId và ảnh cũ nếu audit PASS
+TEA-BATCH-02,9,REMAP,BGKQ-0161,TRDEPL,Trà đen Phúc Long,Phúc Long,bgkq-0161,VERIFY_EXISTING,APPROVED,Giữ variantId và ảnh cũ nếu audit PASS
+TEA-BATCH-02,10,REMAP,BGKQ-0165,LIPTON,Cozy Lipton,Cozy,bgkq-0165,VERIFY_EXISTING,APPROVED,Giữ variantId và ảnh cũ nếu audit PASS
+TEA-BATCH-02,11,CREATE_NEW,,TXABON,Thái xanh B-One,Trà Thái,,WAITING_MANUAL_IMAGE,APPROVED,SKU mới; không alias BGKQ-0169; ảnh bổ sung thủ công sau; không tạo ảnh AI
+TEA-BATCH-02,12,CREATE_NEW,,TXABIE,Thái xanh Biên,Trà Thái,,WAITING_MANUAL_IMAGE,APPROVED,SKU mới; không alias BGKQ-0169; ảnh bổ sung thủ công sau; không tạo ảnh AI
+TEA-BATCH-02,13,REMAP,BGKQ-0173,HTRCGA,Hồng trà Cô Gái ONA,ONA,bgkq-0173,VERIFY_EXISTING,APPROVED,Giữ variantId và ảnh cũ nếu audit PASS
+TEA-BATCH-02,14,REMAP,BGKQ-0174,TRDECG,Trà ONA đen Cô Gái,ONA,bgkq-0174,VERIFY_EXISTING,APPROVED,Giữ variantId và ảnh cũ nếu audit PASS
+TEA-BATCH-02,15,REMAP,BGKQ-0175,TRLACG,Trà ONA lài Cô Gái,ONA,bgkq-0175,VERIFY_EXISTING,APPROVED,Giữ variantId và ảnh cũ nếu audit PASS
+TEA-BATCH-02,16,REMAP,BGKQ-0176,TRLANY,Trà ONA lài Như Ý,ONA,bgkq-0176,VERIFY_EXISTING,APPROVED,Giữ variantId và ảnh cũ nếu audit PASS
+TEA-BATCH-02,17,REMAP,BGKQ-0177,TRGAON,Trà ONA gạo rang,ONA,bgkq-0177,MISSING_IMAGE_USER_CONFIRMED,APPROVED,Không có ảnh thực tế; remap SKU trước; ảnh bổ sung thủ công sau; không tạo ảnh AI
+TEA-BATCH-02,18,REMAP,BGKQ-0178,TROLTQ,Trà ONA Olong Tứ Quý,ONA,bgkq-0178,VERIFY_EXISTING,APPROVED,Giữ variantId và ảnh cũ nếu audit PASS
