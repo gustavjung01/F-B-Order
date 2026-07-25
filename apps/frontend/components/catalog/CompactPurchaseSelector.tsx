@@ -26,7 +26,9 @@ const moneyFormatter = new Intl.NumberFormat("vi-VN", {
 function packagingLabel(variant: CatalogV2VariantCard | null) {
   const packaging = variant?.packaging;
   if (!packaging) return null;
-  return `${quantityFormatter.format(packaging.netQuantity)} ${packaging.netUnit}/${packaging.sellUnit} · ${quantityFormatter.format(packaging.packageQuantity)} ${packaging.sellUnit}/${packaging.packageUnit}`;
+  const outer = `${quantityFormatter.format(packaging.packageQuantity)} ${packaging.sellUnit}/${packaging.packageUnit}`;
+  if (packaging.measureMode === "count_only" || packaging.netQuantity === null || !packaging.netUnit) return outer;
+  return `${quantityFormatter.format(packaging.netQuantity)} ${packaging.netUnit}/${packaging.sellUnit} · ${outer}`;
 }
 
 function initialOptions(detail: CatalogV2DetailResponse, variant: CatalogV2VariantCard | undefined) {
