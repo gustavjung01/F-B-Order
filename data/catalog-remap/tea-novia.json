@@ -22,6 +22,16 @@
     "imagesManuallyVerified": true,
     "productionModified": false
   },
+  "dryRunVerification": {
+    "status": "DRY_RUN_PASS",
+    "verifiedDate": "2026-07-25",
+    "reportPath": "artifacts/catalog-remap/tea-novia-dry-run.json",
+    "classification": "PASS_WITH_EXISTING_PRODUCT_CONSOLIDATION",
+    "canApplyNow": false,
+    "canApplyAfterMigration": true,
+    "requiredMigration": "db/migrations/031_catalog_group_remap.sql",
+    "productionModified": false
+  },
   "imageMigrationPolicy": {
     "phase": "after_all_catalog_groups_verified",
     "targetFileConvention": "lowercase canonical SKU + .webp",
