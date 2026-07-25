@@ -3,6 +3,7 @@ import { createHash } from "node:crypto";
 const MAX_ROWS = 1_000;
 const MAX_TEXT_LENGTH = 240;
 const ALLOWED_NET_UNITS = new Set(["g", "kg", "ml", "l", "cái"]);
+const ALLOWED_MEASURE_MODES = new Set(["measured", "count_only"]);
 
 function fail(code, message, details = undefined) {
   const error = new Error(message);
@@ -54,6 +55,10 @@ function optionalInteger(value, field) {
   return parsed;
 }
 
+function empty(value) {
+  return value === undefined || value === null || value === "";
+}
+
 function normalizeRow(value, index) {
   if (!isRecord(value)) {
     fail("CATALOG_COMMERCIAL_ROW_INVALID", `Row ${index + 1} must be an object.`, { index });
@@ -64,9 +69,30 @@ function normalizeRow(value, index) {
     fail("CATALOG_COMMERCIAL_ROW_NOT_READY", `Row ${index + 1} is not marked ready.`, { index, status });
   }
 
-  const netUnit = text(value.netUnit, `rows[${index}].netUnit`, { lower: true });
-  if (!ALLOWED_NET_UNITS.has(netUnit)) {
-    fail("CATALOG_COMMERCIAL_NET_UNIT_UNSUPPORTED", `Row ${index + 1} has an unsupported net unit.`, { index, netUnit });
+  const measureMode = empty(value.measureMode)
+    ? "measured"
+    : text(value.measureMode, `rows[${index}].measureMode`, { lower: true });
+  if (!ALLOWED_MEASURE_MODES.has(measureMode)) {
+    fail("CATALOG_COMMERCIAL_MEASURE_MODE_UNSUPPORTED", `Row ${index + 1} has an unsupported measure mode.`, {
+      index,
+      measureMode,
+    });
+  }
+
+  let netQuantity = null;
+  let netUnit = null;
+  if (measureMode === "measured") {
+    netUnit = text(value.netUnit, `rows[${index}].netUnit`, { lower: true });
+    if (!ALLOWED_NET_UNITS.has(netUnit)) {
+      fail("CATALOG_COMMERCIAL_NET_UNIT_UNSUPPORTED", `Row ${index + 1} has an unsupported net unit.`, { index, netUnit });
+    }
+    netQuantity = positiveNumber(value.netQuantity, `rows[${index}].netQuantity`);
+  } else if (!empty(value.netQuantity) || !empty(value.netUnit)) {
+    fail(
+      "CATALOG_COMMERCIAL_COUNT_ONLY_NET_FIELDS_FORBIDDEN",
+      `Row ${index + 1} must leave netQuantity and netUnit empty when measureMode is count_only.`,
+      { index, netQuantity: value.netQuantity, netUnit: value.netUnit },
+    );
   }
 
   const row = {
@@ -74,8 +100,9 @@ function normalizeRow(value, index) {
     name: text(value.name, `rows[${index}].name`),
     group: text(value.group, `rows[${index}].group`),
     status,
+    measureMode,
     sellUnit: text(value.sellUnit, `rows[${index}].sellUnit`, { max: 80, lower: true }),
-    netQuantity: positiveNumber(value.netQuantity, `rows[${index}].netQuantity`),
+    netQuantity,
     netUnit,
     packageQuantity: positiveNumber(value.packageQuantity, `rows[${index}].packageQuantity`, { integer: true }),
     packageUnit: text(value.packageUnit, `rows[${index}].packageUnit`, { max: 80, lower: true }),
@@ -160,7 +187,7 @@ export function buildCommercialOptions(row) {
   return {
     sell_unit: row.sellUnit,
     package: `${formatNumber(row.packageQuantity)} ${row.sellUnit} / ${row.packageUnit}`,
-    size: `${formatNumber(row.netQuantity)} ${row.netUnit}`,
+    size: row.measureMode === "count_only" ? null : `${formatNumber(row.netQuantity)} ${row.netUnit}`,
   };
 }
 
@@ -171,6 +198,7 @@ export function buildCommercialRawSource(payload, row) {
     payloadHash: payload.payloadHash,
     sourceRow: row.sourceRow,
     sourceMatchStatus: row.sourceMatchStatus,
+    measureMode: row.measureMode,
     derivedPackagePrice: row.derivedPackagePrice,
     derivedPackagePricePolicy: "reference_only_not_discount_tier",
   };
