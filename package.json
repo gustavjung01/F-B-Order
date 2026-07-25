@@ -42,6 +42,7 @@
     "catalog:remap:audit": "pnpm --filter @fb-order/backend catalog:remap:audit",
     "catalog:remap:dry-run": "pnpm --filter @fb-order/backend catalog:remap:dry-run",
     "catalog:remap:batch:audit": "pnpm --filter @fb-order/backend catalog:remap:batch:audit",
+    "catalog:remap:batch:dry-run": "pnpm --filter @fb-order/backend catalog:remap:batch:dry-run",
     "test:catalog-api:v2": "pnpm --filter @fb-order/backend test:catalog-v2",
     "frontend:audit:copy": "node scripts/frontend/audit-production-copy.mjs",
     "catalog:preview:v2": "node scripts/catalog/hung-phat-v2/build-phase3-preview.mjs",
