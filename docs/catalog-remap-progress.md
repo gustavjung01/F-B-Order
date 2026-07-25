@@ -24,7 +24,7 @@
 ## Trạng thái
 
 - `PENDING_USER_REVIEW`: đã kê mapping, chờ duyệt.
-- `MAPPING_APPROVED`: SKU cũ–mới đã duyệt, chờ đủ dữ liệu để audit.
+- `MAPPING_APPROVED`: SKU cũ–mới và quy cách đã duyệt, chờ audit.
 - `AUDIT_PASS`: dữ liệu và ảnh đạt theo chính sách task.
 - `DRY_RUN_PASS`: kế hoạch thay đổi read-only đã đạt.
 - `APPROVED`: được duyệt để apply.
@@ -37,7 +37,7 @@
 |---:|---|---:|---|---|
 | 1 | `TEA-NOVIA-01` | 3 | `DRY_RUN_PASS` | Chờ migration 031 và phê duyệt apply |
 | 2 | `TEA-BATCH-02` | 18 | `DRY_RUN_PASS` | Audit và dry-run production read-only 18/18 PASS |
-| 3 | `TEA-BATCH-03` | 27 | `PENDING_USER_REVIEW` | 16 SKU đã duyệt quy cách; còn 11 SKU chờ duyệt; không còn dòng thiếu quy cách trong phần đã duyệt |
+| 3 | `TEA-BATCH-03` | 27 | `MAPPING_APPROVED` | 27/27 đã duyệt; 8 remap + 19 create-new; 14 measured + 13 count-only; chờ audit read-only |
 
 # TEA-NOVIA-01 — Trà Novia
 
@@ -62,75 +62,81 @@
 
 # TEA-BATCH-03 — Batch Trà 27 SKU
 
-## Phạm vi
+## Phạm vi đã duyệt
 
-- File review: `data/catalog-remap/tea-batch-03-review.csv`.
+- Review: `data/catalog-remap/tea-batch-03-review.csv`.
+- Manifest: `data/catalog-remap/tea-batch-03.json`.
+- Sổ SKU–ảnh: `data/catalog-remap/sku-image-transition.csv`.
 - Tổng cộng: 8 `REMAP` + 19 `CREATE_NEW`.
-- Không ép SKU tách vị vào các SKU gộp cũ.
-- Các SKU gộp cũ vẫn tồn tại độc lập, chưa alias hoặc deactivate:
-  - `BGKQ-0162` — Trà sen/lài Phúc Long.
-  - `BGKQ-0164` — Trà sen/lài Thái Nguyên.
-  - `BGKQ-0166` — Cozy hòa tan gộp.
-  - `BGKQ-0167` — Cozy túi lọc gộp.
-  - `BGKQ-0168` — Trà Thái xanh/đỏ gộp.
+- Quy cách: 14 `MEASURED` + 13 `COUNT_ONLY`.
+- 27/27 mapping và quy cách đã được người dùng duyệt.
 - Tất cả ảnh `CREATE_NEW` chờ bổ sung thủ công; không tạo ảnh AI.
 
-## Cụm Cozy đã `MAPPING_APPROVED`
+Các SKU gộp cũ vẫn tồn tại độc lập, chưa alias hoặc deactivate:
 
 ```text
-COHTBD
-COHTVA
-COHTOI
-COHTDO
-COHTDA
-COHTCH
-COHTCD
-COTLVA
-COTLHT
-COTLDO
-COTLDA
+BGKQ-0162 — Trà sen/lài Phúc Long
+BGKQ-0164 — Trà sen/lài Thái Nguyên
+BGKQ-0166 — Cozy hòa tan gộp
+BGKQ-0167 — Cozy túi lọc gộp
+BGKQ-0168 — Trà Thái xanh/đỏ gộp
 ```
 
-Quy cách đã chốt cho cả 11 SKU Cozy:
-
-```text
-measureMode = COUNT_ONLY
-sellUnit = hộp
-packageQuantity = 30
-packageUnit = thùng
-netQuantity = null
-netUnit = null
-```
-
-- Nhóm `COHT*` là dạng gói/túi trong hộp.
-- Nhóm `COTL*` là túi lọc trong hộp.
-- Không alias vào `BGKQ-0166` hoặc `BGKQ-0167`.
-- Không bắt buộc gram khi nguồn chỉ công bố quy cách đếm theo hộp.
-- Có thể bổ sung số túi/hộp hoặc khối lượng sau khi có dữ liệu thật.
-- Schema hỗ trợ: `db/migrations/032_catalog_packaging_count_only.sql`.
-- Migration 032 chỉ mở kiểu dữ liệu `COUNT_ONLY`; không remap SKU và chưa chạy production.
-
-## Năm SKU vừa chốt quy cách
+## Quy cách người dùng chốt trực tiếp
 
 ```text
 HTRKIG = MEASURED; 500 g/bịch; 30 bịch/bao
 TR9DXN = MEASURED; 500 g/bịch; 10 bịch/thùng
-TRLPLL = COUNT_ONLY; 1 hộp; 20 hộp/thùng
-TROPLL = COUNT_ONLY; 1 hộp; 20 hộp/thùng
+TRLPLL = COUNT_ONLY; bán theo hộp; 20 hộp/thùng
+TROPLL = COUNT_ONLY; bán theo hộp; 20 hộp/thùng
 COZMAT = MEASURED; 1000 g/bịch; 30 bịch/thùng
 ```
 
 - `TRLPLL` và `TROPLL` là trà túi lọc theo hộp; không điền gram giả.
 - `COZMAT` dùng 1 kg theo xác nhận trực tiếp của người dùng, thay cho quy cách 200 g trong bảng nguồn cũ.
-- Cả 5 SKU đã chuyển sang `MAPPING_APPROVED` trong file review.
+- 11 SKU Cozy mới dùng `COUNT_ONLY`, bán theo hộp và 30 hộp/thùng.
+
+## Hỗ trợ kỹ thuật COUNT_ONLY
+
+Đã hoàn thiện trên branch:
+
+- Validator hỗ trợ `measured | count_only`, tương thích payload cũ.
+- Validator tiếp tục chặn khối lượng `0` và chặn `COUNT_ONLY` có net fields giả.
+- Migration: `db/migrations/032_catalog_packaging_count_only.sql`.
+- API trả packaging cho hàng đếm theo hộp dù không có gram.
+- Frontend hiển thị `30 hộp/thùng`, không hiển thị `0 g` hoặc `null g`.
+- Test validator `MEASURED + COUNT_ONLY + backward compatibility` đã PASS cục bộ.
+- GitHub CI của head mới được kích hoạt; chỉ ghi PASS khi workflow hoàn tất thành công.
+
+## Payload riêng tư
+
+```text
+data/private/catalog-imports/tea-batch-03.private.json
+```
+
+- Payload gồm 27 dòng.
+- Payload hash: `1191f9072d6a3679082bdda2b137220bc514a605679a34ba23682da9b6542ff0`.
+- File nằm trong `.gitignore`; không commit.
+- Payload đã qua validator cục bộ với 14 `MEASURED` và 13 `COUNT_ONLY`.
 
 ## Cổng tiếp theo
 
-1. Duyệt hoặc sửa 11 SKU còn lại trong `tea-batch-03-review.csv`.
-2. Hoàn thiện validator/importer/API/frontend cho `COUNT_ONLY` trước khi tạo manifest.
-3. Khi đủ hai điều kiện mới tạo manifest, payload private và chạy audit read-only.
-4. Chưa cập nhật `sku-image-transition.csv` cho batch 03 trước khi toàn bộ mapping được duyệt.
-5. Không chạy migration, apply, upload ảnh hoặc ghi R2 trong bước review.
+Chỉ chạy audit production read-only:
+
+```powershell
+pnpm catalog:remap:batch:audit -- --manifest=data/catalog-remap/tea-batch-03.json --commercial-file=data/private/catalog-imports/tea-batch-03.private.json
+```
+
+Báo cáo local:
+
+```text
+artifacts/catalog-remap/tea-batch-03-audit.json
+artifacts/catalog-remap/tea-batch-03-audit.csv
+```
+
+- Chưa chạy dry-run trước khi audit PASS và người dùng kiểm kết quả.
+- Chưa chạy migration 031 hoặc 032.
+- Chưa apply production, upload ảnh hoặc ghi R2.
 
 ## Production gate chung
 
