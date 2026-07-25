@@ -37,7 +37,7 @@
 |---:|---|---:|---|---|
 | 1 | `TEA-NOVIA-01` | 3 | `DRY_RUN_PASS` | Chờ migration 031 và phê duyệt apply |
 | 2 | `TEA-BATCH-02` | 18 | `DRY_RUN_PASS` | Audit và dry-run production read-only 18/18 PASS |
-| 3 | `TEA-BATCH-03` | 27 | `PENDING_USER_REVIEW` | 11 Cozy đã duyệt COUNT_ONLY; 16 SKU còn chờ; 5 SKU còn thiếu khối lượng |
+| 3 | `TEA-BATCH-03` | 27 | `PENDING_USER_REVIEW` | 16 SKU đã duyệt quy cách; còn 11 SKU chờ duyệt; không còn dòng thiếu quy cách trong phần đã duyệt |
 
 # TEA-NOVIA-01 — Trà Novia
 
@@ -105,29 +105,29 @@ netUnit = null
 - Nhóm `COHT*` là dạng gói/túi trong hộp.
 - Nhóm `COTL*` là túi lọc trong hộp.
 - Không alias vào `BGKQ-0166` hoặc `BGKQ-0167`.
-- Không bắt buộc gram khi nguồn chỉ công bố `30 hộp/thùng`.
+- Không bắt buộc gram khi nguồn chỉ công bố quy cách đếm theo hộp.
 - Có thể bổ sung số túi/hộp hoặc khối lượng sau khi có dữ liệu thật.
 - Schema hỗ trợ: `db/migrations/032_catalog_packaging_count_only.sql`.
 - Migration 032 chỉ mở kiểu dữ liệu `COUNT_ONLY`; không remap SKU và chưa chạy production.
 
-## SKU thực sự còn thiếu khối lượng
-
-Chỉ còn 5 SKU đo theo khối lượng nhưng nguồn hiện chưa có số thật:
+## Năm SKU vừa chốt quy cách
 
 ```text
-HTRKIG
-TR9DXN
-TRLPLL
-TROPLL
-COZMAT
+HTRKIG = MEASURED; 500 g/bịch; 30 bịch/bao
+TR9DXN = MEASURED; 500 g/bịch; 10 bịch/thùng
+TRLPLL = COUNT_ONLY; 1 hộp; 20 hộp/thùng
+TROPLL = COUNT_ONLY; 1 hộp; 20 hộp/thùng
+COZMAT = MEASURED; 1000 g/bịch; 30 bịch/thùng
 ```
 
-Không tạo manifest audit/apply cho 5 dòng này bằng giá trị `0` hoặc số tự đoán.
+- `TRLPLL` và `TROPLL` là trà túi lọc theo hộp; không điền gram giả.
+- `COZMAT` dùng 1 kg theo xác nhận trực tiếp của người dùng, thay cho quy cách 200 g trong bảng nguồn cũ.
+- Cả 5 SKU đã chuyển sang `MAPPING_APPROVED` trong file review.
 
 ## Cổng tiếp theo
 
-1. Duyệt hoặc sửa 16 SKU còn lại trong `tea-batch-03-review.csv`.
-2. Bổ sung khối lượng thật cho 5 SKU còn thiếu.
+1. Duyệt hoặc sửa 11 SKU còn lại trong `tea-batch-03-review.csv`.
+2. Hoàn thiện validator/importer/API/frontend cho `COUNT_ONLY` trước khi tạo manifest.
 3. Khi đủ hai điều kiện mới tạo manifest, payload private và chạy audit read-only.
 4. Chưa cập nhật `sku-image-transition.csv` cho batch 03 trước khi toàn bộ mapping được duyệt.
 5. Không chạy migration, apply, upload ảnh hoặc ghi R2 trong bước review.
