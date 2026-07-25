@@ -1,5 +1,6 @@
 {
   "schemaVersion": 1,
+  "taskId": "TEA-NOVIA-01",
   "groupKey": "tea-novia",
   "industryKey": "nguyen-lieu-tra-sua",
   "industryName": "Nguyên liệu trà sữa",
@@ -13,6 +14,12 @@
     "survivorLegacySku": "BGKQ-0170",
     "strategy": "merge_keep_first_product"
   },
+  "imageMigrationPolicy": {
+    "phase": "after_all_catalog_groups_verified",
+    "targetFileConvention": "lowercase canonical SKU + .webp",
+    "keepOldObjectsUntil": "all new images uploaded, DB references switched, HTTP checks passed, and rollback manifest saved",
+    "deleteOldObjectsInCurrentTask": false
+  },
   "rows": [
     {
       "legacySku": "BGKQ-0170",
@@ -20,6 +27,12 @@
       "name": "Trà gạo Novia",
       "type": "gao",
       "imageKey": "bgkq-0170",
+      "imageMigration": {
+        "currentObjectKey": null,
+        "targetImageFile": "trgano.webp",
+        "targetObjectKey": null,
+        "status": "WAITING_CURRENT_OBJECT_KEY"
+      },
       "sellUnit": "bịch",
       "netQuantity": 500,
       "netUnit": "g",
@@ -32,6 +45,12 @@
       "name": "Trà đen Novia",
       "type": "den",
       "imageKey": "bgkq-0171",
+      "imageMigration": {
+        "currentObjectKey": null,
+        "targetImageFile": "trdenn.webp",
+        "targetObjectKey": null,
+        "status": "WAITING_CURRENT_OBJECT_KEY"
+      },
       "sellUnit": "bịch",
       "netQuantity": 500,
       "netUnit": "g",
@@ -44,6 +63,12 @@
       "name": "Trà lài Novia",
       "type": "lai",
       "imageKey": "bgkq-0172",
+      "imageMigration": {
+        "currentObjectKey": null,
+        "targetImageFile": "trlano.webp",
+        "targetObjectKey": null,
+        "status": "WAITING_CURRENT_OBJECT_KEY"
+      },
       "sellUnit": "bịch",
       "netQuantity": 500,
       "netUnit": "g",
