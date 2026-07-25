@@ -13,7 +13,10 @@ const remoteRoot = "/srv/apps/bepsi";
 const remoteEnv = "/etc/app-env/bepsi.env";
 const remoteService = "bepsi-api.service";
 const remoteDir = `${remoteRoot}/.tmp/catalog-commercial-map-${Date.now()}-${process.pid}`;
-const localReportPath = path.join(repoRoot, "artifacts/catalog-commercial-import/reconciliation.json");
+const localArtifactsDir = path.join(repoRoot, "artifacts/catalog-commercial-import");
+const localReportPath = path.join(localArtifactsDir, "reconciliation.json");
+const localDiffJsonPath = path.join(localArtifactsDir, "dry-run-diff.json");
+const localDiffCsvPath = path.join(localArtifactsDir, "dry-run-diff.csv");
 
 function argument(name, fallback = null) {
   const prefix = `--${name}=`;
@@ -44,6 +47,24 @@ function run(command, args, { allowFailure = false, capture = false } = {}) {
   return result;
 }
 
+function downloadRemoteFile(remoteName, localPath, label) {
+  const probe = run("ssh", [
+    ...sshArgs,
+    sshTarget,
+    `sudo -n test -f '${remoteDir}/${remoteName}'`,
+  ], { allowFailure: true, capture: true });
+  if (probe.status !== 0) return false;
+
+  fs.mkdirSync(path.dirname(localPath), { recursive: true });
+  run("scp", [
+    ...scpArgs,
+    `${sshTarget}:${remoteDir}/${remoteName}`,
+    localPath,
+  ]);
+  console.log(`[catalog-commercial] ${label} saved: ${localPath}`);
+  return true;
+}
+
 if (process.argv.includes("--apply") || process.argv.some((value) => value.startsWith("--rollback="))) {
   fail("This VPS command is dry-run only. Apply and rollback are intentionally blocked.");
 }
@@ -59,7 +80,8 @@ if (!fs.existsSync(sshKey)) fail(`SSH key not found: ${sshKey}`);
 const importerPath = path.join(here, "import-catalog-commercial-map.mjs");
 const helperPath = path.join(here, "catalog-commercial-map.mjs");
 const reconciliationPath = path.join(here, "audit-catalog-commercial-map-reconciliation.mjs");
-for (const requiredPath of [importerPath, helperPath, reconciliationPath]) {
+const diffPath = path.join(here, "audit-catalog-commercial-map-diff.mjs");
+for (const requiredPath of [importerPath, helperPath, reconciliationPath, diffPath]) {
   if (!fs.existsSync(requiredPath)) fail(`Required script not found: ${requiredPath}`);
 }
 
@@ -93,6 +115,7 @@ try {
     importerPath,
     helperPath,
     reconciliationPath,
+    diffPath,
     payloadPath,
     `${sshTarget}:${remoteDir}/`,
   ]);
@@ -116,9 +139,11 @@ try {
     `node import-catalog-commercial-map.mjs --file='${payloadName}'`,
     "IMPORT_STATUS=$?",
     "set -e",
-    "if [ \"$IMPORT_STATUS\" -eq 2 ]; then",
+    "if [ \"$IMPORT_STATUS\" -eq 0 ]; then",
+    `  node audit-catalog-commercial-map-diff.mjs --file='${payloadName}' --output-json='dry-run-diff.json' --output-csv='dry-run-diff.csv'`,
+    "elif [ \"$IMPORT_STATUS\" -eq 2 ]; then",
     `  node audit-catalog-commercial-map-reconciliation.mjs --file='${payloadName}' --output='reconciliation.json'`,
-    "elif [ \"$IMPORT_STATUS\" -ne 0 ]; then",
+    "else",
     "  exit \"$IMPORT_STATUS\"",
     "fi",
   ].join("\n");
@@ -127,19 +152,11 @@ try {
 
   run("ssh", [...sshArgs, sshTarget, remoteCommand]);
 
-  const reportProbe = run("ssh", [
-    ...sshArgs,
-    sshTarget,
-    `sudo -n test -f '${remoteDir}/reconciliation.json'`,
-  ], { allowFailure: true, capture: true });
-  if (reportProbe.status === 0) {
-    fs.mkdirSync(path.dirname(localReportPath), { recursive: true });
-    run("scp", [
-      ...scpArgs,
-      `${sshTarget}:${remoteDir}/reconciliation.json`,
-      localReportPath,
-    ]);
-    console.log(`[catalog-commercial] Reconciliation report saved: ${localReportPath}`);
+  downloadRemoteFile("reconciliation.json", localReportPath, "Reconciliation report");
+  const downloadedDiffJson = downloadRemoteFile("dry-run-diff.json", localDiffJsonPath, "Dry-run JSON diff");
+  const downloadedDiffCsv = downloadRemoteFile("dry-run-diff.csv", localDiffCsvPath, "Dry-run CSV diff");
+  if (downloadedDiffJson || downloadedDiffCsv) {
+    console.log("[catalog-commercial] Review the 4 price-change rows and all packaging rows before any apply approval.");
   }
 } catch (error) {
   console.error(`[catalog-commercial] VPS dry-run failed: ${error instanceof Error ? error.message : String(error)}`);
