@@ -107,6 +107,8 @@ netUnit = null
 - Không alias vào `BGKQ-0166` hoặc `BGKQ-0167`.
 - Không bắt buộc gram khi nguồn chỉ công bố `30 hộp/thùng`.
 - Có thể bổ sung số túi/hộp hoặc khối lượng sau khi có dữ liệu thật.
+- Schema hỗ trợ: `db/migrations/032_catalog_packaging_count_only.sql`.
+- Migration 032 chỉ mở kiểu dữ liệu `COUNT_ONLY`; không remap SKU và chưa chạy production.
 
 ## SKU thực sự còn thiếu khối lượng
 
@@ -135,6 +137,7 @@ Không tạo manifest audit/apply cho 5 dòng này bằng giá trị `0` hoặc 
 Chỉ thực hiện khi có phê duyệt riêng, rõ ràng:
 
 1. Chạy migration `db/migrations/031_catalog_group_remap.sql` trên đúng backend Bếp Sỉ.
-2. Apply đúng task bằng manifest hash, before/after snapshot và rollback batch.
-3. Hậu kiểm API, frontend, cart, order và recipe.
-4. Không thao tác backend khác trên cùng VPS.
+2. Trước batch có `COUNT_ONLY`, chạy thêm `db/migrations/032_catalog_packaging_count_only.sql`.
+3. Apply đúng task bằng manifest hash, before/after snapshot và rollback batch.
+4. Hậu kiểm API, frontend, cart, order và recipe.
+5. Không thao tác backend khác trên cùng VPS.
