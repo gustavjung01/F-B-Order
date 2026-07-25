@@ -28,8 +28,9 @@
 
 - `TODO`: chưa audit
 - `AUDIT`: đang đối chiếu dữ liệu cũ/mới
+- `AUDIT_PASS`: audit production và ảnh cũ đã đạt; chưa dry-run thay đổi
 - `BLOCKED`: thiếu hoặc xung đột dữ liệu
-- `DRY_RUN_PASS`: đạt toàn bộ kiểm tra đọc-only
+- `DRY_RUN_PASS`: đạt toàn bộ kiểm tra thay đổi đọc-only
 - `APPROVED`: đã được duyệt để apply
 - `APPLIED`: đã ghi production có batch/snapshot
 - `VERIFIED`: đã kiểm tra UI, API, ảnh và dữ liệu sau apply
@@ -62,6 +63,7 @@ old_r2_delete_status
 ### Trạng thái ảnh
 
 - `WAITING_CURRENT_OBJECT_KEY`: đã biết SKU/ảnh key cũ nhưng chưa lấy object key thật từ production.
+- `CURRENT_IMAGE_VERIFIED_PENDING_OBJECT_KEY_SYNC`: file audit và ảnh cũ đã được duyệt; object key thật chưa chép vào sổ.
 - `MAPPED`: đã có đủ object key cũ và tên file ảnh mới.
 - `READY_UPLOAD`: ảnh mới đã chuẩn bị và kiểm checksum/kích thước.
 - `UPLOADED`: ảnh mới đã có trên R2 nhưng DB chưa chuyển key.
@@ -114,7 +116,7 @@ Thứ tự ưu tiên dựa trên độ sạch của SKU cũ–mới, quy cách v
 
 | Thứ tự | Nhóm chi tiết/hãng | SKU | Trạng thái | Ghi chú |
 |---:|---|---:|---|---|
-| 1 | Novia | 3 | AUDIT | Manifest, sổ SKU–ảnh và audit VPS đã có; chờ báo cáo production |
+| 1 | Novia | 3 | AUDIT_PASS | File audit và 3 ảnh cũ đã được duyệt; đang chuẩn bị dry-run remap |
 | 2 | Hoàng Gia | 3 | TODO | Quy cách tương đối đồng nhất |
 | 3 | GTP | 1 | TODO | Nhóm nhỏ, dễ xác nhận |
 | 4 | ONA | 7 | TODO | Cần kiểm ảnh và một số liên kết cũ |
@@ -167,14 +169,14 @@ Thứ tự ưu tiên dựa trên độ sạch của SKU cũ–mới, quy cách v
 - [x] Tạo manifest nhóm Novia
 - [x] Tạo audit read-only lấy `productId`, `variantId`, nhóm, giá, quy cách và ảnh R2
 - [x] Tạo runner VPS chỉ giới hạn `/srv/apps/bepsi` và `bepsi-api.service`
-- [ ] Chạy audit production và tải báo cáo JSON/CSV
-- [ ] Điền 3 `currentObjectKey` thật vào sổ chuyển đổi
-- [ ] Xác nhận 3 `imageObjectKey` R2 mở được và đúng ảnh gạo/đen/lài
-- [ ] Xác nhận không có SKU mới trùng trong production
-- [ ] Xác nhận schema có chỗ lưu SKU cũ/alias
+- [x] Chạy audit production và tải báo cáo JSON/CSV
+- [x] Duyệt thủ công file audit và 3 ảnh gạo/đen/lài
+- [x] Xác nhận không có SKU mới trùng trong production
+- [ ] Điền 3 `currentObjectKey` thật từ báo cáo local vào sổ chuyển đổi
+- [ ] Xác nhận cơ chế lưu SKU cũ/alias trong dry-run remap
 - [ ] Kiểm tra tham chiếu đơn hàng/công thức/giỏ hàng trước khi reparent
 - [ ] Tạo dry-run thay đổi cho đúng 3 SKU Novia
-- [ ] Duyệt thủ công
+- [ ] Duyệt thủ công dry-run
 - [ ] Apply SKU/catalog có hash + snapshot + rollback batch
 - [ ] Kiểm tra sau apply trên API và frontend
 - [ ] Để ảnh cũ nguyên trạng cho tới đợt migration ảnh hàng loạt cuối dự án
@@ -190,15 +192,14 @@ Lệnh trên chỉ đọc DB và kiểm tra URL ảnh; không sửa SKU, product
 
 ### Tiêu chí PASS audit
 
-Audit Novia chỉ PASS khi:
+Audit Novia đã được duyệt PASS ngày 2026-07-25:
 
 - Tìm đúng một variant cho mỗi SKU cũ.
 - `TRGANO`, `TRDENN`, `TRLANO` chưa bị SKU khác chiếm.
 - 3 `variantId` khác nhau và đầy đủ.
 - Ba dòng private payload khớp tên, nhóm, quy cách và giá nguồn.
-- 3/3 ảnh có `imageObjectKey` hiệu lực và URL mở được.
+- 3/3 ảnh có `imageObjectKey` hiệu lực, URL mở được và đã được kiểm đúng gạo/đen/lài.
 - Không có product khác chiếm `productKey = tra-novia`.
-- Báo cáo xác định rõ schema đã có hoặc chưa có nơi lưu legacy SKU.
 - Không có thay đổi production.
 
 ### Tiêu chí PASS sau remap
@@ -217,9 +218,9 @@ Audit Novia chỉ PASS khi:
 ## Mốc gần nhất
 
 - Payload remap an toàn 55 SKU đã `DRY_RUN_PASS` nhưng **đang giữ, chưa apply**.
-- Đã tạo sổ chuyển đổi SKU–ảnh toàn dự án và ghi đủ 3 dòng Novia.
-- Manifest Novia đã ghi ảnh cũ và tên file ảnh mới dự kiến.
-- Việc tiếp theo: chạy lại audit Novia production, điền object key thật và chốt blocker trước khi viết dry-run remap.
+- Novia đã `AUDIT_PASS`; file audit và 3 ảnh cũ đã được duyệt thủ công.
+- Ba cặp SKU cũ–mới và tên file ảnh đích đã được ghi vào sổ chuyển đổi.
+- Việc tiếp theo: kiểm alias/tham chiếu và tạo dry-run remap Novia; chưa ghi production, chưa migration ảnh R2.
 
 ## Quy tắc cập nhật file
 
