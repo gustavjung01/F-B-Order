@@ -38,7 +38,7 @@
 |---:|---|---:|---|---|
 | 1 | `TEA-NOVIA-01` | 3 | `DRY_RUN_PASS` | Chờ migration 031 và phê duyệt apply |
 | 2 | `TEA-BATCH-02` | 18 | `DRY_RUN_PASS` | Audit và dry-run production read-only 18/18 PASS |
-| 3 | `TEA-BATCH-03` | 27 | `PENDING_USER_REVIEW` | 8 remap + 19 create-new; 12 SKU thiếu net quantity |
+| 3 | `TEA-BATCH-03` | 27 | `PENDING_USER_REVIEW` | 11 Cozy CREATE_NEW đã duyệt; 16 SKU còn chờ; 12 SKU thiếu net quantity |
 
 # Task TEA-NOVIA-01 — Trà Novia
 
@@ -144,6 +144,31 @@ Chỉ được thực hiện khi có phê duyệt riêng, rõ ràng:
 - `TRQMON` là `CREATE_NEW` vì chưa có SKU cũ đúng nghĩa.
 - Tất cả ảnh của `CREATE_NEW` chờ bổ sung thủ công; không tạo ảnh AI.
 
+## Cụm Cozy đã duyệt mapping
+
+Người dùng xác nhận catalog hiện có Cozy nhưng chưa đủ vị; cho phép thêm 11 SKU sau dưới dạng `CREATE_NEW`:
+
+```text
+COHTBD
+COHTVA
+COHTOI
+COHTDO
+COHTDA
+COHTCH
+COHTCD
+COTLVA
+COTLHT
+COTLDO
+COTLDA
+```
+
+- Không alias 7 SKU hòa tan vào `BGKQ-0166`.
+- Không alias 4 SKU túi lọc vào `BGKQ-0167`.
+- `BGKQ-0166` và `BGKQ-0167` tiếp tục tồn tại độc lập.
+- Ảnh thiếu không chặn mapping; người dùng bổ sung ảnh thủ công sau.
+- Không tạo ảnh AI.
+- Bảy SKU `COHT*` vẫn phải bổ sung `netQuantity` thật trước audit.
+
 ## Quy cách còn thiếu
 
 12 SKU đang thiếu `netQuantity`, nên có thể duyệt mapping SKU nhưng chưa được tạo manifest audit/apply:
@@ -167,13 +192,13 @@ Các SKU này phải được bổ sung khối lượng thực trước audit. K
 
 ## Cổng tiếp theo
 
-1. Người dùng duyệt hoặc sửa đủ 27 cặp SKU trong `tea-batch-03-review.csv`.
+1. Người dùng duyệt hoặc sửa 16 SKU còn lại trong `tea-batch-03-review.csv`.
 2. Bổ sung `netQuantity` thật cho 12 SKU còn thiếu.
 3. Sau khi đủ hai điều kiện trên mới tạo manifest, payload riêng tư và chạy audit read-only.
-4. Chưa cập nhật `sku-image-transition.csv` cho batch 03 trước khi mapping được duyệt.
+4. Chưa cập nhật `sku-image-transition.csv` cho batch 03 trước khi toàn bộ mapping được duyệt.
 5. Không chạy migration, apply, upload ảnh hoặc ghi R2 trong bước review.
 
 ## Việc tiếp theo
 
-- Catalog: chờ người dùng duyệt `TEA-BATCH-03` và bổ sung 12 quy cách còn thiếu.
+- Catalog: 11 SKU Cozy đã `MAPPING_APPROVED`; tiếp tục duyệt 16 SKU còn lại và bổ sung 12 quy cách.
 - Production: giữ nguyên; chưa migration 031, chưa apply Novia hoặc batch 02.
