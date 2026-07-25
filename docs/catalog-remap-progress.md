@@ -38,8 +38,8 @@
 | Thứ tự | Task | SKU chuẩn | Trạng thái | Ghi chú |
 |---:|---|---:|---|---|
 | 1 | `TEA-NOVIA-01` | 3 | `DRY_RUN_PASS` | Chờ migration 031 và phê duyệt apply |
-| 2 | `TEA-BATCH-02` | 18 | `MAPPING_APPROVED` | 16 remap + 2 create-new; audit read-only đã sẵn sàng |
-| 3 | Phần Trà còn lại | 27 | `TODO` | Kê batch tiếp theo sau khi batch 02 audit |
+| 2 | `TEA-BATCH-02` | 18 | `AUDIT_PASS` | Audit production read-only 18/18 PASS; dry-run batch đã sẵn sàng |
+| 3 | Phần Trà còn lại | 27 | `TODO` | Kê batch tiếp theo sau khi batch 02 dry-run |
 
 # Task TEA-NOVIA-01 — Trà Novia
 
@@ -67,52 +67,67 @@
 ```text
 data/catalog-remap/tea-batch-02-review.csv
 data/catalog-remap/tea-batch-02.json
+data/catalog-remap/tea-batch-02-audit-verification.json
 data/catalog-remap/sku-image-transition.csv
 ```
 
-Manifest batch dùng schema 2, hỗ trợ đồng thời `REMAP` và `CREATE_NEW`.
-
 ## Payload riêng tư
-
-Đặt file riêng tư tại:
 
 ```text
 data/private/catalog-imports/tea-batch-02.private.json
 ```
 
-- Payload hash: `64788440c741397acf8ecd74fd821b376f474cb43af861d2b4d8f918d1d243e5`
-- Không commit file này.
+- Payload hash: `64788440c741397acf8ecd74fd821b376f474cb43af861d2b4d8f918d1d243e5`.
 - Payload chứa 18 dòng giá/quy cách đã duyệt.
+- File nằm trong `.gitignore`; không commit.
 
-## Audit batch read-only
+## Kết quả audit batch
 
-Lệnh:
-
-```powershell
-git pull --ff-only origin agent/catalog-commercial-map-trial
-pnpm catalog:remap:batch:audit -- --commercial-file=data/private/catalog-imports/tea-batch-02.private.json
-```
-
-Kết quả local:
+- Trạng thái: `BATCH_AUDIT_PASS`.
+- Tổng dòng: 18.
+- PASS: 18.
+- BLOCKED: 0.
+- Báo cáo local:
 
 ```text
 artifacts/catalog-remap/tea-batch-02-audit.json
 artifacts/catalog-remap/tea-batch-02-audit.csv
 ```
 
-Audit kiểm:
+- Audit chỉ đọc; không sửa DB, R2, service hoặc production.
 
-- 16 legacy SKU tồn tại đúng một variant.
-- 18 canonical SKU chưa bị chiếm.
-- Hai `CREATE_NEW` không có alias legacy.
-- Giá, tên, nhóm và quy cách khớp payload riêng tư.
-- Product cha theo từng hãng không va chạm.
-- Ảnh hiện hữu mở được, trừ các dòng đã được phép thiếu ảnh.
-- Migration `031` đã có hay chưa.
+## Dry-run batch read-only
+
+Lệnh:
+
+```powershell
+git pull --ff-only origin agent/catalog-commercial-map-trial
+pnpm catalog:remap:batch:dry-run -- --commercial-file=data/private/catalog-imports/tea-batch-02.private.json
+```
+
+Kết quả local:
+
+```text
+artifacts/catalog-remap/tea-batch-02-dry-run.json
+artifacts/catalog-remap/tea-batch-02-dry-run.csv
+```
+
+Dry-run kiểm:
+
+- Parent riêng cho GTP, King, Lộc Phát, Hoàng Gia, Phúc Long, Cozy, Trà Thái và ONA.
+- 16 `variantId` remap được giữ nguyên.
+- 16 alias SKU cũ được dự kiến tạo sau migration 031.
+- `TXABON` và `TXABIE` được dự kiến tạo mới, không có alias legacy.
+- Cart/order tiếp tục giữ tham chiếu qua `variantId`.
+- Recipe được liệt kê chính xác phần cần đổi `catalog_product_id` và snapshot.
+- Ảnh R2 hiện hữu được giữ nguyên; 3 ảnh thiếu chờ bổ sung thủ công.
+- `generateImages = false`, `r2Writes = 0`.
+- Thiếu migration 031 chỉ làm `canApplyNow = false`; không phải blocker dữ liệu.
 - Không sửa DB, R2, service hoặc production.
 
 ## Cổng tiếp theo
 
-1. Chạy audit batch read-only.
-2. Nếu `BATCH_AUDIT_PASS`, tạo dry-run batch cho đủ 18 SKU.
-3. Không chạy migration/apply/R2 nếu chưa có phê duyệt production riêng.
+1. Chạy dry-run batch read-only.
+2. Nếu `BATCH_DRY_RUN_PASS`, nâng `TEA-BATCH-02` lên `DRY_RUN_PASS`.
+3. Chỉ chạy migration 031 và apply sau khi có phê duyệt production riêng.
+4. Không tạo hoặc upload ảnh trong task SKU.
