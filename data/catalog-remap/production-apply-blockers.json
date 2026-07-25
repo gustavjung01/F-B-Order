@@ -2,8 +2,13 @@
   "schemaVersion": 1,
   "recordedDate": "2026-07-25",
   "scope": "catalog tea remap production apply",
-  "status": "PRODUCTION_APPLY_BLOCKED",
+  "status": "PRODUCTION_PIPELINE_READY_LOCAL_EXECUTION_REQUIRED",
   "productionModified": false,
+  "mergedPipeline": {
+    "pullRequest": 107,
+    "commit": "8bfca2ca4c82ba7a32e06dfc6a377408aef622b9",
+    "command": "pnpm catalog:remap:production:tea -- --confirm-production=BEPSI_TEA_48"
+  },
   "authorizedScope": {
     "remoteRoot": "/srv/apps/bepsi",
     "migrations": [
@@ -16,25 +21,21 @@
       "TEA-BATCH-03"
     ]
   },
-  "blockers": [
-    {
-      "code": "CATALOG_REMAP_BATCH_APPLY_MISSING",
-      "detail": "Repository has batch audit and dry-run commands but no batch apply/rollback implementation. Manual SQL apply is prohibited because it would bypass manifest hash, before/after snapshot and rollback gates."
-    },
-    {
-      "code": "CATALOG_REMAP_COUNT_ONLY_OPTIONS_INVALID",
-      "detail": "Current batch dry-run builds options.size from null net fields for COUNT_ONLY rows, producing nullnull. Dry-run must be corrected and TEA-BATCH-03 must be rerun before production apply."
-    },
-    {
-      "code": "EXECUTION_ENVIRONMENT_SSH_UNAVAILABLE",
-      "detail": "Current chat execution environment has no mounted Bếp Sỉ SSH key or SSH client. Production was not accessed."
-    }
+  "resolvedBlockers": [
+    "Batch apply and rollback are implemented with manifest hash and before/after snapshots.",
+    "COUNT_ONLY option generation omits measured size fields instead of producing nullnull.",
+    "Production runner performs local payload self-test, exact Bếp Sỉ scope checks, pg_dump backup, migrations 031/032, fresh read-only dry-run, one-transaction apply, database/API verification and automatic catalog rollback on API failure."
   ],
-  "requiredBeforeApply": [
-    "Implement and test catalog:remap:batch:apply and rollback.",
-    "Fix COUNT_ONLY option generation so size is omitted instead of nullnull.",
-    "Rerun TEA-BATCH-03 dry-run and obtain 27/27 PASS with corrected after-state.",
-    "Create a database backup before migrations.",
-    "Run migrations and apply only through the guarded Bếp Sỉ production runner."
-  ]
+  "remainingExecutionPrerequisites": [
+    "Run from the authoritative Windows workspace where the Bếp Sỉ SSH key is available.",
+    "Place tea-novia.private.json at data/private/catalog-imports/tea-novia.private.json; Batch 02 and Batch 03 private payloads must also remain present.",
+    "The runner will stop before backup or migration if the deployed Bếp Sỉ backend does not yet contain COUNT_ONLY API support.",
+    "No manual migration or SQL apply is permitted outside the guarded runner."
+  ],
+  "safety": {
+    "otherVpsBackendsTouched": false,
+    "serviceRestartPlanned": false,
+    "r2WritesPlanned": 0,
+    "automaticRollbackOnApiVerificationFailure": true
+  }
 }
