@@ -31,6 +31,7 @@ data/catalog/hung-phat/v2/generated/
 # Supplier workbooks and generated payloads must never enter the public repo.
 data/private/catalog-imports/
 artifacts/catalog-commercial-import/
+artifacts/catalog-remap/
 
 # TypeScript incremental build cache
 *.tsbuildinfo
