@@ -14,6 +14,14 @@
     "survivorLegacySku": "BGKQ-0170",
     "strategy": "merge_keep_first_product"
   },
+  "auditVerification": {
+    "status": "AUDIT_PASS",
+    "verifiedBy": "manual-review",
+    "verifiedDate": "2026-07-25",
+    "reportPath": "artifacts/catalog-remap/tea-novia-audit.json",
+    "imagesManuallyVerified": true,
+    "productionModified": false
+  },
   "imageMigrationPolicy": {
     "phase": "after_all_catalog_groups_verified",
     "targetFileConvention": "lowercase canonical SKU + .webp",
@@ -31,7 +39,7 @@
         "currentObjectKey": null,
         "targetImageFile": "trgano.webp",
         "targetObjectKey": null,
-        "status": "WAITING_CURRENT_OBJECT_KEY"
+        "status": "CURRENT_IMAGE_VERIFIED_PENDING_OBJECT_KEY_SYNC"
       },
       "sellUnit": "bịch",
       "netQuantity": 500,
@@ -49,7 +57,7 @@
         "currentObjectKey": null,
         "targetImageFile": "trdenn.webp",
         "targetObjectKey": null,
-        "status": "WAITING_CURRENT_OBJECT_KEY"
+        "status": "CURRENT_IMAGE_VERIFIED_PENDING_OBJECT_KEY_SYNC"
       },
       "sellUnit": "bịch",
       "netQuantity": 500,
@@ -67,7 +75,7 @@
         "currentObjectKey": null,
         "targetImageFile": "trlano.webp",
         "targetObjectKey": null,
-        "status": "WAITING_CURRENT_OBJECT_KEY"
+        "status": "CURRENT_IMAGE_VERIFIED_PENDING_OBJECT_KEY_SYNC"
       },
       "sellUnit": "bịch",
       "netQuantity": 500,
