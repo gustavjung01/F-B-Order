@@ -42,9 +42,9 @@
     "catalog:remap:audit": "node scripts/run-catalog-remap-group-vps-root.mjs",
     "catalog:remap:dry-run": "node scripts/run-catalog-remap-dry-run-vps-root.mjs",
     "catalog:remap:batch:audit": "node scripts/run-catalog-remap-batch-audit-vps-root.mjs",
-    "recipe:images:upload": "tsx scripts/upload-recipe-images-r2.mjs",
-    "recipe:content:import": "tsx scripts/import-recipes-v1.mjs",
-    "recipe:content:validate": "tsx scripts/validate-recipes-v1.mjs",
+    "recipe:images:upload": "node scripts/upload-recipe-images-r2.mjs",
+    "recipe:content:import": "node scripts/import-recipes-v1.mjs",
+    "recipe:content:validate": "node scripts/validate-recipes-v1.mjs",
     "test:rbac": "tsx --test test/auth.permissions.test.ts"
   },
   "dependencies": {
@@ -58,7 +58,7 @@
     "zod": "3.23.8"
   },
   "devDependencies": {
-    "@types/cors": "5.0.6",
+    "@types/cors": "8.2.19",
     "@types/express": "5.0.6",
     "@types/node": "25.9.3",
     "tsx": "4.19.2",
