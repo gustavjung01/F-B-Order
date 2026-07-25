@@ -39,7 +39,7 @@
     "catalog:commercial:dry-run": "node scripts/run-catalog-commercial-map-vps.mjs",
     "catalog:commercial:apply": "node scripts/run-catalog-commercial-map-bepsi.mjs --apply",
     "catalog:commercial:rollback": "node scripts/run-catalog-commercial-map-bepsi.mjs",
-    "catalog:remap:audit": "node scripts/run-catalog-remap-group-vps.mjs",
+    "catalog:remap:audit": "node scripts/run-catalog-remap-group-vps-root.mjs",
     "recipe:images:upload": "node scripts/upload-recipe-images-r2.mjs",
     "recipe:content:import": "node scripts/import-recipes-v1.mjs",
     "recipe:content:validate": "node scripts/validate-recipes-v1.mjs",
@@ -56,7 +56,7 @@
     "zod": "3.23.8"
   },
   "devDependencies": {
-    "@types/cors": "2.8.19",
+    "@types/cors": "5.0.6",
     "@types/express": "5.0.6",
     "@types/node": "25.9.3",
     "tsx": "4.19.2",
