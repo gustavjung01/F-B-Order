@@ -38,7 +38,7 @@
 |---:|---|---:|---|---|
 | 1 | `TEA-NOVIA-01` | 3 | `DRY_RUN_PASS` | Chờ migration 031 và phê duyệt apply |
 | 2 | `TEA-BATCH-02` | 18 | `DRY_RUN_PASS` | Audit và dry-run production read-only 18/18 PASS |
-| 3 | `TEA-BATCH-03` | 27 | `TODO` | Kê toàn bộ phần Trà còn lại để duyệt một lượt |
+| 3 | `TEA-BATCH-03` | 27 | `PENDING_USER_REVIEW` | 8 remap + 19 create-new; 12 SKU thiếu net quantity |
 
 # Task TEA-NOVIA-01 — Trà Novia
 
@@ -127,7 +127,53 @@ Chỉ được thực hiện khi có phê duyệt riêng, rõ ràng:
 4. Không tạo/upload/xóa ảnh trong task SKU.
 5. Không thao tác backend khác trên cùng VPS.
 
+# Task TEA-BATCH-03 — Batch Trà 27 SKU
+
+## Phạm vi đang chờ duyệt
+
+- File review: `data/catalog-remap/tea-batch-03-review.csv`.
+- Tổng cộng 27 SKU: 8 dòng `REMAP`, 19 dòng `CREATE_NEW`.
+- Không ép các SKU tách vị vào SKU gộp cũ.
+- Các SKU gộp cũ tiếp tục tồn tại độc lập, chưa alias hoặc deactivate:
+  - `BGKQ-0162` — Trà sen/lài Phúc Long.
+  - `BGKQ-0164` — Trà sen/lài Thái Nguyên.
+  - `BGKQ-0166` — Trà Cozy hòa tan gộp.
+  - `BGKQ-0167` — Trà Cozy túi lọc gộp.
+  - `BGKQ-0168` — Trà Thái xanh/đỏ gộp.
+- `HTRLPH` là `CREATE_NEW` vì `BGKQ-0148` đã được duyệt map sang `TRLALP` trong batch 02.
+- `TRQMON` là `CREATE_NEW` vì chưa có SKU cũ đúng nghĩa.
+- Tất cả ảnh của `CREATE_NEW` chờ bổ sung thủ công; không tạo ảnh AI.
+
+## Quy cách còn thiếu
+
+12 SKU đang thiếu `netQuantity`, nên có thể duyệt mapping SKU nhưng chưa được tạo manifest audit/apply:
+
+```text
+HTRKIG
+TR9DXN
+TRLPLL
+TROPLL
+COHTBD
+COHTVA
+COHTOI
+COHTDO
+COHTDA
+COHTCH
+COHTCD
+COZMAT
+```
+
+Các SKU này phải được bổ sung khối lượng thực trước audit. Không dùng giá trị 0 hoặc tự đoán quy cách.
+
+## Cổng tiếp theo
+
+1. Người dùng duyệt hoặc sửa đủ 27 cặp SKU trong `tea-batch-03-review.csv`.
+2. Bổ sung `netQuantity` thật cho 12 SKU còn thiếu.
+3. Sau khi đủ hai điều kiện trên mới tạo manifest, payload riêng tư và chạy audit read-only.
+4. Chưa cập nhật `sku-image-transition.csv` cho batch 03 trước khi mapping được duyệt.
+5. Không chạy migration, apply, upload ảnh hoặc ghi R2 trong bước review.
+
 ## Việc tiếp theo
 
-- Catalog: kê `TEA-BATCH-03` gồm 27 SKU Trà còn lại để người dùng duyệt một lượt.
+- Catalog: chờ người dùng duyệt `TEA-BATCH-03` và bổ sung 12 quy cách còn thiếu.
 - Production: giữ nguyên; chưa migration 031, chưa apply Novia hoặc batch 02.
