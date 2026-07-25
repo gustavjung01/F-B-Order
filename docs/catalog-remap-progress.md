@@ -22,7 +22,9 @@ Hiện **không còn PR mở thuộc luồng commercial-map này**.
 |---|---:|---|---|
 | `TEA-NOVIA-01` | 3 | `DRY_RUN_PASS` | Migration `031` + phê duyệt apply |
 | `TEA-BATCH-02` | 18 | `DRY_RUN_PASS` | Migration `031` + phê duyệt apply |
-| `TEA-BATCH-03` | 27 | `AUDIT_PASS` | Chạy dry-run read-only; sau đó migration `031/032` + phê duyệt apply |
+| `TEA-BATCH-03` | 27 | `DRY_RUN_PASS` | Migration `031/032` + phê duyệt apply |
+
+**Tổng cộng: 48 SKU đã audit và dry-run production read-only PASS.**
 
 ## TEA-NOVIA-01
 
@@ -44,10 +46,12 @@ Hiện **không còn PR mở thuộc luồng commercial-map này**.
 - 27 SKU: 8 `REMAP` + 19 `CREATE_NEW`.
 - Quy cách: 14 `MEASURED` + 13 `COUNT_ONLY`.
 - Audit production read-only: **27/27 PASS, blocked=0**.
-- Verification: `data/catalog-remap/tea-batch-03-audit-verification.json`.
+- Dry-run production read-only: **27/27 PASS, blocked=0**.
+- `canApplyNow=false`, `canApplyAfterMigration=true`.
+- Audit verification: `data/catalog-remap/tea-batch-03-audit-verification.json`.
+- Dry-run verification: `data/catalog-remap/tea-batch-03-dry-run-verification.json`.
 - Payload private hash: `1191f9072d6a3679082bdda2b137220bc514a605679a34ba23682da9b6542ff0`.
-- Không migration, không sửa DB/R2/service trong audit.
-- Bước dữ liệu còn lại: chạy dry-run production read-only.
+- Không migration, không sửa DB/R2/service trong audit hoặc dry-run.
 
 Quy cách người dùng chốt trực tiếp:
 
@@ -75,8 +79,9 @@ COZMAT = 1000 g/bịch; 30 bịch/thùng
 
 Chỉ thực hiện khi có phê duyệt riêng, rõ ràng:
 
-1. Chạy migration đúng thứ tự trên backend Bếp Sỉ `/srv/apps/bepsi`.
-2. Chỉ thao tác `bepsi-api.service`, `bepsi-ai-worker.service` và port 5100 khi thật sự cần.
-3. Apply đúng task bằng manifest hash, before/after snapshot và rollback batch.
-4. Hậu kiểm API, frontend, cart, order và recipe.
-5. Không thao tác hai backend khác trên cùng VPS.
+1. Backup database Bếp Sỉ.
+2. Chạy migration `031` trên `/srv/apps/bepsi`.
+3. Chạy migration `032` trước batch có `COUNT_ONLY`.
+4. Apply lần lượt `TEA-NOVIA-01`, `TEA-BATCH-02`, `TEA-BATCH-03` bằng manifest hash, before/after snapshot và rollback batch.
+5. Hậu kiểm API, frontend, cart, order và recipe.
+6. Không thao tác hai backend khác trên cùng VPS.
