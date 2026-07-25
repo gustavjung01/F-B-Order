@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "taskId": "TEA-BATCH-02",
+  "groupKey": "tea-batch-02",
+  "status": "BATCH_AUDIT_PASS",
+  "verifiedBy": "project-owner-run",
+  "verifiedDate": "2026-07-25",
+  "reportPath": "artifacts/catalog-remap/tea-batch-02-audit.json",
+  "csvPath": "artifacts/catalog-remap/tea-batch-02-audit.csv",
+  "rowCount": 18,
+  "passCount": 18,
+  "blockedCount": 0,
+  "productionModified": false,
+  "notes": [
+    "Batch audit was executed against the Bếp Sỉ production database in read-only mode.",
+    "TXABON and TXABIE remain CREATE_NEW without legacy aliases.",
+    "BGKQ-0177 to TRGAON is allowed to remain without an image until a manual image is supplied.",
+    "No AI image generation is allowed."
+  ]
+}
