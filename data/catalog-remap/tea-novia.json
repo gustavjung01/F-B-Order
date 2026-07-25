@@ -1,0 +1,97 @@
+{
+  "schemaVersion": 1,
+  "taskId": "TEA-NOVIA-01",
+  "groupKey": "tea-novia",
+  "industryKey": "nguyen-lieu-tra-sua",
+  "industryName": "Nguyên liệu trà sữa",
+  "catalogGroupKey": "tra",
+  "catalogGroupName": "Trà",
+  "detailGroup": "Novia",
+  "targetParent": {
+    "productKey": "tra-novia",
+    "name": "Trà Novia",
+    "brand": "Novia",
+    "survivorLegacySku": "BGKQ-0170",
+    "strategy": "merge_keep_first_product"
+  },
+  "auditVerification": {
+    "status": "AUDIT_PASS",
+    "verifiedBy": "manual-review",
+    "verifiedDate": "2026-07-25",
+    "reportPath": "artifacts/catalog-remap/tea-novia-audit.json",
+    "imagesManuallyVerified": true,
+    "productionModified": false
+  },
+  "dryRunVerification": {
+    "status": "DRY_RUN_PASS",
+    "verifiedDate": "2026-07-25",
+    "reportPath": "artifacts/catalog-remap/tea-novia-dry-run.json",
+    "classification": "PASS_WITH_EXISTING_PRODUCT_CONSOLIDATION",
+    "canApplyNow": false,
+    "canApplyAfterMigration": true,
+    "requiredMigration": "db/migrations/031_catalog_group_remap.sql",
+    "productionModified": false
+  },
+  "imageMigrationPolicy": {
+    "phase": "after_all_catalog_groups_verified",
+    "targetFileConvention": "lowercase canonical SKU + .webp",
+    "keepOldObjectsUntil": "all new images uploaded, DB references switched, HTTP checks passed, and rollback manifest saved",
+    "deleteOldObjectsInCurrentTask": false
+  },
+  "rows": [
+    {
+      "legacySku": "BGKQ-0170",
+      "canonicalSku": "TRGANO",
+      "name": "Trà gạo Novia",
+      "type": "gao",
+      "imageKey": "bgkq-0170",
+      "imageMigration": {
+        "currentObjectKey": null,
+        "targetImageFile": "trgano.webp",
+        "targetObjectKey": null,
+        "status": "CURRENT_IMAGE_VERIFIED_PENDING_OBJECT_KEY_SYNC"
+      },
+      "sellUnit": "bịch",
+      "netQuantity": 500,
+      "netUnit": "g",
+      "packageQuantity": 20,
+      "packageUnit": "thùng"
+    },
+    {
+      "legacySku": "BGKQ-0171",
+      "canonicalSku": "TRDENN",
+      "name": "Trà đen Novia",
+      "type": "den",
+      "imageKey": "bgkq-0171",
+      "imageMigration": {
+        "currentObjectKey": null,
+        "targetImageFile": "trdenn.webp",
+        "targetObjectKey": null,
+        "status": "CURRENT_IMAGE_VERIFIED_PENDING_OBJECT_KEY_SYNC"
+      },
+      "sellUnit": "bịch",
+      "netQuantity": 500,
+      "netUnit": "g",
+      "packageQuantity": 20,
+      "packageUnit": "thùng"
+    },
+    {
+      "legacySku": "BGKQ-0172",
+      "canonicalSku": "TRLANO",
+      "name": "Trà lài Novia",
+      "type": "lai",
+      "imageKey": "bgkq-0172",
+      "imageMigration": {
+        "currentObjectKey": null,
+        "targetImageFile": "trlano.webp",
+        "targetObjectKey": null,
+        "status": "CURRENT_IMAGE_VERIFIED_PENDING_OBJECT_KEY_SYNC"
+      },
+      "sellUnit": "bịch",
+      "netQuantity": 500,
+      "netUnit": "g",
+      "packageQuantity": 20,
+      "packageUnit": "thùng"
+    }
+  ]
+}
