@@ -1,0 +1,27 @@
+{
+  "status": "CONTRACT_PASS",
+  "productionModified": false,
+  "taskId": "SIRO-BATCH-01",
+  "manifestHash": "c5c0444a4e6f898e5a2b1ac4229fbfe358ea1c9aa721347e027cf468b788cf05",
+  "payloadHash": "b1c8cc67334df1f29597b7a015c5a4978b86338fd22505e04edb5fe13e3e86bf",
+  "summary": {
+    "rowCount": 39,
+    "remapCount": 4,
+    "createNewCount": 35,
+    "brandCounts": {
+      "Torani": 14,
+      "DingFong": 15,
+      "GTP": 9,
+      "A+": 1
+    },
+    "excludedBlockedSkus": [
+      "GTPMON"
+    ],
+    "priceMathPass": true,
+    "packagingMatchPass": true,
+    "uniqueCanonicalSkus": 39,
+    "uniqueLegacySkus": 4,
+    "toraniParentStrategy": "attach_to_existing_or_create_parent"
+  },
+  "note": "Static contract verification only. No database dry-run or production write was performed."
+}
