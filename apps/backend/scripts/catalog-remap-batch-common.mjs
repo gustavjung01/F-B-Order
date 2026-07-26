@@ -10,7 +10,6 @@ const upper = (v) => clean(v).toLocaleUpperCase("vi-VN");
 const lower = (v) => clean(v).toLocaleLowerCase("vi-VN");
 const positive = (v) => Number.isFinite(Number(v)) && Number(v) > 0 ? Number(v) : null;
 const isRecord = (v) => Boolean(v) && typeof v === "object" && !Array.isArray(v);
-const owns = (value, key) => Object.prototype.hasOwnProperty.call(value || {}, key);
 const MASS_UNITS = new Set(["g", "kg"]);
 const VOLUME_UNITS = new Set(["ml", "l"]);
 const ATTRIBUTE_MEASURE_KINDS = new Set(["mass", "volume", "count"]);
@@ -67,7 +66,7 @@ const buildOptions = (oldOptions, row) => {
   const next = isRecord(oldOptions) ? { ...oldOptions } : {};
   for (const key of ["size", "weight", "volume", "capacity", "measure_kind"]) delete next[key];
   const packaging = packagingOf(row);
-  const attributeModel = Number(row?.attributeModelVersion) === 1 || owns(row, "productType") || owns(row, "flavor") || owns(row, "measureKind");
+  const attributeModel = Number(row?.attributeModelVersion) === 1;
   if (attributeModel) {
     const productType = clean(row?.productType);
     const flavor = clean(row?.flavor);
@@ -80,18 +79,18 @@ const buildOptions = (oldOptions, row) => {
   }
   next.sell_unit = packaging.sellUnit;
   next.package = `${formatNumber(packaging.packageQuantity)} ${packaging.sellUnit} / ${packaging.packageUnit}`;
-  const measureKind = inferredMeasureKindOf(row);
+  const measureKind = attributeModel ? inferredMeasureKindOf(row) : null;
   if (measureKind) next.measure_kind = measureKind;
   if (packaging.measureMode === "measured") {
     const label = `${formatNumber(packaging.netQuantity)} ${packaging.netUnit}`;
     next.size = label;
-    if (measureKind === "mass") next.weight = label;
-    if (measureKind === "volume") {
+    if (attributeModel && measureKind === "mass") next.weight = label;
+    if (attributeModel && measureKind === "volume") {
       next.volume = label;
       next.capacity = label;
     }
   }
-  const secondaryVolume = secondaryVolumeOf(row);
+  const secondaryVolume = attributeModel ? secondaryVolumeOf(row) : null;
   if (secondaryVolume) {
     const label = `${formatNumber(secondaryVolume.quantity)} ${secondaryVolume.unit}`;
     next.volume = label;
