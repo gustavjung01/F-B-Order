@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "planId": "SIRO-BATCH-01",
+  "remoteRoot": "/srv/apps/bepsi",
+  "requiredMigrations": [
+    "db/migrations/031_catalog_group_remap.sql",
+    "db/migrations/032_catalog_packaging_count_only.sql"
+  ],
+  "tasks": [
+    {
+      "taskId": "SIRO-BATCH-01",
+      "manifest": "data/catalog-remap/siro-batch-01.json",
+      "commercialFile": "data/private/catalog-imports/siro-batch-01.private.json"
+    }
+  ]
+}
