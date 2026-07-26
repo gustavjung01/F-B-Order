@@ -72,7 +72,8 @@ Engine catalog-remap đã được mở rộng theo cơ chế opt-in:
 - `measureKind=volume` ghi `options.measure_kind=volume`, `options.volume`, `options.capacity` và `options.size`.
 - `measureKind=count` không tạo `size`.
 - Batch lịch sử không khai báo `attributeModelVersion: 1` nên giữ nguyên hành vi cũ, bao gồm không tự thêm/xóa `measure_kind`.
-- Test engine đã bổ sung kiểm tra dry-run, apply, rollback, thay giá trị `type/flavor` cũ sai và phục hồi đầy đủ before-state.
+- Test engine kiểm tra dry-run, apply, rollback, thay giá trị `type/flavor` cũ sai và phục hồi đầy đủ before-state.
+- Bước `Test reversible catalog remap engine` đã PASS trong GitHub Actions run `30205352349`.
 
 ## Backlog chuẩn hóa chung
 
@@ -92,8 +93,8 @@ Engine catalog-remap đã được mở rộng theo cơ chế opt-in:
 ## Cổng an toàn
 
 - Public manifest/review: đã tách riêng chủng loại, vị và kiểu định lượng cho 25 SKU.
-- Engine code/test: đã cập nhật, đang chờ CI xác nhận PASS.
-- Static contract: BLOCKED đến khi engine test PASS và private payload đủ 25 SKU.
+- Engine code/test: PASS.
+- Static contract: BLOCKED chỉ vì private payload chưa đủ 25 SKU và price math chưa thể xác nhận.
 - Database dry-run: chưa chạy.
 - Production apply: chưa chạy.
 - Không migration, restart service hoặc ghi/xóa R2.
