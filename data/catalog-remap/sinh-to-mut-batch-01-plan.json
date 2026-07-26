@@ -1,0 +1,1 @@
+{"schemaVersion":1,"planId":"sinh-to-mut-batch-01","remoteRoot":"/srv/apps/bepsi","tasks":[{"taskId":"SINH-TO-MUT-BATCH-01","manifest":"data/catalog-remap/sinh-to-mut-batch-01.json","commercialFile":"data/private/catalog-imports/sinh-to-mut-batch-01.private.json"}]}
