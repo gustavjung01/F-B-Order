@@ -1,8 +1,10 @@
 import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 
-const repoRoot = process.cwd();
+const here = path.dirname(fileURLToPath(import.meta.url));
+const repoRoot = path.resolve(here, "../../..");
 const manifestPath = path.resolve(repoRoot, "data/catalog-remap/sinh-to-mut-correction-01.json");
 const sourcePath = path.resolve(repoRoot, "data/private/catalog-imports/sinh-to-mut-batch-01.private.json");
 const targetPath = path.resolve(repoRoot, "data/private/catalog-imports/sinh-to-mut-correction-01.private.json");
@@ -77,6 +79,7 @@ if (fs.existsSync(targetPath)) {
 fs.writeFileSync(targetPath, `${JSON.stringify(payload, null, 2)}\n`, "utf8");
 
 console.log("[prepare-sinh-to-mut-correction-private] PASS");
+console.log(`[prepare-sinh-to-mut-correction-private] Repo: ${repoRoot}`);
 console.log(`[prepare-sinh-to-mut-correction-private] Source: ${sourcePath}`);
 console.log(`[prepare-sinh-to-mut-correction-private] Target: ${targetPath}`);
 console.log(`[prepare-sinh-to-mut-correction-private] Rows: ${rows.length}`);
