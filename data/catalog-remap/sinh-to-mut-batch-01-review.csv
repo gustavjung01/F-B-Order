@@ -12,15 +12,15 @@ rowNo,action,legacySku,canonicalSku,name,detailGroup,type,sellUnit,netQuantity,n
 11,REMAP,BGKQ-0025,BERDTM,BERINO DÂU TẰM,Berino,dau-tam,chai,1350,g,12,thùng,30,sinh-to-berino,READY
 12,REMAP,BGKQ-0026,BERTHM,BERINO THƠM,Berino,thom,chai,1350,g,12,thùng,31,sinh-to-berino,READY
 13,CREATE_NEW,,BERMCA,BERINO MÃNG CẦU,Berino,mang-cau,chai,1350,g,12,thùng,42,sinh-to-berino,READY
-14,REMAP,BGKQ-0027,STGDAU,MỨT GOLD DÂU,Gold,dau,chai,1300,g,12,thùng,33,mut-gold,READY
-15,REMAP,BGKQ-0028,STGDAO,MỨT GOLD ĐÀO,Gold,dao,chai,1300,g,12,thùng,34,mut-gold,READY
-16,REMAP,BGKQ-0029,STGVQU,MỨT GOLD VIỆT QUỐC,Gold,viet-quoc,chai,1300,g,12,thùng,35,mut-gold,READY
-17,REMAP,BGKQ-0030,STGCDA,MỨT GOLD CHANH DÂY,Gold,chanh-day,chai,1300,g,12,thùng,36,mut-gold,READY
-18,REMAP,BGKQ-0031,STGKWI,MỨT GOLD KIWI,Gold,kiwi,chai,1300,g,12,thùng,37,mut-gold,READY
-19,REMAP,BGKQ-0032,STGPBT,MỨT GOLD PHÚC BỒN TỬ,Gold,phuc-bon-tu,chai,1300,g,12,thùng,38,mut-gold,READY
-20,REMAP,BGKQ-0033,STGXOA,MỨT GOLD XOÀI,Gold,xoai,chai,1300,g,12,thùng,39,mut-gold,READY
-21,REMAP,BGKQ-0034,STGOIH,MỨT GOLD ỔI,Gold,oi,chai,1300,g,12,thùng,40,mut-gold,READY
-22,REMAP,BGKQ-0035,STGDTM,MỨT GOLD DÂU TẰM,Gold,dau-tam,chai,1300,g,12,thùng,41,mut-gold,READY
-23,REMAP,BGKQ-0036,STGMCA,MỨT GOLD MÃNG CẦU,Gold,mang-cau,chai,1300,g,12,thùng,42,mut-gold,READY
-24,REMAP,BGKQ-0037,STGVAI,MỨT GOLD VẢI,Gold,vai,chai,1300,g,12,thùng,43,mut-gold,READY
-25,REMAP,BGKQ-0038,STGNHO,MỨT GOLD NHO,Gold,nho,chai,1300,g,12,thùng,44,mut-gold,READY
+14,REMAP,BGKQ-0027,STGDAU,GOLDENFARM DÂU,Goldenfarm,dau,chai,1300,g,12,thùng,33,mut-gold,READY
+15,REMAP,BGKQ-0028,STGDAO,GOLDENFARM ĐÀO,Goldenfarm,dao,chai,1300,g,12,thùng,34,mut-gold,READY
+16,REMAP,BGKQ-0029,STGVQU,GOLDENFARM VIỆT QUỐC,Goldenfarm,viet-quoc,chai,1300,g,12,thùng,35,mut-gold,READY
+17,REMAP,BGKQ-0030,STGCDA,GOLDENFARM CHANH DÂY,Goldenfarm,chanh-day,chai,1300,g,12,thùng,36,mut-gold,READY
+18,REMAP,BGKQ-0031,STGKWI,GOLDENFARM KIWI,Goldenfarm,kiwi,chai,1300,g,12,thùng,37,mut-gold,READY
+19,REMAP,BGKQ-0032,STGPBT,GOLDENFARM PHÚC BỒN TỬ,Goldenfarm,phuc-bon-tu,chai,1300,g,12,thùng,38,mut-gold,READY
+20,REMAP,BGKQ-0033,STGXOA,GOLDENFARM XOÀI,Goldenfarm,xoai,chai,1300,g,12,thùng,39,mut-gold,READY
+21,REMAP,BGKQ-0034,STGOIH,GOLDENFARM ỔI,Goldenfarm,oi,chai,1300,g,12,thùng,40,mut-gold,READY
+22,REMAP,BGKQ-0035,STGDTM,GOLDENFARM DÂU TẰM,Goldenfarm,dau-tam,chai,1300,g,12,thùng,41,mut-gold,READY
+23,REMAP,BGKQ-0036,STGMCA,GOLDENFARM MÃNG CẦU,Goldenfarm,mang-cau,chai,1300,g,12,thùng,42,mut-gold,READY
+24,REMAP,BGKQ-0037,STGVAI,GOLDENFARM VẢI,Goldenfarm,vai,chai,1300,g,12,thùng,43,mut-gold,READY
+25,REMAP,BGKQ-0038,STGNHO,GOLDENFARM NHO,Goldenfarm,nho,chai,1300,g,12,thùng,44,mut-gold,READY
