@@ -2,7 +2,7 @@
   "status": "CONTRACT_PASS",
   "productionModified": false,
   "taskId": "SIRO-BATCH-01",
-  "manifestHash": "4c14a0dde9dac363846b2925e5c9d88c4cd03fb83819b78f5b434f070f9d8111",
+  "manifestHash": "5c59502f0e8cbea1f9a9e124c9d1addbee9d78fcb80bb691851bce7af47086d2",
   "payloadHash": "b1c8cc67334df1f29597b7a015c5a4978b86338fd22505e04edb5fe13e3e86bf",
   "summary": {
     "rowCount": 39,
@@ -20,7 +20,8 @@
     "priceMathPass": true,
     "packagingMatchPass": true,
     "uniqueCanonicalSkus": 39,
-    "uniqueLegacySkus": 4
+    "uniqueLegacySkus": 4,
+    "toraniParentStrategy": "attach_to_existing_or_create_parent"
   },
   "note": "Static contract verification only. No database dry-run or production write was performed."
 }
