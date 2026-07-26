@@ -10,6 +10,10 @@ const upper = (v) => clean(v).toLocaleUpperCase("vi-VN");
 const lower = (v) => clean(v).toLocaleLowerCase("vi-VN");
 const positive = (v) => Number.isFinite(Number(v)) && Number(v) > 0 ? Number(v) : null;
 const isRecord = (v) => Boolean(v) && typeof v === "object" && !Array.isArray(v);
+const owns = (value, key) => Object.prototype.hasOwnProperty.call(value || {}, key);
+const MASS_UNITS = new Set(["g", "kg"]);
+const VOLUME_UNITS = new Set(["ml", "l"]);
+const ATTRIBUTE_MEASURE_KINDS = new Set(["mass", "volume", "count"]);
 const assert = (condition, message, code = "CATALOG_REMAP_BATCH_FAILED", details = undefined) => {
   if (condition) return;
   const error = new Error(message);
@@ -31,6 +35,15 @@ const readJson = (p, label) => {
 };
 const formatNumber = (value) => Number.isInteger(Number(value)) ? String(Number(value)) : String(Number(value));
 const measureModeOf = (row) => lower(row?.measureMode) === "count_only" || (!positive(row?.netQuantity) && !clean(row?.netUnit)) ? "count_only" : "measured";
+const inferredMeasureKindOf = (row) => {
+  if (measureModeOf(row) === "count_only") return "count";
+  const explicit = lower(row?.measureKind);
+  if (explicit) return explicit;
+  const unit = lower(row?.netUnit);
+  if (MASS_UNITS.has(unit)) return "mass";
+  if (VOLUME_UNITS.has(unit)) return "volume";
+  return null;
+};
 const packagingOf = (row) => {
   const mode = measureModeOf(row);
   return {
@@ -42,14 +55,48 @@ const packagingOf = (row) => {
     netUnit: mode === "measured" ? lower(row?.netUnit) : null,
   };
 };
+const secondaryVolumeOf = (row) => {
+  const quantity = positive(row?.volumeQuantity);
+  const unit = lower(row?.volumeUnit);
+  assert(Boolean(quantity) === Boolean(unit), `Secondary volume requires both volumeQuantity and volumeUnit for ${clean(row?.canonicalSku) || clean(row?.sku) || "row"}.`, "CATALOG_REMAP_SECONDARY_VOLUME_INCOMPLETE");
+  if (!quantity) return null;
+  assert(VOLUME_UNITS.has(unit), `Secondary volume unit ${unit} is unsupported.`, "CATALOG_REMAP_SECONDARY_VOLUME_UNIT_INVALID");
+  return { quantity, unit };
+};
 const buildOptions = (oldOptions, row) => {
   const next = isRecord(oldOptions) ? { ...oldOptions } : {};
-  for (const key of ["size", "weight", "volume", "capacity"]) delete next[key];
+  for (const key of ["size", "weight", "volume", "capacity", "measure_kind"]) delete next[key];
   const packaging = packagingOf(row);
-  if (clean(row?.type)) next.type = clean(row.type);
+  const attributeModel = Number(row?.attributeModelVersion) === 1 || owns(row, "productType") || owns(row, "flavor") || owns(row, "measureKind");
+  if (attributeModel) {
+    const productType = clean(row?.productType);
+    const flavor = clean(row?.flavor);
+    if (productType) next.type = productType;
+    else delete next.type;
+    if (flavor) next.flavor = flavor;
+    else delete next.flavor;
+  } else if (clean(row?.type)) {
+    next.type = clean(row.type);
+  }
   next.sell_unit = packaging.sellUnit;
   next.package = `${formatNumber(packaging.packageQuantity)} ${packaging.sellUnit} / ${packaging.packageUnit}`;
-  if (packaging.measureMode === "measured") next.size = `${formatNumber(packaging.netQuantity)} ${packaging.netUnit}`;
+  const measureKind = inferredMeasureKindOf(row);
+  if (measureKind) next.measure_kind = measureKind;
+  if (packaging.measureMode === "measured") {
+    const label = `${formatNumber(packaging.netQuantity)} ${packaging.netUnit}`;
+    next.size = label;
+    if (measureKind === "mass") next.weight = label;
+    if (measureKind === "volume") {
+      next.volume = label;
+      next.capacity = label;
+    }
+  }
+  const secondaryVolume = secondaryVolumeOf(row);
+  if (secondaryVolume) {
+    const label = `${formatNumber(secondaryVolume.quantity)} ${secondaryVolume.unit}`;
+    next.volume = label;
+    next.capacity = label;
+  }
   return next;
 };
 const csv = (value) => {
@@ -128,8 +175,12 @@ function normalizeCommercial(raw) {
 
 function normalizeManifest(raw) {
   assert([1, 2].includes(raw?.schemaVersion), "Manifest schemaVersion must be 1 or 2.", "CATALOG_REMAP_MANIFEST_SCHEMA_INVALID");
+  const attributeModelVersion = Number(raw?.attributeModelVersion) || null;
+  assert(attributeModelVersion === null || attributeModelVersion === 1, "attributeModelVersion must be 1 when provided.", "CATALOG_REMAP_ATTRIBUTE_MODEL_INVALID");
   const common = {
     schemaVersion: raw.schemaVersion,
+    attributeModelVersion,
+    attributePolicy: isRecord(raw.attributePolicy) ? raw.attributePolicy : null,
     taskId: clean(raw.taskId),
     groupKey: clean(raw.groupKey),
     industryKey: clean(raw.industryKey),
@@ -159,6 +210,7 @@ function normalizeManifest(raw) {
     assert(["REMAP", "CREATE_NEW"].includes(action), `Manifest row ${index + 1} action is invalid.`, "CATALOG_REMAP_MANIFEST_ACTION_INVALID");
     const result = {
       ...row,
+      attributeModelVersion,
       rowNo: Number(row.rowNo) || index + 1,
       action,
       legacySku: clean(row.legacySku),
@@ -167,11 +219,26 @@ function normalizeManifest(raw) {
       detailGroup: clean(row.detailGroup),
       targetParentKey: clean(row.targetParentKey),
       type: clean(row.type),
+      productType: clean(row.productType),
+      flavor: clean(row.flavor),
+      measureKind: lower(row.measureKind),
+      volumeQuantity: positive(row.volumeQuantity),
+      volumeUnit: lower(row.volumeUnit),
       ...packagingOf(row),
     };
     assert(result.canonicalSku && result.name && result.detailGroup && result.targetParentKey, `Manifest row ${index + 1} is incomplete.`, "CATALOG_REMAP_MANIFEST_ROW_INCOMPLETE");
     if (action === "REMAP") assert(result.legacySku, `REMAP ${result.canonicalSku} needs legacySku.`, "CATALOG_REMAP_MANIFEST_LEGACY_MISSING");
     if (action === "CREATE_NEW") assert(!result.legacySku, `CREATE_NEW ${result.canonicalSku} cannot have legacySku.`, "CATALOG_REMAP_MANIFEST_CREATE_HAS_LEGACY");
+    if (attributeModelVersion === 1) {
+      assert(!result.type, `Manifest row ${result.canonicalSku} cannot use legacy type with attributeModelVersion 1.`, "CATALOG_REMAP_LEGACY_TYPE_FORBIDDEN");
+      assert(result.productType, `Manifest row ${result.canonicalSku} needs productType.`, "CATALOG_REMAP_PRODUCT_TYPE_MISSING");
+      assert(ATTRIBUTE_MEASURE_KINDS.has(result.measureKind), `Manifest row ${result.canonicalSku} has invalid measureKind.`, "CATALOG_REMAP_MEASURE_KIND_INVALID");
+      if (result.measureMode === "count_only") assert(result.measureKind === "count", `COUNT_ONLY ${result.canonicalSku} must use measureKind count.`, "CATALOG_REMAP_MEASURE_KIND_MODE_MISMATCH");
+      if (result.measureMode === "measured") assert(result.measureKind !== "count", `Measured ${result.canonicalSku} cannot use measureKind count.`, "CATALOG_REMAP_MEASURE_KIND_MODE_MISMATCH");
+      if (result.measureKind === "mass") assert(MASS_UNITS.has(result.netUnit), `Mass ${result.canonicalSku} must use g or kg.`, "CATALOG_REMAP_MEASURE_UNIT_MISMATCH");
+      if (result.measureKind === "volume") assert(VOLUME_UNITS.has(result.netUnit), `Volume ${result.canonicalSku} must use ml or l.`, "CATALOG_REMAP_MEASURE_UNIT_MISMATCH");
+      secondaryVolumeOf(result);
+    }
     return result;
   });
   const canonical = normalizedRows.map((row) => upper(row.canonicalSku));
@@ -198,4 +265,4 @@ function validateManifestCommercial(manifest, payload) {
   return bySku;
 }
 
-export { repoRoot, arg, clean, upper, lower, positive, isRecord, assert, stableStringify, sha256, readJson, formatNumber, measureModeOf, packagingOf, buildOptions, csv, normalizeCommercial, normalizeManifest, commercialRowMap, validateManifestCommercial };
+export { repoRoot, arg, clean, upper, lower, positive, isRecord, assert, stableStringify, sha256, readJson, formatNumber, measureModeOf, inferredMeasureKindOf, packagingOf, secondaryVolumeOf, buildOptions, csv, normalizeCommercial, normalizeManifest, commercialRowMap, validateManifestCommercial };
