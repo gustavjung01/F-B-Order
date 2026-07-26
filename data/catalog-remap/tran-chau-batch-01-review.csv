@@ -1,0 +1,5 @@
+﻿rowNo,action,legacySku,canonicalSku,name,detailGroup,type,sellUnit,netQuantity,netUnit,packageQuantity,packageUnit,sourceRow,targetParentKey,status
+1,REMAP,BGKQ-0068,TCMNGU,TC GIA UY MINI,Gia Uy,cafe-mini,bịch,2000,g,10,thùng,77,tran-chau-gia-uy,READY
+2,REMAP,BGKQ-0070,TCTRGU,TC GIA UY TRẮNG,Gia Uy,trang,bịch,2000,g,10,thùng,79,tran-chau-gia-uy,READY
+3,REMAP,BGKQ-0071,TCCFGU,TC GIA UY CAFE,Gia Uy,cafe,bịch,2000,g,10,thùng,80,tran-chau-gia-uy,READY
+4,REMAP,BGKQ-0073,KH2KDD,TCĐĐ KUNHAN 2KG,Kunhan,duong-den,hộp,2000,g,10,thùng,82,tran-chau-kunhan,READY
