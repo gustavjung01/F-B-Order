@@ -1,0 +1,24 @@
+{
+  "status": "CONTRACT_PASS",
+  "productionModified": false,
+  "taskId": "TRAN-CHAU-BATCH-01",
+  "manifestHash": "2a7998459e7a8c2fe3b703434bb664fba337c21a0236e65d5582c9ec2b446e6c",
+  "payloadHash": "75dd72b024cbeddaf4b631dc4b17eaac49a407058faf7e94893b56d9253c7dc3",
+  "summary": {
+    "rowCount": 4,
+    "remapCount": 4,
+    "createNewCount": 0,
+    "parentCounts": {
+      "Gia Uy": 3,
+      "Kunhan": 1
+    },
+    "holdCountAppendedToBacklog": 1,
+    "priceMathPass": true,
+    "packagingMatchPass": true,
+    "uniqueCanonicalSkuPass": true,
+    "uniqueLegacySkuPass": true,
+    "giaUyMiniCafeDistinctionReviewed": true,
+    "kunhanSiblingParentPreservationReviewed": true
+  },
+  "note": "Static contract validation only. Database dry-run and production apply have not run."
+}
