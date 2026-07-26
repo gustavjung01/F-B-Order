@@ -64,10 +64,11 @@ const secondaryVolumeOf = (row) => {
 };
 const buildOptions = (oldOptions, row) => {
   const next = isRecord(oldOptions) ? { ...oldOptions } : {};
-  for (const key of ["size", "weight", "volume", "capacity", "measure_kind"]) delete next[key];
+  for (const key of ["size", "weight", "volume", "capacity"]) delete next[key];
   const packaging = packagingOf(row);
   const attributeModel = Number(row?.attributeModelVersion) === 1;
   if (attributeModel) {
+    delete next.measure_kind;
     const productType = clean(row?.productType);
     const flavor = clean(row?.flavor);
     if (productType) next.type = productType;
