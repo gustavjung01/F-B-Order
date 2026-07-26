@@ -1,26 +1,26 @@
-rowNo,action,legacySku,canonicalSku,name,detailGroup,type,sellUnit,netQuantity,netUnit,packageQuantity,packageUnit,sourceRow,targetParentKey,status
-1,REMAP,BGKQ-0015,BERDAU,BERINO DÂU,Berino,dau,chai,1350,g,12,thùng,20,sinh-to-berino,READY
-2,REMAP,BGKQ-0016,BERDAO,BERINO ĐÀO,Berino,dao,chai,1350,g,12,thùng,21,sinh-to-berino,READY
-3,REMAP,BGKQ-0017,BEROIH,BERINO ỔI,Berino,oi,chai,1350,g,12,thùng,22,sinh-to-berino,READY
-4,REMAP,BGKQ-0018,BERVQU,BERINO VIỆT QUỐC,Berino,viet-quoc,chai,1350,g,12,thùng,23,sinh-to-berino,READY
-5,REMAP,BGKQ-0019,BERCDA,BERINO CHANH DÂY,Berino,chanh-day,chai,1350,g,12,thùng,24,sinh-to-berino,READY
-6,REMAP,BGKQ-0020,BERVAI,BERINO VẢI,Berino,vai,chai,1350,g,12,thùng,25,sinh-to-berino,READY
-7,REMAP,BGKQ-0021,BERKWI,BERINO KIWI,Berino,kiwi,chai,1350,g,12,thùng,26,sinh-to-berino,READY
-8,REMAP,BGKQ-0022,BERPBT,BERINO PHÚC BỒN TỬ,Berino,phuc-bon-tu,chai,1350,g,12,thùng,27,sinh-to-berino,READY
-9,REMAP,BGKQ-0023,BERXOA,BERINO XOÀI,Berino,xoai,chai,1350,g,12,thùng,28,sinh-to-berino,READY
-10,REMAP,BGKQ-0024,BERNHO,BERINO NHO,Berino,nho,chai,1350,g,12,thùng,29,sinh-to-berino,READY
-11,REMAP,BGKQ-0025,BERDTM,BERINO DÂU TẰM,Berino,dau-tam,chai,1350,g,12,thùng,30,sinh-to-berino,READY
-12,REMAP,BGKQ-0026,BERTHM,BERINO THƠM,Berino,thom,chai,1350,g,12,thùng,31,sinh-to-berino,READY
-13,CREATE_NEW,,BERMCA,BERINO MÃNG CẦU,Berino,mang-cau,chai,1350,g,12,thùng,42,sinh-to-berino,READY
-14,REMAP,BGKQ-0027,STGDAU,GOLDENFARM DÂU,Goldenfarm,dau,chai,1300,g,12,thùng,33,mut-gold,READY
-15,REMAP,BGKQ-0028,STGDAO,GOLDENFARM ĐÀO,Goldenfarm,dao,chai,1300,g,12,thùng,34,mut-gold,READY
-16,REMAP,BGKQ-0029,STGVQU,GOLDENFARM VIỆT QUỐC,Goldenfarm,viet-quoc,chai,1300,g,12,thùng,35,mut-gold,READY
-17,REMAP,BGKQ-0030,STGCDA,GOLDENFARM CHANH DÂY,Goldenfarm,chanh-day,chai,1300,g,12,thùng,36,mut-gold,READY
-18,REMAP,BGKQ-0031,STGKWI,GOLDENFARM KIWI,Goldenfarm,kiwi,chai,1300,g,12,thùng,37,mut-gold,READY
-19,REMAP,BGKQ-0032,STGPBT,GOLDENFARM PHÚC BỒN TỬ,Goldenfarm,phuc-bon-tu,chai,1300,g,12,thùng,38,mut-gold,READY
-20,REMAP,BGKQ-0033,STGXOA,GOLDENFARM XOÀI,Goldenfarm,xoai,chai,1300,g,12,thùng,39,mut-gold,READY
-21,REMAP,BGKQ-0034,STGOIH,GOLDENFARM ỔI,Goldenfarm,oi,chai,1300,g,12,thùng,40,mut-gold,READY
-22,REMAP,BGKQ-0035,STGDTM,GOLDENFARM DÂU TẰM,Goldenfarm,dau-tam,chai,1300,g,12,thùng,41,mut-gold,READY
-23,REMAP,BGKQ-0036,STGMCA,GOLDENFARM MÃNG CẦU,Goldenfarm,mang-cau,chai,1300,g,12,thùng,42,mut-gold,READY
-24,REMAP,BGKQ-0037,STGVAI,GOLDENFARM VẢI,Goldenfarm,vai,chai,1300,g,12,thùng,43,mut-gold,READY
-25,REMAP,BGKQ-0038,STGNHO,GOLDENFARM NHO,Goldenfarm,nho,chai,1300,g,12,thùng,44,mut-gold,READY
+rowNo,action,legacySku,canonicalSku,name,brand,productType,flavor,measureKind,sellUnit,netQuantity,netUnit,volumeQuantity,volumeUnit,packageQuantity,packageUnit,sourceRow,targetParentKey,status
+1,REMAP,BGKQ-0015,BERDAU,BERINO DÂU,Berino,sinh-to,dau,mass,chai,1350,g,,,12,thùng,20,sinh-to-berino,READY
+2,REMAP,BGKQ-0016,BERDAO,BERINO ĐÀO,Berino,sinh-to,dao,mass,chai,1350,g,,,12,thùng,21,sinh-to-berino,READY
+3,REMAP,BGKQ-0017,BEROIH,BERINO ỔI,Berino,sinh-to,oi,mass,chai,1350,g,,,12,thùng,22,sinh-to-berino,READY
+4,REMAP,BGKQ-0018,BERVQU,BERINO VIỆT QUỐC,Berino,sinh-to,viet-quoc,mass,chai,1350,g,,,12,thùng,23,sinh-to-berino,READY
+5,REMAP,BGKQ-0019,BERCDA,BERINO CHANH DÂY,Berino,sinh-to,chanh-day,mass,chai,1350,g,,,12,thùng,24,sinh-to-berino,READY
+6,REMAP,BGKQ-0020,BERVAI,BERINO VẢI,Berino,sinh-to,vai,mass,chai,1350,g,,,12,thùng,25,sinh-to-berino,READY
+7,REMAP,BGKQ-0021,BERKWI,BERINO KIWI,Berino,sinh-to,kiwi,mass,chai,1350,g,,,12,thùng,26,sinh-to-berino,READY
+8,REMAP,BGKQ-0022,BERPBT,BERINO PHÚC BỒN TỬ,Berino,sinh-to,phuc-bon-tu,mass,chai,1350,g,,,12,thùng,27,sinh-to-berino,READY
+9,REMAP,BGKQ-0023,BERXOA,BERINO XOÀI,Berino,sinh-to,xoai,mass,chai,1350,g,,,12,thùng,28,sinh-to-berino,READY
+10,REMAP,BGKQ-0024,BERNHO,BERINO NHO,Berino,sinh-to,nho,mass,chai,1350,g,,,12,thùng,29,sinh-to-berino,READY
+11,REMAP,BGKQ-0025,BERDTM,BERINO DÂU TẰM,Berino,sinh-to,dau-tam,mass,chai,1350,g,,,12,thùng,30,sinh-to-berino,READY
+12,REMAP,BGKQ-0026,BERTHM,BERINO THƠM,Berino,sinh-to,thom,mass,chai,1350,g,,,12,thùng,31,sinh-to-berino,READY
+13,CREATE_NEW,,BERMCA,BERINO MÃNG CẦU,Berino,sinh-to,mang-cau,mass,chai,1350,g,,,12,thùng,42,sinh-to-berino,READY
+14,REMAP,BGKQ-0027,STGDAU,GOLDENFARM DÂU,Goldenfarm,mut,dau,mass,chai,1300,g,,,12,thùng,33,mut-gold,READY
+15,REMAP,BGKQ-0028,STGDAO,GOLDENFARM ĐÀO,Goldenfarm,mut,dao,mass,chai,1300,g,,,12,thùng,34,mut-gold,READY
+16,REMAP,BGKQ-0029,STGVQU,GOLDENFARM VIỆT QUỐC,Goldenfarm,mut,viet-quoc,mass,chai,1300,g,,,12,thùng,35,mut-gold,READY
+17,REMAP,BGKQ-0030,STGCDA,GOLDENFARM CHANH DÂY,Goldenfarm,mut,chanh-day,mass,chai,1300,g,,,12,thùng,36,mut-gold,READY
+18,REMAP,BGKQ-0031,STGKWI,GOLDENFARM KIWI,Goldenfarm,mut,kiwi,mass,chai,1300,g,,,12,thùng,37,mut-gold,READY
+19,REMAP,BGKQ-0032,STGPBT,GOLDENFARM PHÚC BỒN TỬ,Goldenfarm,mut,phuc-bon-tu,mass,chai,1300,g,,,12,thùng,38,mut-gold,READY
+20,REMAP,BGKQ-0033,STGXOA,GOLDENFARM XOÀI,Goldenfarm,mut,xoai,mass,chai,1300,g,,,12,thùng,39,mut-gold,READY
+21,REMAP,BGKQ-0034,STGOIH,GOLDENFARM ỔI,Goldenfarm,mut,oi,mass,chai,1300,g,,,12,thùng,40,mut-gold,READY
+22,REMAP,BGKQ-0035,STGDTM,GOLDENFARM DÂU TẰM,Goldenfarm,mut,dau-tam,mass,chai,1300,g,,,12,thùng,41,mut-gold,READY
+23,REMAP,BGKQ-0036,STGMCA,GOLDENFARM MÃNG CẦU,Goldenfarm,mut,mang-cau,mass,chai,1300,g,,,12,thùng,42,mut-gold,READY
+24,REMAP,BGKQ-0037,STGVAI,GOLDENFARM VẢI,Goldenfarm,mut,vai,mass,chai,1300,g,,,12,thùng,43,mut-gold,READY
+25,REMAP,BGKQ-0038,STGNHO,GOLDENFARM NHO,Goldenfarm,mut,nho,mass,chai,1300,g,,,12,thùng,44,mut-gold,READY
