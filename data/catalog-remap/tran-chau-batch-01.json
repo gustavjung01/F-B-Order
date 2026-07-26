@@ -1,0 +1,117 @@
+{
+  "schemaVersion": 2,
+  "taskId": "TRAN-CHAU-BATCH-01",
+  "groupKey": "tran-chau-batch-01",
+  "industryKey": "nguyen-lieu-tra-sua",
+  "industryName": "Nguyên liệu trà sữa",
+  "catalogGroupKey": "tran-chau",
+  "catalogGroupName": "Trân châu",
+  "reviewApproval": {
+    "status": "APPROVED",
+    "approvedBy": "project-owner",
+    "approvedDate": "2026-07-26",
+    "scope": "4 REMAP; 4 unique SKU",
+    "notes": [
+      "Map phần chắc chắn trước; dòng khó hiểu append vào backlog chung và kiểm một lần sau khi hoàn tất toàn bộ catalog.",
+      "Batch gồm Gia Uy 3 SKU và Kunhan 1 SKU; không có CREATE_NEW.",
+      "TCCFGU remap BGKQ-0071 theo tên variant exact; BGKQ-0068 là bản MINI nên không trùng.",
+      "KH2KDD remap BGKQ-0073 theo tên variant TC đđ Kuhan 2kG và quy cách 2 kg / 10 hộp.",
+      "KH3KHK bị hold vì tên bảng quán ghi Duoxian nhưng tên chuẩn hóa ghi Kunhan; candidate BGKQ-0067 cũng là Douxian.",
+      "TCDDGU đã được tách sang Đường đen / đường nước trong DUONG-DEN-BATCH-01 nên không thuộc batch này.",
+      "Giữ nguyên canonical spelling từ nguồn như KUNHAN; ảnh bổ sung thủ công sau khi toàn catalog hoàn tất; không tạo ảnh AI và không ghi/xóa R2."
+    ]
+  },
+  "imageMigrationPolicy": {
+    "phase": "after_all_catalog_groups_verified",
+    "targetFileConvention": "lowercase canonical SKU + .webp",
+    "allowMissingImageDuringSkuRemap": true,
+    "generateImages": false,
+    "deleteOldObjectsInCurrentTask": false
+  },
+  "requiredMigrations": [
+    "db/migrations/031_catalog_group_remap.sql",
+    "db/migrations/032_catalog_packaging_count_only.sql"
+  ],
+  "targetParents": {
+    "Gia Uy": {
+      "productKey": "tran-chau-gia-uy",
+      "name": "Trân châu Gia Uy",
+      "brand": "Gia Uy",
+      "strategy": "merge_keep_first_product",
+      "survivorLegacySku": "BGKQ-0068"
+    },
+    "Kunhan": {
+      "productKey": "tran-chau-kunhan",
+      "name": "Trân châu Kunhan",
+      "brand": "Kunhan",
+      "strategy": "merge_keep_first_product",
+      "survivorLegacySku": "BGKQ-0073"
+    }
+  },
+  "rows": [
+    {
+      "rowNo": 1,
+      "action": "REMAP",
+      "legacySku": "BGKQ-0068",
+      "canonicalSku": "TCMNGU",
+      "name": "TC GIA UY MINI",
+      "detailGroup": "Gia Uy",
+      "type": "cafe-mini",
+      "sellUnit": "bịch",
+      "netQuantity": 2000,
+      "netUnit": "g",
+      "packageQuantity": 10,
+      "packageUnit": "thùng",
+      "sourceRow": 77,
+      "targetParentKey": "tran-chau-gia-uy"
+    },
+    {
+      "rowNo": 2,
+      "action": "REMAP",
+      "legacySku": "BGKQ-0070",
+      "canonicalSku": "TCTRGU",
+      "name": "TC GIA UY TRẮNG",
+      "detailGroup": "Gia Uy",
+      "type": "trang",
+      "sellUnit": "bịch",
+      "netQuantity": 2000,
+      "netUnit": "g",
+      "packageQuantity": 10,
+      "packageUnit": "thùng",
+      "sourceRow": 79,
+      "targetParentKey": "tran-chau-gia-uy"
+    },
+    {
+      "rowNo": 3,
+      "action": "REMAP",
+      "legacySku": "BGKQ-0071",
+      "canonicalSku": "TCCFGU",
+      "name": "TC GIA UY CAFE",
+      "detailGroup": "Gia Uy",
+      "type": "cafe",
+      "sellUnit": "bịch",
+      "netQuantity": 2000,
+      "netUnit": "g",
+      "packageQuantity": 10,
+      "packageUnit": "thùng",
+      "sourceRow": 80,
+      "targetParentKey": "tran-chau-gia-uy"
+    },
+    {
+      "rowNo": 4,
+      "action": "REMAP",
+      "legacySku": "BGKQ-0073",
+      "canonicalSku": "KH2KDD",
+      "name": "TCĐĐ KUNHAN 2KG",
+      "detailGroup": "Kunhan",
+      "type": "duong-den",
+      "sellUnit": "hộp",
+      "netQuantity": 2000,
+      "netUnit": "g",
+      "packageQuantity": 10,
+      "packageUnit": "thùng",
+      "sourceRow": 82,
+      "targetParentKey": "tran-chau-kunhan"
+    }
+  ]
+}
