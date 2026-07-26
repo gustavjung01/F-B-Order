@@ -3,7 +3,7 @@
   "productionModified": false,
   "taskId": "TRAN-CHAU-BATCH-01",
   "manifestHash": "2a7998459e7a8c2fe3b703434bb664fba337c21a0236e65d5582c9ec2b446e6c",
-  "payloadHash": "75dd72b024cbeddaf4b631dc4b17eaac49a407058faf7e94893b56d9253c7dc3",
+  "payloadHash": "781a52a2a46c001f8cd4b14f7270a3e19ede0cf5a0009eeb2df9fb077b3bc6a1",
   "summary": {
     "rowCount": 4,
     "remapCount": 4,
@@ -20,5 +20,5 @@
     "giaUyMiniCafeDistinctionReviewed": true,
     "kunhanSiblingParentPreservationReviewed": true
   },
-  "note": "Static contract validation only. Database dry-run and production apply have not run."
+  "note": "Static contract validation only. Database dry-run and production apply have not run. Private payload was rematerialized from the original commercial source and verified with the engine standard hash profile."
 }
