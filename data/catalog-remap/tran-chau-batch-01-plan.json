@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "planId": "tran-chau-batch-01",
+  "remoteRoot": "/srv/apps/bepsi",
+  "tasks": [
+    {
+      "taskId": "TRAN-CHAU-BATCH-01",
+      "manifest": "data/catalog-remap/tran-chau-batch-01.json",
+      "commercialFile": "data/private/catalog-imports/tran-chau-batch-01.private.json"
+    }
+  ]
+}
