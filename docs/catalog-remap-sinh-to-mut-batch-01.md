@@ -71,8 +71,8 @@ Engine catalog-remap đã được mở rộng theo cơ chế opt-in:
 - `measureKind=mass` ghi `options.measure_kind=mass`, `options.weight` và chuỗi `options.size` tương thích.
 - `measureKind=volume` ghi `options.measure_kind=volume`, `options.volume`, `options.capacity` và `options.size`.
 - `measureKind=count` không tạo `size`.
-- Batch lịch sử không khai báo `attributeModelVersion: 1` nên giữ nguyên hành vi cũ.
-- Test engine đã bổ sung kiểm tra dry-run, apply, rollback, xóa giá trị cũ sai và bảo toàn batch legacy.
+- Batch lịch sử không khai báo `attributeModelVersion: 1` nên giữ nguyên hành vi cũ, bao gồm không tự thêm/xóa `measure_kind`.
+- Test engine đã bổ sung kiểm tra dry-run, apply, rollback, thay giá trị `type/flavor` cũ sai và phục hồi đầy đủ before-state.
 
 ## Backlog chuẩn hóa chung
 
