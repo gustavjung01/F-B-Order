@@ -12,6 +12,10 @@ const remoteRoot = "/srv/apps/bepsi";
 const remoteEnv = "/etc/app-env/bepsi.env";
 const remoteService = "bepsi-api.service";
 const remoteWorker = "bepsi-ai-worker.service";
+const remotePgBin = "/usr/lib/postgresql/17/bin";
+const remotePsql = `${remotePgBin}/psql`;
+const remotePgDump = `${remotePgBin}/pg_dump`;
+const remotePgRestore = `${remotePgBin}/pg_restore`;
 const remoteDir = `${remoteRoot}/.tmp/catalog-remap-tea-production-${Date.now()}-${process.pid}`;
 const localArtifactsDir = path.join(repoRoot, "artifacts/catalog-remap/production");
 const confirmation = process.argv.find((value) => value.startsWith("--confirm-production="))?.split("=").slice(1).join("=") || "";
@@ -90,9 +94,12 @@ const preflight = [
   `SERVICE_CWD=$(readlink -f "/proc/$SERVICE_PID/cwd")`,
   `case "$SERVICE_CWD" in '${remoteRoot}'|'${remoteRoot}'/*) ;; *) echo "Unexpected Bếp Sỉ service cwd: $SERVICE_CWD" >&2; exit 1 ;; esac`,
   "command -v node >/dev/null",
-  "command -v psql >/dev/null",
-  "command -v pg_dump >/dev/null",
-  "command -v pg_restore >/dev/null",
+  `test -x '${remotePsql}'`,
+  `test -x '${remotePgDump}'`,
+  `test -x '${remotePgRestore}'`,
+  `'${remotePsql}' --version | grep -qE ' 17\\.'`,
+  `'${remotePgDump}' --version | grep -qE ' 17\\.'`,
+  `'${remotePgRestore}' --version | grep -qE ' 17\\.'`,
   "command -v curl >/dev/null",
   `ss -ltn | grep -qE '[:.]5100[[:space:]]'`,
   `CODE_READY=0; for D in "$SERVICE_CWD/dist" '${remoteRoot}/apps/backend/dist'; do if [ -d "$D" ] && grep -Rqs 'count_only' "$D"; then CODE_READY=1; fi; done; test "$CODE_READY" -eq 1 || { echo 'Deployed Bếp Sỉ backend does not contain COUNT_ONLY support.' >&2; exit 1; }`,
@@ -117,6 +124,9 @@ REMOTE_DIR='${remoteDir}'
 REMOTE_ROOT='${remoteRoot}'
 REMOTE_ENV='${remoteEnv}'
 SERVICE='${remoteService}'
+PSQL='${remotePsql}'
+PG_DUMP='${remotePgDump}'
+PG_RESTORE='${remotePgRestore}'
 cd "$REMOTE_DIR"
 chmod 600 data/private/catalog-imports/*.json
 SERVICE_PID=$(systemctl show --property MainPID --value "$SERVICE")
@@ -135,14 +145,15 @@ test -n "$DB_URL"
 BACKUP_DIR="$REMOTE_ROOT/backups/catalog-remap"
 mkdir -p "$BACKUP_DIR"
 BACKUP_FILE="$BACKUP_DIR/bepsi-before-tea-48-$(date -u +%Y%m%dT%H%M%SZ).dump"
-pg_dump "$DB_URL" --format=custom --no-owner --no-acl --file="$BACKUP_FILE"
+trap 'if [ -n "\${BACKUP_FILE:-}" ] && [ -e "$BACKUP_FILE" ] && [ ! -s "$BACKUP_FILE" ]; then rm -f "$BACKUP_FILE"; fi' EXIT
+"$PG_DUMP" "$DB_URL" --format=custom --no-owner --no-acl --file="$BACKUP_FILE"
 test -s "$BACKUP_FILE"
-pg_restore -l "$BACKUP_FILE" >/dev/null
+"$PG_RESTORE" -l "$BACKUP_FILE" >/dev/null
 chmod 600 "$BACKUP_FILE"
 BACKUP_SHA=$(sha256sum "$BACKUP_FILE" | awk '{print $1}')
 node -e 'const fs=require("fs");fs.writeFileSync("artifacts/catalog-remap/backup.json",JSON.stringify({status:"BACKUP_PASS",file:process.argv[1],sha256:process.argv[2],bytes:Number(process.argv[3])},null,2)+"\\n")' "$BACKUP_FILE" "$BACKUP_SHA" "$(stat -c %s "$BACKUP_FILE")"
-psql "$DB_URL" -v ON_ERROR_STOP=1 -f db/migrations/031_catalog_group_remap.sql
-psql "$DB_URL" -v ON_ERROR_STOP=1 -f db/migrations/032_catalog_packaging_count_only.sql
+"$PSQL" "$DB_URL" -v ON_ERROR_STOP=1 -f db/migrations/031_catalog_group_remap.sql
+"$PSQL" "$DB_URL" -v ON_ERROR_STOP=1 -f db/migrations/032_catalog_packaging_count_only.sql
 node apps/backend/scripts/catalog-remap-batch-engine.mjs --config=data/catalog-remap/tea-production-plan.json --output-json=artifacts/catalog-remap/pre-apply-dry-run.json
 node -e 'const r=require("./artifacts/catalog-remap/pre-apply-dry-run.json");if(r.status!=="TEA_PRODUCTION_DRY_RUN_PASS")process.exit(2)'
 node apps/backend/scripts/catalog-remap-batch-engine.mjs --config=data/catalog-remap/tea-production-plan.json --apply --allow-remote-apply --confirm-production=BEPSI_TEA_48 --output-json=artifacts/catalog-remap/apply.json
@@ -150,8 +161,8 @@ node -e 'const r=require("./artifacts/catalog-remap/apply.json");if(r.status!=="
 set +e
 curl -fsS http://127.0.0.1:5100/health > artifacts/catalog-remap/health.json
 HEALTH_STATUS=$?
-COUNT_ID=$(psql "$DB_URL" -Atqc "SELECT id FROM catalog_variants WHERE sku='COHTBD' LIMIT 1")
-MEASURED_ID=$(psql "$DB_URL" -Atqc "SELECT id FROM catalog_variants WHERE sku='HTRKIG' LIMIT 1")
+COUNT_ID=$("$PSQL" "$DB_URL" -Atqc "SELECT id FROM catalog_variants WHERE sku='COHTBD' LIMIT 1")
+MEASURED_ID=$("$PSQL" "$DB_URL" -Atqc "SELECT id FROM catalog_variants WHERE sku='HTRKIG' LIMIT 1")
 test -n "$COUNT_ID" && curl -fsS "http://127.0.0.1:5100/api/catalog-v2/products/$COUNT_ID" > artifacts/catalog-remap/count-only-api.json
 COUNT_STATUS=$?
 test -n "$MEASURED_ID" && curl -fsS "http://127.0.0.1:5100/api/catalog-v2/products/$MEASURED_ID" > artifacts/catalog-remap/measured-api.json
