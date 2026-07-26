@@ -1,0 +1,31 @@
+action,legacySku,canonicalSku,name,detailGroup,targetParentKey,sellUnit,netQuantity,netUnit,packageQuantity,packageUnit,unitPrice,derivedPackagePrice,sourceRow,sourceMatchStatus
+CREATE_NEW,,PIXVAI,Siro Pixie Vải,Pixie,siro-pixie,chai,1000,g,12,thùng,62000,744000,5,KHỚP NHÓM - NHIỀU SKU CÙNG GIÁ
+CREATE_NEW,,PIXTAO,Siro Pixie Táo,Pixie,siro-pixie,chai,1000,g,12,thùng,62000,744000,5,KHỚP NHÓM - NHIỀU SKU CÙNG GIÁ
+CREATE_NEW,,PIXSCL,Siro Pixie Socola,Pixie,siro-pixie,chai,1000,g,12,thùng,62000,744000,5,KHỚP NHÓM - NHIỀU SKU CÙNG GIÁ
+CREATE_NEW,,PIXNHO,Siro Pixie Nho,Pixie,siro-pixie,chai,1000,g,12,thùng,62000,744000,5,KHỚP NHÓM - NHIỀU SKU CÙNG GIÁ
+CREATE_NEW,,PIXMAT,Siro Pixie Matcha,Pixie,siro-pixie,chai,1000,g,12,thùng,62000,744000,5,KHỚP NHÓM - NHIỀU SKU CÙNG GIÁ
+CREATE_NEW,,PIXKWI,Siro Pixie Kiwi,Pixie,siro-pixie,chai,1000,g,12,thùng,62000,744000,5,KHỚP NHÓM - NHIỀU SKU CÙNG GIÁ
+CREATE_NEW,,PIXDAO,Siro Pixie Đào,Pixie,siro-pixie,chai,1000,g,12,thùng,62000,744000,5,KHỚP NHÓM - NHIỀU SKU CÙNG GIÁ
+CREATE_NEW,,PIXDLU,Siro Pixie Dưa Lưới,Pixie,siro-pixie,chai,1000,g,12,thùng,62000,744000,5,KHỚP NHÓM - NHIỀU SKU CÙNG GIÁ
+CREATE_NEW,,PIXDAU,Siro Pixie Dâu,Pixie,siro-pixie,chai,1000,g,12,thùng,62000,744000,5,KHỚP NHÓM - NHIỀU SKU CÙNG GIÁ
+CREATE_NEW,,PIXCDA,Siro Pixie Chanh Dây,Pixie,siro-pixie,chai,1000,g,12,thùng,62000,744000,5,KHỚP NHÓM - NHIỀU SKU CÙNG GIÁ
+CREATE_NEW,,PIXBHA,Siro Pixie Bạc Hà,Pixie,siro-pixie,chai,1000,g,12,thùng,62000,744000,5,KHỚP NHÓM - NHIỀU SKU CÙNG GIÁ
+REMAP,BGKQ-0008,SRVNTA,Siro Vina Táo,Vina,siro-vina,chai,1000,g,12,thùng,40000,480000,12,CẦN DUYỆT - NHIỀU SKU KHÁC QUY CÁCH/GIÁ
+CREATE_NEW,,SRVNMN,Siro Vina Môn,Vina,siro-vina,chai,1000,g,12,thùng,40000,480000,12,CẦN DUYỆT - NHIỀU SKU KHÁC QUY CÁCH/GIÁ
+CREATE_NEW,,SRVNKW,Siro Vina Kiwi,Vina,siro-vina,chai,1000,g,12,thùng,40000,480000,12,CẦN DUYỆT - NHIỀU SKU KHÁC QUY CÁCH/GIÁ
+CREATE_NEW,,SRVNDL,Siro Vina Dưa Lưới,Vina,siro-vina,chai,1000,g,12,thùng,40000,480000,12,CẦN DUYỆT - NHIỀU SKU KHÁC QUY CÁCH/GIÁ
+CREATE_NEW,,SRVNCD,Siro Vina Chanh Dây,Vina,siro-vina,chai,1000,g,12,thùng,40000,480000,12,CẦN DUYỆT - NHIỀU SKU KHÁC QUY CÁCH/GIÁ
+CREATE_NEW,,SRVNBL,Siro Vina Blue,Vina,siro-vina,chai,1000,g,12,thùng,40000,480000,12,CẦN DUYỆT - NHIỀU SKU KHÁC QUY CÁCH/GIÁ
+CREATE_NEW,,SRVNXO,Siro Vina Xoài,Vina,siro-vina,chai,1000,g,12,thùng,40000,480000,12,CẦN DUYỆT - NHIỀU SKU KHÁC QUY CÁCH/GIÁ
+CREATE_NEW,,SRVNVQ,Siro Vina Việt Quốc,Vina,siro-vina,chai,1000,g,12,thùng,40000,480000,12,CẦN DUYỆT - NHIỀU SKU KHÁC QUY CÁCH/GIÁ
+CREATE_NEW,,SRVNVA,Siro Vina Vải,Vina,siro-vina,chai,1000,g,12,thùng,40000,480000,12,CẦN DUYỆT - NHIỀU SKU KHÁC QUY CÁCH/GIÁ
+CREATE_NEW,,SRVNSO,Siro Vina Socola,Vina,siro-vina,chai,1000,g,12,thùng,40000,480000,12,CẦN DUYỆT - NHIỀU SKU KHÁC QUY CÁCH/GIÁ
+CREATE_NEW,,SRVNOI,Siro Vina Ổi,Vina,siro-vina,chai,1000,g,12,thùng,40000,480000,12,CẦN DUYỆT - NHIỀU SKU KHÁC QUY CÁCH/GIÁ
+CREATE_NEW,,SRVNNH,Siro Vina Nho,Vina,siro-vina,chai,1000,g,12,thùng,40000,480000,12,CẦN DUYỆT - NHIỀU SKU KHÁC QUY CÁCH/GIÁ
+CREATE_NEW,,SRVNDO,Siro Vina Đào,Vina,siro-vina,chai,1000,g,12,thùng,40000,480000,12,CẦN DUYỆT - NHIỀU SKU KHÁC QUY CÁCH/GIÁ
+CREATE_NEW,,SRVNDA,Siro Vina Dâu,Vina,siro-vina,chai,1000,g,12,thùng,40000,480000,12,CẦN DUYỆT - NHIỀU SKU KHÁC QUY CÁCH/GIÁ
+CREATE_NEW,,SRVNCA,Siro Vina Cam,Vina,siro-vina,chai,1000,g,12,thùng,40000,480000,12,CẦN DUYỆT - NHIỀU SKU KHÁC QUY CÁCH/GIÁ
+CREATE_NEW,,SRVNBH,Siro Vina Bạc Hà,Vina,siro-vina,chai,1000,g,12,thùng,40000,480000,12,CẦN DUYỆT - NHIỀU SKU KHÁC QUY CÁCH/GIÁ
+CREATE_NEW,,MOGVNA,Siro Vina Mật Ong,Vina,siro-vina,bình,1000,g,12,thùng,55000,660000,12,CẦN DUYỆT - NHIỀU SKU KHÁC QUY CÁCH/GIÁ
+CREATE_NEW,,SRVNSD,Siro Vina Sâm Dứa,Vina,siro-vina,chai,1000,g,12,thùng,25000,300000,13,CẦN DUYỆT - NHIỀU SKU KHÁC QUY CÁCH/GIÁ
+CREATE_NEW,,SRMMSD,Siro Mama Sâm Dứa,Mama,siro-mama,chai,1000,g,12,thùng,53000,636000,13,CẦN DUYỆT - NHIỀU SKU KHÁC QUY CÁCH/GIÁ
