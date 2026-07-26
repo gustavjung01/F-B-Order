@@ -1,0 +1,40 @@
+rowNo,action,legacySku,canonicalSku,name,detailGroup,type,sellUnit,netQuantity,netUnit,packageQuantity,packageUnit,sourceRow,sourceMatchStatus,reviewDecision
+1,REMAP,BGKQ-0001,TORDLU,Siro Torani Dưa Lưới,Torani,dua-luoi,chai,1500,g,12,thùng,4,KHỚP NHÓM - NHIỀU SKU CÙNG GIÁ,SPLIT_CATALOG_FIRST
+2,CREATE_NEW,,TORVQU,Siro Torani Việt Quốc,Torani,viet-quoc,chai,1500,g,12,thùng,4,KHỚP NHÓM - NHIỀU SKU CÙNG GIÁ,SPLIT_CATALOG_FIRST
+3,CREATE_NEW,,TORVAI,Siro Torani Vải,Torani,vai,chai,1500,g,12,thùng,4,KHỚP NHÓM - NHIỀU SKU CÙNG GIÁ,SPLIT_CATALOG_FIRST
+4,CREATE_NEW,,TORTAO,Siro Torani Táo,Torani,tao,chai,1500,g,12,thùng,4,KHỚP NHÓM - NHIỀU SKU CÙNG GIÁ,SPLIT_CATALOG_FIRST
+5,CREATE_NEW,,TOROIH,Siro Torani Ổi,Torani,oi,chai,1500,g,12,thùng,4,KHỚP NHÓM - NHIỀU SKU CÙNG GIÁ,SPLIT_CATALOG_FIRST
+6,CREATE_NEW,,TORNHA,Siro Torani Nhãn,Torani,nhan,chai,1500,g,12,thùng,4,KHỚP NHÓM - NHIỀU SKU CÙNG GIÁ,SPLIT_CATALOG_FIRST
+7,CREATE_NEW,,TORMJT,Siro Torani Mojito,Torani,mojito,chai,1500,g,12,thùng,4,KHỚP NHÓM - NHIỀU SKU CÙNG GIÁ,SPLIT_CATALOG_FIRST
+8,CREATE_NEW,,TORLUU,Siro Torani Lựu,Torani,luu,chai,1500,g,12,thùng,4,KHỚP NHÓM - NHIỀU SKU CÙNG GIÁ,SPLIT_CATALOG_FIRST
+9,CREATE_NEW,,TORHDE,Siro Torani Hạt Dẻ,Torani,hat-de,chai,1500,g,12,thùng,4,KHỚP NHÓM - NHIỀU SKU CÙNG GIÁ,SPLIT_CATALOG_FIRST
+10,CREATE_NEW,,TORDAO,Siro Torani Đào,Torani,dao,chai,1500,g,12,thùng,4,KHỚP NHÓM - NHIỀU SKU CÙNG GIÁ,SPLIT_CATALOG_FIRST
+11,CREATE_NEW,,TORDAU,Siro Torani Dâu,Torani,dau,chai,1500,g,12,thùng,4,KHỚP NHÓM - NHIỀU SKU CÙNG GIÁ,SPLIT_CATALOG_FIRST
+12,CREATE_NEW,,TORCDA,Siro Torani Chanh Dây,Torani,chanh-day,chai,1500,g,12,thùng,4,KHỚP NHÓM - NHIỀU SKU CÙNG GIÁ,SPLIT_CATALOG_FIRST
+13,CREATE_NEW,,TORBLC,Siro Torani Blue Curacao,Torani,blue-curacao,chai,1500,g,12,thùng,4,KHỚP NHÓM - NHIỀU SKU CÙNG GIÁ,SPLIT_CATALOG_FIRST
+14,CREATE_NEW,,TORBHX,Siro Torani Bạc Hà Xanh,Torani,bac-ha-xanh,chai,1500,g,12,thùng,4,KHỚP NHÓM - NHIỀU SKU CÙNG GIÁ,SPLIT_CATALOG_FIRST
+15,REMAP,BGKQ-0003,DFGXOA,Siro DingFong Xoài,DingFong,xoai,chai,1050,g,12,thùng,6,KHỚP NHÓM - NHIỀU SKU CÙNG GIÁ,SPLIT_CATALOG_FIRST
+16,CREATE_NEW,,DFGVQU,Siro DingFong Việt Quốc,DingFong,viet-quoc,chai,1050,g,12,thùng,6,KHỚP NHÓM - NHIỀU SKU CÙNG GIÁ,SPLIT_CATALOG_FIRST
+17,CREATE_NEW,,DFGVAI,Siro DingFong Vải,DingFong,vai,chai,1050,g,12,thùng,6,KHỚP NHÓM - NHIỀU SKU CÙNG GIÁ,SPLIT_CATALOG_FIRST
+18,CREATE_NEW,,DFGTAO,Siro DingFong Táo,DingFong,tao,chai,1050,g,12,thùng,6,KHỚP NHÓM - NHIỀU SKU CÙNG GIÁ,SPLIT_CATALOG_FIRST
+19,CREATE_NEW,,DFGSCL,Siro DingFong Socola,DingFong,socola,chai,1050,g,12,thùng,6,KHỚP NHÓM - NHIỀU SKU CÙNG GIÁ,SPLIT_CATALOG_FIRST
+20,CREATE_NEW,,DFGNHO,Siro DingFong Nho,DingFong,nho,chai,1050,g,12,thùng,6,KHỚP NHÓM - NHIỀU SKU CÙNG GIÁ,SPLIT_CATALOG_FIRST
+21,CREATE_NEW,,DFGKWI,Siro DingFong Kiwi,DingFong,kiwi,chai,1050,g,12,thùng,6,KHỚP NHÓM - NHIỀU SKU CÙNG GIÁ,SPLIT_CATALOG_FIRST
+22,CREATE_NEW,,DFGDAO,Siro DingFong Đào,DingFong,dao,chai,1050,g,12,thùng,6,KHỚP NHÓM - NHIỀU SKU CÙNG GIÁ,SPLIT_CATALOG_FIRST
+23,CREATE_NEW,,DFGDLU,Siro DingFong Dưa Lưới,DingFong,dua-luoi,chai,1050,g,12,thùng,6,KHỚP NHÓM - NHIỀU SKU CÙNG GIÁ,SPLIT_CATALOG_FIRST
+24,CREATE_NEW,,DFGDAU,Siro DingFong Dâu,DingFong,dau,chai,1050,g,12,thùng,6,KHỚP NHÓM - NHIỀU SKU CÙNG GIÁ,SPLIT_CATALOG_FIRST
+25,CREATE_NEW,,DFGCDA,Siro DingFong Chanh Dây,DingFong,chanh-day,chai,1050,g,12,thùng,6,KHỚP NHÓM - NHIỀU SKU CÙNG GIÁ,SPLIT_CATALOG_FIRST
+26,CREATE_NEW,,DFGCAM,Siro DingFong Cam,DingFong,cam,chai,1050,g,12,thùng,6,KHỚP NHÓM - NHIỀU SKU CÙNG GIÁ,SPLIT_CATALOG_FIRST
+27,CREATE_NEW,,DFGBLU,Siro DingFong Blue,DingFong,blue,chai,1050,g,12,thùng,6,KHỚP NHÓM - NHIỀU SKU CÙNG GIÁ,SPLIT_CATALOG_FIRST
+28,CREATE_NEW,,DFGBHA,Siro DingFong Bạc Hà,DingFong,bac-ha,chai,1050,g,12,thùng,6,KHỚP NHÓM - NHIỀU SKU CÙNG GIÁ,SPLIT_CATALOG_FIRST
+29,CREATE_NEW,,DFGDHA,Siro DingFong Dưa Hấu,DingFong,dua-hau,chai,1050,g,12,thùng,6,KHỚP NHÓM - NHIỀU SKU CÙNG GIÁ,SPLIT_CATALOG_FIRST
+30,REMAP,BGKQ-0006,GTPNHO,Siro GTP Nho,GTP,nho,bình,2550,g,6,thùng,10,CẦN DUYỆT - NHIỀU SKU KHÁC QUY CÁCH/GIÁ,SPLIT_CATALOG_FIRST
+31,CREATE_NEW,,GTPVAI,Siro GTP Vải,GTP,vai,bình,2550,g,6,thùng,10,CẦN DUYỆT - NHIỀU SKU KHÁC QUY CÁCH/GIÁ,SPLIT_CATALOG_FIRST
+32,CREATE_NEW,,GTPTAO,Siro GTP Táo,GTP,tao,bình,2550,g,6,thùng,10,CẦN DUYỆT - NHIỀU SKU KHÁC QUY CÁCH/GIÁ,SPLIT_CATALOG_FIRST
+33,CREATE_NEW,,GTPOII,Siro GTP Ổi,GTP,oi,bình,2550,g,6,thùng,10,CẦN DUYỆT - NHIỀU SKU KHÁC QUY CÁCH/GIÁ,SPLIT_CATALOG_FIRST
+34,CREATE_NEW,,GTPDAO,Siro GTP Đào,GTP,dao,bình,2550,g,6,thùng,10,CẦN DUYỆT - NHIỀU SKU KHÁC QUY CÁCH/GIÁ,SPLIT_CATALOG_FIRST
+35,CREATE_NEW,,GTPDLU,Siro GTP Dưa Lưới,GTP,dua-luoi,bình,2550,g,6,thùng,10,CẦN DUYỆT - NHIỀU SKU KHÁC QUY CÁCH/GIÁ,SPLIT_CATALOG_FIRST
+36,CREATE_NEW,,GTPCDA,Siro GTP Chanh Dây,GTP,chanh-day,bình,2550,g,6,thùng,10,CẦN DUYỆT - NHIỀU SKU KHÁC QUY CÁCH/GIÁ,SPLIT_CATALOG_FIRST
+37,CREATE_NEW,,GTPBHA,Siro GTP Bạc Hà,GTP,bac-ha,bình,2550,g,6,thùng,10,CẦN DUYỆT - NHIỀU SKU KHÁC QUY CÁCH/GIÁ,SPLIT_CATALOG_FIRST
+38,CREATE_NEW,,GTPDAU,Siro GTP Dâu,GTP,dau,bình,2550,g,6,thùng,11,KHỚP NHÓM - NHIỀU SKU CÙNG GIÁ,SPLIT_CATALOG_FIRST
+39,REMAP,BGKQ-0053,SRADDE,Siro A+ đường đen,A+,duong-den,chai,650,g,24,thùng,61,KHỚP CHẮC - TÊN/GIÁ,SAFE_REMAP
