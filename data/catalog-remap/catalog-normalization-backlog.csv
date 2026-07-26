@@ -1,4 +1,4 @@
-﻿batchId,sku,name,sourceGroup,sourceRow,status,category,sellUnit,sourcePack,outerPack,warning,nextAction,resolution
+batchId,sku,name,sourceGroup,sourceRow,status,category,sellUnit,sourcePack,outerPack,warning,nextAction,resolution
 SIRO-BATCH-02,PIXVQU,SIRO PIXIE VIỆT QUỐC,Siro Thái PIXE,5,HOLD_CHUAN_HOA,THIẾU ĐỊNH LƯỢNG,CHAI,0 kg / CHAI,12 CHAI / THÙNG,Khối lượng/dung tích bằng 0,Xác nhận khối lượng hoặc dung tích thật của 1 chai Pixie; không dùng 0 kg.,
 SIRO-BATCH-02,PIXPUN,SIRO PIXIE BLUE PUNCH,Siro Thái PIXE,5,HOLD_CHUAN_HOA,THIẾU ĐỊNH LƯỢNG,CHAI,0 kg / CHAI,12 CHAI / THÙNG,Khối lượng/dung tích bằng 0,Xác nhận khối lượng hoặc dung tích thật của 1 chai Pixie; không dùng 0 kg.,
 SIRO-BATCH-02,PIXBLU,SIRO PIXIE BLUE CURACAO,Siro Thái PIXE,5,HOLD_CHUAN_HOA,THIẾU ĐỊNH LƯỢNG,CHAI,0 kg / CHAI,12 CHAI / THÙNG,Khối lượng/dung tích bằng 0,Xác nhận khối lượng hoặc dung tích thật của 1 chai Pixie; không dùng 0 kg.,
