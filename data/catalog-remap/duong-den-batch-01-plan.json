@@ -1,0 +1,1 @@
+{"schemaVersion":1,"planId":"duong-den-batch-01","remoteRoot":"/srv/apps/bepsi","tasks":[{"taskId":"DUONG-DEN-BATCH-01","manifest":"data/catalog-remap/duong-den-batch-01.json","commercialFile":"data/private/catalog-imports/duong-den-batch-01.private.json"}]}

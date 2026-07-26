@@ -1,0 +1,7 @@
+rowNo,action,legacySku,canonicalSku,name,detailGroup,type,sellUnit,netQuantity,netUnit,packageQuantity,packageUnit,sourceRow,targetParentKey,status
+1,REMAP,BGKQ-0054,DDSEUL,ĐƯỜNG ĐEN MONITA,Monita,duong-den,gói,1000,g,16,thùng,62,duong-monita,READY
+2,REMAP,BGKQ-0055,DNSEUL,ĐƯỜNG NÂU MONITA,Monita,duong-nau,gói,1000,g,16,thùng,63,duong-monita,READY
+3,REMAP,BGKQ-0056,DDDLTB,ĐƯỜNG ĐEN ĐÀI LOAN,Đài Loan,dai-loan,gói,1000,g,12,thùng,64,duong-den-dai-loan,READY
+4,REMAP,BGKQ-0057,DDMOLA,ĐƯỜNG ĐEN MOLA,Mola,mola,chai,1550,g,12,thùng,65,duong-den-mola,READY
+5,CREATE_NEW,,SRDDER,ĐƯỜNG ĐEN ERODELI,Erodeli,erodeli,bình,2000,g,6,thùng,66,duong-den-erodeli,READY
+6,REMAP,BGKQ-0069,TCDDGU,TC GIA UY ĐƯỜNG ĐEN,Gia Uy,duong-den,bịch,2000,g,10,thùng,78,duong-den-gia-uy,READY
