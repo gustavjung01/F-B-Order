@@ -25,7 +25,9 @@
 ## Hash
 
 - Manifest: `2a7998459e7a8c2fe3b703434bb664fba337c21a0236e65d5582c9ec2b446e6c`
-- Private payload: `75dd72b024cbeddaf4b631dc4b17eaac49a407058faf7e94893b56d9253c7dc3`
+- Private payload: `781a52a2a46c001f8cd4b14f7270a3e19ede0cf5a0009eeb2df9fb077b3bc6a1`
+- Hash profile: `standard`
+- Private payload được dựng lại trực tiếp từ nguồn thương mại gốc; không dùng hash của file private thất lạc.
 
 ## Cổng an toàn
 
