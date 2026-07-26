@@ -5,20 +5,22 @@ rowNo,action,legacySku,canonicalSku,name,detailGroup,type,sellUnit,netQuantity,n
 4,REMAP,BGKQ-0018,BERVQU,BERINO VIỆT QUỐC,Berino,viet-quoc,chai,1350,g,12,thùng,23,sinh-to-berino,READY
 5,REMAP,BGKQ-0019,BERCDA,BERINO CHANH DÂY,Berino,chanh-day,chai,1350,g,12,thùng,24,sinh-to-berino,READY
 6,REMAP,BGKQ-0020,BERVAI,BERINO VẢI,Berino,vai,chai,1350,g,12,thùng,25,sinh-to-berino,READY
-7,REMAP,BGKQ-0022,BERPBT,BERINO PHÚC BỒN TỬ,Berino,phuc-bon-tu,chai,1350,g,12,thùng,27,sinh-to-berino,READY
-8,REMAP,BGKQ-0023,BERXOA,BERINO XOÀI,Berino,xoai,chai,1350,g,12,thùng,28,sinh-to-berino,READY
-9,REMAP,BGKQ-0024,BERNHO,BERINO NHO,Berino,nho,chai,1350,g,12,thùng,29,sinh-to-berino,READY
-10,REMAP,BGKQ-0025,BERDTM,BERINO DÂU TẰM,Berino,dau-tam,chai,1350,g,12,thùng,30,sinh-to-berino,READY
-11,REMAP,BGKQ-0026,BERTHM,BERINO THƠM,Berino,thom,chai,1350,g,12,thùng,31,sinh-to-berino,READY
-12,CREATE_NEW,,BERMCA,BERINO MÃNG CẦU,Berino,mang-cau,chai,1350,g,12,thùng,42,sinh-to-berino,READY
-13,REMAP,BGKQ-0027,STGDAU,MỨT GOLD DÂU,Gold,dau,chai,1300,g,12,thùng,33,mut-gold,READY
-14,REMAP,BGKQ-0028,STGDAO,MỨT GOLD ĐÀO,Gold,dao,chai,1300,g,12,thùng,34,mut-gold,READY
-15,REMAP,BGKQ-0029,STGVQU,MỨT GOLD VIỆT QUỐC,Gold,viet-quoc,chai,1300,g,12,thùng,35,mut-gold,READY
-16,REMAP,BGKQ-0030,STGCDA,MỨT GOLD CHANH DÂY,Gold,chanh-day,chai,1300,g,12,thùng,36,mut-gold,READY
-17,REMAP,BGKQ-0031,STGKWI,MỨT GOLD KIWI,Gold,kiwi,chai,1300,g,12,thùng,37,mut-gold,READY
-18,REMAP,BGKQ-0033,STGXOA,MỨT GOLD XOÀI,Gold,xoai,chai,1300,g,12,thùng,39,mut-gold,READY
-19,REMAP,BGKQ-0034,STGOIH,MỨT GOLD ỔI,Gold,oi,chai,1300,g,12,thùng,40,mut-gold,READY
-20,REMAP,BGKQ-0035,STGDTM,MỨT GOLD DÂU TẰM,Gold,dau-tam,chai,1300,g,12,thùng,41,mut-gold,READY
-21,REMAP,BGKQ-0036,STGMCA,MỨT GOLD MÃNG CẦU,Gold,mang-cau,chai,1300,g,12,thùng,42,mut-gold,READY
-22,REMAP,BGKQ-0037,STGVAI,MỨT GOLD VẢI,Gold,vai,chai,1300,g,12,thùng,43,mut-gold,READY
-23,REMAP,BGKQ-0038,STGNHO,MỨT GOLD NHO,Gold,nho,chai,1300,g,12,thùng,44,mut-gold,READY
+7,REMAP,BGKQ-0021,BERKWI,BERINO KIWI,Berino,kiwi,chai,1350,g,12,thùng,26,sinh-to-berino,READY
+8,REMAP,BGKQ-0022,BERPBT,BERINO PHÚC BỒN TỬ,Berino,phuc-bon-tu,chai,1350,g,12,thùng,27,sinh-to-berino,READY
+9,REMAP,BGKQ-0023,BERXOA,BERINO XOÀI,Berino,xoai,chai,1350,g,12,thùng,28,sinh-to-berino,READY
+10,REMAP,BGKQ-0024,BERNHO,BERINO NHO,Berino,nho,chai,1350,g,12,thùng,29,sinh-to-berino,READY
+11,REMAP,BGKQ-0025,BERDTM,BERINO DÂU TẰM,Berino,dau-tam,chai,1350,g,12,thùng,30,sinh-to-berino,READY
+12,REMAP,BGKQ-0026,BERTHM,BERINO THƠM,Berino,thom,chai,1350,g,12,thùng,31,sinh-to-berino,READY
+13,CREATE_NEW,,BERMCA,BERINO MÃNG CẦU,Berino,mang-cau,chai,1350,g,12,thùng,42,sinh-to-berino,READY
+14,REMAP,BGKQ-0027,STGDAU,MỨT GOLD DÂU,Gold,dau,chai,1300,g,12,thùng,33,mut-gold,READY
+15,REMAP,BGKQ-0028,STGDAO,MỨT GOLD ĐÀO,Gold,dao,chai,1300,g,12,thùng,34,mut-gold,READY
+16,REMAP,BGKQ-0029,STGVQU,MỨT GOLD VIỆT QUỐC,Gold,viet-quoc,chai,1300,g,12,thùng,35,mut-gold,READY
+17,REMAP,BGKQ-0030,STGCDA,MỨT GOLD CHANH DÂY,Gold,chanh-day,chai,1300,g,12,thùng,36,mut-gold,READY
+18,REMAP,BGKQ-0031,STGKWI,MỨT GOLD KIWI,Gold,kiwi,chai,1300,g,12,thùng,37,mut-gold,READY
+19,REMAP,BGKQ-0032,STGPBT,MỨT GOLD PHÚC BỒN TỬ,Gold,phuc-bon-tu,chai,1300,g,12,thùng,38,mut-gold,READY
+20,REMAP,BGKQ-0033,STGXOA,MỨT GOLD XOÀI,Gold,xoai,chai,1300,g,12,thùng,39,mut-gold,READY
+21,REMAP,BGKQ-0034,STGOIH,MỨT GOLD ỔI,Gold,oi,chai,1300,g,12,thùng,40,mut-gold,READY
+22,REMAP,BGKQ-0035,STGDTM,MỨT GOLD DÂU TẰM,Gold,dau-tam,chai,1300,g,12,thùng,41,mut-gold,READY
+23,REMAP,BGKQ-0036,STGMCA,MỨT GOLD MÃNG CẦU,Gold,mang-cau,chai,1300,g,12,thùng,42,mut-gold,READY
+24,REMAP,BGKQ-0037,STGVAI,MỨT GOLD VẢI,Gold,vai,chai,1300,g,12,thùng,43,mut-gold,READY
+25,REMAP,BGKQ-0038,STGNHO,MỨT GOLD NHO,Gold,nho,chai,1300,g,12,thùng,44,mut-gold,READY
