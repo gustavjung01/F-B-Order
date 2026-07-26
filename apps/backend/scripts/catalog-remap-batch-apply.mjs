@@ -27,7 +27,7 @@ async function updateVariantAndRecipes(client, current, targetProduct, expected,
   )
   UPDATE recipe_ingredients ingredient SET catalog_product_id=$2::uuid,
     catalog_snapshot=COALESCE(ingredient.catalog_snapshot,'{}'::jsonb) || jsonb_build_object(
-      'variantId',$1::text,'productId',$2::text,'sku',$3,'productName',$7,'variantName',$4
+      'variantId',$1::text,'productId',$2::text,'sku',$3,'productName',$7::text,'variantName',$4
     )
   FROM moved WHERE ingredient.catalog_variant_id=moved.id
   RETURNING ingredient.id::text`, [current.id, targetProduct.id, expected.canonicalSku, expected.name, JSON.stringify(options), commercial.unitPrice, targetProduct.name]);
