@@ -1,0 +1,13 @@
+﻿rowNo,action,legacySku,canonicalSku,name,detailGroup,type,measureMode,sellUnit,netQuantity,netUnit,packageQuantity,packageUnit,sourceRow,targetParentKey,status
+1,REMAP,BGKQ-0076,3QBBTR,3Q BIBI TRẮNG,Bibi,trang,count_only,gói,,,6,thùng,85,3q-bibi,READY
+2,REMAP,BGKQ-0077,3QBBDE,3Q BIBI ĐEN,Bibi,den,count_only,gói,,,6,thùng,86,3q-bibi,READY
+3,CREATE_NEW,,3QBBDA,3Q BIBI DÂU,Bibi,dau,count_only,gói,,,6,thùng,86,3q-bibi,READY
+4,CREATE_NEW,,3QBBDO,3Q BIBI ĐÀO,Bibi,dao,count_only,gói,,,6,thùng,86,3q-bibi,READY
+5,REMAP,BGKQ-0078,3QSEAT,3Q SEA TRẮNG,Sea,trang,count_only,gói,,,6,thùng,87,3q-sea,READY
+6,REMAP,BGKQ-0079,3QSEAD,3Q SEA ĐEN,Sea,den,count_only,gói,,,6,thùng,88,3q-sea,READY
+7,REMAP,BGKQ-0080,3QZITR,3Q ZION TRẮNG,Zion,trang,measured,gói,2000,g,6,thùng,89,3q-zion,READY
+8,REMAP,BGKQ-0081,3QZIDE,3Q ZION ĐEN,Zion,den,measured,gói,2000,g,6,thùng,90,3q-zion,READY
+9,REMAP,BGKQ-0082,3QOKTR,3Q OK TRẮNG,OK,trang,count_only,gói,,,6,thùng,91,3q-ok,READY
+10,REMAP,BGKQ-0083,3QOKOL,3Q OK OLONG,OK,olong,measured,gói,2000,g,6,thùng,92,3q-ok,READY
+11,REMAP,BGKQ-0084,3QHUDX,THẠCH 3Q HỦ,Douxian,3q-hu,measured,hộp,2600,g,6,thùng,93,thach-3q-douxian,READY
+12,REMAP,BGKQ-0086,THCFHC,THẠCH CAFE HÙNG CHƯƠNG,Hùng Chương,cafe,measured,hủ,2600,g,6,thùng,95,thach-hung-chuong,READY
