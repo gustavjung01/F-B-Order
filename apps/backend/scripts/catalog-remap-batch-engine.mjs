@@ -18,7 +18,8 @@ function selfTest() {
     existing: null,
     survivorProduct: { id: "shared-source-parent" },
     strategy: "merge_keep_first_product",
-    claimedTargetProductIds: new Set(["shared-source-parent"]),
+    reservedTargetProductIds: new Set(["shared-source-parent"]),
+    claimedTargetProductIds: new Set(),
   });
   assert(!sharedParentSelection.targetProduct && sharedParentSelection.createProduct && sharedParentSelection.sharedSourceCollision, "Shared source parent was not split into a distinct target parent.");
   const validated = [];
