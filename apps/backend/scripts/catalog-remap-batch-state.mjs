@@ -49,23 +49,58 @@ async function snapshotState(client, { productIds, variantIds, legacySkus }) {
   return { products, variants, aliases, packaging, recipes, references };
 }
 
+function selectParentTarget({ existing, survivorProduct, strategy, reservedTargetProductIds, claimedTargetProductIds }) {
+  if (existing) return { targetProduct: existing, createProduct: false, sharedSourceCollision: false };
+
+  const survivorClaimed = Boolean(survivorProduct?.id && (reservedTargetProductIds.has(survivorProduct.id) || claimedTargetProductIds.has(survivorProduct.id)));
+  if (survivorProduct && !survivorClaimed) return { targetProduct: survivorProduct, createProduct: false, sharedSourceCollision: false };
+
+  const canCreateMissing = strategy === "attach_to_existing_or_create_parent";
+  const canSplitSharedSource = survivorClaimed && ["attach_to_existing_or_create_parent", "merge_keep_first_product"].includes(strategy);
+  return {
+    targetProduct: null,
+    createProduct: canCreateMissing || canSplitSharedSource,
+    sharedSourceCollision: survivorClaimed,
+  };
+}
+
 async function buildPlan(client, manifest, payload, { lock = false } = {}) {
   const commercialBySku = validateManifestCommercial(manifest, payload);
   const parents = [];
   const parentByKey = new Map();
+  const existingByKey = new Map();
+  const reservedTargetProductIds = new Set();
   for (const spec of manifest.parents) {
-    const existing = await productByKey(client, clean(spec.productKey), lock);
+    const productKey = clean(spec.productKey);
+    const existing = await productByKey(client, productKey, lock);
+    existingByKey.set(productKey, existing);
+    if (existing?.id) reservedTargetProductIds.add(existing.id);
+  }
+  const claimedTargetProductIds = new Set();
+  for (const spec of manifest.parents) {
+    const productKey = clean(spec.productKey);
+    const existing = existingByKey.get(productKey) || null;
     const survivor = clean(spec.survivorLegacySku) ? await variantBySkuOrAlias(client, spec.survivorLegacySku, lock) : null;
+    const survivorProduct = survivor ? await (async () => {
+      const result = await client.query(`SELECT ${PRODUCT_FIELDS} FROM catalog_products WHERE id=$1::uuid ${lock ? "FOR UPDATE" : ""}`, [survivor.productId]);
+      return result.rows[0] || null;
+    })() : null;
     const blockers = [];
     if (spec.strategy === "merge_keep_first_product" && !survivor) blockers.push("survivor_missing");
     if (spec.strategy === "merge_keep_first_product" && existing && survivor && existing.id !== survivor.productId) blockers.push("target_parent_key_collision");
-    const target = existing || (survivor ? await (async () => {
-      const result = await client.query(`SELECT ${PRODUCT_FIELDS} FROM catalog_products WHERE id=$1::uuid ${lock ? "FOR UPDATE" : ""}`, [survivor.productId]);
-      return result.rows[0] || null;
-    })() : null);
-    const canCreate = spec.strategy === "attach_to_existing_or_create_parent";
-    if (!target && !canCreate) blockers.push("target_parent_unresolved");
-    const plan = { ...spec, productKey: clean(spec.productKey), targetProduct: target, survivor, createProduct: !target && canCreate, blockers, pass: blockers.length === 0 };
+    const selection = selectParentTarget({ existing, survivorProduct, strategy: spec.strategy, reservedTargetProductIds, claimedTargetProductIds });
+    if (!selection.targetProduct && !selection.createProduct) blockers.push("target_parent_unresolved");
+    const plan = {
+      ...spec,
+      productKey,
+      targetProduct: selection.targetProduct,
+      survivor,
+      createProduct: selection.createProduct,
+      sharedSourceCollision: selection.sharedSourceCollision,
+      blockers,
+      pass: blockers.length === 0,
+    };
+    if (!existing && plan.targetProduct?.id) claimedTargetProductIds.add(plan.targetProduct.id);
     parents.push(plan);
     parentByKey.set(plan.productKey, plan);
   }
@@ -108,9 +143,10 @@ async function buildPlan(client, manifest, payload, { lock = false } = {}) {
       rowBlockedCount: blockedRows.length,
       parentCount: parents.length,
       parentsCreated: parents.filter((parent) => parent.createProduct).length,
+      sharedSourceSplits: parents.filter((parent) => parent.sharedSourceCollision && parent.createProduct).length,
       globalBlockers,
     },
   };
 }
 
-export { PRODUCT_FIELDS, assertSchema, productByKey, variantByActualSku, variantBySkuOrAlias, loadPackaging, snapshotState, buildPlan };
+export { PRODUCT_FIELDS, assertSchema, productByKey, variantByActualSku, variantBySkuOrAlias, loadPackaging, snapshotState, selectParentTarget, buildPlan };

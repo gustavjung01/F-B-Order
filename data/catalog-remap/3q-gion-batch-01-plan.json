@@ -2,6 +2,7 @@
   "schemaVersion": 1,
   "planId": "3q-gion-batch-01",
   "remoteRoot": "/srv/apps/bepsi",
+  "productionConfirmation": "BEPSI_3Q_GION_12",
   "tasks": [
     {
       "taskId": "3Q-GION-BATCH-01",
