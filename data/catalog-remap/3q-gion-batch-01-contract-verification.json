@@ -1,0 +1,30 @@
+{
+  "status": "CONTRACT_PASS",
+  "productionModified": false,
+  "taskId": "3Q-GION-BATCH-01",
+  "manifestHash": "3dee21674bd79e42e855ebdc6440ba011abe5aa53a4268a6381a51c1930f2972",
+  "payloadHash": "1f795c686bdc4e3f4f0c7aa53717be2757b8926219c3d7299aebce9d895fcff5",
+  "summary": {
+    "rowCount": 12,
+    "remapCount": 10,
+    "createNewCount": 2,
+    "measuredCount": 5,
+    "countOnlyCount": 7,
+    "parentCounts": {
+      "Bibi": 4,
+      "Sea": 2,
+      "Zion": 2,
+      "OK": 2,
+      "Douxian": 1,
+      "Hùng Chương": 1
+    },
+    "holdCountAppendedToBacklog": 2,
+    "priceMathPass": true,
+    "packagingMatchPass": true,
+    "uniqueCanonicalSkuPass": true,
+    "uniqueLegacySkuPass": true,
+    "zeroMeasurementExcludedPass": true,
+    "zionBlackPriceReviewed": true
+  },
+  "note": "Static contract validation only. Database dry-run and production apply have not run. Private payload is local-only and must not be committed."
+}
