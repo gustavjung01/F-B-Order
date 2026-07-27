@@ -2,6 +2,7 @@
   "schemaVersion": 1,
   "planId": "TEA-PRODUCTION-48",
   "remoteRoot": "/srv/apps/bepsi",
+  "productionConfirmation": "BEPSI_TEA_48",
   "requiredMigrations": [
     "db/migrations/031_catalog_group_remap.sql",
     "db/migrations/032_catalog_packaging_count_only.sql"

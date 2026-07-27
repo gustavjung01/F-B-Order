@@ -1,0 +1,55 @@
+{
+  "status": "DRY_RUN_PASS",
+  "staticContractStatus": "CONTRACT_PASS",
+  "productionModified": false,
+  "taskId": "3Q-GION-BATCH-01",
+  "manifestHash": "588f522afba4aca8a6d4a59a7a81c48e5ec66afc2a28dca6439ed0920f97765a",
+  "payloadHash": "1f795c686bdc4e3f4f0c7aa53717be2757b8926219c3d7299aebce9d895fcff5",
+  "summary": {
+    "rowCount": 12,
+    "remapCount": 10,
+    "createNewCount": 2,
+    "measuredCount": 5,
+    "countOnlyCount": 7,
+    "parentCounts": {
+      "Bibi": 4,
+      "Sea": 2,
+      "Zion": 2,
+      "OK": 2,
+      "Douxian": 1,
+      "Hùng Chương": 1
+    },
+    "holdCountAppendedToBacklog": 2,
+    "priceMathPass": true,
+    "packagingMatchPass": true,
+    "uniqueCanonicalSkuPass": true,
+    "uniqueLegacySkuPass": true,
+    "zeroMeasurementExcludedPass": true,
+    "zionBlackPriceReviewed": true,
+    "okExistingParentAttachmentReviewed": true
+  },
+  "dryRunVerification": {
+    "status": "CATALOG_REMAP_PLAN_DRY_RUN_PASS",
+    "taskStatus": "BATCH_DRY_RUN_PASS",
+    "verifiedDate": "2026-07-27",
+    "rowCount": 12,
+    "rowPassCount": 12,
+    "rowBlockedCount": 0,
+    "productionModified": false,
+    "reportPath": "artifacts/catalog-remap/production/3q-gion-batch-01-dry-run.json"
+  },
+  "history": [
+    {
+      "status": "CATALOG_REMAP_PLAN_DRY_RUN_BLOCKED",
+      "rowCount": 12,
+      "rowPassCount": 10,
+      "rowBlockedCount": 2,
+      "blockers": [
+        "BGKQ-0082 -> 3QOKTR: target_parent_blocked",
+        "BGKQ-0083 -> 3QOKOL: target_parent_blocked"
+      ],
+      "resolution": "Changed only the OK parent strategy to attach_to_existing_or_create_parent; SKU, variant identity, price, packaging, image policy, and private payload were unchanged."
+    }
+  ],
+  "note": "Fresh VPS plan dry-run passed 12/12 in a read-only transaction. No catalog, database, migration, service, deploy, restart, or R2 write occurred. Production apply remains blocked pending separate approval."
+}

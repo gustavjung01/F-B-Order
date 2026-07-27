@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { repoRoot, arg, clean, assert, readJson, normalizeManifest, normalizeCommercial, validateManifestCommercial, buildOptions } from "./catalog-remap-batch-common.mjs";
-import { buildPlan } from "./catalog-remap-batch-state.mjs";
+import { buildPlan, selectParentTarget } from "./catalog-remap-batch-state.mjs";
 import { applyTask, rollbackTask } from "./catalog-remap-batch-apply.mjs";
 import { verifyAppliedTasks, loadTaskConfig } from "./catalog-remap-batch-verify.mjs";
 
@@ -14,6 +14,14 @@ function selfTest() {
   assert(countOnly.package === "30 hộp / thùng" && countOnly.sell_unit === "hộp", "COUNT_ONLY options are invalid.");
   const measured = buildOptions({}, { measureMode: "measured", sellUnit: "bịch", packageQuantity: 20, packageUnit: "thùng", netQuantity: 500, netUnit: "g" });
   assert(measured.size === "500 g", "Measured options are invalid.");
+  const sharedParentSelection = selectParentTarget({
+    existing: null,
+    survivorProduct: { id: "shared-source-parent" },
+    strategy: "merge_keep_first_product",
+    reservedTargetProductIds: new Set(["shared-source-parent"]),
+    claimedTargetProductIds: new Set(),
+  });
+  assert(!sharedParentSelection.targetProduct && sharedParentSelection.createProduct && sharedParentSelection.sharedSourceCollision, "Shared source parent was not split into a distinct target parent.");
   const validated = [];
   const configArg = arg("test-config");
   if (configArg) {
@@ -31,7 +39,7 @@ function selfTest() {
       validated.push({ taskId: manifest.taskId, rows: manifest.rows.length, manifestHash: manifest.manifestHash, payloadHash: payload.payloadHash, payloadHashProfile: payload.hashProfile });
     }
   }
-  console.log(JSON.stringify({ status: "SELF_TEST_PASS", countOnly, measured, validated }, null, 2));
+  console.log(JSON.stringify({ status: "SELF_TEST_PASS", countOnly, measured, sharedParentSelection, validated }, null, 2));
 }
 
 if (process.argv.includes("--self-test")) {
@@ -53,21 +61,31 @@ const allowRemoteApply = process.argv.includes("--allow-remote-apply");
 const confirmProduction = arg("confirm-production");
 const configPath = path.resolve(repoRoot, arg("config", "data/catalog-remap/tea-production-plan.json"));
 const outputPath = path.resolve(repoRoot, arg("output-json", "artifacts/catalog-remap/tea-production-result.json"));
+const config = readJson(configPath, "Task configuration");
+const expectedConfirmation = config.productionConfirmation || (config.planId === "TEA-PRODUCTION-48" ? "BEPSI_TEA_48" : undefined);
+const allowedTaskIds = new Set((config.tasks || []).map((task) => clean(task.taskId)).filter(Boolean));
 const connectionString = process.env.DATABASE_URL || process.env.BEPSI_DATABASE_URL;
 assert(connectionString, "DATABASE_URL or BEPSI_DATABASE_URL is not configured.", "CATALOG_REMAP_DATABASE_URL_REQUIRED");
 const targetUrl = new URL(connectionString);
 const localConnection = ["localhost", "127.0.0.1", "::1"].includes(targetUrl.hostname);
 if (apply || rollbackIds.length) {
   assert(localConnection || allowRemoteApply, "Remote writes require --allow-remote-apply.", "CATALOG_REMAP_REMOTE_WRITE_REFUSED");
-  assert(confirmProduction === "BEPSI_TEA_48", "Production write requires --confirm-production=BEPSI_TEA_48.", "CATALOG_REMAP_PRODUCTION_CONFIRMATION_REQUIRED");
+  assert(expectedConfirmation, "Production plan is missing productionConfirmation.", "CATALOG_REMAP_PRODUCTION_CONFIRMATION_MISSING");
+  assert(confirmProduction === expectedConfirmation, `Production write requires --confirm-production=${expectedConfirmation}.`, "CATALOG_REMAP_PRODUCTION_CONFIRMATION_REQUIRED");
 }
+if (rollbackIds.length) assert(allowedTaskIds.size > 0, "Rollback plan has no task scope.", "CATALOG_REMAP_ROLLBACK_SCOPE_MISSING");
 const pool = new Pool({ connectionString, ssl: localConnection ? false : { rejectUnauthorized: false }, max: 1 });
 const client = await pool.connect();
 try {
   if (rollbackIds.length) {
+    for (const id of rollbackIds) assert(/^[0-9a-f-]{36}$/i.test(id), "Rollback batch ID is invalid.", "CATALOG_REMAP_ROLLBACK_ID_INVALID");
     await client.query("BEGIN");
     await client.query("SET LOCAL lock_timeout='5s'");
     await client.query("SET LOCAL statement_timeout='180s'");
+    const scope = await client.query(`SELECT id::text,task_id AS "taskId" FROM catalog_group_remap_batches WHERE id=ANY($1::uuid[])`, [rollbackIds]);
+    assert(scope.rows.length === rollbackIds.length, "One or more rollback batches do not exist.", "CATALOG_REMAP_ROLLBACK_BATCH_MISSING");
+    const outOfScope = scope.rows.filter((row) => !allowedTaskIds.has(clean(row.taskId)));
+    assert(outOfScope.length === 0, "Rollback batch is outside the selected production plan.", "CATALOG_REMAP_ROLLBACK_SCOPE_MISMATCH", outOfScope);
     const results = [];
     for (const id of rollbackIds) results.push(await rollbackTask(client, id));
     await client.query("COMMIT");
