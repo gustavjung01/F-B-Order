@@ -62,6 +62,7 @@ const configPath = path.resolve(repoRoot, arg("config", "data/catalog-remap/tea-
 const outputPath = path.resolve(repoRoot, arg("output-json", "artifacts/catalog-remap/tea-production-result.json"));
 const config = readJson(configPath, "Task configuration");
 const expectedConfirmation = config.productionConfirmation || (config.planId === "TEA-PRODUCTION-48" ? "BEPSI_TEA_48" : undefined);
+const allowedTaskIds = new Set((config.tasks || []).map((task) => clean(task.taskId)).filter(Boolean));
 const connectionString = process.env.DATABASE_URL || process.env.BEPSI_DATABASE_URL;
 assert(connectionString, "DATABASE_URL or BEPSI_DATABASE_URL is not configured.", "CATALOG_REMAP_DATABASE_URL_REQUIRED");
 const targetUrl = new URL(connectionString);
@@ -71,13 +72,19 @@ if (apply || rollbackIds.length) {
   assert(expectedConfirmation, "Production plan is missing productionConfirmation.", "CATALOG_REMAP_PRODUCTION_CONFIRMATION_MISSING");
   assert(confirmProduction === expectedConfirmation, `Production write requires --confirm-production=${expectedConfirmation}.`, "CATALOG_REMAP_PRODUCTION_CONFIRMATION_REQUIRED");
 }
+if (rollbackIds.length) assert(allowedTaskIds.size > 0, "Rollback plan has no task scope.", "CATALOG_REMAP_ROLLBACK_SCOPE_MISSING");
 const pool = new Pool({ connectionString, ssl: localConnection ? false : { rejectUnauthorized: false }, max: 1 });
 const client = await pool.connect();
 try {
   if (rollbackIds.length) {
+    for (const id of rollbackIds) assert(/^[0-9a-f-]{36}$/i.test(id), "Rollback batch ID is invalid.", "CATALOG_REMAP_ROLLBACK_ID_INVALID");
     await client.query("BEGIN");
     await client.query("SET LOCAL lock_timeout='5s'");
     await client.query("SET LOCAL statement_timeout='180s'");
+    const scope = await client.query(`SELECT id::text,task_id AS "taskId" FROM catalog_group_remap_batches WHERE id=ANY($1::uuid[])`, [rollbackIds]);
+    assert(scope.rows.length === rollbackIds.length, "One or more rollback batches do not exist.", "CATALOG_REMAP_ROLLBACK_BATCH_MISSING");
+    const outOfScope = scope.rows.filter((row) => !allowedTaskIds.has(clean(row.taskId)));
+    assert(outOfScope.length === 0, "Rollback batch is outside the selected production plan.", "CATALOG_REMAP_ROLLBACK_SCOPE_MISMATCH", outOfScope);
     const results = [];
     for (const id of rollbackIds) results.push(await rollbackTask(client, id));
     await client.query("COMMIT");
