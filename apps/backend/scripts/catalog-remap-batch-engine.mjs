@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { repoRoot, arg, clean, assert, readJson, normalizeManifest, normalizeCommercial, validateManifestCommercial, buildOptions } from "./catalog-remap-batch-common.mjs";
-import { buildPlan } from "./catalog-remap-batch-state.mjs";
+import { buildPlan, selectParentTarget } from "./catalog-remap-batch-state.mjs";
 import { applyTask, rollbackTask } from "./catalog-remap-batch-apply.mjs";
 import { verifyAppliedTasks, loadTaskConfig } from "./catalog-remap-batch-verify.mjs";
 
@@ -14,6 +14,13 @@ function selfTest() {
   assert(countOnly.package === "30 hộp / thùng" && countOnly.sell_unit === "hộp", "COUNT_ONLY options are invalid.");
   const measured = buildOptions({}, { measureMode: "measured", sellUnit: "bịch", packageQuantity: 20, packageUnit: "thùng", netQuantity: 500, netUnit: "g" });
   assert(measured.size === "500 g", "Measured options are invalid.");
+  const sharedParentSelection = selectParentTarget({
+    existing: null,
+    survivorProduct: { id: "shared-source-parent" },
+    strategy: "merge_keep_first_product",
+    claimedTargetProductIds: new Set(["shared-source-parent"]),
+  });
+  assert(!sharedParentSelection.targetProduct && sharedParentSelection.createProduct && sharedParentSelection.sharedSourceCollision, "Shared source parent was not split into a distinct target parent.");
   const validated = [];
   const configArg = arg("test-config");
   if (configArg) {
@@ -31,7 +38,7 @@ function selfTest() {
       validated.push({ taskId: manifest.taskId, rows: manifest.rows.length, manifestHash: manifest.manifestHash, payloadHash: payload.payloadHash, payloadHashProfile: payload.hashProfile });
     }
   }
-  console.log(JSON.stringify({ status: "SELF_TEST_PASS", countOnly, measured, validated }, null, 2));
+  console.log(JSON.stringify({ status: "SELF_TEST_PASS", countOnly, measured, sharedParentSelection, validated }, null, 2));
 }
 
 if (process.argv.includes("--self-test")) {
