@@ -53,13 +53,16 @@ const allowRemoteApply = process.argv.includes("--allow-remote-apply");
 const confirmProduction = arg("confirm-production");
 const configPath = path.resolve(repoRoot, arg("config", "data/catalog-remap/tea-production-plan.json"));
 const outputPath = path.resolve(repoRoot, arg("output-json", "artifacts/catalog-remap/tea-production-result.json"));
+const config = readJson(configPath, "Task configuration");
+const expectedConfirmation = config.productionConfirmation || (config.planId === "TEA-PRODUCTION-48" ? "BEPSI_TEA_48" : undefined);
 const connectionString = process.env.DATABASE_URL || process.env.BEPSI_DATABASE_URL;
 assert(connectionString, "DATABASE_URL or BEPSI_DATABASE_URL is not configured.", "CATALOG_REMAP_DATABASE_URL_REQUIRED");
 const targetUrl = new URL(connectionString);
 const localConnection = ["localhost", "127.0.0.1", "::1"].includes(targetUrl.hostname);
 if (apply || rollbackIds.length) {
   assert(localConnection || allowRemoteApply, "Remote writes require --allow-remote-apply.", "CATALOG_REMAP_REMOTE_WRITE_REFUSED");
-  assert(confirmProduction === "BEPSI_TEA_48", "Production write requires --confirm-production=BEPSI_TEA_48.", "CATALOG_REMAP_PRODUCTION_CONFIRMATION_REQUIRED");
+  assert(expectedConfirmation, "Production plan is missing productionConfirmation.", "CATALOG_REMAP_PRODUCTION_CONFIRMATION_MISSING");
+  assert(confirmProduction === expectedConfirmation, `Production write requires --confirm-production=${expectedConfirmation}.`, "CATALOG_REMAP_PRODUCTION_CONFIRMATION_REQUIRED");
 }
 const pool = new Pool({ connectionString, ssl: localConnection ? false : { rejectUnauthorized: false }, max: 1 });
 const client = await pool.connect();
