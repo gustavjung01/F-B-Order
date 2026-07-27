@@ -24,7 +24,7 @@ Correction này xử lý đúng trạng thái thật:
 
 ## Log ảnh
 
-Toàn bộ alias cũ được giữ nguyên. Correction dry-run bắt buộc kiểm alias cũ vẫn trỏ đúng canonical SKU. Ảnh chỉ đổi tên sau khi hoàn tất toàn bộ catalog:
+Toàn bộ alias cũ được giữ nguyên. Correction dry-run kiểm tra alias cũ vẫn trỏ đúng canonical SKU. Ảnh chỉ đổi tên sau khi hoàn tất toàn bộ catalog:
 
 - không ghi/xóa R2;
 - không đổi image object key trong correction;
@@ -48,13 +48,15 @@ Giá được giữ từ bảng chuẩn/private payload hiện tại. Hai giá �
 - `BERKWI = 108000`
 - `STGPBT = 120000`
 
+Trạng thái: **PASS**, đủ 25 dòng gồm 23 `UPDATE_EXISTING` và 2 `REMAP`.
+
 ## Self-test
 
 ```powershell
 pnpm --filter @fb-order/backend catalog:sinh-to-mut:correction:self-test
 ```
 
-Kết quả:
+Kết quả ngày 2026-07-27:
 
 `SINH_TO_MUT_CORRECTION_SELF_TEST_PASS`
 
@@ -64,7 +66,7 @@ Kết quả:
 pnpm --filter @fb-order/backend catalog:sinh-to-mut:correction:dry-run
 ```
 
-Kết quả bắt buộc:
+Kết quả ngày 2026-07-27:
 
 ```text
 SINH_TO_MUT_CORRECTION_DRY_RUN_PASS
@@ -75,16 +77,22 @@ UPDATE_EXISTING=23
 REMAP=2
 ```
 
-Dry-run không migration, không DB write, không restart service và không R2 write.
+Artifacts local:
+
+- `artifacts/catalog-remap/sinh-to-mut-correction-01-dry-run.json`
+- `artifacts/catalog-remap/sinh-to-mut-correction-01-dry-run.csv`
+
+Dry-run đã kiểm tra canonical SKU, alias lịch sử, `variantId`, recipe links và image object keys. Không migration, không DB write, không restart service và không R2 write.
 
 ## Production gate
 
+Correction đã vượt qua private payload preparation, self-test và VPS read-only dry-run 25/25.
+
 Chưa có quyền apply production cho correction này. Engine và VPS wrapper trong PR hiện cố ý khóa `--apply` và `--rollback`.
 
-Chỉ được xây dựng và chạy apply sau khi:
+Điều kiện còn lại:
 
-1. private payload correction hợp lệ;
-2. self-test PASS;
-3. VPS dry-run 25/25 PASS;
-4. CI PASS;
-5. project owner cấp quyền production riêng đúng task `SINH-TO-MUT-CORRECTION-01`.
+1. CI của head hiện tại phải PASS;
+2. project owner cấp quyền production riêng đúng task `SINH-TO-MUT-CORRECTION-01`;
+3. production apply phải có rollback snapshot và chỉ thao tác `/srv/apps/bepsi`, `bepsi-api.service`, port 5100;
+4. không đổi tên ảnh hoặc ghi/xóa R2 trong correction này.
