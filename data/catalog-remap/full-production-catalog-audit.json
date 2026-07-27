@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "auditId": "FULL-PRODUCTION-CATALOG-AUDIT-01",
+  "mode": "READ_ONLY",
+  "apiUrl": "http://127.0.0.1:5100/api/catalog-v2/products",
+  "tasks": [
+    {
+      "taskId": "TEA-NOVIA-01",
+      "manifest": "data/catalog-remap/tea-novia.json",
+      "attributePolicy": "review_legacy"
+    },
+    {
+      "taskId": "TEA-BATCH-02",
+      "manifest": "data/catalog-remap/tea-batch-02.json",
+      "attributePolicy": "review_legacy"
+    },
+    {
+      "taskId": "TEA-BATCH-03",
+      "manifest": "data/catalog-remap/tea-batch-03.json",
+      "attributePolicy": "review_legacy"
+    },
+    {
+      "taskId": "SIRO-BATCH-01",
+      "manifest": "data/catalog-remap/siro-batch-01.json",
+      "attributePolicy": "legacy_flavor_split",
+      "productType": "siro"
+    },
+    {
+      "taskId": "SIRO-BATCH-02",
+      "manifest": "data/catalog-remap/siro-batch-02.json",
+      "attributePolicy": "legacy_flavor_split",
+      "productType": "siro"
+    },
+    {
+      "taskId": "SINH-TO-MUT-CORRECTION-01",
+      "manifest": "data/catalog-remap/sinh-to-mut-correction-01.json",
+      "attributePolicy": "explicit"
+    },
+    {
+      "taskId": "DUONG-DEN-BATCH-01",
+      "manifest": "data/catalog-remap/duong-den-batch-01.json",
+      "attributePolicy": "review_legacy"
+    },
+    {
+      "taskId": "TRAN-CHAU-BATCH-01",
+      "manifest": "data/catalog-remap/tran-chau-batch-01.json",
+      "attributePolicy": "review_legacy"
+    },
+    {
+      "taskId": "3Q-GION-BATCH-01",
+      "manifest": "data/catalog-remap/3q-gion-batch-01.json",
+      "attributePolicy": "review_legacy"
+    }
+  ],
+  "supersededTasks": [
+    {
+      "taskId": "SINH-TO-MUT-BATCH-01",
+      "supersededBy": "SINH-TO-MUT-CORRECTION-01",
+      "reason": "Production correction audits the complete final 25-SKU state."
+    }
+  ]
+}
