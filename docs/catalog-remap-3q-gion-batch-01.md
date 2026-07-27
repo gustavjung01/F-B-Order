@@ -66,7 +66,7 @@ MEASURED=5
 COUNT_ONLY=7
 ```
 
-- Manifest hash: `3dee21674bd79e42e855ebdc6440ba011abe5aa53a4268a6381a51c1930f2972`
+- Manifest hash: `588f522afba4aca8a6d4a59a7a81c48e5ec66afc2a28dca6439ed0920f97765a`
 - Private payload hash: `1f795c686bdc4e3f4f0c7aa53717be2757b8926219c3d7299aebce9d895fcff5`
 - Giá thùng = giá đơn vị × 6: PASS
 - Canonical SKU duy nhất: PASS
@@ -77,7 +77,20 @@ COUNT_ONLY=7
 
 `audit-catalog-remap-batch.mjs` chỉ nhận batch từ 15 đến 30 dòng. Không dùng runner đó cho batch 12 dòng này và không hạ cổng an toàn 15–30.
 
-Chạy plan dry-run engine; runner tự thực hiện local self-test, khóa đúng `/srv/apps/bepsi`, mở transaction `BEGIN READ ONLY`, kiểm toàn bộ 12 dòng và rollback transaction sau khi đọc:
+Lượt plan dry-run đầu tiên ngày 2026-07-27:
+
+```text
+CATALOG_REMAP_PLAN_DRY_RUN_BLOCKED
+rows=12
+pass=10
+blocked=2
+BGKQ-0082 -> 3QOKTR: target_parent_blocked
+BGKQ-0083 -> 3QOKOL: target_parent_blocked
+```
+
+Nguyên nhân: product key `3q-ok` đã tồn tại ở parent đích khác với parent hiện tại của survivor `BGKQ-0082`. Hai legacy SKU vẫn tồn tại và không có blocker dữ liệu khác. Manifest đã đổi riêng chiến lược parent `OK` từ `merge_keep_first_product` sang `attach_to_existing_or_create_parent`, giống cách xử lý parent đích đã tồn tại. Không đổi SKU, giá, quy cách, ảnh hoặc private payload.
+
+Chạy lại plan dry-run engine; runner tự thực hiện local self-test, khóa đúng `/srv/apps/bepsi`, mở transaction `BEGIN READ ONLY`, kiểm toàn bộ 12 dòng và rollback transaction sau khi đọc:
 
 ```powershell
 node .\apps\backend\scripts\run-catalog-remap-plan-dry-run-vps-root.mjs `
@@ -100,7 +113,8 @@ Report local:
 
 ## An toàn
 
-- Chưa database dry-run PASS cho đến khi có output thật từ plan runner.
+- Lượt dry-run 10/12 và correction manifest đều không ghi production.
+- Chưa database dry-run PASS cho đến khi có output 12/12 thật từ plan runner.
 - Chưa apply production.
 - Không migration.
 - Không restart service.
