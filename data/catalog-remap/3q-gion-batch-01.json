@@ -18,6 +18,7 @@
       "Bảy SKU nguồn ghi 0 g được xử lý COUNT_ONLY; không lưu khối lượng giả.",
       "3Q ZION ĐEN dùng giá chuẩn 55.000đ; giá bảng quán cũ 52.000đ chỉ giữ làm dấu vết đối chiếu.",
       "Thạch Douxian các loại (BGKQ-0085) và Thủy Tinh Hùng Chương (BGKQ-0087) bị HOLD vì chưa xác định canonical SKU chính xác.",
+      "Dry-run production xác nhận productKey 3q-ok đã tồn tại ở parent đích khác parent survivor; nhóm OK phải attach vào parent hiện có, không rename parent survivor.",
       "Ảnh xử lý sau khi toàn bộ catalog hoàn tất; không tạo ảnh AI và không ghi/xóa R2."
     ]
   },
@@ -58,7 +59,7 @@
       "productKey": "3q-ok",
       "name": "3Q OK",
       "brand": "OK",
-      "strategy": "merge_keep_first_product",
+      "strategy": "attach_to_existing_or_create_parent",
       "survivorLegacySku": "BGKQ-0082"
     },
     "Douxian": {
