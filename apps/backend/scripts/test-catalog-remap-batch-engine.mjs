@@ -83,7 +83,7 @@ try {
   const configPath = path.join(tempDir, "config.json");
   fs.writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
   fs.writeFileSync(payloadPath, `${JSON.stringify(payload, null, 2)}\n`);
-  fs.writeFileSync(configPath, `${JSON.stringify({ planId: "3q-gion-batch-01", productionConfirmation: "BEPSI_3Q_GION_12", tasks: [{ manifest: path.relative(repoRoot, manifestPath).replaceAll("\\", "/"), commercialFile: path.relative(repoRoot, payloadPath).replaceAll("\\", "/") }] }, null, 2)}\n`);
+  fs.writeFileSync(configPath, `${JSON.stringify({ planId: "3q-gion-batch-01", productionConfirmation: "BEPSI_3Q_GION_12", tasks: [{ taskId: manifest.taskId, manifest: path.relative(repoRoot, manifestPath).replaceAll("\\", "/"), commercialFile: path.relative(repoRoot, payloadPath).replaceAll("\\", "/") }] }, null, 2)}\n`);
 
   const dryPath = path.join(tempDir, "dry.json");
   run([`--config=${configPath}`, `--output-json=${dryPath}`]);
@@ -110,8 +110,12 @@ try {
   const recipeAfter = (await client.query(`SELECT catalog_product_id::text AS product_id,catalog_snapshot FROM recipe_ingredients WHERE id=$1::uuid`, [recipeIngredientId])).rows[0];
   if (recipeAfter.product_id !== targetProductId || recipeAfter.catalog_snapshot.sku !== canonicalSku) throw new Error("Recipe link was not updated atomically.");
 
+  const rejectTeaRollbackPath = path.join(tempDir, "reject-tea-rollback.json");
+  const rejectTeaRollback = spawnSync("node", [enginePath, `--rollback=${batchId}`, "--confirm-production=BEPSI_TEA_48", `--output-json=${rejectTeaRollbackPath}`], { cwd: repoRoot, env: process.env, encoding: "utf8" });
+  if (rejectTeaRollback.status === 0) throw new Error("Tea production plan rolled back a 3Q-scoped batch.");
+
   const rollbackPath = path.join(tempDir, "rollback.json");
-  run([`--rollback=${batchId}`, "--confirm-production=BEPSI_3Q_GION_12", `--output-json=${rollbackPath}`]);
+  run([`--config=${configPath}`, `--rollback=${batchId}`, "--confirm-production=BEPSI_3Q_GION_12", `--output-json=${rollbackPath}`]);
   const rolled = JSON.parse(fs.readFileSync(rollbackPath, "utf8"));
   if (rolled.status !== "CATALOG_REMAP_ROLLBACK_PASS") throw new Error("Rollback did not pass.");
   const restored = (await client.query(`SELECT id::text,sku,product_id::text AS product_id,options FROM catalog_variants WHERE id=$1::uuid`, [sourceVariantId])).rows[0];
