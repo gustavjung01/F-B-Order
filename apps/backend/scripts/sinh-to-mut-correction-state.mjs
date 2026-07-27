@@ -8,15 +8,15 @@ import {
 } from "./catalog-remap-batch-common.mjs";
 import { validateCorrectionCommercial } from "./sinh-to-mut-correction-common.mjs";
 
-const PRODUCT_FIELDS = `id::text AS "id", product_key AS "productKey", name, brand, industry, industry_key AS "industryKey", catalog_group_key AS "catalogGroupKey", subcategory, cover_image_key AS "coverImageKey", cover_image_object_key AS "coverImageObjectKey", status`;
-const VARIANT_FIELDS = `id::text AS "id", product_id::text AS "productId", catalog_version AS "catalogVersion", variant_key AS "variantKey", sku, name, options, price_mode AS "priceMode", shop_price::float8 AS "shopPrice", image_key AS "imageKey", image_object_key AS "imageObjectKey", status, is_active AS "isActive", is_public AS "isPublic", is_orderable AS "isOrderable"`;
+const PRODUCT_FIELDS = `id::text AS "id", catalog_version AS "catalogVersion", product_key AS "productKey", name, brand, industry, industry_key AS "industryKey", catalog_group_key AS "catalogGroupKey", subcategory, source_group AS "sourceGroup", option_groups AS "optionGroups", choice_groups AS "choiceGroups", cover_image_key AS "coverImageKey", cover_image_object_key AS "coverImageObjectKey", status, sort_order AS "sortOrder"`;
+const VARIANT_FIELDS = `id::text AS "id", product_id::text AS "productId", catalog_version AS "catalogVersion", variant_key AS "variantKey", sku, name, options, price_mode AS "priceMode", shop_price::float8 AS "shopPrice", image_key AS "imageKey", image_object_key AS "imageObjectKey", status, is_active AS "isActive", is_public AS "isPublic", is_orderable AS "isOrderable", sort_order AS "sortOrder"`;
 
-async function productByKey(client, key) {
-  return (await client.query(`SELECT ${PRODUCT_FIELDS} FROM catalog_products WHERE product_key=$1`, [key])).rows[0] || null;
+async function productByKey(client, key, lock = false) {
+  return (await client.query(`SELECT ${PRODUCT_FIELDS} FROM catalog_products WHERE product_key=$1 ${lock ? "FOR UPDATE" : ""}`, [key])).rows[0] || null;
 }
 
-async function variantBySku(client, sku) {
-  const result = await client.query(`SELECT ${VARIANT_FIELDS} FROM catalog_variants WHERE UPPER(sku)=UPPER($1)`, [sku]);
+async function variantBySku(client, sku, lock = false) {
+  const result = await client.query(`SELECT ${VARIANT_FIELDS} FROM catalog_variants WHERE UPPER(sku)=UPPER($1) ${lock ? "FOR UPDATE" : ""}`, [sku]);
   if (result.rows.length > 1) throw Object.assign(new Error(`SKU ${sku} resolves to multiple variants.`), { code: "CATALOG_CORRECTION_SKU_DUPLICATE" });
   return result.rows[0] || null;
 }
@@ -50,13 +50,25 @@ async function referencesByVariantIds(client, variantIds) {
   return new Map(rows.map((row) => [row.variantId, row]));
 }
 
-async function buildCorrectionPlan(client, manifest, payload) {
+async function snapshotCorrectionState(client, { productIds = [], variantIds = [], legacySkus = [] }) {
+  const pids = [...new Set(productIds.filter(Boolean))];
+  const vids = [...new Set(variantIds.filter(Boolean))];
+  const products = pids.length ? (await client.query(`SELECT ${PRODUCT_FIELDS} FROM catalog_products WHERE id=ANY($1::uuid[]) ORDER BY id`, [pids])).rows : [];
+  const variants = vids.length ? (await client.query(`SELECT ${VARIANT_FIELDS} FROM catalog_variants WHERE id=ANY($1::uuid[]) ORDER BY id`, [vids])).rows : [];
+  const aliases = legacySkus.length ? (await client.query(`SELECT alias_sku AS "aliasSku", variant_id::text AS "variantId", source, created_at::text AS "createdAt" FROM catalog_variant_sku_aliases WHERE UPPER(alias_sku)=ANY($1::text[]) ORDER BY UPPER(alias_sku)`, [legacySkus.map(upper)])).rows : [];
+  const packaging = vids.length ? (await client.query(`SELECT variant_id::text AS "variantId", sell_unit AS "sellUnit", package_quantity::float8 AS "packageQuantity", package_unit AS "packageUnit", net_quantity::float8 AS "netQuantity", net_unit AS "netUnit", measure_mode AS "measureMode", conversion_status AS "conversionStatus", source, confidence, source_url AS "sourceUrl", note, verified_by AS "verifiedBy", verified_date::text AS "verifiedDate", raw_source AS "rawSource", created_at::text AS "createdAt", updated_at::text AS "updatedAt" FROM catalog_variant_packaging_specs WHERE variant_id=ANY($1::uuid[]) ORDER BY variant_id`, [vids])).rows : [];
+  const recipes = vids.length ? (await client.query(`SELECT id::text AS "id", catalog_variant_id::text AS "variantId", catalog_product_id::text AS "productId", catalog_snapshot AS "snapshot" FROM recipe_ingredients WHERE catalog_variant_id=ANY($1::uuid[]) ORDER BY id`, [vids])).rows : [];
+  const references = vids.length ? (await client.query(`SELECT variant.id::text AS "variantId", (SELECT COUNT(*)::int FROM cart_items item WHERE item.variant_id=variant.id) AS "cartItems", (SELECT COUNT(*)::int FROM order_items item WHERE item.variant_id=variant.id) AS "orderItems", (SELECT COUNT(*)::int FROM recipe_ingredients item WHERE item.catalog_variant_id=variant.id) AS "recipeIngredients", (SELECT COUNT(*)::int FROM catalog_variant_prices price WHERE price.variant_id=variant.id) AS "priceRows" FROM catalog_variants variant WHERE variant.id=ANY($1::uuid[])`, [vids])).rows : [];
+  return { products, variants, aliases, packaging, recipes, references };
+}
+
+async function buildCorrectionPlan(client, manifest, payload, { lock = false } = {}) {
   const commercialBySku = validateCorrectionCommercial(manifest, payload);
   const parentPlans = [];
   const parentByKey = new Map();
 
   for (const parent of manifest.parents) {
-    const current = await productByKey(client, parent.productKey);
+    const current = await productByKey(client, parent.productKey, lock);
     const blockers = [];
     if (!current) blockers.push("target_parent_missing");
     const plan = {
@@ -83,8 +95,8 @@ async function buildCorrectionPlan(client, manifest, payload) {
   for (const expected of manifest.rows) {
     const parent = parentByKey.get(expected.targetParentKey);
     const commercial = commercialBySku.get(upper(expected.canonicalSku));
-    const canonical = await variantBySku(client, expected.canonicalSku);
-    const legacy = expected.action === "REMAP" ? await variantBySku(client, expected.legacySku) : null;
+    const canonical = await variantBySku(client, expected.canonicalSku, lock);
+    const legacy = expected.action === "REMAP" ? await variantBySku(client, expected.legacySku, lock) : null;
     const current = expected.action === "UPDATE_EXISTING" ? canonical : legacy;
     const alias = expected.legacySku ? aliasMap.get(upper(expected.legacySku)) || null : null;
     const blockers = [];
@@ -164,4 +176,4 @@ async function buildCorrectionPlan(client, manifest, payload) {
   };
 }
 
-export { buildCorrectionPlan };
+export { PRODUCT_FIELDS, VARIANT_FIELDS, productByKey, variantBySku, aliasesBySku, packagingByVariantIds, referencesByVariantIds, snapshotCorrectionState, buildCorrectionPlan };

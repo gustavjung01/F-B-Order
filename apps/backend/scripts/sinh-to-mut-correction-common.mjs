@@ -3,6 +3,7 @@ import {
   clean,
   lower,
   packagingOf,
+  sha256,
   stableStringify,
   upper,
 } from "./catalog-remap-batch-common.mjs";
@@ -21,6 +22,11 @@ function normalizeCorrectionManifest(raw) {
     brand: clean(parent.brand),
   }));
   assert(parents.length > 0, "Correction target parents are required.", "CATALOG_CORRECTION_PARENTS_MISSING");
+  const targetParents = Object.fromEntries(parents.map((parent) => [parent.detailGroup, {
+    productKey: parent.productKey,
+    name: parent.name,
+    brand: parent.brand,
+  }]));
 
   const rows = (raw.rows || []).map((source, index) => {
     const action = upper(source.action);
@@ -52,12 +58,14 @@ function normalizeCorrectionManifest(raw) {
   assert(new Set(remapLegacy).size === remapLegacy.length, "Correction manifest has duplicate remap legacy SKUs.", "CATALOG_CORRECTION_LEGACY_DUPLICATE");
 
   return {
+    manifestHash: sha256(raw),
     taskId: clean(raw.taskId),
     groupKey: clean(raw.groupKey),
     industryKey: clean(raw.industryKey),
     industryName: clean(raw.industryName),
     catalogGroupKey: clean(raw.catalogGroupKey),
     catalogGroupName: clean(raw.catalogGroupName),
+    targetParents,
     imagePolicy: raw.imagePolicy || {},
     parents,
     rows,

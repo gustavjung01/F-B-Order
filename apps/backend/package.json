@@ -48,6 +48,8 @@
     "catalog:sinh-to-mut:correction:prepare-private": "node scripts/prepare-sinh-to-mut-correction-private.mjs",
     "catalog:sinh-to-mut:correction:self-test": "node scripts/sinh-to-mut-correction-engine.mjs --self-test",
     "catalog:sinh-to-mut:correction:dry-run": "node scripts/run-sinh-to-mut-correction-dry-run-vps-root.mjs",
+    "catalog:sinh-to-mut:correction:test": "node scripts/test-sinh-to-mut-correction-engine.mjs",
+    "catalog:sinh-to-mut:correction:production": "node scripts/run-sinh-to-mut-correction-production-vps-root.mjs",
     "catalog:remap:production:tea": "node scripts/run-catalog-remap-tea-production-vps-root.mjs",
     "catalog:remap:production:rollback": "node scripts/run-catalog-remap-tea-rollback-vps-root.mjs",
     "recipe:images:upload": "tsx scripts/upload-recipe-images-r2.mjs",
