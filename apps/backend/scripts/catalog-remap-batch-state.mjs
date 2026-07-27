@@ -49,12 +49,10 @@ async function snapshotState(client, { productIds, variantIds, legacySkus }) {
   return { products, variants, aliases, packaging, recipes, references };
 }
 
-function selectParentTarget({ existing, survivorProduct, strategy, claimedTargetProductIds }) {
-  const existingClaimed = Boolean(existing?.id && claimedTargetProductIds.has(existing.id));
-  if (existingClaimed) return { targetProduct: null, createProduct: false, sharedSourceCollision: true };
+function selectParentTarget({ existing, survivorProduct, strategy, reservedTargetProductIds, claimedTargetProductIds }) {
   if (existing) return { targetProduct: existing, createProduct: false, sharedSourceCollision: false };
 
-  const survivorClaimed = Boolean(survivorProduct?.id && claimedTargetProductIds.has(survivorProduct.id));
+  const survivorClaimed = Boolean(survivorProduct?.id && (reservedTargetProductIds.has(survivorProduct.id) || claimedTargetProductIds.has(survivorProduct.id)));
   if (survivorProduct && !survivorClaimed) return { targetProduct: survivorProduct, createProduct: false, sharedSourceCollision: false };
 
   const canCreateMissing = strategy === "attach_to_existing_or_create_parent";
@@ -70,9 +68,18 @@ async function buildPlan(client, manifest, payload, { lock = false } = {}) {
   const commercialBySku = validateManifestCommercial(manifest, payload);
   const parents = [];
   const parentByKey = new Map();
+  const existingByKey = new Map();
+  const reservedTargetProductIds = new Set();
+  for (const spec of manifest.parents) {
+    const productKey = clean(spec.productKey);
+    const existing = await productByKey(client, productKey, lock);
+    existingByKey.set(productKey, existing);
+    if (existing?.id) reservedTargetProductIds.add(existing.id);
+  }
   const claimedTargetProductIds = new Set();
   for (const spec of manifest.parents) {
-    const existing = await productByKey(client, clean(spec.productKey), lock);
+    const productKey = clean(spec.productKey);
+    const existing = existingByKey.get(productKey) || null;
     const survivor = clean(spec.survivorLegacySku) ? await variantBySkuOrAlias(client, spec.survivorLegacySku, lock) : null;
     const survivorProduct = survivor ? await (async () => {
       const result = await client.query(`SELECT ${PRODUCT_FIELDS} FROM catalog_products WHERE id=$1::uuid ${lock ? "FOR UPDATE" : ""}`, [survivor.productId]);
@@ -81,12 +88,11 @@ async function buildPlan(client, manifest, payload, { lock = false } = {}) {
     const blockers = [];
     if (spec.strategy === "merge_keep_first_product" && !survivor) blockers.push("survivor_missing");
     if (spec.strategy === "merge_keep_first_product" && existing && survivor && existing.id !== survivor.productId) blockers.push("target_parent_key_collision");
-    const selection = selectParentTarget({ existing, survivorProduct, strategy: spec.strategy, claimedTargetProductIds });
-    if (selection.sharedSourceCollision && existing) blockers.push("target_parent_identity_collision");
+    const selection = selectParentTarget({ existing, survivorProduct, strategy: spec.strategy, reservedTargetProductIds, claimedTargetProductIds });
     if (!selection.targetProduct && !selection.createProduct) blockers.push("target_parent_unresolved");
     const plan = {
       ...spec,
-      productKey: clean(spec.productKey),
+      productKey,
       targetProduct: selection.targetProduct,
       survivor,
       createProduct: selection.createProduct,
@@ -94,7 +100,7 @@ async function buildPlan(client, manifest, payload, { lock = false } = {}) {
       blockers,
       pass: blockers.length === 0,
     };
-    if (plan.targetProduct?.id) claimedTargetProductIds.add(plan.targetProduct.id);
+    if (!existing && plan.targetProduct?.id) claimedTargetProductIds.add(plan.targetProduct.id);
     parents.push(plan);
     parentByKey.set(plan.productKey, plan);
   }
