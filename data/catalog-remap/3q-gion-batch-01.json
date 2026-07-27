@@ -1,0 +1,370 @@
+{
+  "schemaVersion": 2,
+  "taskId": "3Q-GION-BATCH-01",
+  "groupKey": "3q-gion-batch-01",
+  "industryKey": "nguyen-lieu-tra-sua",
+  "industryName": "Nguyên liệu trà sữa",
+  "catalogGroupKey": "3q-gion",
+  "catalogGroupName": "3Q Giòn",
+  "reviewApproval": {
+    "status": "APPROVED",
+    "approvedBy": "project-owner",
+    "approvedDate": "2026-07-27",
+    "scope": "10 REMAP + 2 CREATE_NEW; 12 unique SKU",
+    "notes": [
+      "Người dùng phê duyệt triển khai nhóm kế tiếp bằng chỉ thị 'làm đi'.",
+      "Batch gồm Bibi 4, Sea 2, Zion 2, OK 2, Douxian 1 và Hùng Chương 1.",
+      "BGKQ-0077 remap vào 3QBBDE theo đúng tên dòng nguồn; 3QBBDA và 3QBBDO là các SKU cùng dòng giá nên CREATE_NEW.",
+      "Bảy SKU nguồn ghi 0 g được xử lý COUNT_ONLY; không lưu khối lượng giả.",
+      "3Q ZION ĐEN dùng giá chuẩn 55.000đ; giá bảng quán cũ 52.000đ chỉ giữ làm dấu vết đối chiếu.",
+      "Thạch Douxian các loại (BGKQ-0085) và Thủy Tinh Hùng Chương (BGKQ-0087) bị HOLD vì chưa xác định canonical SKU chính xác.",
+      "Dry-run production xác nhận productKey 3q-ok đã tồn tại ở parent đích khác parent survivor; nhóm OK phải attach vào parent hiện có, không rename parent survivor.",
+      "Ảnh xử lý sau khi toàn bộ catalog hoàn tất; không tạo ảnh AI và không ghi/xóa R2."
+    ]
+  },
+  "imageMigrationPolicy": {
+    "phase": "after_all_catalog_groups_verified",
+    "targetFileConvention": "lowercase canonical SKU + .webp",
+    "allowMissingImageDuringSkuRemap": true,
+    "generateImages": false,
+    "deleteOldObjectsInCurrentTask": false
+  },
+  "requiredMigrations": [
+    "db/migrations/031_catalog_group_remap.sql",
+    "db/migrations/032_catalog_packaging_count_only.sql"
+  ],
+  "targetParents": {
+    "Bibi": {
+      "productKey": "3q-bibi",
+      "name": "3Q Bibi",
+      "brand": "Bibi",
+      "strategy": "merge_keep_first_product",
+      "survivorLegacySku": "BGKQ-0076"
+    },
+    "Sea": {
+      "productKey": "3q-sea",
+      "name": "3Q Sea",
+      "brand": "Sea",
+      "strategy": "merge_keep_first_product",
+      "survivorLegacySku": "BGKQ-0078"
+    },
+    "Zion": {
+      "productKey": "3q-zion",
+      "name": "3Q Zion",
+      "brand": "Zion",
+      "strategy": "merge_keep_first_product",
+      "survivorLegacySku": "BGKQ-0080"
+    },
+    "OK": {
+      "productKey": "3q-ok",
+      "name": "3Q OK",
+      "brand": "OK",
+      "strategy": "attach_to_existing_or_create_parent",
+      "survivorLegacySku": "BGKQ-0082"
+    },
+    "Douxian": {
+      "productKey": "thach-3q-douxian",
+      "name": "Thạch 3Q Douxian",
+      "brand": "Douxian",
+      "strategy": "attach_to_existing_or_create_parent",
+      "survivorLegacySku": "BGKQ-0084"
+    },
+    "Hùng Chương": {
+      "productKey": "thach-hung-chuong",
+      "name": "Thạch Hùng Chương",
+      "brand": "Hùng Chương",
+      "strategy": "attach_to_existing_or_create_parent",
+      "survivorLegacySku": "BGKQ-0086"
+    }
+  },
+  "rows": [
+    {
+      "rowNo": 1,
+      "action": "REMAP",
+      "legacySku": "BGKQ-0076",
+      "canonicalSku": "3QBBTR",
+      "name": "3Q BIBI TRẮNG",
+      "detailGroup": "Bibi",
+      "type": "trang",
+      "measureMode": "count_only",
+      "sellUnit": "gói",
+      "netQuantity": null,
+      "netUnit": null,
+      "packageQuantity": 6,
+      "packageUnit": "thùng",
+      "sourceRow": 85,
+      "targetParentKey": "3q-bibi",
+      "imageMigration": {
+        "currentImageKey": "bgkq-0076",
+        "currentObjectKey": null,
+        "targetImageFile": "3qbbtr.webp",
+        "targetObjectKey": null,
+        "status": "VERIFY_EXISTING"
+      }
+    },
+    {
+      "rowNo": 2,
+      "action": "REMAP",
+      "legacySku": "BGKQ-0077",
+      "canonicalSku": "3QBBDE",
+      "name": "3Q BIBI ĐEN",
+      "detailGroup": "Bibi",
+      "type": "den",
+      "measureMode": "count_only",
+      "sellUnit": "gói",
+      "netQuantity": null,
+      "netUnit": null,
+      "packageQuantity": 6,
+      "packageUnit": "thùng",
+      "sourceRow": 86,
+      "targetParentKey": "3q-bibi",
+      "imageMigration": {
+        "currentImageKey": "bgkq-0077",
+        "currentObjectKey": null,
+        "targetImageFile": "3qbbde.webp",
+        "targetObjectKey": null,
+        "status": "VERIFY_EXISTING"
+      }
+    },
+    {
+      "rowNo": 3,
+      "action": "CREATE_NEW",
+      "legacySku": null,
+      "canonicalSku": "3QBBDA",
+      "name": "3Q BIBI DÂU",
+      "detailGroup": "Bibi",
+      "type": "dau",
+      "measureMode": "count_only",
+      "sellUnit": "gói",
+      "netQuantity": null,
+      "netUnit": null,
+      "packageQuantity": 6,
+      "packageUnit": "thùng",
+      "sourceRow": 86,
+      "targetParentKey": "3q-bibi",
+      "imageMigration": {
+        "currentImageKey": null,
+        "currentObjectKey": null,
+        "targetImageFile": "3qbbda.webp",
+        "targetObjectKey": null,
+        "status": "WAITING_MANUAL_IMAGE"
+      }
+    },
+    {
+      "rowNo": 4,
+      "action": "CREATE_NEW",
+      "legacySku": null,
+      "canonicalSku": "3QBBDO",
+      "name": "3Q BIBI ĐÀO",
+      "detailGroup": "Bibi",
+      "type": "dao",
+      "measureMode": "count_only",
+      "sellUnit": "gói",
+      "netQuantity": null,
+      "netUnit": null,
+      "packageQuantity": 6,
+      "packageUnit": "thùng",
+      "sourceRow": 86,
+      "targetParentKey": "3q-bibi",
+      "imageMigration": {
+        "currentImageKey": null,
+        "currentObjectKey": null,
+        "targetImageFile": "3qbbdo.webp",
+        "targetObjectKey": null,
+        "status": "WAITING_MANUAL_IMAGE"
+      }
+    },
+    {
+      "rowNo": 5,
+      "action": "REMAP",
+      "legacySku": "BGKQ-0078",
+      "canonicalSku": "3QSEAT",
+      "name": "3Q SEA TRẮNG",
+      "detailGroup": "Sea",
+      "type": "trang",
+      "measureMode": "count_only",
+      "sellUnit": "gói",
+      "netQuantity": null,
+      "netUnit": null,
+      "packageQuantity": 6,
+      "packageUnit": "thùng",
+      "sourceRow": 87,
+      "targetParentKey": "3q-sea",
+      "imageMigration": {
+        "currentImageKey": "bgkq-0078",
+        "currentObjectKey": null,
+        "targetImageFile": "3qseat.webp",
+        "targetObjectKey": null,
+        "status": "VERIFY_EXISTING"
+      }
+    },
+    {
+      "rowNo": 6,
+      "action": "REMAP",
+      "legacySku": "BGKQ-0079",
+      "canonicalSku": "3QSEAD",
+      "name": "3Q SEA ĐEN",
+      "detailGroup": "Sea",
+      "type": "den",
+      "measureMode": "count_only",
+      "sellUnit": "gói",
+      "netQuantity": null,
+      "netUnit": null,
+      "packageQuantity": 6,
+      "packageUnit": "thùng",
+      "sourceRow": 88,
+      "targetParentKey": "3q-sea",
+      "imageMigration": {
+        "currentImageKey": "bgkq-0079",
+        "currentObjectKey": null,
+        "targetImageFile": "3qsead.webp",
+        "targetObjectKey": null,
+        "status": "VERIFY_EXISTING"
+      }
+    },
+    {
+      "rowNo": 7,
+      "action": "REMAP",
+      "legacySku": "BGKQ-0080",
+      "canonicalSku": "3QZITR",
+      "name": "3Q ZION TRẮNG",
+      "detailGroup": "Zion",
+      "type": "trang",
+      "measureMode": "measured",
+      "sellUnit": "gói",
+      "netQuantity": 2000,
+      "netUnit": "g",
+      "packageQuantity": 6,
+      "packageUnit": "thùng",
+      "sourceRow": 89,
+      "targetParentKey": "3q-zion",
+      "imageMigration": {
+        "currentImageKey": "bgkq-0080",
+        "currentObjectKey": null,
+        "targetImageFile": "3qzitr.webp",
+        "targetObjectKey": null,
+        "status": "VERIFY_EXISTING"
+      }
+    },
+    {
+      "rowNo": 8,
+      "action": "REMAP",
+      "legacySku": "BGKQ-0081",
+      "canonicalSku": "3QZIDE",
+      "name": "3Q ZION ĐEN",
+      "detailGroup": "Zion",
+      "type": "den",
+      "measureMode": "measured",
+      "sellUnit": "gói",
+      "netQuantity": 2000,
+      "netUnit": "g",
+      "packageQuantity": 6,
+      "packageUnit": "thùng",
+      "sourceRow": 90,
+      "targetParentKey": "3q-zion",
+      "imageMigration": {
+        "currentImageKey": "bgkq-0081",
+        "currentObjectKey": null,
+        "targetImageFile": "3qzide.webp",
+        "targetObjectKey": null,
+        "status": "VERIFY_EXISTING"
+      }
+    },
+    {
+      "rowNo": 9,
+      "action": "REMAP",
+      "legacySku": "BGKQ-0082",
+      "canonicalSku": "3QOKTR",
+      "name": "3Q OK TRẮNG",
+      "detailGroup": "OK",
+      "type": "trang",
+      "measureMode": "count_only",
+      "sellUnit": "gói",
+      "netQuantity": null,
+      "netUnit": null,
+      "packageQuantity": 6,
+      "packageUnit": "thùng",
+      "sourceRow": 91,
+      "targetParentKey": "3q-ok",
+      "imageMigration": {
+        "currentImageKey": "bgkq-0082",
+        "currentObjectKey": null,
+        "targetImageFile": "3qoktr.webp",
+        "targetObjectKey": null,
+        "status": "VERIFY_EXISTING"
+      }
+    },
+    {
+      "rowNo": 10,
+      "action": "REMAP",
+      "legacySku": "BGKQ-0083",
+      "canonicalSku": "3QOKOL",
+      "name": "3Q OK OLONG",
+      "detailGroup": "OK",
+      "type": "olong",
+      "measureMode": "measured",
+      "sellUnit": "gói",
+      "netQuantity": 2000,
+      "netUnit": "g",
+      "packageQuantity": 6,
+      "packageUnit": "thùng",
+      "sourceRow": 92,
+      "targetParentKey": "3q-ok",
+      "imageMigration": {
+        "currentImageKey": "bgkq-0083",
+        "currentObjectKey": null,
+        "targetImageFile": "3qokol.webp",
+        "targetObjectKey": null,
+        "status": "VERIFY_EXISTING"
+      }
+    },
+    {
+      "rowNo": 11,
+      "action": "REMAP",
+      "legacySku": "BGKQ-0084",
+      "canonicalSku": "3QHUDX",
+      "name": "THẠCH 3Q HỦ",
+      "detailGroup": "Douxian",
+      "type": "3q-hu",
+      "measureMode": "measured",
+      "sellUnit": "hộp",
+      "netQuantity": 2600,
+      "netUnit": "g",
+      "packageQuantity": 6,
+      "packageUnit": "thùng",
+      "sourceRow": 93,
+      "targetParentKey": "thach-3q-douxian",
+      "imageMigration": {
+        "currentImageKey": "bgkq-0084",
+        "currentObjectKey": null,
+        "targetImageFile": "3qhudx.webp",
+        "targetObjectKey": null,
+        "status": "VERIFY_EXISTING"
+      }
+    },
+    {
+      "rowNo": 12,
+      "action": "REMAP",
+      "legacySku": "BGKQ-0086",
+      "canonicalSku": "THCFHC",
+      "name": "THẠCH CAFE HÙNG CHƯƠNG",
+      "detailGroup": "Hùng Chương",
+      "type": "cafe",
+      "measureMode": "measured",
+      "sellUnit": "hủ",
+      "netQuantity": 2600,
+      "netUnit": "g",
+      "packageQuantity": 6,
+      "packageUnit": "thùng",
+      "sourceRow": 95,
+      "targetParentKey": "thach-hung-chuong",
+      "imageMigration": {
+        "currentImageKey": "bgkq-0086",
+        "currentObjectKey": null,
+        "targetImageFile": "thcfhc.webp",
+        "targetObjectKey": null,
+        "status": "VERIFY_EXISTING"
+      }
+    }
+  ]
+}
