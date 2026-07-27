@@ -75,9 +75,9 @@ COUNT_ONLY=7
 
 ## Read-only production verification
 
-`audit-catalog-remap-batch.mjs` chỉ nhận batch từ 15 đến 30 dòng. Không dùng runner đó cho batch 12 dòng này và không hạ cổng an toàn 15–30.
+`audit-catalog-remap-batch.mjs` chỉ nhận batch từ 15 đến 30 dòng. Batch 12 dòng này dùng plan dry-run engine và không hạ cổng an toàn 15–30.
 
-Lượt plan dry-run đầu tiên ngày 2026-07-27:
+### Lượt đầu — BLOCKED 10/12
 
 ```text
 CATALOG_REMAP_PLAN_DRY_RUN_BLOCKED
@@ -88,16 +88,11 @@ BGKQ-0082 -> 3QOKTR: target_parent_blocked
 BGKQ-0083 -> 3QOKOL: target_parent_blocked
 ```
 
-Nguyên nhân: product key `3q-ok` đã tồn tại ở parent đích khác với parent hiện tại của survivor `BGKQ-0082`. Hai legacy SKU vẫn tồn tại và không có blocker dữ liệu khác. Manifest đã đổi riêng chiến lược parent `OK` từ `merge_keep_first_product` sang `attach_to_existing_or_create_parent`, giống cách xử lý parent đích đã tồn tại. Không đổi SKU, giá, quy cách, ảnh hoặc private payload.
+Nguyên nhân: product key `3q-ok` đã tồn tại ở parent đích khác với parent hiện tại của survivor `BGKQ-0082`. Hai legacy SKU vẫn tồn tại và không có blocker dữ liệu khác.
 
-Chạy lại plan dry-run engine; runner tự thực hiện local self-test, khóa đúng `/srv/apps/bepsi`, mở transaction `BEGIN READ ONLY`, kiểm toàn bộ 12 dòng và rollback transaction sau khi đọc:
+Manifest chỉ đổi chiến lược parent `OK` từ `merge_keep_first_product` sang `attach_to_existing_or_create_parent`. Không đổi SKU, giá, quy cách, ảnh hoặc private payload.
 
-```powershell
-node .\apps\backend\scripts\run-catalog-remap-plan-dry-run-vps-root.mjs `
-  --plan=data/catalog-remap/3q-gion-batch-01-plan.json
-```
-
-Kết quả bắt buộc:
+### Lượt mới — PASS 12/12
 
 ```text
 CATALOG_REMAP_PLAN_DRY_RUN_PASS
@@ -107,14 +102,16 @@ pass=12
 blocked=0
 ```
 
-Report local:
+- Ngày xác nhận: `2026-07-27`.
+- Runner dùng transaction `BEGIN READ ONLY` và không ghi production.
+- Report local: `artifacts/catalog-remap/production/3q-gion-batch-01-dry-run.json`.
 
-`artifacts/catalog-remap/production/3q-gion-batch-01-dry-run.json`
+## Trạng thái
 
-## An toàn
-
-- Lượt dry-run 10/12 và correction manifest đều không ghi production.
-- Chưa database dry-run PASS cho đến khi có output 12/12 thật từ plan runner.
+- Static contract: PASS.
+- CI: PASS.
+- VPS dry-run: PASS 12/12.
+- PR vẫn draft.
 - Chưa apply production.
 - Không migration.
 - Không restart service.
