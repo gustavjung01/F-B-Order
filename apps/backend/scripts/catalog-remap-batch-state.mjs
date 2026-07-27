@@ -116,7 +116,7 @@ async function buildPlan(client, manifest, payload, { lock = false } = {}) {
       current = await variantByActualSku(client, expected.legacySku, lock);
       if (!current) blockers.push("legacy_sku_missing");
       if (current && (!current.isActive || !current.isPublic || !current.isOrderable || current.priceMode !== "fixed")) blockers.push("legacy_variant_unavailable");
-      const alias = await client.query(`SELECT variant_id::text AS "variantId" FROM catalog_variant_sku_aliases WHERE UPPER(alias.alias_sku)=UPPER($1)`, [expected.legacySku]);
+      const alias = await client.query(`SELECT variant_id::text AS "variantId" FROM catalog_variant_sku_aliases WHERE UPPER(alias_sku)=UPPER($1)`, [expected.legacySku]);
       if (alias.rows[0] && current && alias.rows[0].variantId !== current.id) blockers.push("legacy_alias_collision");
     }
     rows.push({ expected, commercial, parent, current, blockers, pass: blockers.length === 0 });
