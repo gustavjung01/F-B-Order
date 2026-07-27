@@ -2,7 +2,7 @@
   "status": "CONTRACT_PASS",
   "productionModified": false,
   "taskId": "3Q-GION-BATCH-01",
-  "manifestHash": "3dee21674bd79e42e855ebdc6440ba011abe5aa53a4268a6381a51c1930f2972",
+  "manifestHash": "588f522afba4aca8a6d4a59a7a81c48e5ec66afc2a28dca6439ed0920f97765a",
   "payloadHash": "1f795c686bdc4e3f4f0c7aa53717be2757b8926219c3d7299aebce9d895fcff5",
   "summary": {
     "rowCount": 12,
@@ -24,7 +24,8 @@
     "uniqueCanonicalSkuPass": true,
     "uniqueLegacySkuPass": true,
     "zeroMeasurementExcludedPass": true,
-    "zionBlackPriceReviewed": true
+    "zionBlackPriceReviewed": true,
+    "okExistingParentAttachmentReviewed": true
   },
-  "note": "Static contract validation only. Database dry-run and production apply have not run. Private payload is local-only and must not be committed."
+  "note": "Static contract validation only. The first read-only VPS dry-run passed 10/12 and exposed a target parent collision for the two OK variants. Manifest now attaches them to the existing 3q-ok parent. No database, service, migration, or R2 write occurred. A fresh read-only dry-run is required."
 }
