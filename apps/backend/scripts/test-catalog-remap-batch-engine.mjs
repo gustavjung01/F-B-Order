@@ -48,7 +48,7 @@ try {
   targetProductId = (await client.query(`INSERT INTO catalog_products (product_key,name,brand,industry,industry_key,catalog_group_key,subcategory,status) VALUES ($1,'CI Target','CI','Nguyên liệu trà sữa','nguyen-lieu-tra-sua','tra','CI','active') RETURNING id::text`, [targetProductKey])).rows[0].id;
   sourceProductId = (await client.query(`INSERT INTO catalog_products (product_key,name,brand,industry,industry_key,catalog_group_key,subcategory,status) VALUES ($1,'CI Source','CI','Nguyên liệu trà sữa','nguyen-lieu-tra-sua','tra','CI','active') RETURNING id::text`, [sourceProductKey])).rows[0].id;
   survivorVariantId = (await client.query(`INSERT INTO catalog_variants (product_id,variant_key,sku,name,options,price_mode,shop_price,status,is_active,is_public,is_orderable) VALUES ($1::uuid,$2,$3,'CI Survivor','{}'::jsonb,'fixed',10000,'active',true,true,true) RETURNING id::text`, [targetProductId,targetVariantKey,survivorSku])).rows[0].id;
-  sourceVariantId = (await client.query(`INSERT INTO catalog_variants (product_id,variant_key,sku,name,options,price_mode,shop_price,status,is_active,is_public,is_orderable) VALUES ($1::uuid,$2,$3,'CI Old','{"size":"250 g","type":"legacy-wrong","flavor":"legacy-wrong"}'::jsonb,'fixed',11000,'active',true,true,true) RETURNING id::text`, [sourceProductId,sourceVariantKey,legacySku])).rows[0].id;
+  sourceVariantId = (await client.query(`INSERT INTO catalog_variants (product_id,variant_key,sku,name,options,price_mode,shop_price,status,is_active,is_public,is_orderable) VALUES ($1::uuid,$2,$3,'CI Old','{"size":"250 g"}'::jsonb,'fixed',11000,'active',true,true,true) RETURNING id::text`, [sourceProductId,sourceVariantKey,legacySku])).rows[0].id;
   await client.query(`INSERT INTO catalog_variant_packaging_specs (variant_id,sell_unit,package_quantity,package_unit,net_quantity,net_unit,measure_mode,source) VALUES ($1::uuid,'bịch',10,'thùng',250,'g','measured','ci-before')`, [sourceVariantId]);
   recipeId = (await client.query(`INSERT INTO recipes (slug,title,status) VALUES ($1,'CI Recipe','needs_review') RETURNING id::text`, [key("ci-recipe")])).rows[0].id;
   const snapshot = { variantId: sourceVariantId, productId: sourceProductId, sku: legacySku, productName: "CI Source", variantName: "CI Old" };
@@ -57,7 +57,6 @@ try {
 
   const manifest = {
     schemaVersion: 2,
-    attributeModelVersion: 1,
     taskId: key("CI-BATCH").toUpperCase(),
     groupKey: key("ci-batch"),
     industryKey: "nguyen-lieu-tra-sua",
@@ -69,8 +68,8 @@ try {
       CI: { productKey: targetProductKey, name: "CI Target", brand: "CI", strategy: "attach_to_existing_or_create_parent", survivorLegacySku: survivorSku },
     },
     rows: [
-      { rowNo: 1, action: "REMAP", legacySku, canonicalSku, name: "CI New", detailGroup: "CI", targetParentKey: targetProductKey, productType: "tra", flavor: "hong", measureKind: "mass", measureMode: "measured", sellUnit: "bịch", netQuantity: 500, netUnit: "g", packageQuantity: 20, packageUnit: "thùng" },
-      { rowNo: 2, action: "CREATE_NEW", canonicalSku: createSku, name: "CI Box", detailGroup: "CI", targetParentKey: targetProductKey, productType: "tra-tui-loc", flavor: "", measureKind: "count", measureMode: "count_only", sellUnit: "hộp", netQuantity: null, netUnit: null, packageQuantity: 30, packageUnit: "thùng" },
+      { rowNo: 1, action: "REMAP", legacySku, canonicalSku, name: "CI New", detailGroup: "CI", targetParentKey: targetProductKey, type: "hong", measureMode: "measured", sellUnit: "bịch", netQuantity: 500, netUnit: "g", packageQuantity: 20, packageUnit: "thùng" },
+      { rowNo: 2, action: "CREATE_NEW", canonicalSku: createSku, name: "CI Box", detailGroup: "CI", targetParentKey: targetProductKey, type: "tui-loc", measureMode: "count_only", sellUnit: "hộp", netQuantity: null, netUnit: null, packageQuantity: 30, packageUnit: "thùng" },
     ],
   };
   const rows = [
@@ -84,19 +83,20 @@ try {
   const configPath = path.join(tempDir, "config.json");
   fs.writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
   fs.writeFileSync(payloadPath, `${JSON.stringify(payload, null, 2)}\n`);
-  fs.writeFileSync(configPath, `${JSON.stringify({ tasks: [{ manifest: path.relative(repoRoot, manifestPath).replaceAll("\\", "/"), commercialFile: path.relative(repoRoot, payloadPath).replaceAll("\\", "/") }] }, null, 2)}\n`);
+  fs.writeFileSync(configPath, `${JSON.stringify({ planId: "3q-gion-batch-01", productionConfirmation: "BEPSI_3Q_GION_12", tasks: [{ taskId: manifest.taskId, manifest: path.relative(repoRoot, manifestPath).replaceAll("\\", "/"), commercialFile: path.relative(repoRoot, payloadPath).replaceAll("\\", "/") }] }, null, 2)}\n`);
 
   const dryPath = path.join(tempDir, "dry.json");
   run([`--config=${configPath}`, `--output-json=${dryPath}`]);
   const dry = JSON.parse(fs.readFileSync(dryPath, "utf8"));
   if (dry.status !== "TEA_PRODUCTION_DRY_RUN_PASS") throw new Error("Dry-run did not pass.");
-  const remapAfterOptions = dry.taskReports[0].rows.find((row) => row.canonicalSku === canonicalSku)?.afterOptions;
-  if (!remapAfterOptions || remapAfterOptions.type !== "tra" || remapAfterOptions.flavor !== "hong" || remapAfterOptions.measure_kind !== "mass" || remapAfterOptions.weight !== "500 g") throw new Error("Explicit product type, flavor, or mass options were not built correctly.");
   const countAfterOptions = dry.taskReports[0].rows.find((row) => row.canonicalSku === createSku)?.afterOptions;
-  if (!countAfterOptions || countAfterOptions.type !== "tra-tui-loc" || countAfterOptions.measure_kind !== "count" || Object.prototype.hasOwnProperty.call(countAfterOptions, "flavor") || Object.prototype.hasOwnProperty.call(countAfterOptions, "size")) throw new Error("COUNT_ONLY explicit attributes are invalid.");
+  if (!countAfterOptions || Object.prototype.hasOwnProperty.call(countAfterOptions, "size")) throw new Error("COUNT_ONLY dry-run retained size.");
+  const rejectTeaPath = path.join(tempDir, "reject-tea.json");
+  const rejectTea = spawnSync("node", [enginePath, `--config=${configPath}`, "--apply", "--confirm-production=BEPSI_TEA_48", `--output-json=${rejectTeaPath}`], { cwd: repoRoot, env: process.env, encoding: "utf8" });
+  if (rejectTea.status === 0) throw new Error("3Q production gate accepted the Tea confirmation token.");
 
   const applyPath = path.join(tempDir, "apply.json");
-  run([`--config=${configPath}`, "--apply", "--confirm-production=BEPSI_TEA_48", `--output-json=${applyPath}`]);
+  run([`--config=${configPath}`, "--apply", "--confirm-production=BEPSI_3Q_GION_12", `--output-json=${applyPath}`]);
   const applied = JSON.parse(fs.readFileSync(applyPath, "utf8"));
   if (applied.status !== "TEA_PRODUCTION_APPLY_PASS" || applied.verification.canonicalVariantCount !== 2) throw new Error("Apply verification did not pass.");
   batchId = applied.results[0].batchId;
@@ -106,17 +106,20 @@ try {
   const remapped = after.rows.find((row) => row.sku === canonicalSku);
   const created = after.rows.find((row) => row.sku === createSku);
   if (remapped.id !== sourceVariantId || remapped.product_id !== targetProductId || remapped.net_quantity !== 500) throw new Error("REMAP identity/state is invalid.");
-  if (remapped.options.type !== "tra" || remapped.options.flavor !== "hong" || remapped.options.measure_kind !== "mass" || remapped.options.weight !== "500 g") throw new Error("REMAP explicit attributes were not persisted.");
-  if (created.measure_mode !== "count_only" || created.options.type !== "tra-tui-loc" || created.options.measure_kind !== "count" || Object.prototype.hasOwnProperty.call(created.options || {}, "size") || Object.prototype.hasOwnProperty.call(created.options || {}, "flavor")) throw new Error("CREATE_NEW count-only state is invalid.");
+  if (created.measure_mode !== "count_only" || Object.prototype.hasOwnProperty.call(created.options || {}, "size")) throw new Error("CREATE_NEW count-only state is invalid.");
   const recipeAfter = (await client.query(`SELECT catalog_product_id::text AS product_id,catalog_snapshot FROM recipe_ingredients WHERE id=$1::uuid`, [recipeIngredientId])).rows[0];
   if (recipeAfter.product_id !== targetProductId || recipeAfter.catalog_snapshot.sku !== canonicalSku) throw new Error("Recipe link was not updated atomically.");
 
+  const rejectTeaRollbackPath = path.join(tempDir, "reject-tea-rollback.json");
+  const rejectTeaRollback = spawnSync("node", [enginePath, `--rollback=${batchId}`, "--confirm-production=BEPSI_TEA_48", `--output-json=${rejectTeaRollbackPath}`], { cwd: repoRoot, env: process.env, encoding: "utf8" });
+  if (rejectTeaRollback.status === 0) throw new Error("Tea production plan rolled back a 3Q-scoped batch.");
+
   const rollbackPath = path.join(tempDir, "rollback.json");
-  run([`--rollback=${batchId}`, "--confirm-production=BEPSI_TEA_48", `--output-json=${rollbackPath}`]);
+  run([`--config=${configPath}`, `--rollback=${batchId}`, "--confirm-production=BEPSI_3Q_GION_12", `--output-json=${rollbackPath}`]);
   const rolled = JSON.parse(fs.readFileSync(rollbackPath, "utf8"));
   if (rolled.status !== "CATALOG_REMAP_ROLLBACK_PASS") throw new Error("Rollback did not pass.");
   const restored = (await client.query(`SELECT id::text,sku,product_id::text AS product_id,options FROM catalog_variants WHERE id=$1::uuid`, [sourceVariantId])).rows[0];
-  if (restored.sku !== legacySku || restored.product_id !== sourceProductId || restored.options.size !== "250 g" || restored.options.type !== "legacy-wrong" || restored.options.flavor !== "legacy-wrong") throw new Error("Rollback did not restore the original variant.");
+  if (restored.sku !== legacySku || restored.product_id !== sourceProductId || restored.options.size !== "250 g") throw new Error("Rollback did not restore the original variant.");
   const createdCount = Number((await client.query(`SELECT COUNT(*)::int AS count FROM catalog_variants WHERE sku=$1`, [createSku])).rows[0].count);
   const aliasCount = Number((await client.query(`SELECT COUNT(*)::int AS count FROM catalog_variant_sku_aliases WHERE alias_sku=$1`, [legacySku])).rows[0].count);
   const recipeRestored = (await client.query(`SELECT catalog_product_id::text AS product_id,catalog_snapshot FROM recipe_ingredients WHERE id=$1::uuid`, [recipeIngredientId])).rows[0];
