@@ -1,5 +1,6 @@
 {
-  "status": "CONTRACT_PASS",
+  "status": "DRY_RUN_PASS",
+  "staticContractStatus": "CONTRACT_PASS",
   "productionModified": false,
   "taskId": "3Q-GION-BATCH-01",
   "manifestHash": "588f522afba4aca8a6d4a59a7a81c48e5ec66afc2a28dca6439ed0920f97765a",
@@ -27,5 +28,28 @@
     "zionBlackPriceReviewed": true,
     "okExistingParentAttachmentReviewed": true
   },
-  "note": "Static contract validation only. The first read-only VPS dry-run passed 10/12 and exposed a target parent collision for the two OK variants. Manifest now attaches them to the existing 3q-ok parent. No database, service, migration, or R2 write occurred. A fresh read-only dry-run is required."
+  "dryRunVerification": {
+    "status": "CATALOG_REMAP_PLAN_DRY_RUN_PASS",
+    "taskStatus": "BATCH_DRY_RUN_PASS",
+    "verifiedDate": "2026-07-27",
+    "rowCount": 12,
+    "rowPassCount": 12,
+    "rowBlockedCount": 0,
+    "productionModified": false,
+    "reportPath": "artifacts/catalog-remap/production/3q-gion-batch-01-dry-run.json"
+  },
+  "history": [
+    {
+      "status": "CATALOG_REMAP_PLAN_DRY_RUN_BLOCKED",
+      "rowCount": 12,
+      "rowPassCount": 10,
+      "rowBlockedCount": 2,
+      "blockers": [
+        "BGKQ-0082 -> 3QOKTR: target_parent_blocked",
+        "BGKQ-0083 -> 3QOKOL: target_parent_blocked"
+      ],
+      "resolution": "Changed only the OK parent strategy to attach_to_existing_or_create_parent; SKU, variant identity, price, packaging, image policy, and private payload were unchanged."
+    }
+  ],
+  "note": "Fresh VPS plan dry-run passed 12/12 in a read-only transaction. No catalog, database, migration, service, deploy, restart, or R2 write occurred. Production apply remains blocked pending separate approval."
 }
