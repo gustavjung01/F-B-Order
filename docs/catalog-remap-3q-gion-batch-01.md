@@ -73,9 +73,34 @@ COUNT_ONLY=7
 - Legacy SKU duy nhất: PASS
 - Không có `0 g` trong manifest: PASS
 
+## Read-only production verification
+
+`audit-catalog-remap-batch.mjs` chỉ nhận batch từ 15 đến 30 dòng. Không dùng runner đó cho batch 12 dòng này và không hạ cổng an toàn 15–30.
+
+Chạy plan dry-run engine; runner tự thực hiện local self-test, khóa đúng `/srv/apps/bepsi`, mở transaction `BEGIN READ ONLY`, kiểm toàn bộ 12 dòng và rollback transaction sau khi đọc:
+
+```powershell
+node .\apps\backend\scripts\run-catalog-remap-plan-dry-run-vps-root.mjs `
+  --plan=data/catalog-remap/3q-gion-batch-01-plan.json
+```
+
+Kết quả bắt buộc:
+
+```text
+CATALOG_REMAP_PLAN_DRY_RUN_PASS
+3Q-GION-BATCH-01: BATCH_DRY_RUN_PASS
+rows=12
+pass=12
+blocked=0
+```
+
+Report local:
+
+`artifacts/catalog-remap/production/3q-gion-batch-01-dry-run.json`
+
 ## An toàn
 
-- Chưa database dry-run.
+- Chưa database dry-run PASS cho đến khi có output thật từ plan runner.
 - Chưa apply production.
 - Không migration.
 - Không restart service.
