@@ -16,3 +16,5 @@ export type UserRole = (typeof USER_ROLES)[number];
 export const PRODUCT_GROUPS = ["milk_tea", "spicy_noodle", "general", "promotion"] as const;
 
 export type ProductGroup = (typeof PRODUCT_GROUPS)[number];
+
+export * from "./recipe-domain";
