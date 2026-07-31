@@ -1,0 +1,15 @@
+project_id  = "replace-with-gcp-project-id"
+region      = "asia-southeast1"
+environment = "prod"
+
+github_repository = "gustavjung01/F-B-Order"
+github_ref        = "refs/heads/main"
+
+artifact_registry_repository_id = "bepsi-containers"
+runtime_service_account_id      = "bepsi-api-runtime"
+deploy_service_account_id       = "bepsi-github-deployer"
+
+secret_ids = [
+  "bepsi-database-url",
+  "bepsi-clerk-secret-key",
+]

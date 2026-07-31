@@ -23,6 +23,20 @@ test-results/
 
 .vercel-env-audit
 
+# Terraform local state, plans and local variables
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+*.tfplan
+*.tfvars
+!*.tfvars.example
+crash.log
+crash.*.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
 # Generated catalog review preview
 artifacts/catalog/hung-phat-v2-preview/
 data/catalog/hung-phat/v2/generated/
